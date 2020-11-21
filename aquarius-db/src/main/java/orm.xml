@@ -1,0 +1,1139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_0.xsd" version="2.0">
+    <package>
+        de.regatta_hd.aquarius.db
+    </package>
+    <access>
+        PROPERTY
+    </access>
+    <entity class="AgeClass">
+        <table name="AgeClass"/>
+        <id-class class="AgeClassId"/>
+        <attributes>
+            <id name="ageClassID">
+                <column name="AgeClass_ID" column-definition="int identity"/>
+            </id>
+            <basic name="ageClassAbbr">
+                <column name="AgeClass_Abbr" nullable="false" length="8"/>
+            </basic>
+            <basic name="ageClassAbbrSuffix">
+                <column name="AgeClass_AbbrSuffix" length="8"/>
+            </basic>
+            <basic name="ageClassAllowYounger">
+                <column name="AgeClass_AllowYounger"/>
+            </basic>
+            <basic name="ageClassCaption">
+                <column name="AgeClass_Caption" nullable="false" length="48"/>
+            </basic>
+            <basic name="ageClassGender">
+                <column name="AgeClass_Gender" nullable="false" length="1"/>
+            </basic>
+            <basic name="ageClassLWAvgLimit">
+                <column name="AgeClass_LW_AvgLimit"/>
+            </basic>
+            <basic name="ageClassLWCoxLowerLimit">
+                <column name="AgeClass_LW_CoxLowerLimit"/>
+            </basic>
+            <basic name="ageClassLWCoxTolerance">
+                <column name="AgeClass_LW_CoxTolerance"/>
+            </basic>
+            <basic name="ageClassLWUpperLimit">
+                <column name="AgeClass_LW_UpperLimit"/>
+            </basic>
+            <basic name="ageClassMaxAge">
+                <column name="AgeClass_MaxAge"/>
+            </basic>
+            <basic name="ageClassMinAge">
+                <column name="AgeClass_MinAge"/>
+            </basic>
+            <basic name="ageClassNumSubClasses">
+                <column name="AgeClass_NumSubClasses"/>
+            </basic>
+            <basic name="ageClassSuffix">
+                <column name="AgeClass_Suffix" length="16"/>
+            </basic>
+            <one-to-many name="offers" target-entity="de.regatta_hd.aquarius.db.Offer" mapped-by="ageClass">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Athlet">
+        <table name="Athlet"/>
+        <id-class class="AthletId"/>
+        <attributes>
+            <id name="athletID">
+                <column name="Athlet_ID" column-definition="int identity"/>
+            </id>
+            <basic name="athletDOB">
+                <column name="Athlet_DOB" column-definition="datetime" nullable="false"/>
+            </basic>
+            <basic name="athletExternIDA">
+                <column name="Athlet_ExternID_A" length="11"/>
+            </basic>
+            <basic name="athletExternIDB">
+                <column name="Athlet_ExternID_B" length="11"/>
+            </basic>
+            <basic name="athletExternState">
+                <column name="Athlet_ExternState"/>
+            </basic>
+            <basic name="athletExternStateB">
+                <column name="Athlet_ExternState_B"/>
+            </basic>
+            <basic name="athletFirstName">
+                <column name="Athlet_FirstName" nullable="false" length="32"/>
+            </basic>
+            <basic name="athletGender">
+                <column name="Athlet_Gender" nullable="false" length="1"/>
+            </basic>
+            <basic name="athletLastName">
+                <column name="Athlet_LastName" nullable="false" length="64"/>
+            </basic>
+            <basic name="athletSoundEx">
+                <column name="Athlet_SoundEx" length="5"/>
+            </basic>
+            <basic name="athletState">
+                <column name="Athlet_State"/>
+            </basic>
+            <many-to-one name="club" fetch="LAZY">
+                <join-column name="Athlet_Club_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="nation" fetch="LAZY">
+                <join-column name="Athlet_Nation_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="crews" target-entity="de.regatta_hd.aquarius.db.Crew" mapped-by="athlet">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="BoatClass">
+        <table name="BoatClass"/>
+        <id-class class="BoatClassId"/>
+        <attributes>
+            <id name="boatClassID">
+                <column name="BoatClass_ID" column-definition="int identity"/>
+            </id>
+            <basic name="boatClassAbbr">
+                <column name="BoatClass_Abbr" nullable="false" length="8"/>
+            </basic>
+            <basic name="boatClassCaption">
+                <column name="BoatClass_Caption" nullable="false" length="50"/>
+            </basic>
+            <basic name="boatClassCoxed">
+                <column name="BoatClass_Coxed"/>
+            </basic>
+            <basic name="boatClassNumRowers">
+                <column name="BoatClass_NumRowers"/>
+            </basic>
+            <one-to-many name="offers" target-entity="de.regatta_hd.aquarius.db.Offer" mapped-by="boatClass">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Club">
+        <table name="Club"/>
+        <id-class class="ClubId"/>
+        <attributes>
+            <id name="clubID">
+                <column name="Club_ID" column-definition="int identity"/>
+            </id>
+            <basic name="clubAbbr">
+                <column name="Club_Abbr" length="50"/>
+            </basic>
+            <basic name="clubCity">
+                <column name="Club_City" length="64"/>
+            </basic>
+            <basic name="clubDiscount">
+                <column name="Club_Discount"/>
+            </basic>
+            <basic name="clubExternID">
+                <column name="Club_ExternID"/>
+            </basic>
+            <basic name="clubName">
+                <column name="Club_Name" length="128"/>
+            </basic>
+            <basic name="clubUltraAbbr">
+                <column name="Club_UltraAbbr" length="16"/>
+            </basic>
+            <many-to-one name="nation" fetch="LAZY">
+                <join-column name="Club_Nation_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="athlets" target-entity="de.regatta_hd.aquarius.db.Athlet" mapped-by="club">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="crews" target-entity="de.regatta_hd.aquarius.db.Crew" mapped-by="club">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="entrys" target-entity="de.regatta_hd.aquarius.db.Entry" mapped-by="club">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="events" target-entity="de.regatta_hd.aquarius.db.Event" mapped-by="club">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="labels" target-entity="de.regatta_hd.aquarius.db.Label" mapped-by="club">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Comp">
+        <table name="Comp"/>
+        <id-class class="CompId"/>
+        <attributes>
+            <id name="compID">
+                <column name="Comp_ID" column-definition="int identity"/>
+            </id>
+            <basic name="compCancelled">
+                <column name="Comp_Cancelled"/>
+            </basic>
+            <basic name="compDateTime">
+                <column name="Comp_DateTime" column-definition="datetime"/>
+            </basic>
+            <basic name="compDummy">
+                <column name="Comp_Dummy"/>
+            </basic>
+            <basic name="compGroupValue">
+                <column name="Comp_GroupValue"/>
+            </basic>
+            <basic name="compHeatNumber">
+                <column name="Comp_HeatNumber"/>
+            </basic>
+            <basic name="compLabel">
+                <column name="Comp_Label" length="32"/>
+            </basic>
+            <basic name="compLocked">
+                <column name="Comp_Locked"/>
+            </basic>
+            <basic name="compNumber">
+                <column name="Comp_Number"/>
+            </basic>
+            <basic name="compRound">
+                <column name="Comp_Round"/>
+            </basic>
+            <basic name="compRoundCode">
+                <column name="Comp_RoundCode" length="8"/>
+            </basic>
+            <basic name="compState">
+                <column name="Comp_State"/>
+            </basic>
+            <many-to-one name="event" fetch="LAZY">
+                <join-column name="Comp_Event_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="offer" fetch="LAZY">
+                <join-column name="Comp_Race_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="raceModeDetail" fetch="LAZY">
+                <join-column name="Comp_RMDetail_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="compEntries" target-entity="de.regatta_hd.aquarius.db.CompEntries" mapped-by="comp">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="compReferees" target-entity="de.regatta_hd.aquarius.db.CompReferee" mapped-by="comp">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="reportInfos" target-entity="de.regatta_hd.aquarius.db.ReportInfo" mapped-by="comp">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="CompEntries">
+        <table name="CompEntries"/>
+        <id-class class="CompEntriesId"/>
+        <attributes>
+            <id name="ceId">
+                <column name="CE_ID" column-definition="int identity"/>
+            </id>
+            <basic name="cELane">
+                <column name="CE_Lane"/>
+            </basic>
+            <many-to-one name="comp" fetch="LAZY">
+                <join-column name="CE_Comp_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="entry" fetch="LAZY">
+                <join-column name="CE_Entry_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="results" target-entity="de.regatta_hd.aquarius.db.Result" mapped-by="compEntries">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="CompReferee">
+        <table name="CompReferee"/>
+        <id-class class="CompRefereeId"/>
+        <attributes>
+            <id name="compRefereeID">
+                <column name="CompReferee_ID" column-definition="int identity"/>
+            </id>
+            <basic name="compRefereeRole">
+                <column name="CompReferee_Role" length="1"/>
+            </basic>
+            <many-to-one name="comp" fetch="LAZY">
+                <join-column name="CompReferee_Comp_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="referee" fetch="LAZY">
+                <join-column name="CompReferee_Referee_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Crew">
+        <table name="Crew"/>
+        <id-class class="CrewId"/>
+        <attributes>
+            <id name="crewID">
+                <column name="Crew_ID" column-definition="int identity"/>
+            </id>
+            <basic name="crewIsCox">
+                <column name="Crew_IsCox"/>
+            </basic>
+            <basic name="crewPos">
+                <column name="Crew_Pos"/>
+            </basic>
+            <basic name="crewRoundFrom">
+                <column name="Crew_RoundFrom"/>
+            </basic>
+            <basic name="crewRoundTo">
+                <column name="Crew_RoundTo"/>
+            </basic>
+            <many-to-one name="athlet" fetch="LAZY">
+                <join-column name="Crew_Athlete_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="club" fetch="LAZY">
+                <join-column name="Crew_Club_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="entry" fetch="LAZY">
+                <join-column name="Crew_Entry_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Cup">
+        <table name="Cup"/>
+        <id-class class="CupId"/>
+        <attributes>
+            <id name="id">
+                <column name="ID" column-definition="int identity"/>
+            </id>
+            <basic name="caption">
+                <column name="Caption" column-definition="nvarchar" length="32"/>
+            </basic>
+            <many-to-one name="cup" fetch="LAZY">
+                <join-column name="Parent_ID"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="cupPointTable" fetch="LAZY">
+                <join-column name="PointTable_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="offer" fetch="LAZY">
+                <join-column name="Race_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="cups" target-entity="de.regatta_hd.aquarius.db.Cup" mapped-by="cup">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="CupPointTable">
+        <table name="CupPointTable"/>
+        <id-class class="CupPointTableId"/>
+        <attributes>
+            <id name="id">
+                <column name="ID" column-definition="int identity"/>
+            </id>
+            <basic name="caption">
+                <column name="Caption" column-definition="nvarchar" length="32"/>
+            </basic>
+            <basic name="lap">
+                <column name="Lap"/>
+            </basic>
+            <basic name="points">
+                <column name="Points"/>
+            </basic>
+            <basic name="rank">
+                <column name="Rank"/>
+            </basic>
+            <basic name="round">
+                <column name="Round"/>
+            </basic>
+            <many-to-one name="cupPointTable" fetch="LAZY">
+                <join-column name="Parent_ID"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="cupPointTables" target-entity="de.regatta_hd.aquarius.db.CupPointTable" mapped-by="cupPointTable">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="cups" target-entity="de.regatta_hd.aquarius.db.Cup" mapped-by="cupPointTable">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Entry">
+        <table name="Entry"/>
+        <id-class class="EntryId"/>
+        <attributes>
+            <id name="entryID">
+                <column name="Entry_ID" column-definition="int identity"/>
+            </id>
+            <basic name="entryBib">
+                <column name="Entry_Bib"/>
+            </basic>
+            <basic name="entryBoatNumber">
+                <column name="Entry_BoatNumber"/>
+            </basic>
+            <basic name="entryCancelValue">
+                <column name="Entry_CancelValue"/>
+            </basic>
+            <basic name="entryComment">
+                <column name="Entry_Comment" length="50"/>
+            </basic>
+            <basic name="entryExternID">
+                <column name="Entry_ExternID"/>
+            </basic>
+            <basic name="entryGroupValue">
+                <column name="Entry_GroupValue"/>
+            </basic>
+            <basic name="entryIsLate">
+                <column name="Entry_IsLate"/>
+            </basic>
+            <basic name="entryNote">
+                <column name="Entry_Note" length="128"/>
+            </basic>
+            <many-to-one name="club" fetch="LAZY">
+                <join-column name="Entry_OwnerClub_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="event" fetch="LAZY">
+                <join-column name="Entry_Event_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="label" fetch="LAZY">
+                <join-column name="Entry_ManualLabel_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="offer" fetch="LAZY">
+                <join-column name="Entry_Race_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="compEntries" target-entity="de.regatta_hd.aquarius.db.CompEntries" mapped-by="entry">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="crews" target-entity="de.regatta_hd.aquarius.db.Crew" mapped-by="entry">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="entryLabels" target-entity="de.regatta_hd.aquarius.db.EntryLabel" mapped-by="entry">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="EntryLabel">
+        <table name="EntryLabel"/>
+        <id-class class="EntryLabelId"/>
+        <attributes>
+            <id name="elId">
+                <column name="EL_ID" column-definition="int identity"/>
+            </id>
+            <basic name="eLIsClubMultiNOC">
+                <column name="EL_IsClubMultiNOC"/>
+            </basic>
+            <basic name="eLIsCrewClubMultiNOC">
+                <column name="EL_IsCrewClubMultiNOC"/>
+            </basic>
+            <basic name="eLRoundFrom">
+                <column name="EL_RoundFrom"/>
+            </basic>
+            <basic name="eLRoundTo">
+                <column name="EL_RoundTo"/>
+            </basic>
+            <many-to-one name="entry" fetch="LAZY">
+                <join-column name="EL_Entry_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="label" fetch="LAZY">
+                <join-column name="EL_Label_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Event">
+        <table name="Event"/>
+        <id-class class="EventId"/>
+        <attributes>
+            <id name="eventID">
+                <column name="Event_ID" column-definition="int identity"/>
+            </id>
+            <basic name="eventBoardMemberA">
+                <column name="Event_BoardMemberA" length="32"/>
+            </basic>
+            <basic name="eventBoardMemberB">
+                <column name="Event_BoardMemberB" length="32"/>
+            </basic>
+            <basic name="eventDefaultDistance">
+                <column name="Event_DefaultDistance"/>
+            </basic>
+            <basic name="eventEndDate">
+                <column name="Event_EndDate" column-definition="datetime" nullable="false"/>
+            </basic>
+            <basic name="eventFootLogo">
+                <column name="Event_FootLogo" length="64"/>
+            </basic>
+            <basic name="eventHeadLogoA">
+                <column name="Event_HeadLogo_A" length="64"/>
+            </basic>
+            <basic name="eventHeadLogoB">
+                <column name="Event_HeadLogo_B" length="64"/>
+            </basic>
+            <basic name="eventStartDate">
+                <column name="Event_StartDate" column-definition="datetime" nullable="false"/>
+            </basic>
+            <basic name="eventSubTitle">
+                <column name="Event_SubTitle" length="32"/>
+            </basic>
+            <basic name="eventTitle">
+                <column name="Event_Title" nullable="false" length="64"/>
+            </basic>
+            <basic name="eventTrackDirection">
+                <column name="Event_TrackDirection" length="3"/>
+            </basic>
+            <basic name="eventType">
+                <column name="Event_Type" length="1"/>
+            </basic>
+            <basic name="eventUrl">
+                <column name="Event_Url" length="64"/>
+            </basic>
+            <basic name="eventVenue">
+                <column name="Event_Venue" length="32"/>
+            </basic>
+            <many-to-one name="club" fetch="LAZY">
+                <join-column name="Event_Club_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="nation" fetch="LAZY">
+                <join-column name="Event_Venue_Nation_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="raceMode" fetch="LAZY">
+                <join-column name="Event_DefaultRaceMode_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="referee" fetch="LAZY">
+                <join-column name="Event_HeadReferee_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="comps" target-entity="de.regatta_hd.aquarius.db.Comp" mapped-by="event">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="entrys" target-entity="de.regatta_hd.aquarius.db.Entry" mapped-by="event">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="eventReferees" target-entity="de.regatta_hd.aquarius.db.EventReferee" mapped-by="event">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="offers" target-entity="de.regatta_hd.aquarius.db.Offer" mapped-by="event">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="reportInfos" target-entity="de.regatta_hd.aquarius.db.ReportInfo" mapped-by="event">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="EventReferee">
+        <table name="EventReferee"/>
+        <id-class class="EventRefereeId"/>
+        <attributes>
+            <id name="eREventIDFK">
+                <column name="ER_Event_ID_FK"/>
+            </id>
+            <id name="eRRefereeIDFK">
+                <column name="ER_Referee_ID_FK"/>
+            </id>
+            <many-to-one name="event" fetch="LAZY">
+                <join-column name="ER_Event_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="referee" fetch="LAZY">
+                <join-column name="ER_Referee_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Label">
+        <table name="Label"/>
+        <id-class class="LabelId"/>
+        <attributes>
+            <id name="labelID">
+                <column name="Label_ID" column-definition="int identity"/>
+            </id>
+            <basic name="labelIsTeam">
+                <column name="Label_IsTeam"/>
+            </basic>
+            <basic name="labelLong">
+                <column name="Label_Long" nullable="false" length="512"/>
+            </basic>
+            <basic name="labelShort">
+                <column name="Label_Short" nullable="false" length="256"/>
+            </basic>
+            <many-to-one name="club" fetch="LAZY">
+                <join-column name="Label_Club_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="entryLabels" target-entity="de.regatta_hd.aquarius.db.EntryLabel" mapped-by="label">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="entrys" target-entity="de.regatta_hd.aquarius.db.Entry" mapped-by="label">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="MetaData">
+        <table name="MetaData"/>
+        <id-class class="MetaDataId"/>
+        <attributes>
+            <id name="metaDataKey">
+                <column name="MetaData_Key" length="32"/>
+            </id>
+            <basic name="metaDataValue">
+                <column name="MetaData_Value" length="32"/>
+            </basic>
+        </attributes>
+    </entity>
+    <entity class="Nation">
+        <table name="Nation"/>
+        <id-class class="NationId"/>
+        <attributes>
+            <id name="nationID">
+                <column name="Nation_ID" column-definition="int identity"/>
+            </id>
+            <basic name="nationIOCCode">
+                <column name="Nation_IOC_Code" length="5"/>
+            </basic>
+            <basic name="nationName">
+                <column name="Nation_Name" length="64"/>
+            </basic>
+            <basic name="nationNameGerman">
+                <column name="Nation_Name_German" length="64"/>
+            </basic>
+            <one-to-many name="athlets" target-entity="de.regatta_hd.aquarius.db.Athlet" mapped-by="nation">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="clubs" target-entity="de.regatta_hd.aquarius.db.Club" mapped-by="nation">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="events" target-entity="de.regatta_hd.aquarius.db.Event" mapped-by="nation">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="referees" target-entity="de.regatta_hd.aquarius.db.Referee" mapped-by="nation">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Offer">
+        <table name="Offer"/>
+        <id-class class="OfferId"/>
+        <attributes>
+            <id name="offerID">
+                <column name="Offer_ID" column-definition="int identity"/>
+            </id>
+            <basic name="offerBibSeed">
+                <column name="Offer_BibSeed"/>
+            </basic>
+            <basic name="offerCancelled">
+                <column name="Offer_Cancelled"/>
+            </basic>
+            <basic name="offerComment">
+                <column name="Offer_Comment" length="32"/>
+            </basic>
+            <basic name="offerDistance">
+                <column name="Offer_Distance"/>
+            </basic>
+            <basic name="offerDriven">
+                <column name="Offer_Driven"/>
+            </basic>
+            <basic name="offerEventDay">
+                <column name="Offer_EventDay"/>
+            </basic>
+            <basic name="offerFee">
+                <column name="Offer_Fee" column-definition="smallmoney"/>
+            </basic>
+            <basic name="offerForceDriven">
+                <column name="Offer_ForceDriven"/>
+            </basic>
+            <basic name="offerGroupMode">
+                <column name="Offer_GroupMode"/>
+            </basic>
+            <basic name="offerIsLightweight">
+                <column name="Offer_IsLightweight"/>
+            </basic>
+            <basic name="offerLongLabel">
+                <column name="Offer_LongLabel" length="64"/>
+            </basic>
+            <basic name="offerPrize">
+                <column name="Offer_Prize" length="128"/>
+            </basic>
+            <basic name="offerRaceNumber">
+                <column name="Offer_RaceNumber" nullable="false" length="8"/>
+            </basic>
+            <basic name="offerRaceType">
+                <column name="Offer_RaceType"/>
+            </basic>
+            <basic name="offerShortLabel">
+                <column name="Offer_ShortLabel" length="32"/>
+            </basic>
+            <basic name="offerSortValue">
+                <column name="Offer_SortValue"/>
+            </basic>
+            <basic name="offerSplits">
+                <column name="Offer_Splits"/>
+            </basic>
+            <many-to-one name="ageClass" fetch="LAZY">
+                <join-column name="Offer_AgeClass_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="boatClass" fetch="LAZY">
+                <join-column name="Offer_BoatClass_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="event" fetch="LAZY">
+                <join-column name="Offer_Event_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="raceMode" fetch="LAZY">
+                <join-column name="Offer_RaceMode_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="comps" target-entity="de.regatta_hd.aquarius.db.Comp" mapped-by="offer">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="cups" target-entity="de.regatta_hd.aquarius.db.Cup" mapped-by="offer">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="entrys" target-entity="de.regatta_hd.aquarius.db.Entry" mapped-by="offer">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="reportInfos" target-entity="de.regatta_hd.aquarius.db.ReportInfo" mapped-by="offer">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="ProgressionRule">
+        <table name="ProgressionRule"/>
+        <id-class class="ProgressionRuleId"/>
+        <attributes>
+            <id name="prId">
+                <column name="PR_ID" column-definition="int identity"/>
+            </id>
+            <basic name="pRArg">
+                <column name="PR_Arg"/>
+            </basic>
+            <basic name="pROption">
+                <column name="PR_Option"/>
+            </basic>
+            <basic name="pROrder">
+                <column name="PR_Order"/>
+            </basic>
+            <basic name="pRType">
+                <column name="PR_Type" nullable="false" length="1"/>
+            </basic>
+            <many-to-one name="raceModeDetail" fetch="LAZY">
+                <join-column name="PR_RMLap_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="raceModeDetail2" fetch="LAZY">
+                <join-column name="PR_Src_Lap_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="RaceMode">
+        <table name="RaceMode"/>
+        <id-class class="RaceModeId"/>
+        <attributes>
+            <id name="raceModeID">
+                <column name="RaceMode_ID" column-definition="int identity"/>
+            </id>
+            <basic name="raceModeIsSystemMode">
+                <column name="RaceMode_IsSystemMode"/>
+            </basic>
+            <basic name="raceModeLaneCount">
+                <column name="RaceMode_LaneCount"/>
+            </basic>
+            <basic name="raceModeTitle">
+                <column name="RaceMode_Title" nullable="false" length="32"/>
+            </basic>
+            <one-to-many name="events" target-entity="de.regatta_hd.aquarius.db.Event" mapped-by="raceMode">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="offers" target-entity="de.regatta_hd.aquarius.db.Offer" mapped-by="raceMode">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="raceModeRanges" target-entity="de.regatta_hd.aquarius.db.RaceModeRange" mapped-by="raceMode">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="RaceModeDetail">
+        <table name="RaceMode_Detail"/>
+        <id-class class="RaceModeDetailId"/>
+        <attributes>
+            <id name="rMLapID">
+                <column name="RMLap_ID" column-definition="int identity"/>
+            </id>
+            <basic name="rMLapCode">
+                <column name="RMLap_Code" nullable="false" length="8"/>
+            </basic>
+            <basic name="rMLapLabel">
+                <column name="RMLap_Label" nullable="false" length="8"/>
+            </basic>
+            <basic name="rMLapNumber">
+                <column name="RMLap_Number"/>
+            </basic>
+            <basic name="rMLapQRText">
+                <column name="RMLap_QRText" length="64"/>
+            </basic>
+            <basic name="rMLapRound">
+                <column name="RMLap_Round"/>
+            </basic>
+            <many-to-one name="raceModeRange" fetch="LAZY">
+                <join-column name="RMLap_Range_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="comps" target-entity="de.regatta_hd.aquarius.db.Comp" mapped-by="raceModeDetail">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="progressionRules" target-entity="de.regatta_hd.aquarius.db.ProgressionRule" mapped-by="raceModeDetail">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="progressionRules2" target-entity="de.regatta_hd.aquarius.db.ProgressionRule" mapped-by="raceModeDetail2">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="RaceModeRange">
+        <table name="RaceMode_Range"/>
+        <id-class class="RaceModeRangeId"/>
+        <attributes>
+            <id name="rMRangeID">
+                <column name="RMRange_ID" column-definition="int identity"/>
+            </id>
+            <basic name="rMRangeFrom">
+                <column name="RMRange_From"/>
+            </basic>
+            <basic name="rMRangeTo">
+                <column name="RMRange_To"/>
+            </basic>
+            <many-to-one name="raceMode" fetch="LAZY">
+                <join-column name="RMRange_RM_ID_FK" nullable="false"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="raceModeDetails" target-entity="de.regatta_hd.aquarius.db.RaceModeDetail" mapped-by="raceModeRange">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="Referee">
+        <table name="Referee"/>
+        <id-class class="RefereeId"/>
+        <attributes>
+            <id name="refereeID">
+                <column name="Referee_ID" column-definition="int identity"/>
+            </id>
+            <basic name="refereeCity">
+                <column name="Referee_City" length="32"/>
+            </basic>
+            <basic name="refereeExternID">
+                <column name="Referee_ExternID"/>
+            </basic>
+            <basic name="refereeFirstName">
+                <column name="Referee_FirstName" nullable="false" length="32"/>
+            </basic>
+            <basic name="refereeLastName">
+                <column name="Referee_LastName" nullable="false" length="64"/>
+            </basic>
+            <basic name="refereeLicenceState">
+                <column name="Referee_LicenceState"/>
+            </basic>
+            <many-to-one name="nation" fetch="LAZY">
+                <join-column name="Referee_Nation_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <one-to-many name="compReferees" target-entity="de.regatta_hd.aquarius.db.CompReferee" mapped-by="referee">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="eventReferees" target-entity="de.regatta_hd.aquarius.db.EventReferee" mapped-by="referee">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+            <one-to-many name="events" target-entity="de.regatta_hd.aquarius.db.Event" mapped-by="referee">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+    <entity class="ReportInfo">
+        <table name="ReportInfo"/>
+        <id-class class="ReportInfoId"/>
+        <attributes>
+            <id name="reportInfoID">
+                <column name="ReportInfo_ID" column-definition="int identity"/>
+            </id>
+            <basic name="reportBackend">
+                <column name="Report_Backend" nullable="false" length="4"/>
+            </basic>
+            <basic name="reportCode">
+                <column name="Report_Code" nullable="false" length="16"/>
+            </basic>
+            <basic name="reportDate">
+                <column name="Report_Date" column-definition="datetime"/>
+            </basic>
+            <basic name="reportGenerated">
+                <column name="Report_Generated" column-definition="datetime"/>
+            </basic>
+            <basic name="reportRound">
+                <column name="Report_Round"/>
+            </basic>
+            <basic name="reportVersionMajor">
+                <column name="Report_VersionMajor"/>
+            </basic>
+            <basic name="reportVersionMinor">
+                <column name="Report_VersionMinor"/>
+            </basic>
+            <many-to-one name="comp" fetch="LAZY">
+                <join-column name="Report_Comp_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="event" fetch="LAZY">
+                <join-column name="Report_Event_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="offer" fetch="LAZY">
+                <join-column name="Report_Race_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Result">
+        <table name="Result"/>
+        <id-class class="ResultId"/>
+        <attributes>
+            <id name="resultCEIDFK">
+                <column name="Result_CE_ID_FK"/>
+            </id>
+            <id name="resultSplitNr">
+                <column name="Result_SplitNr"/>
+            </id>
+            <basic name="resultComment">
+                <column name="Result_Comment"/>
+            </basic>
+            <basic name="resultDayTime">
+                <column name="Result_DayTime"/>
+            </basic>
+            <basic name="resultDelta">
+                <column name="Result_Delta"/>
+            </basic>
+            <basic name="resultDisplayType">
+                <column name="Result_DisplayType" nullable="false" length="1"/>
+            </basic>
+            <basic name="resultDisplayValue">
+                <column name="Result_DisplayValue" length="64"/>
+            </basic>
+            <basic name="resultNetTime">
+                <column name="Result_NetTime"/>
+            </basic>
+            <basic name="resultParams">
+                <column name="Result_Params" length="64"/>
+            </basic>
+            <basic name="resultRank">
+                <column name="Result_Rank"/>
+            </basic>
+            <basic name="resultResultType">
+                <column name="Result_ResultType" nullable="false" length="1"/>
+            </basic>
+            <basic name="resultSortValue">
+                <column name="Result_SortValue"/>
+            </basic>
+            <many-to-one name="compEntries" fetch="LAZY">
+                <join-column name="Result_CE_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
+</entity-mappings>

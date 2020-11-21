@@ -38,16 +38,17 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
+          <!-- http://openjpa.apache.org/builds/3.1.2/apache-openjpa/docs/manual.html#ref_guide_pc_reverse -->
           <mainClass>org.apache.openjpa.jdbc.meta.ReverseMappingTool</mainClass>
           <arguments>
+            <argument>-package</argument>
+            <argument>de.regatta_hd.aquarius.db</argument>
             <argument>-directory</argument>
             <argument>${project.basedir}/src/main/java</argument> <!-- or target/generated/model -->
             <argument>-accessType</argument>
-            <argument>fields</argument>
+            <argument>field</argument>
             <argument>-useGenericCollections</argument>
             <argument>true</argument>
-            <argument>-package</argument>
-            <argument>de.regatta_hd.aquarius.db</argument>
             <argument>-innerIdentityClasses</argument>
             <argument>false</argument>
             <argument>-useBuiltinIdentityClass</argument>
@@ -56,6 +57,8 @@
             <argument>false</argument>
             <argument>-annotations</argument>
             <argument>true</argument>
+            <argument>-useSchemaElement</argument>
+            <argument>false</argument>
           </arguments>
           <includePluginDependencies>true</includePluginDependencies>
         </configuration>
