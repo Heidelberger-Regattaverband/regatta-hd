@@ -47,7 +47,7 @@
             <argument>-useGenericCollections</argument>
             <argument>true</argument>
             <argument>-package</argument>
-            <argument>de.regatta_hd.aquarius.model</argument>
+            <argument>de.regatta_hd.aquarius.db</argument>
             <argument>-innerIdentityClasses</argument>
             <argument>false</argument>
             <argument>-useBuiltinIdentityClass</argument>
