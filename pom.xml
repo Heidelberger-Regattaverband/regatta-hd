@@ -45,25 +45,11 @@
         <version>2.2.3</version>
       </dependency>
 
-      <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-      <dependency>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-core</artifactId>
-        <version>4.2.0</version>
-      </dependency>
-
       <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>1.18.16</version>
-      </dependency>
-
-      <!-- https://search.maven.org/artifact/com.gluonhq/ignite-spring -->
-      <dependency>
-        <groupId>com.gluonhq</groupId>
-        <artifactId>ignite-spring</artifactId>
-        <version>1.1.0</version>
       </dependency>
 
       <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
@@ -72,43 +58,10 @@
         <artifactId>commons-lang3</artifactId>
         <version>3.11</version>
       </dependency>
-
-      <!-- http://mvnrepository.com/artifact/org.mockito/mockito-core -->
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>3.6.0</version>
-        <scope>test</scope>
-      </dependency>
-      <!-- http://mvnrepository.com/artifact/junit/junit -->
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.13.1</version>
-        <scope>test</scope>
-      </dependency>
-      <!-- http://mvnrepository.com/artifact/org.hamcrest/hamcrest-junit -->
-      <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-junit</artifactId>
-        <version>2.0.0.0</version>
-        <scope>test</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
-    <!-- test dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>

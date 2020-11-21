@@ -12,9 +12,6 @@
   <artifactId>ui</artifactId>
   <name>User Interface</name>
 
-  <properties>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -34,12 +31,6 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
       <version>${javafx.version}</version>
-    </dependency>
-
-    <!-- https://search.maven.org/artifact/com.gluonhq/ignite-spring -->
-    <dependency>
-      <groupId>com.gluonhq</groupId>
-      <artifactId>ignite-spring</artifactId>
     </dependency>
   </dependencies>
 
