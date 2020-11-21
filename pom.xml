@@ -1,0 +1,190 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.regatta-hd</groupId>
+  <artifactId>regatta-hd</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Heidelberger Regatta Software</name>
+
+  <organization>
+    <name>Heidelberger Regattaverband e. V.</name>
+    <url>http://www.regatta-hd.de/</url>
+  </organization>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <java.version>11</java.version>
+    <javafx.version>15.0.1</javafx.version>
+
+    <db.driver.class>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver.class>
+    <db.url>jdbc:sqlserver://localhost;database=rudern</db.url>
+    <db.username>sa</db.username>
+    <db.password>regatta</db.password>
+  </properties>
+
+  <modules>
+    <module>aquarius-db</module>
+    <module>ui</module>
+  </modules>
+
+  <prerequisites>
+    <maven>3.6.3</maven>
+  </prerequisites>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- https://search.maven.org/artifact/jakarta.persistence/jakarta.persistence-api -->
+      <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>2.2.3</version>
+      </dependency>
+
+      <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
+      <dependency>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-core</artifactId>
+        <version>4.2.0</version>
+      </dependency>
+
+      <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.16</version>
+      </dependency>
+
+      <!-- https://search.maven.org/artifact/com.gluonhq/ignite-spring -->
+      <dependency>
+        <groupId>com.gluonhq</groupId>
+        <artifactId>ignite-spring</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+
+      <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.11</version>
+      </dependency>
+
+      <!-- http://mvnrepository.com/artifact/org.mockito/mockito-core -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>3.6.0</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- http://mvnrepository.com/artifact/junit/junit -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13.1</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- http://mvnrepository.com/artifact/org.hamcrest/hamcrest-junit -->
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-junit</artifactId>
+        <version>2.0.0.0</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-clean-plugin -->
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-resources-plugin -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-deploy-plugin -->
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-install-plugin -->
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-site-plugin -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.9.1</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.2</version>
+        </plugin>
+
+        <!-- https://search.maven.org/artifact/org.openjfx/javafx-maven-plugin -->
+        <plugin>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-maven-plugin</artifactId>
+          <version>0.0.5</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.version}</release>
+        </configuration>
+      </plugin>
+
+      <!-- http://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/Test*Unit*</include>
+          </includes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

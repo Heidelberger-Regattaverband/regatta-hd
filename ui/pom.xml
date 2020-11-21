@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.regatta-hd</groupId>
+    <artifactId>regatta-hd</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>ui</artifactId>
+  <name>User Interface</name>
+
+  <properties>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aquarius-db</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- https://search.maven.org/artifact/org.openjfx/javafx-controls -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${javafx.version}</version>
+    </dependency>
+
+    <!-- https://search.maven.org/artifact/org.openjfx/javafx-fxml -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>${javafx.version}</version>
+    </dependency>
+
+    <!-- https://search.maven.org/artifact/com.gluonhq/ignite-spring -->
+    <dependency>
+      <groupId>com.gluonhq</groupId>
+      <artifactId>ignite-spring</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- https://search.maven.org/artifact/org.openjfx/javafx-maven-plugin -->
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>de.regatta_hd.ui.App</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
