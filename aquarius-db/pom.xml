@@ -55,7 +55,7 @@
           <mainClass>org.apache.openjpa.jdbc.meta.ReverseMappingTool</mainClass>
           <arguments>
             <argument>-package</argument>
-            <argument>de.regatta_hd.aquarius.db</argument>
+            <argument>de.regatta_hd.aquarius.db.model</argument>
             <argument>-directory</argument>
             <argument>${project.basedir}/src/main/java</argument> <!-- or target/generated/model -->
             <argument>-accessType</argument>
@@ -72,6 +72,8 @@
             <argument>true</argument>
             <argument>-useSchemaElement</argument>
             <argument>false</argument>
+            <argument>-nullableAsObject</argument>
+            <argument>true</argument>
           </arguments>
           <includePluginDependencies>true</includePluginDependencies>
         </configuration>
