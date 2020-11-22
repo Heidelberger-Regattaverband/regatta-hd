@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>aquarius-db</artifactId>
-  <name>Aquarius Database Model</name>
+  <name>Regatta HD - Aquarius Database Model</name>
 
   <properties>
     <db.driver.class>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver.class>
@@ -25,6 +25,14 @@
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
     </dependency>
   </dependencies>
 
@@ -74,11 +82,6 @@
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-all</artifactId>
             <version>3.1.2</version>
-          </dependency>
-          <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>8.4.1.jre11</version>
           </dependency>
         </dependencies>
       </plugin>

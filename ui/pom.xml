@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>ui</artifactId>
-  <name>User Interface</name>
+  <name>Regatta HD - User Interface</name>
 
   <dependencies>
     <dependency>
@@ -19,18 +19,14 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- https://search.maven.org/artifact/org.openjfx/javafx-controls -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>${javafx.version}</version>
     </dependency>
 
-    <!-- https://search.maven.org/artifact/org.openjfx/javafx-fxml -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>${javafx.version}</version>
     </dependency>
   </dependencies>
 

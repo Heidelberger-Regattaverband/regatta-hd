@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2"
-	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-	<persistence-unit name="aquarius-jpa">
-		<properties>
-			<property name="openjpa.ConnectionUserName"
-				value="${db.username}" />
-			<property name="openjpa.ConnectionPassword"
-				value="${db.password}" />
-			<property name="openjpa.ConnectionURL" value="${db.url}" />
-			<property name="openjpa.ConnectionDriverName"
-				value="${db.driver.class}" />
-		</properties>
-	</persistence-unit>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+  <persistence-unit name="aquarius">
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="${db.url}" />
+      <property name="javax.persistence.jdbc.user" value="${db.username}" />
+      <property name="javax.persistence.jdbc.password" value="${db.password}" />
+      <property name="javax.persistence.jdbc.driver" value="${db.driver.class}" />
+      <property name="hibernate.show_sql" value="true" />
+      <property name="hibernate.format_sql" value="true" />
+      <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect" />
+      <property name="hibernate.hbm2ddl.auto" value="none" />
+    </properties>
+  </persistence-unit>
 </persistence>
