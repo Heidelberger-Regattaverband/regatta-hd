@@ -53,9 +53,6 @@ public class Event {
 	@Column(name="Event_ID", columnDefinition="int identity")
 	private int eventID;
 
-	@OneToMany(targetEntity=de.regatta_hd.aquarius.db.EventReferee.class, mappedBy="event", cascade=CascadeType.MERGE)
-	private Set<EventReferee> eventReferees = new HashSet<EventReferee>();
-
 	@Basic
 	@Column(name="Event_StartDate", columnDefinition="datetime", nullable=false)
 	private Date eventStartDate;
@@ -98,6 +95,10 @@ public class Event {
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
 	@JoinColumn(name="Event_HeadReferee_ID_FK")
 	private Referee referee;
+
+	@ManyToMany(targetEntity=de.regatta_hd.aquarius.db.Referee.class, cascade=CascadeType.MERGE)
+	@JoinTable(schema="dbo", name="EventReferee", joinColumns=@JoinColumn(name="ER_Event_ID_FK"), inverseJoinColumns=@JoinColumn(name="ER_Referee_ID_FK"))
+	private Set<Referee> referees = new HashSet<Referee>();
 
 	@OneToMany(targetEntity=de.regatta_hd.aquarius.db.ReportInfo.class, mappedBy="event", cascade=CascadeType.MERGE)
 	private Set<ReportInfo> reportInfos = new HashSet<ReportInfo>();
@@ -198,14 +199,6 @@ public class Event {
 		this.eventID = eventID;
 	}
 
-	public Set<EventReferee> getEventReferees() {
-		return eventReferees;
-	}
-
-	public void setEventReferees(Set<EventReferee> eventReferees) {
-		this.eventReferees = eventReferees;
-	}
-
 	public Date getEventStartDate() {
 		return eventStartDate;
 	}
@@ -292,6 +285,14 @@ public class Event {
 
 	public void setReferee(Referee referee) {
 		this.referee = referee;
+	}
+
+	public Set<Referee> getReferees() {
+		return referees;
+	}
+
+	public void setReferees(Set<Referee> referees) {
+		this.referees = referees;
 	}
 
 	public Set<ReportInfo> getReportInfos() {

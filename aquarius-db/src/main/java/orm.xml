@@ -6,6 +6,29 @@
     <access>
         PROPERTY
     </access>
+    <entity class="EventReferee">
+        <id-class class="EventRefereeId"/>
+        <attributes>
+            <id name="eREventIDFK">
+                <column name="ER_Event_ID_FK"/>
+            </id>
+            <id name="eRRefereeIDFK">
+                <column name="ER_Referee_ID_FK"/>
+            </id>
+            <many-to-one name="event" fetch="LAZY">
+                <join-column name="ER_Event_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="referee" fetch="LAZY">
+                <join-column name="ER_Referee_ID_FK"/>
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+        </attributes>
+    </entity>
     <entity class="AgeClass">
         <table name="AgeClass"/>
         <id-class class="AgeClassId"/>
@@ -629,11 +652,6 @@
                     <cascade-merge/>
                 </cascade>
             </one-to-many>
-            <one-to-many name="eventReferees" target-entity="de.regatta_hd.aquarius.db.EventReferee" mapped-by="event">
-                <cascade>
-                    <cascade-merge/>
-                </cascade>
-            </one-to-many>
             <one-to-many name="offers" target-entity="de.regatta_hd.aquarius.db.Offer" mapped-by="event">
                 <cascade>
                     <cascade-merge/>
@@ -644,30 +662,15 @@
                     <cascade-merge/>
                 </cascade>
             </one-to-many>
-        </attributes>
-    </entity>
-    <entity class="EventReferee">
-        <table name="EventReferee"/>
-        <id-class class="EventRefereeId"/>
-        <attributes>
-            <id name="eREventIDFK">
-                <column name="ER_Event_ID_FK"/>
-            </id>
-            <id name="eRRefereeIDFK">
-                <column name="ER_Referee_ID_FK"/>
-            </id>
-            <many-to-one name="event" fetch="LAZY">
-                <join-column name="ER_Event_ID_FK"/>
+            <many-to-many name="referees" target-entity="de.regatta_hd.aquarius.db.Referee">
+                <join-table schema="dbo" name="EventReferee">
+                    <join-column name="ER_Event_ID_FK"/>
+                    <inverse-join-column name="ER_Referee_ID_FK"/>
+                </join-table>
                 <cascade>
                     <cascade-merge/>
                 </cascade>
-            </many-to-one>
-            <many-to-one name="referee" fetch="LAZY">
-                <join-column name="ER_Referee_ID_FK"/>
-                <cascade>
-                    <cascade-merge/>
-                </cascade>
-            </many-to-one>
+            </many-to-many>
         </attributes>
     </entity>
     <entity class="Label">
@@ -1028,16 +1031,16 @@
                     <cascade-merge/>
                 </cascade>
             </one-to-many>
-            <one-to-many name="eventReferees" target-entity="de.regatta_hd.aquarius.db.EventReferee" mapped-by="referee">
-                <cascade>
-                    <cascade-merge/>
-                </cascade>
-            </one-to-many>
             <one-to-many name="events" target-entity="de.regatta_hd.aquarius.db.Event" mapped-by="referee">
                 <cascade>
                     <cascade-merge/>
                 </cascade>
             </one-to-many>
+            <many-to-many name="events2" target-entity="de.regatta_hd.aquarius.db.Event" mapped-by="referees">
+                <cascade>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-many>
         </attributes>
     </entity>
     <entity class="ReportInfo">

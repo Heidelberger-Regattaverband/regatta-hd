@@ -19,11 +19,11 @@ public class EventReferee {
 	private int eRRefereeIDFK;
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
-	@JoinColumn(name="ER_Event_ID_FK")
+	@JoinColumn(name="ER_Event_ID_FK", insertable = false, updatable = false)
 	private Event event;
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
-	@JoinColumn(name="ER_Referee_ID_FK")
+	@JoinColumn(name="ER_Referee_ID_FK", insertable = false, updatable = false)
 	private Referee referee;
 
 

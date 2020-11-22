@@ -14,11 +14,11 @@ public class Referee {
 	@OneToMany(targetEntity=de.regatta_hd.aquarius.db.CompReferee.class, mappedBy="referee", cascade=CascadeType.MERGE)
 	private Set<CompReferee> compReferees = new HashSet<CompReferee>();
 
-	@OneToMany(targetEntity=de.regatta_hd.aquarius.db.EventReferee.class, mappedBy="referee", cascade=CascadeType.MERGE)
-	private Set<EventReferee> eventReferees = new HashSet<EventReferee>();
-
 	@OneToMany(targetEntity=de.regatta_hd.aquarius.db.Event.class, mappedBy="referee", cascade=CascadeType.MERGE)
 	private Set<Event> events = new HashSet<Event>();
+
+	@ManyToMany(targetEntity=de.regatta_hd.aquarius.db.Event.class, mappedBy="referees", cascade=CascadeType.MERGE)
+	private Set<Event> events2 = new HashSet<Event>();
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
 	@JoinColumn(name="Referee_Nation_ID_FK")
@@ -64,20 +64,20 @@ public class Referee {
 		this.compReferees = compReferees;
 	}
 
-	public Set<EventReferee> getEventReferees() {
-		return eventReferees;
-	}
-
-	public void setEventReferees(Set<EventReferee> eventReferees) {
-		this.eventReferees = eventReferees;
-	}
-
 	public Set<Event> getEvents() {
 		return events;
 	}
 
 	public void setEvents(Set<Event> events) {
 		this.events = events;
+	}
+
+	public Set<Event> getEvents2() {
+		return events2;
+	}
+
+	public void setEvents2(Set<Event> events2) {
+		this.events2 = events2;
 	}
 
 	public Nation getNation() {

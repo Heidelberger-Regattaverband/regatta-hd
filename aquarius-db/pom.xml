@@ -67,7 +67,7 @@
             <argument>-useBuiltinIdentityClass</argument>
             <argument>false</argument>
             <argument>-primaryKeyOnJoin</argument>
-            <argument>false</argument>
+            <argument>true</argument>
             <argument>-annotations</argument>
             <argument>true</argument>
             <argument>-useSchemaElement</argument>

@@ -15,7 +15,7 @@ public class Result {
 	private CompEntries compEntries;
 
 	@Id
-	@Column(name="Result_CE_ID_FK")
+	@Column(name="Result_CE_ID_FK", insertable = false, updatable = false)
 	private int resultCEIDFK;
 
 	@Basic
