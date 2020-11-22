@@ -19,11 +19,13 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!-- =========== -->
+    <!-- Open JavaFX -->
+    <!-- =========== -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
@@ -32,7 +34,6 @@
 
   <build>
     <plugins>
-      <!-- https://search.maven.org/artifact/org.openjfx/javafx-maven-plugin -->
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>

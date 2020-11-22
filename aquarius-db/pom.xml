@@ -22,6 +22,9 @@
   </properties>
 
   <dependencies>
+    <!-- ============== -->
+    <!-- Database & JPA -->
+    <!-- ============== -->
     <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>

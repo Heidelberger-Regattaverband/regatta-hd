@@ -55,9 +55,9 @@
         <version>8.4.1.jre11</version>
       </dependency>
 
-      <!-- ======= -->
-      <!-- OpenJFX -->
-      <!-- ======= -->
+      <!-- =========== -->
+      <!-- Open JavaFX -->
+      <!-- =========== -->
       <!-- https://search.maven.org/artifact/org.openjfx/javafx-controls -->
       <dependency>
         <groupId>org.openjfx</groupId>
@@ -196,7 +196,6 @@
     </pluginManagement>
 
     <plugins>
-      <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -207,8 +206,8 @@
         </configuration>
       </plugin>
 
-      <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <includes>
