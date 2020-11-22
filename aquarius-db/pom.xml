@@ -14,7 +14,7 @@
 
   <properties>
     <db.driver.class>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver.class>
-    <db.url>jdbc:sqlserver://localhost;database=rudern</db.url>
+    <db.url>jdbc:sqlserver://192.168.0.125;database=rudern</db.url>
     <db.username>sa</db.username>
     <db.password>regatta</db.password>
   </properties>
