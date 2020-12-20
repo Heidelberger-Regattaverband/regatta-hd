@@ -102,11 +102,12 @@ class EntityManagerTest {
 	}
 
 	private void trace(Entry entry) {
-		System.out
-				.println("Entry: ID=" + entry.getEntryID() + ": " + entry.getLabel() + ", " + entry.getEntryComment());
+		System.out.println(
+				"\t\t\tEntry: ID=" + entry.getEntryID() + ": " + entry.getLabel() + ", " + entry.getEntryComment());
 	}
 
 	private void trace(CompEntries compentries) {
 		System.out.println("\t\tCompEntries: ID=" + compentries.getCeId() + ", Lane=" + compentries.getcELane());
+		trace(compentries.getEntry());
 	}
 }
