@@ -2,6 +2,9 @@ package de.regatta_hd.ui;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import de.regatta_hd.aquarius.db.AquariusDB;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -14,7 +17,9 @@ public class PrimaryController {
 	@FXML
 	private MenuBar menuBar;
 
-
+	@Inject
+	private AquariusDB aquarius;
+	
 	/**
 	 * Handle action related to "About" menu item.
 	 *
@@ -26,7 +31,8 @@ public class PrimaryController {
 	}
 
 	/**
-	 * Handle action related to input (in this case specifically only responds to keyboard event CTRL-A).
+	 * Handle action related to input (in this case specifically only responds to
+	 * keyboard event CTRL-A).
 	 *
 	 * @param event Input event.
 	 */
@@ -49,6 +55,6 @@ public class PrimaryController {
 
 	@FXML
 	private void switchToSecondary() throws IOException {
-		App.setRoot("secondary");
+//		app.setRoot("secondary");
 	}
 }

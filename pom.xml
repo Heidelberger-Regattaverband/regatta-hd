@@ -71,6 +71,22 @@
         <version>15.0.1</version>
       </dependency>
 
+      <!-- ============ -->
+      <!-- Google Guice -->
+      <!-- ============ -->
+      <!-- https://search.maven.org/artifact/com.google.inject/guice -->
+      <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <version>4.2.3</version>
+      </dependency>
+      <!-- https://search.maven.org/artifact/com.gluonhq/ignite-guice -->
+      <dependency>
+        <groupId>com.gluonhq</groupId>
+        <artifactId>ignite-guice</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+
       <!-- =========== -->
       <!-- Other Tools -->
       <!-- =========== -->
@@ -115,6 +131,20 @@
   </dependencyManagement>
 
   <dependencies>
+    <!-- ============ -->
+    <!-- Google Guice -->
+    <!-- ============ -->
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+<!--       <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+ -->    </dependency>
+
     <!-- ========== -->
     <!-- Test tools -->
     <!-- ========== -->
