@@ -22,6 +22,8 @@ import com.google.inject.Injector;
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import de.regatta_hd.aquarius.db.EventDAO;
+import de.regatta_hd.aquarius.db.MasterDataDAO;
+import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.Comp;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Entry;
@@ -43,6 +45,8 @@ class AquariusDBTests {
 
 	private static EventDAO eventDAO;
 
+	private static MasterDataDAO masterData;
+
 	@BeforeAll
 	static void setUpBeforeClass() {
 		Injector injector = Guice.createInjector(new AquariusDBModule());
@@ -50,6 +54,7 @@ class AquariusDBTests {
 		aquariusDb.open(HOST_NAME, DB_NAME, USER_NAME, PASSWORD);
 		
 		eventDAO = injector.getInstance(EventDAO.class);
+		masterData = injector.getInstance(MasterDataDAO.class);
 	}
 
 	@AfterAll
@@ -121,6 +126,12 @@ class AquariusDBTests {
 		resultList.forEach(this::trace);
 	}
 
+	@Test
+	void testGetAgeClasses() {
+		List<AgeClass> ageClasses = masterData.getAgeClasses();
+		Assertions.assertFalse(ageClasses.isEmpty());
+	}
+	
 	private void trace(Offer offer) {
 		System.out.println("Offer: ID=" + offer.getOfferID() + ", RaceNr=" + offer.getOfferRaceNumber() + " - "
 				+ offer.getOfferLongLabel());
