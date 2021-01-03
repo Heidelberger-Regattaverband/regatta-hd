@@ -131,13 +131,7 @@
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-<!--       <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-      </exclusions>
- -->    </dependency>
+    </dependency>
 
     <!-- ========== -->
     <!-- Test tools -->
@@ -234,8 +228,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <argLine>--add-opens java.base/java.lang=com.google.guice</argLine>
           <includes>
-            <include>**/Test*Unit*</include>
+            <include>**/*Tests</include>
           </includes>
         </configuration>
       </plugin>

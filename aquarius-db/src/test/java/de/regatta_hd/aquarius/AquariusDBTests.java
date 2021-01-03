@@ -2,10 +2,7 @@ package de.regatta_hd.aquarius;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,6 +16,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import de.regatta_hd.aquarius.db.AquariusDB;
+import de.regatta_hd.aquarius.db.AquariusDBModule;
+import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.Comp;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Entry;
@@ -26,21 +29,34 @@ import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
 
-class EntityManagerTest {
+class AquariusDBTests {
 
-	private static EntityManager entityManager;
+	private static final String PASSWORD = "regatta";
+
+	private static final String USER_NAME = "sa";
+
+	private static final String DB_NAME = "rudern";
+
+	private static final String HOST_NAME = "192.168.0.130";
+	
+	private static AquariusDB aquariusDb;
+
+	private static EventDAO eventDAO;
 
 	@BeforeAll
 	static void setUpBeforeClass() {
-		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius");
-		entityManager = factory.createEntityManager();
+		Injector injector = Guice.createInjector(new AquariusDBModule());
+		aquariusDb = injector.getInstance(AquariusDB.class);
+		aquariusDb.open(HOST_NAME, DB_NAME, USER_NAME, PASSWORD);
+		
+		eventDAO = injector.getInstance(EventDAO.class);
 	}
 
 	@AfterAll
 	static void tearDownAfterClass() {
-		if (entityManager != null) {
-			entityManager.close();
-			entityManager = null;
+		if (aquariusDb != null) {
+			aquariusDb.close();
+			aquariusDb = null;
 		}
 	}
 
@@ -53,9 +69,25 @@ class EntityManagerTest {
 	}
 
 	@Test
+	void testOpen() {
+		aquariusDb.open(HOST_NAME, DB_NAME, USER_NAME, PASSWORD);
+	}
+
+	@Test
+	void testIsOpen() {
+		Assertions.assertTrue(aquariusDb.isOpen());
+	}
+
+	@Test
+	void testGetEvents() {
+		List<Event> events = eventDAO.getEvents();
+		Assertions.assertFalse(events.isEmpty());
+	}
+	
+	@Test
 	void testGetEventOK() {
 		EventId id = new EventId("1");
-		Event event = entityManager.getReference(Event.class, id);
+		Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
 		Assertions.assertEquals(id.eventID, event.getEventID());
 		Assertions.assertNotNull(event);
 
@@ -68,8 +100,9 @@ class EntityManagerTest {
 	void testGetEventFailed() {
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
 			EventId id = new EventId("2");
-			Event event = entityManager.getReference(Event.class, id);
-			// as event with ID == 2 doesn't exist, calling any getter causes an EntityNotFoundException
+			Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
+			// as event with ID == 2 doesn't exist, calling any getter causes an
+			// EntityNotFoundException
 			event.getEventID();
 		});
 	}
@@ -77,12 +110,12 @@ class EntityManagerTest {
 	@Test
 	@Disabled
 	void testPokal() {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaBuilder builder = aquariusDb.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Offer> cq = builder.createQuery(Offer.class);
 		Root<Offer> from = cq.from(Offer.class);
 		cq.select(from);
 
-		TypedQuery<Offer> query = entityManager.createQuery(cq);
+		TypedQuery<Offer> query = aquariusDb.getEntityManager().createQuery(cq);
 		List<Offer> resultList = query.getResultList();
 
 		resultList.forEach(this::trace);
