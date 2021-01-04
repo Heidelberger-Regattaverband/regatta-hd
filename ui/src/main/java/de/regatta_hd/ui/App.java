@@ -36,7 +36,7 @@ public class App extends Application {
 	}
 
 	private Parent loadFXML(String fxml) throws IOException {
-		this.fxmlLoader.setLocation(App.class.getResource("primary.fxml"));
+		this.fxmlLoader.setLocation(App.class.getResource(fxml + ".fxml"));
 		return this.fxmlLoader.load();
 	}
 

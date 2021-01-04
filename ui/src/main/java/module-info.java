@@ -1,6 +1,8 @@
 open module de.regatta_hd.ui {
 	requires javafx.controls;
 	requires javafx.fxml;
+	requires transitive javafx.graphics;
+
 	requires javax.inject;
 
 	requires ignite.common;

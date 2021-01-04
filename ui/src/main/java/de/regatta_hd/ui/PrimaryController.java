@@ -1,16 +1,13 @@
 package de.regatta_hd.ui;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
-import javafx.scene.input.InputEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 public class PrimaryController {
 
@@ -19,7 +16,16 @@ public class PrimaryController {
 
 	@Inject
 	private AquariusDB aquarius;
-	
+
+	public void initialize() {
+		Platform.runLater(() -> {
+			if (!this.aquarius.isOpen()) {
+				LoginDialog dialog = new LoginDialog((Stage) this.menuBar.getScene().getWindow(), true);
+				dialog.show();
+			}
+		});
+	}
+
 	/**
 	 * Handle action related to "About" menu item.
 	 *
@@ -27,34 +33,6 @@ public class PrimaryController {
 	 */
 	@FXML
 	private void handleAboutAction(final ActionEvent event) {
-		provideAboutFunctionality();
-	}
-
-	/**
-	 * Handle action related to input (in this case specifically only responds to
-	 * keyboard event CTRL-A).
-	 *
-	 * @param event Input event.
-	 */
-	@FXML
-	private void handleKeyInput(final InputEvent event) {
-		if (event instanceof KeyEvent) {
-			final KeyEvent keyEvent = (KeyEvent) event;
-			if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.A) {
-				provideAboutFunctionality();
-			}
-		}
-	}
-
-	/**
-	 * Perform functionality associated with "About" menu selection or CTRL-A.
-	 */
-	private void provideAboutFunctionality() {
 		System.out.println("You clicked on About!");
-	}
-
-	@FXML
-	private void switchToSecondary() throws IOException {
-//		app.setRoot("secondary");
 	}
 }
