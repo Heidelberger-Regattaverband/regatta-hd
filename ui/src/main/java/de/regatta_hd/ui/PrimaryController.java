@@ -1,8 +1,11 @@
 package de.regatta_hd.ui;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
+import de.regatta_hd.aquarius.db.ConnectionData;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +24,10 @@ public class PrimaryController {
 		Platform.runLater(() -> {
 			if (!this.aquarius.isOpen()) {
 				LoginDialog dialog = new LoginDialog((Stage) this.menuBar.getScene().getWindow(), true);
-				dialog.show();
+				Optional<ConnectionData> result = dialog.showAndWait();
+				if (result.isPresent()) {
+					this.aquarius.open(result.get());
+				}
 			}
 		});
 	}

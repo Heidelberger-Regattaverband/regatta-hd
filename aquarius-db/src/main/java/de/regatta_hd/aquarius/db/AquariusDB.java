@@ -5,13 +5,15 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 public interface AquariusDB {
 
-	boolean isOpen();
+	void close();
 
-	void open(String hostName, String dbName, String userName, String password);
+	CriteriaBuilder getCriteriaBuilder();
 
 	EntityManager getEntityManager();
 
-	void close();
-	
-	CriteriaBuilder getCriteriaBuilder();
+	boolean isOpen();
+
+	void open(ConnectionData connectionData);
+
+	void open(String hostName, String dbName, String userName, String password);
 }

@@ -11,6 +11,7 @@ import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
+import de.regatta_hd.aquarius.db.ConnectionData;
 
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {
@@ -18,8 +19,33 @@ public class AqauriusDBImpl implements AquariusDB {
 	private EntityManager entityManager;
 
 	@Override
+	public synchronized void close() {
+		if (isOpenImpl()) {
+			this.entityManager.close();
+			this.entityManager = null;
+		}
+	}
+
+	@Override
+	public CriteriaBuilder getCriteriaBuilder() {
+		return getEntityManager().getCriteriaBuilder();
+	}
+
+	@Override
+	public synchronized EntityManager getEntityManager() {
+		checkIsOpen();
+		return this.entityManager;
+	}
+
+	@Override
 	public synchronized boolean isOpen() {
 		return isOpenImpl();
+	}
+
+	@Override
+	public void open(ConnectionData connectionData) {
+		open(connectionData.getHostName(), connectionData.getDbName(), connectionData.getUserName(),
+				connectionData.getPassword());
 	}
 
 	@Override
@@ -39,25 +65,6 @@ public class AqauriusDBImpl implements AquariusDB {
 
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
-	}
-
-	@Override
-	public synchronized void close() {
-		if (isOpenImpl()) {
-			this.entityManager.close();
-			this.entityManager = null;
-		}
-	}
-
-	@Override
-	public synchronized EntityManager getEntityManager() {
-		checkIsOpen();
-		return this.entityManager;
-	}
-
-	@Override
-	public CriteriaBuilder getCriteriaBuilder() {
-		return getEntityManager().getCriteriaBuilder();
 	}
 
 	private void checkIsOpen() {

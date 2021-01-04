@@ -14,11 +14,6 @@
 
   <properties>
     <db.driver.class>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver.class>
-    <db.host>192.168.0.130</db.host>
-    <db.name>rudern</db.name>
-    <db.url>jdbc:sqlserver://${db.host};database=${db.name}</db.url>
-    <db.username>sa</db.username>
-    <db.password>regatta</db.password>
   </properties>
 
   <dependencies>

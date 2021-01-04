@@ -20,6 +20,7 @@
 
     <java.version>11</java.version>
     <javafx.version>15.0.1</javafx.version>
+    <lombok.version>1.18.16</lombok.version>
   </properties>
 
   <modules>
@@ -106,7 +107,7 @@
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.18.16</version>
+        <version>${lombok.version}</version>
       </dependency>
       <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
       <dependency>
@@ -149,6 +150,11 @@
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
 
     <!-- ========== -->
@@ -239,6 +245,13 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <release>${java.version}</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}  </version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
