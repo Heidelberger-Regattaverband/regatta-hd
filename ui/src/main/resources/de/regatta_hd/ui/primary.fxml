@@ -10,14 +10,12 @@
     <top>
    <MenuBar fx:id="menuBar">
       <menus>
-         <Menu text="File">
+         <Menu text="%Primary.Menu.Database.text">
             <items>
-               <MenuItem text="New"/>
-               <MenuItem text="Open"/>
-               <MenuItem text="Save"/>
-               <MenuItem text="Save As"/>
+               <MenuItem fx:id="databaseConnect" text="%Primary.MenuItem.DatabaseConnect.text" onAction="#handleDatabaseConnect"/>
+               <MenuItem fx:id="databaseDisconnect" text="%Primary.MenuItem.DatabaseDisconnect.text" onAction="#handleDatabaseDisconnect"/>
                <SeparatorMenuItem  />
-               <MenuItem text="Exit"/>
+               <MenuItem fx:id="exit" text="%Primary.MenuItem.Exit.text" onAction="#handleExit"/>
             </items>
          </Menu>
          <Menu text="Edit">
