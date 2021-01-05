@@ -35,9 +35,9 @@ public class LoginDialog extends Dialog<ConnectionData> {
 		Label passwordLbl = new Label("Password: ");
 		gridpane.add(passwordLbl, 0, 4);
 
-		TextField hostNameFld = new TextField("localhost");
+		TextField hostNameFld = new TextField("192.168.0.130");
 		gridpane.add(hostNameFld, 1, 1);
-		TextField dbNameFld = new TextField("regatta");
+		TextField dbNameFld = new TextField("rudern");
 		gridpane.add(dbNameFld, 1, 2);
 		TextField userNameFld = new TextField("sa");
 		gridpane.add(userNameFld, 1, 3);

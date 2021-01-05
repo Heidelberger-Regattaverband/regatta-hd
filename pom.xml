@@ -57,13 +57,19 @@
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
-        <version>15.0.1</version>
+        <version>${javafx.version}</version>
       </dependency>
       <!-- https://search.maven.org/artifact/org.openjfx/javafx-fxml -->
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
-        <version>15.0.1</version>
+        <version>${javafx.version}</version>
+      </dependency>
+      <!-- https://search.maven.org/artifact/org.openjfx/javafx-graphics -->
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${javafx.version}</version>
       </dependency>
 
       <!-- ============ -->

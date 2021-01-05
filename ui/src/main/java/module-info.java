@@ -11,6 +11,7 @@ open module de.regatta_hd.ui {
 	requires ignite.guice;
 	requires com.google.guice;
 	requires com.microsoft.sqlserver.jdbc;
+	requires org.hibernate.orm.core;
 
 	requires transitive de.regatta_hd.aquarius.db;
 
