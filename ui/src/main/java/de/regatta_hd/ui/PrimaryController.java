@@ -1,6 +1,8 @@
 package de.regatta_hd.ui;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -11,15 +13,17 @@ import de.regatta_hd.aquarius.db.ConnectionData;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 public class PrimaryController implements Initializable {
 
-	@FXML
-	private MenuBar menuBar;
+	@Inject
+	private AquariusDB aquarius;
 
 	@FXML
 	private MenuItem databaseConnect;
@@ -27,10 +31,27 @@ public class PrimaryController implements Initializable {
 	@FXML
 	private MenuItem databaseDisconnect;
 
+	@FXML
+	private MenuItem events;
+
 	@Inject
-	private AquariusDB aquarius;
+	private FXMLLoader fxmlLoader;
+
+	@FXML
+	private MenuBar menuBar;
 
 	private ResourceBundle resources;
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		this.resources = Objects.requireNonNull(resources, "resources");
+
+		updateControls();
+
+		Platform.runLater(() -> {
+			handleDatabaseConnect();
+		});
+	}
 
 	/**
 	 * Handle action related to "About" menu item.
@@ -62,23 +83,32 @@ public class PrimaryController implements Initializable {
 	}
 
 	@FXML
-	private void handleExit() {
-		Platform.exit();
+	private void handleEvents() {
+		try {
+			this.fxmlLoader.setLocation(App.class.getResource("events.fxml"));
+			this.fxmlLoader.setResources(this.resources);
+			/*
+			 * if "fx:controller" is not set in fxml
+			 * fxmlLoader.setController(NewWindowController);
+			 */
+			Scene scene = new Scene(this.fxmlLoader.load(), 600, 400);
+			Stage stage = new Stage();
+			stage.setTitle("Regatten");
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		this.resources = resources;
-
-		updateControls();
-
-		Platform.runLater(() -> {
-			handleDatabaseConnect();
-		});
+	@FXML
+	private void handleExit() {
+		Platform.exit();
 	}
 
 	private void updateControls() {
 		this.databaseConnect.setDisable(this.aquarius.isOpen());
 		this.databaseDisconnect.setDisable(!this.aquarius.isOpen());
+		this.events.setDisable(!this.aquarius.isOpen());
 	}
 }

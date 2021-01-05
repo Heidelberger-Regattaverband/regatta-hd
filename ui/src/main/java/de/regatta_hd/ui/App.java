@@ -32,14 +32,15 @@ public class App extends Application {
 	public void start(Stage stage) throws IOException {
 		this.context.init();
 
-		Scene scene = new Scene(loadFXML("primary"), 640, 480);
+		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
+
+		Scene scene = new Scene(loadFXML("primary", bundle), 640, 480);
 		stage.setScene(scene);
+		stage.setTitle(bundle.getString("MainWindow.title"));
 		stage.show();
 	}
 
-	private Parent loadFXML(String fxml) throws IOException {
-		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
-
+	private Parent loadFXML(String fxml, ResourceBundle bundle) throws IOException {
 		this.fxmlLoader.setLocation(App.class.getResource(fxml + ".fxml"));
 		this.fxmlLoader.setResources(bundle);
 		return this.fxmlLoader.load();
