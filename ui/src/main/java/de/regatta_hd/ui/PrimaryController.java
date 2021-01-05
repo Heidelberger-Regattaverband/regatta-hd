@@ -1,6 +1,8 @@
 package de.regatta_hd.ui;
 
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
@@ -9,28 +11,17 @@ import de.regatta_hd.aquarius.db.ConnectionData;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 
-public class PrimaryController {
+public class PrimaryController implements Initializable{
 
 	@FXML
 	private MenuBar menuBar;
 
 	@Inject
 	private AquariusDB aquarius;
-
-	public void initialize() {
-		Platform.runLater(() -> {
-			if (!this.aquarius.isOpen()) {
-				LoginDialog dialog = new LoginDialog((Stage) this.menuBar.getScene().getWindow(), true);
-				Optional<ConnectionData> result = dialog.showAndWait();
-				if (result.isPresent()) {
-					this.aquarius.open(result.get());
-				}
-			}
-		});
-	}
 
 	/**
 	 * Handle action related to "About" menu item.
@@ -40,5 +31,18 @@ public class PrimaryController {
 	@FXML
 	private void handleAboutAction(final ActionEvent event) {
 		System.out.println("You clicked on About!");
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		Platform.runLater(() -> {
+			if (!this.aquarius.isOpen()) {
+				DatabaseConnectionDialog dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, resources);
+				Optional<ConnectionData> result = dialog.showAndWait();
+				if (result.isPresent()) {
+					this.aquarius.open(result.get());
+				}
+			}
+		});
 	}
 }

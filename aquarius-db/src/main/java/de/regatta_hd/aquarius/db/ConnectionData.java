@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ConnectionData {
 
-	private String hostName;
+	private String dbHost;
 
 	private String dbName;
 

@@ -2,6 +2,8 @@ package de.regatta_hd.ui;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
@@ -36,7 +38,10 @@ public class App extends Application {
 	}
 
 	private Parent loadFXML(String fxml) throws IOException {
+		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
+
 		this.fxmlLoader.setLocation(App.class.getResource(fxml + ".fxml"));
+		this.fxmlLoader.setResources(bundle);
 		return this.fxmlLoader.load();
 	}
 

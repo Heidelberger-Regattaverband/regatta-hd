@@ -1,4 +1,5 @@
 open module de.regatta_hd.ui {
+	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
 	requires transitive javafx.graphics;

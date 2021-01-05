@@ -44,24 +44,23 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	@Override
 	public void open(ConnectionData connectionData) {
-		open(connectionData.getHostName(), connectionData.getDbName(), connectionData.getUserName(),
+		Objects.requireNonNull(connectionData, "connectionData is null.");
+
+		open(connectionData.getDbHost(), connectionData.getDbName(), connectionData.getUserName(),
 				connectionData.getPassword());
 	}
 
 	@Override
 	public synchronized void open(String hostName, String dbName, String userName, String password) {
-		Objects.requireNonNull(hostName, "hostName is null.");
-		Objects.requireNonNull(dbName, "dbName is null.");
-		Objects.requireNonNull(userName, "userName is null.");
-		Objects.requireNonNull(password, "password is null.");
-
 		close();
 
 		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;database=%s", hostName, dbName);
+		String url = String.format("jdbc:sqlserver://%s;database=%s",
+				Objects.requireNonNull(hostName, "hostName is null."),
+				Objects.requireNonNull(dbName, "dbName is null."));
 		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", userName);
-		props.put("javax.persistence.jdbc.password", password);
+		props.put("javax.persistence.jdbc.user", Objects.requireNonNull(userName, "userName is null."));
+		props.put("javax.persistence.jdbc.password", Objects.requireNonNull(password, "password is null."));
 
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
