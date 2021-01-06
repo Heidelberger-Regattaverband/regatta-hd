@@ -90,12 +90,15 @@ class AquariusDBTests {
 	}
 	
 	@Test
+	
 	void testGetEventOK() {
 		EventId id = new EventId("1");
 		Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
 		Assertions.assertEquals(id.eventID, event.getEventID());
 		Assertions.assertNotNull(event);
 
+		System.out.println(event.toString());
+		
 		event.getOffers().forEach(this::trace);
 //		event.getComps().forEach(this::trace);
 //		event.getEntrys().forEach(this::trace);
@@ -133,14 +136,13 @@ class AquariusDBTests {
 	}
 	
 	private void trace(Offer offer) {
-		System.out.println("Offer: ID=" + offer.getOfferID() + ", RaceNr=" + offer.getOfferRaceNumber() + " - "
-				+ offer.getOfferLongLabel());
+		System.out.println(offer.toString());
 		offer.getComps().forEach(this::trace);
 	}
 
 	private void trace(Comp comp) {
 //		Label label = entityManager.getReference(Label.class, new LabelId(comp.getCompLabel()));
-		System.out.println("\tComp: ID=" + comp.getCompID() + ", Label=" + comp.getCompLabel() + ", Round="
+		System.out.println("\t\tComp: ID=" + comp.getCompID() + ", Label=" + comp.getCompLabel() + ", Round="
 				+ comp.getCompRound() + ", HeatNr=" + comp.getCompHeatNumber() + ", Number=" + comp.getCompNumber());
 		comp.getCompEntries().forEach(this::trace);
 	}

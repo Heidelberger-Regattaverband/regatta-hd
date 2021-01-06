@@ -36,9 +36,9 @@ public class EventsController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		// make sure the property value factory should be exactly same as the e.g
 		// getStudentId from your model class
-		this.title.setCellValueFactory(new PropertyValueFactory<>("eventTitle"));
-		this.begin.setCellValueFactory(new PropertyValueFactory<>("eventStartDate"));
-		this.end.setCellValueFactory(new PropertyValueFactory<>("eventEndDate"));
+		this.title.setCellValueFactory(new PropertyValueFactory<>("title"));
+		this.begin.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+		this.end.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
 		// add your data to the table here.
 		this.tbData.setItems(getEvents());

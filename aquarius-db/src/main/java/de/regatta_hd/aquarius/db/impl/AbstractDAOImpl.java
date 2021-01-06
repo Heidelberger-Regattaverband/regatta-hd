@@ -19,4 +19,8 @@ abstract class AbstractDAOImpl {
 		query.select(from);
 		return this.aquariusDb.getEntityManager().createQuery(query).getResultList();
 	}
+	
+	protected <T> T getEntity(Class<T> entityClass, Object id) {
+		return this.aquariusDb.getEntityManager().getReference(entityClass, id);
+	}
 }
