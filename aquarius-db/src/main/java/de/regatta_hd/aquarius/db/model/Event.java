@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -27,7 +28,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Event")
-@IdClass(de.regatta_hd.aquarius.db.model.EventId.class)
+@IdClass(EventId.class)
 // lombok
 @Data
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,10 +37,10 @@ public class Event {
 	@JoinColumn(name = "Event_Club_ID_FK")
 	private Club club;
 
-	@OneToMany(targetEntity = de.regatta_hd.aquarius.db.model.Comp.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Comp.class, mappedBy = "event", cascade = CascadeType.MERGE)
 	private Set<Comp> comps = new HashSet<>();
 
-	@OneToMany(targetEntity = de.regatta_hd.aquarius.db.model.Entry.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Entry.class, mappedBy = "event", cascade = CascadeType.MERGE)
 	private Set<Entry> entrys = new HashSet<>();
 
 	@Basic
@@ -73,7 +74,7 @@ public class Event {
 	@Id
 	@Column(name = "Event_ID", columnDefinition = "int identity")
 	@ToString.Include(rank = 20)
-	private int eventID;
+	private int id;
 
 	@Basic
 	@Column(name = "Event_StartDate", columnDefinition = "datetime", nullable = false)
@@ -94,21 +95,22 @@ public class Event {
 
 	@Basic
 	@Column(name = "Event_Type", length = 1)
-	private String eventType;
+	private String type;
 
 	@Basic
 	@Column(name = "Event_Url", length = 64)
-	private String eventUrl;
+	private String url;
 
 	@Basic
 	@Column(name = "Event_Venue", length = 32)
-	private String eventVenue;
+	private String venue;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Event_Venue_Nation_ID_FK")
 	private Nation nation;
 
-	@OneToMany(targetEntity = de.regatta_hd.aquarius.db.model.Offer.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Offer.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	@OrderBy("raceNumber")
 	private Set<Offer> offers = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
@@ -127,10 +129,6 @@ public class Event {
 	private Set<ReportInfo> reportInfos = new HashSet<>();
 
 	public Event() {
-	}
-
-	public Event(int eventID) {
-		this.eventID = eventID;
 	}
 
 	public Club getClub() {
@@ -155,14 +153,6 @@ public class Event {
 
 	public void setEntrys(Set<Entry> entrys) {
 		this.entrys = entrys;
-	}
-
-	public int getEventID() {
-		return this.eventID;
-	}
-
-	public void setEventID(int eventID) {
-		this.eventID = eventID;
 	}
 
 	public Nation getNation() {

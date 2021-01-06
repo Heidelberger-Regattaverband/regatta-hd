@@ -40,7 +40,7 @@ class AquariusDBTests {
 	private static final String DB_NAME = "rudern";
 
 	private static final String HOST_NAME = "192.168.0.130";
-	
+
 	private static AquariusDB aquariusDb;
 
 	private static EventDAO eventDAO;
@@ -52,7 +52,7 @@ class AquariusDBTests {
 		Injector injector = Guice.createInjector(new AquariusDBModule());
 		aquariusDb = injector.getInstance(AquariusDB.class);
 		aquariusDb.open(HOST_NAME, DB_NAME, USER_NAME, PASSWORD);
-		
+
 		eventDAO = injector.getInstance(EventDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 	}
@@ -88,17 +88,17 @@ class AquariusDBTests {
 		List<Event> events = eventDAO.getEvents();
 		Assertions.assertFalse(events.isEmpty());
 	}
-	
+
 	@Test
-	
+
 	void testGetEventOK() {
-		EventId id = new EventId("1");
+		EventId id = new EventId(1);
 		Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
-		Assertions.assertEquals(id.eventID, event.getEventID());
+		Assertions.assertEquals(id.getId(), event.getId());
 		Assertions.assertNotNull(event);
 
 		System.out.println(event.toString());
-		
+
 		event.getOffers().forEach(this::trace);
 //		event.getComps().forEach(this::trace);
 //		event.getEntrys().forEach(this::trace);
@@ -107,11 +107,11 @@ class AquariusDBTests {
 	@Test
 	void testGetEventFailed() {
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			EventId id = new EventId("2");
+			EventId id = new EventId(2);
 			Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
 			// as event with ID == 2 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
-			event.getEventID();
+			event.getId();
 		});
 	}
 
@@ -134,10 +134,11 @@ class AquariusDBTests {
 		List<AgeClass> ageClasses = masterData.getAgeClasses();
 		Assertions.assertFalse(ageClasses.isEmpty());
 	}
-	
+
 	private void trace(Offer offer) {
-		System.out.println(offer.toString());
+		System.out.println("\t" + offer.toString());
 		offer.getComps().forEach(this::trace);
+		offer.getEntrys().forEach(this::trace);
 	}
 
 	private void trace(Comp comp) {
@@ -148,8 +149,7 @@ class AquariusDBTests {
 	}
 
 	private void trace(Entry entry) {
-		System.out.println(
-				"\t\t\tEntry: ID=" + entry.getEntryID() + ": " + entry.getLabel() + ", " + entry.getEntryComment());
+		System.out.println("\t\t\t" + entry.toString());
 	}
 
 	private void trace(CompEntries compentries) {
