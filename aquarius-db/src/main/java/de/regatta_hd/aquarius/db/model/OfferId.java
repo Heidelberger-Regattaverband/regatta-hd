@@ -23,6 +23,7 @@ public class OfferId implements Serializable {
 		try {
 			Class.forName("de.regatta_hd.aquarius.db.model.Offer");
 		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 

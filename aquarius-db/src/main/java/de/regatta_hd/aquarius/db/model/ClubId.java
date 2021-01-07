@@ -19,6 +19,7 @@ public class ClubId implements Serializable {
 		try {
 			Class.forName("de.regatta_hd.aquarius.db.model.Club");
 		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 

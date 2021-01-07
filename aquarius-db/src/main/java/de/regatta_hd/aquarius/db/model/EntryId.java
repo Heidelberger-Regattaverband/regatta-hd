@@ -23,6 +23,7 @@ public class EntryId implements Serializable {
 		try {
 			Class.forName("de.regatta_hd.aquarius.db.model.Entry");
 		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
