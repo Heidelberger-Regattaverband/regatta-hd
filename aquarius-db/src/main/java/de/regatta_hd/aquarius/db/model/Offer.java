@@ -43,6 +43,7 @@ public class Offer {
 	private BoatClass boatClass;
 
 	@OneToMany(targetEntity = Comp.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OrderBy("heatNumber")
 	private Set<Comp> comps = new HashSet<>();
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "offer", cascade = CascadeType.MERGE)
@@ -94,7 +95,6 @@ public class Offer {
 
 	@Id
 	@Column(name = "Offer_ID", columnDefinition = "int identity")
-	@ToString.Include(rank = 10)
 	private int id;
 
 	@Basic
@@ -137,71 +137,4 @@ public class Offer {
 
 	@OneToMany(targetEntity = de.regatta_hd.aquarius.db.model.ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	private Set<ReportInfo> reportInfos = new HashSet<>();
-
-	public Offer() {
-	}
-
-	public AgeClass getAgeClass() {
-		return this.ageClass;
-	}
-
-	public void setAgeClass(AgeClass ageClass) {
-		this.ageClass = ageClass;
-	}
-
-	public BoatClass getBoatClass() {
-		return this.boatClass;
-	}
-
-	public void setBoatClass(BoatClass boatClass) {
-		this.boatClass = boatClass;
-	}
-
-	public Set<Comp> getComps() {
-		return this.comps;
-	}
-
-	public void setComps(Set<Comp> comps) {
-		this.comps = comps;
-	}
-
-	public Set<Cup> getCups() {
-		return this.cups;
-	}
-
-	public void setCups(Set<Cup> cups) {
-		this.cups = cups;
-	}
-
-	public Set<Entry> getEntrys() {
-		return this.entrys;
-	}
-
-	public void setEntrys(Set<Entry> entrys) {
-		this.entrys = entrys;
-	}
-
-	public Event getEvent() {
-		return this.event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
-	}
-
-	public RaceMode getRaceMode() {
-		return this.raceMode;
-	}
-
-	public void setRaceMode(RaceMode raceMode) {
-		this.raceMode = raceMode;
-	}
-
-	public Set<ReportInfo> getReportInfos() {
-		return this.reportInfos;
-	}
-
-	public void setReportInfos(Set<ReportInfo> reportInfos) {
-		this.reportInfos = reportInfos;
-	}
 }

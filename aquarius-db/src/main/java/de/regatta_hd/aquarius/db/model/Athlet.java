@@ -30,7 +30,7 @@ import lombok.ToString;
 //lombok
 @Getter
 @Setter
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, doNotUseGetters = true)
 public class Athlet {
 	@Basic
 	@Column(name = "Athlet_DOB", columnDefinition = "datetime", nullable = false)

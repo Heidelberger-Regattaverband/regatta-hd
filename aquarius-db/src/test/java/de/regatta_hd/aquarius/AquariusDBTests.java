@@ -128,9 +128,7 @@ class AquariusDBTests {
 
 	private void trace(Comp comp, int indent) {
 		indent(indent);
-//		Label label = entityManager.getReference(Label.class, new LabelId(comp.getCompLabel()));
-		System.out.println("Comp: ID=" + comp.getCompID() + ", Label=" + comp.getCompLabel() + ", Round="
-				+ comp.getCompRound() + ", HeatNr=" + comp.getCompHeatNumber() + ", Number=" + comp.getCompNumber());
+		System.out.println(comp.toString());
 
 		comp.getCompEntries().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
@@ -148,7 +146,7 @@ class AquariusDBTests {
 
 	private void trace(CompEntries compentries, int indent) {
 		indent(indent);
-		System.out.println("CompEntries: ID=" + compentries.getCeId() + ", Lane=" + compentries.getcELane());
+		System.out.println(compentries.toString());
 		trace(compentries.getEntry(), indent + 1);
 	}
 

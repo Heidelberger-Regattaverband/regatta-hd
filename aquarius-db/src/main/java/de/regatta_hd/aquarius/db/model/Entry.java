@@ -46,7 +46,7 @@ public class Entry {
 
 	@Basic
 	@Column(name = "Entry_Bib")
-	@ToString.Include
+	@ToString.Include(rank = 10)
 	private Short bib;
 
 	@Basic
@@ -72,7 +72,6 @@ public class Entry {
 
 	@Id
 	@Column(name = "Entry_ID", columnDefinition = "int identity")
-	@ToString.Include(rank = 10)
 	private int id;
 
 	@Basic
