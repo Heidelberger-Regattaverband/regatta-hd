@@ -13,6 +13,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -48,6 +49,7 @@ public class Offer {
 	private Set<Cup> cups = new HashSet<>();
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OrderBy("bib")
 	private Set<Entry> entrys = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

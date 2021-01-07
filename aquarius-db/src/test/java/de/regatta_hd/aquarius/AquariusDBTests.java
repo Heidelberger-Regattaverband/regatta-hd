@@ -3,17 +3,12 @@ package de.regatta_hd.aquarius;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.google.inject.Guice;
@@ -91,7 +86,6 @@ class AquariusDBTests {
 	}
 
 	@Test
-
 	void testGetEventOK() {
 		EventId id = new EventId(1);
 		Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
@@ -100,9 +94,11 @@ class AquariusDBTests {
 
 		System.out.println(event.toString());
 
-		event.getOffers().forEach(this::trace);
-//		event.getComps().forEach(this::trace);
-//		event.getEntrys().forEach(this::trace);
+		Offer offer = eventDAO.getOffer(event, "104");
+		Assertions.assertEquals("104", offer.getRaceNumber());
+
+		trace(offer, 1);
+//		event.getOffers().forEach(this::trace);
 	}
 
 	@Test
@@ -117,49 +113,48 @@ class AquariusDBTests {
 	}
 
 	@Test
-	@Disabled
-	void testPokal() {
-		CriteriaBuilder builder = aquariusDb.getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Offer> cq = builder.createQuery(Offer.class);
-		Root<Offer> from = cq.from(Offer.class);
-		cq.select(from);
-
-		TypedQuery<Offer> query = aquariusDb.getEntityManager().createQuery(cq);
-		List<Offer> resultList = query.getResultList();
-
-		resultList.forEach(this::trace);
-	}
-
-	@Test
 	void testGetAgeClasses() {
 		List<AgeClass> ageClasses = masterData.getAgeClasses();
 		Assertions.assertFalse(ageClasses.isEmpty());
 	}
 
-	private void trace(Offer offer) {
-		System.out.println("\t" + offer.toString());
-		offer.getComps().forEach(this::trace);
-		offer.getEntrys().forEach(this::trace);
+	private void trace(Offer offer, int indent) {
+		indent(indent);
+		System.out.println(offer.toString());
+
+		offer.getComps().forEach(comp -> trace(comp, indent + 1));
+		offer.getEntrys().forEach(entry -> trace(entry, indent + 1));
 	}
 
-	private void trace(Comp comp) {
+	private void trace(Comp comp, int indent) {
+		indent(indent);
 //		Label label = entityManager.getReference(Label.class, new LabelId(comp.getCompLabel()));
-		System.out.println("\t\tComp: ID=" + comp.getCompID() + ", Label=" + comp.getCompLabel() + ", Round="
+		System.out.println("Comp: ID=" + comp.getCompID() + ", Label=" + comp.getCompLabel() + ", Round="
 				+ comp.getCompRound() + ", HeatNr=" + comp.getCompHeatNumber() + ", Number=" + comp.getCompNumber());
-		comp.getCompEntries().forEach(this::trace);
+
+		comp.getCompEntries().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
-	private void trace(Entry entry) {
-		System.out.println("\t\t\t" + entry.toString());
-		entry.getCrews().forEach(this::trace);
+	private void trace(Entry entry, int indent) {
+		indent(indent);
+		System.out.println(entry.toString());
+		entry.getCrews().forEach(crew -> trace(crew, indent + 1));
 	}
 
-	private void trace(Crew crew) {
-		System.out.println("\t\t\t\t" + crew.toString());
+	private void trace(Crew crew, int indent) {
+		indent(indent);
+		System.out.println(crew.toString());
 	}
 
-	private void trace(CompEntries compentries) {
-		System.out.println("\t\tCompEntries: ID=" + compentries.getCeId() + ", Lane=" + compentries.getcELane());
-		trace(compentries.getEntry());
+	private void trace(CompEntries compentries, int indent) {
+		indent(indent);
+		System.out.println("CompEntries: ID=" + compentries.getCeId() + ", Lane=" + compentries.getcELane());
+		trace(compentries.getEntry(), indent + 1);
+	}
+
+	private static void indent(int depth) {
+		for (int i = 0; i < depth; i++) {
+			System.out.print("\t");
+		}
 	}
 }
