@@ -27,6 +27,7 @@ import de.regatta_hd.aquarius.db.model.EntryLabel;
 import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Result;
 
 class AquariusDBTests {
 
@@ -151,10 +152,16 @@ class AquariusDBTests {
 		System.out.println(entryLabel.toString());
 	}
 
-	private void trace(CompEntries compentries, int indent) {
+	private void trace(CompEntries compEntries, int indent) {
 		indent(indent);
-		System.out.println(compentries.toString());
-		trace(compentries.getEntry(), indent + 1);
+		System.out.println(compEntries.toString());
+		trace(compEntries.getEntry(), indent + 1);
+		compEntries.getResults().forEach(result -> trace(result, indent + 1));
+	}
+
+	private void trace(Result result, int indent) {
+		indent(indent);
+		System.out.println(result.toString());
 	}
 
 	private static void indent(int depth) {
