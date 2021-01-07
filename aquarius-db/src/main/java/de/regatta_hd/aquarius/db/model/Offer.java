@@ -33,10 +33,12 @@ import lombok.ToString;
 public class Offer {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_AgeClass_ID_FK", nullable = false)
+	@ToString.Include(rank = 2)
 	private AgeClass ageClass;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_BoatClass_ID_FK", nullable = false)
+	@ToString.Include(rank = 3)
 	private BoatClass boatClass;
 
 	@OneToMany(targetEntity = Comp.class, mappedBy = "offer", cascade = CascadeType.MERGE)
@@ -99,7 +101,7 @@ public class Offer {
 
 	@Basic
 	@Column(name = "Offer_LongLabel", length = 64)
-	@ToString.Include
+	@ToString.Include(rank = 8)
 	private String longLabel;
 
 	@Basic

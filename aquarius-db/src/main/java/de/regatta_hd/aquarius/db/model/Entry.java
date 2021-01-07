@@ -13,6 +13,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class Entry {
 	private Set<CompEntries> compEntries = new HashSet<>();
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "entry", cascade = CascadeType.MERGE)
+	@OrderBy("pos")
 	private Set<Crew> crews = new HashSet<>();
 
 	@Basic

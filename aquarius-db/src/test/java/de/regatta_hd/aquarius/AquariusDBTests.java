@@ -26,6 +26,7 @@ import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.Comp;
 import de.regatta_hd.aquarius.db.model.CompEntries;
+import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
 import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.EventId;
@@ -150,6 +151,11 @@ class AquariusDBTests {
 
 	private void trace(Entry entry) {
 		System.out.println("\t\t\t" + entry.toString());
+		entry.getCrews().forEach(this::trace);
+	}
+
+	private void trace(Crew crew) {
+		System.out.println("\t\t\t\t" + crew.toString());
 	}
 
 	private void trace(CompEntries compentries) {
