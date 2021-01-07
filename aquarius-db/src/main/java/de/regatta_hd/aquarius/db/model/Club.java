@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -32,7 +31,7 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Club {
 	@OneToMany(targetEntity = Athlet.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Athlet> athlets = new HashSet<>();
+	private Set<Athlet> athlets;
 
 	@Basic
 	@Column(name = "Club_Abbr", length = 50)
@@ -64,16 +63,16 @@ public class Club {
 	private String ultraAbbr;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Crew> crews = new HashSet<>();
+	private Set<Crew> crews;
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Entry> entrys = new HashSet<>();
+	private Set<Entry> entrys;
 
 	@OneToMany(targetEntity = Event.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Event> events = new HashSet<>();
+	private Set<Event> events;
 
 	@OneToMany(targetEntity = Label.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Label> labels = new HashSet<>();
+	private Set<Label> labels;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Club_Nation_ID_FK")

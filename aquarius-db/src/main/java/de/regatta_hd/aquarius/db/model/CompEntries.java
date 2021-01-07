@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -49,5 +48,5 @@ public class CompEntries {
 	private Entry entry;
 
 	@OneToMany(targetEntity = Result.class, mappedBy = "compEntries", cascade = CascadeType.MERGE)
-	private Set<Result> results = new HashSet<>();
+	private Set<Result> results;
 }

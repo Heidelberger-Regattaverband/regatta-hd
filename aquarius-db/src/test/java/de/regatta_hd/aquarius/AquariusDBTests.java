@@ -23,6 +23,7 @@ import de.regatta_hd.aquarius.db.model.Comp;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
+import de.regatta_hd.aquarius.db.model.EntryLabel;
 import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
@@ -137,11 +138,17 @@ class AquariusDBTests {
 		indent(indent);
 		System.out.println(entry.toString());
 		entry.getCrews().forEach(crew -> trace(crew, indent + 1));
+		entry.getLabels().forEach(label -> trace(label, indent + 1));
 	}
 
 	private void trace(Crew crew, int indent) {
 		indent(indent);
 		System.out.println(crew.toString());
+	}
+
+	private void trace(EntryLabel entryLabel, int indent) {
+		indent(indent);
+		System.out.println(entryLabel.toString());
 	}
 
 	private void trace(CompEntries compentries, int indent) {

@@ -1,7 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -47,7 +46,7 @@ public class Comp {
 
 	@OneToMany(targetEntity = CompEntries.class, mappedBy = "comp", cascade = CascadeType.MERGE)
 	@OrderBy("lane")
-	private Set<CompEntries> compEntries = new HashSet<>();
+	private Set<CompEntries> compEntries;
 
 	@Basic
 	@Column(name = "Comp_GroupValue")
@@ -77,7 +76,7 @@ public class Comp {
 	private short number;
 
 	@OneToMany(targetEntity = CompReferee.class, mappedBy = "comp", cascade = CascadeType.MERGE)
-	private Set<CompReferee> compReferees = new HashSet<>();
+	private Set<CompReferee> compReferees;
 
 	@Basic
 	@Column(name = "Comp_Round")
@@ -106,5 +105,5 @@ public class Comp {
 	private RaceModeDetail raceModeDetail;
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "comp", cascade = CascadeType.MERGE)
-	private Set<ReportInfo> reportInfos = new HashSet<>();
+	private Set<ReportInfo> reportInfos;
 }

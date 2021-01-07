@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -44,14 +43,14 @@ public class Offer {
 
 	@OneToMany(targetEntity = Comp.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	@OrderBy("heatNumber")
-	private Set<Comp> comps = new HashSet<>();
+	private Set<Comp> comps;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "offer", cascade = CascadeType.MERGE)
-	private Set<Cup> cups = new HashSet<>();
+	private Set<Cup> cups;
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	@OrderBy("bib")
-	private Set<Entry> entrys = new HashSet<>();
+	private Set<Entry> entrys;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_Event_ID_FK", nullable = false)
@@ -135,6 +134,6 @@ public class Offer {
 	@JoinColumn(name = "Offer_RaceMode_ID_FK")
 	private RaceMode raceMode;
 
-	@OneToMany(targetEntity = de.regatta_hd.aquarius.db.model.ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)
-	private Set<ReportInfo> reportInfos = new HashSet<>();
+	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	private Set<ReportInfo> reportInfos;
 }

@@ -34,7 +34,7 @@ import lombok.ToString;
 public class Athlet {
 	@Basic
 	@Column(name = "Athlet_DOB", columnDefinition = "datetime", nullable = false)
-	private Date DOB;
+	private Date dob;
 
 	@Basic
 	@Column(name = "Athlet_ExternID_A", length = 11)
@@ -89,5 +89,6 @@ public class Athlet {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Athlet_Nation_ID_FK")
+	@ToString.Include(rank = 1)
 	private Nation nation;
 }

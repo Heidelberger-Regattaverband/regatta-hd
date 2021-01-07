@@ -1,7 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -38,10 +37,10 @@ public class Event {
 	private Club club;
 
 	@OneToMany(targetEntity = Comp.class, mappedBy = "event", cascade = CascadeType.MERGE)
-	private Set<Comp> comps = new HashSet<>();
+	private Set<Comp> comps;
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "event", cascade = CascadeType.MERGE)
-	private Set<Entry> entrys = new HashSet<>();
+	private Set<Entry> entrys;
 
 	@Basic
 	@Column(name = "Event_BoardMemberA", length = 32)
@@ -111,7 +110,7 @@ public class Event {
 
 	@OneToMany(targetEntity = Offer.class, mappedBy = "event", cascade = CascadeType.MERGE)
 	@OrderBy("raceNumber")
-	private Set<Offer> offers = new HashSet<>();
+	private Set<Offer> offers;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Event_DefaultRaceMode_ID_FK")
@@ -121,85 +120,10 @@ public class Event {
 	@JoinColumn(name = "Event_HeadReferee_ID_FK")
 	private Referee referee;
 
-	@ManyToMany(targetEntity = de.regatta_hd.aquarius.db.model.Referee.class, cascade = CascadeType.MERGE)
+	@ManyToMany(targetEntity = Referee.class, cascade = CascadeType.MERGE)
 	@JoinTable(schema = "dbo", name = "EventReferee", joinColumns = @JoinColumn(name = "ER_Event_ID_FK"), inverseJoinColumns = @JoinColumn(name = "ER_Referee_ID_FK"))
-	private Set<Referee> referees = new HashSet<>();
+	private Set<Referee> referees;
 
-	@OneToMany(targetEntity = de.regatta_hd.aquarius.db.model.ReportInfo.class, mappedBy = "event", cascade = CascadeType.MERGE)
-	private Set<ReportInfo> reportInfos = new HashSet<>();
-
-	public Event() {
-	}
-
-	public Club getClub() {
-		return this.club;
-	}
-
-	public void setClub(Club club) {
-		this.club = club;
-	}
-
-	public Set<Comp> getComps() {
-		return this.comps;
-	}
-
-	public void setComps(Set<Comp> comps) {
-		this.comps = comps;
-	}
-
-	public Set<Entry> getEntrys() {
-		return this.entrys;
-	}
-
-	public void setEntrys(Set<Entry> entrys) {
-		this.entrys = entrys;
-	}
-
-	public Nation getNation() {
-		return this.nation;
-	}
-
-	public void setNation(Nation nation) {
-		this.nation = nation;
-	}
-
-	public Set<Offer> getOffers() {
-		return this.offers;
-	}
-
-	public void setOffers(Set<Offer> offers) {
-		this.offers = offers;
-	}
-
-	public RaceMode getRaceMode() {
-		return this.raceMode;
-	}
-
-	public void setRaceMode(RaceMode raceMode) {
-		this.raceMode = raceMode;
-	}
-
-	public Referee getReferee() {
-		return this.referee;
-	}
-
-	public void setReferee(Referee referee) {
-		this.referee = referee;
-	}
-
-	public Set<Referee> getReferees() {
-		return this.referees;
-	}
-
-	public void setReferees(Set<Referee> referees) {
-		this.referees = referees;
-	}
-
-	public Set<ReportInfo> getReportInfos() {
-		return this.reportInfos;
-	}
-
-	public void setReportInfos(Set<ReportInfo> reportInfos) {
-		this.reportInfos = reportInfos;
-	}
+	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	private Set<ReportInfo> reportInfos;
 }

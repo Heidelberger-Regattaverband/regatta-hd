@@ -42,7 +42,7 @@ public class Entry {
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "entry", cascade = CascadeType.MERGE)
 	@OrderBy("pos")
-	private Set<Crew> crews = new HashSet<>();
+	private Set<Crew> crews;
 
 	@Basic
 	@Column(name = "Entry_Bib")
@@ -79,7 +79,7 @@ public class Entry {
 	private boolean isLate;
 
 	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "entry", cascade = CascadeType.MERGE)
-	private Set<EntryLabel> labels = new HashSet<>();
+	private Set<EntryLabel> labels;
 
 	@Basic
 	@Column(name = "Entry_Note", length = 128)
