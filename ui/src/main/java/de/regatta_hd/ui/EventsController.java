@@ -11,12 +11,11 @@ import de.regatta_hd.aquarius.db.model.Event;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class EventsController implements Initializable {
+public class EventsController extends AbstractBaseController {
 	@FXML
 	private TableView<Event> tbData;
 
@@ -34,6 +33,8 @@ public class EventsController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		super.initialize(location, resources);
+
 		// make sure the property value factory should be exactly same as the e.g
 		// getStudentId from your model class
 		this.title.setCellValueFactory(new PropertyValueFactory<>("title"));

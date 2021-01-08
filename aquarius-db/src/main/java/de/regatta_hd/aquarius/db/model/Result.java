@@ -41,18 +41,22 @@ public class Result {
 
 	@Basic
 	@Column(name = "Result_DayTime")
+	@ToString.Include
 	private Integer dayTime;
 
 	@Basic
 	@Column(name = "Result_Delta")
+	@ToString.Include
 	private Integer delta;
 
 	@Basic
 	@Column(name = "Result_DisplayType", nullable = false, length = 1)
+	@ToString.Include
 	private String displayType;
 
 	@Basic
 	@Column(name = "Result_DisplayValue", length = 64)
+	@ToString.Include
 	private String displayValue;
 
 	@Basic
@@ -62,6 +66,7 @@ public class Result {
 
 	@Basic
 	@Column(name = "Result_Params", length = 64)
+	@ToString.Include
 	private String params;
 
 	@Basic
@@ -75,9 +80,11 @@ public class Result {
 
 	@Basic
 	@Column(name = "Result_SortValue")
+	@ToString.Include
 	private Integer sortValue;
 
 	@Id
 	@Column(name = "Result_SplitNr")
+	@ToString.Include
 	private byte splitNr;
 }

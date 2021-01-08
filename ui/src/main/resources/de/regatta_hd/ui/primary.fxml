@@ -23,6 +23,7 @@
         <Menu text="%Primary.Menu.Administration.text">
           <items>
             <MenuItem fx:id="events" text="%Primary.MenuItem.Events.text" onAction="#handleEvents" />
+            <MenuItem fx:id="arrangements" text="%Primary.MenuItem.Arrangements.text" onAction="#handleArrangements" />
           </items>
         </Menu>
         <Menu text="Help">

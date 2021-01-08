@@ -12,6 +12,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -48,5 +49,6 @@ public class CompEntries {
 	private Entry entry;
 
 	@OneToMany(targetEntity = Result.class, mappedBy = "compEntries", cascade = CascadeType.MERGE)
+	@OrderBy("rank")
 	private Set<Result> results;
 }

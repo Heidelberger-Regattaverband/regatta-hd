@@ -2,7 +2,6 @@ package de.regatta_hd.ui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -13,14 +12,11 @@ import de.regatta_hd.aquarius.db.ConnectionData;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
-public class PrimaryController implements Initializable {
+public class PrimaryController extends AbstractBaseController {
 
 	@Inject
 	private AquariusDB aquarius;
@@ -34,17 +30,15 @@ public class PrimaryController implements Initializable {
 	@FXML
 	private MenuItem events;
 
-	@Inject
-	private FXMLLoader fxmlLoader;
+	@FXML
+	private MenuItem arrangements;
 
 	@FXML
 	private MenuBar menuBar;
 
-	private ResourceBundle resources;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.resources = Objects.requireNonNull(resources, "resources");
+		super.initialize(location, resources);
 
 		updateControls();
 
@@ -59,7 +53,7 @@ public class PrimaryController implements Initializable {
 	 * @param event Event on "About" menu item.
 	 */
 	@FXML
-	private void handleAboutAction(final ActionEvent event) {
+	private void handleAboutAction(ActionEvent event) {
 		System.out.println("You clicked on About!");
 	}
 
@@ -83,19 +77,18 @@ public class PrimaryController implements Initializable {
 	}
 
 	@FXML
+	private void handleArrangements() {
+		try {
+			newWindow("arrangements.fxml", "Einstellungen");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
 	private void handleEvents() {
 		try {
-			this.fxmlLoader.setLocation(App.class.getResource("events.fxml"));
-			this.fxmlLoader.setResources(this.resources);
-			/*
-			 * if "fx:controller" is not set in fxml
-			 * fxmlLoader.setController(NewWindowController);
-			 */
-			Scene scene = new Scene(this.fxmlLoader.load(), 600, 400);
-			Stage stage = new Stage();
-			stage.setTitle("Regatten");
-			stage.setScene(scene);
-			stage.show();
+			newWindow("events.fxml", "Regatten");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -110,5 +103,6 @@ public class PrimaryController implements Initializable {
 		this.databaseConnect.setDisable(this.aquarius.isOpen());
 		this.databaseDisconnect.setDisable(!this.aquarius.isOpen());
 		this.events.setDisable(!this.aquarius.isOpen());
+		this.arrangements.setDisable(!this.aquarius.isOpen());
 	}
 }
