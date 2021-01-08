@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
-import com.gluonhq.ignite.guice.GuiceContext;
 import com.google.inject.AbstractModule;
 
 import de.regatta_hd.aquarius.db.AquariusDBModule;
@@ -22,7 +21,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-	private GuiceContext context = new GuiceContext(this,
+	private AppGuiceContext context = new AppGuiceContext(this,
 			() -> Arrays.asList(new GuiceModule(), new AquariusDBModule()));
 
 	@Inject
@@ -34,14 +33,14 @@ public class App extends Application {
 
 		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
 
-		Scene scene = new Scene(loadFXML("primary", bundle), 640, 480);
+		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/primary.fxml", bundle), 640, 480);
 		stage.setScene(scene);
 		stage.setTitle(bundle.getString("MainWindow.title"));
 		stage.show();
 	}
 
 	private Parent loadFXML(String fxml, ResourceBundle bundle) throws IOException {
-		this.fxmlLoader.setLocation(App.class.getResource(fxml + ".fxml"));
+		this.fxmlLoader.setLocation(App.class.getResource(fxml));
 		this.fxmlLoader.setResources(bundle);
 		return this.fxmlLoader.load();
 	}
@@ -53,6 +52,7 @@ public class App extends Application {
 	class GuiceModule extends AbstractModule {
 		@Override
 		protected void configure() {
+			bind(FXMLLoaderFactory.class).toInstance(App.this.context);
 		}
 	}
 }

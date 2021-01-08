@@ -1,4 +1,4 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.ui.pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import de.regatta_hd.ui.FXMLLoaderFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -20,7 +21,7 @@ abstract class AbstractBaseController implements Initializable {
 	protected ResourceBundle resources;
 
 	@Inject
-	protected FXMLLoader fxmlLoader;
+	protected FXMLLoaderFactory fxmlLoaderFactory;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -29,9 +30,10 @@ abstract class AbstractBaseController implements Initializable {
 	}
 
 	protected void newWindow(String resource, String title) throws IOException {
-		this.fxmlLoader.setLocation(App.class.getResource(resource));
-		this.fxmlLoader.setResources(this.resources);
-		Parent parent = this.fxmlLoader.load();
+		FXMLLoader loader = this.fxmlLoaderFactory.newLoader();
+		loader.setLocation(getClass().getResource(resource));
+		loader.setResources(this.resources);
+		Parent parent = loader.load();
 
 		Scene scene = new Scene(parent, 600, 400);
 		Stage stage = new Stage();

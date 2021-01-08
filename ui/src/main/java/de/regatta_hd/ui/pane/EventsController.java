@@ -1,4 +1,4 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.ui.pane;
 
 import java.net.URL;
 import java.util.Date;

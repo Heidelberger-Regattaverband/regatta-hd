@@ -1,4 +1,4 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.ui.pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.ConnectionData;
+import de.regatta_hd.ui.DatabaseConnectionDialog;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

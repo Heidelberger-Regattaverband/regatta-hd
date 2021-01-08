@@ -1,7 +1,7 @@
 open module de.regatta_hd.ui {
 	requires javafx.base;
 	requires javafx.controls;
-	requires javafx.fxml;
+	requires transitive javafx.fxml;
 	requires transitive javafx.graphics;
 
 	requires java.persistence;
@@ -10,7 +10,7 @@ open module de.regatta_hd.ui {
 
 	requires ignite.common;
 	requires ignite.guice;
-	requires com.google.guice;
+	requires transitive com.google.guice;
 	requires com.microsoft.sqlserver.jdbc;
 	requires org.hibernate.orm.core;
 

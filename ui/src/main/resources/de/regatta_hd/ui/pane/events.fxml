@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
   prefHeight="563.0" prefWidth="1102.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="de.regatta_hd.ui.EventsController">
+  fx:controller="de.regatta_hd.ui.pane.EventsController">
   <TableView fx:id="tbData" layoutX="20.0" layoutY="192.0" prefHeight="349.0" prefWidth="1066.0"
     AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="16.0"
     AnchorPane.topAnchor="192.0">
