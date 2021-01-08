@@ -1,4 +1,4 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.ui.dialog;
 
 import java.util.Objects;
 import java.util.ResourceBundle;

@@ -6,11 +6,12 @@ import java.util.function.Supplier;
 import com.gluonhq.ignite.guice.GuiceContext;
 import com.google.inject.Module;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
 class AppGuiceContext extends GuiceContext implements FXMLLoaderFactory {
 
-	AppGuiceContext(Object contextRoot, Supplier<Collection<Module>> modules) {
+	AppGuiceContext(Application contextRoot, Supplier<Collection<Module>> modules) {
 		super(contextRoot, modules);
 	}
 

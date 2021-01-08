@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 /**
  * JavaFX App
  */
-public class App extends Application {
+public class RegattaHD extends Application {
 
 	private AppGuiceContext context = new AppGuiceContext(this,
 			() -> Arrays.asList(new GuiceModule(), new AquariusDBModule()));
@@ -40,7 +40,7 @@ public class App extends Application {
 	}
 
 	private Parent loadFXML(String fxml, ResourceBundle bundle) throws IOException {
-		this.fxmlLoader.setLocation(App.class.getResource(fxml));
+		this.fxmlLoader.setLocation(RegattaHD.class.getResource(fxml));
 		this.fxmlLoader.setResources(bundle);
 		return this.fxmlLoader.load();
 	}
@@ -52,7 +52,7 @@ public class App extends Application {
 	class GuiceModule extends AbstractModule {
 		@Override
 		protected void configure() {
-			bind(FXMLLoaderFactory.class).toInstance(App.this.context);
+			bind(FXMLLoaderFactory.class).toInstance(RegattaHD.this.context);
 		}
 	}
 }
