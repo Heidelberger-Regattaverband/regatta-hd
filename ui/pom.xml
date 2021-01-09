@@ -46,7 +46,7 @@
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
-          <mainClass>de.regatta_hd.ui.App</mainClass>
+          <mainClass>de.regatta_hd.ui.RegattaHD</mainClass>
           <options>
             <option>--add-opens</option>
             <option>java.base/java.lang=com.google.guice</option>
