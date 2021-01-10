@@ -33,7 +33,7 @@ public class RegattaHD extends Application {
 
 		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
 
-		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/primary.fxml", bundle), 640, 480);
+		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/PrimaryView.fxml", bundle), 640, 480);
 		stage.setScene(scene);
 		stage.setTitle(bundle.getString("MainWindow.title"));
 		stage.show();

@@ -90,7 +90,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleArrangements() {
 		try {
-			newWindow("DivisionsPane.fxml", "Einteilungen");
+			newWindow("DivisionsView.fxml", "Einteilungen");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +99,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleEvents() {
 		try {
-			newWindow("events.fxml", "Regatten");
+			newWindow("EventsView.fxml", "Regatten");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
