@@ -12,7 +12,6 @@ import de.regatta_hd.aquarius.db.ConnectionData;
 import de.regatta_hd.ui.ConnectionDataStore;
 import de.regatta_hd.ui.dialog.DatabaseConnectionDialog;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -33,10 +32,10 @@ public class PrimaryController extends AbstractBaseController {
 	private MenuItem databaseDisconnect;
 
 	@FXML
-	private MenuItem events;
+	private MenuItem eventsMitm;
 
 	@FXML
-	private MenuItem arrangements;
+	private MenuItem divisionsMitm;
 
 	@FXML
 	private MenuBar menuBar;
@@ -50,16 +49,6 @@ public class PrimaryController extends AbstractBaseController {
 		Platform.runLater(() -> {
 			handleDatabaseConnect();
 		});
-	}
-
-	/**
-	 * Handle action related to "About" menu item.
-	 *
-	 * @param event Event on "About" menu item.
-	 */
-	@FXML
-	private void handleAboutAction(ActionEvent event) {
-		System.out.println("You clicked on About!");
 	}
 
 	@FXML
@@ -88,9 +77,9 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void handleArrangements() {
+	private void handleDivisions() {
 		try {
-			newWindow("DivisionsView.fxml", "Einteilungen");
+			newWindow("DivisionsView.fxml", this.resources.getString("PrimaryView.MenuItem.Divisions.text"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +88,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleEvents() {
 		try {
-			newWindow("EventsView.fxml", "Regatten");
+			newWindow("EventsView.fxml", this.resources.getString("PrimaryView.MenuItem.Events.text"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -113,7 +102,7 @@ public class PrimaryController extends AbstractBaseController {
 	private void updateControls() {
 		this.databaseConnect.setDisable(this.aquarius.isOpen());
 		this.databaseDisconnect.setDisable(!this.aquarius.isOpen());
-		this.events.setDisable(!this.aquarius.isOpen());
-		this.arrangements.setDisable(!this.aquarius.isOpen());
+		this.eventsMitm.setDisable(!this.aquarius.isOpen());
+		this.divisionsMitm.setDisable(!this.aquarius.isOpen());
 	}
 }

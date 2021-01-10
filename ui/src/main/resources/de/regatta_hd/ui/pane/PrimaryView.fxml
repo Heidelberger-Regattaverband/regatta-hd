@@ -10,29 +10,21 @@
   <top>
     <MenuBar fx:id="menuBar">
       <menus>
-        <Menu text="%Primary.Menu.Database.text">
+        <Menu text="%PrimaryView.Menu.Database.text">
           <items>
-            <MenuItem fx:id="databaseConnect" text="%Primary.MenuItem.DatabaseConnect.text"
+            <MenuItem fx:id="databaseConnect" text="%PrimaryView.MenuItem.DatabaseConnect.text"
               onAction="#handleDatabaseConnect" />
-            <MenuItem fx:id="databaseDisconnect" text="%Primary.MenuItem.DatabaseDisconnect.text"
+            <MenuItem fx:id="databaseDisconnect" text="%PrimaryView.MenuItem.DatabaseDisconnect.text"
               onAction="#handleDatabaseDisconnect" />
             <SeparatorMenuItem />
-            <MenuItem text="%Primary.MenuItem.Exit.text" onAction="#handleExit" />
+            <MenuItem text="%PrimaryView.MenuItem.Exit.text" onAction="#handleExit" />
           </items>
         </Menu>
-        <Menu text="%Primary.Menu.Administration.text">
+        <Menu text="%PrimaryView.Menu.Administration.text">
           <items>
-            <MenuItem fx:id="events" text="%Primary.MenuItem.Events.text" onAction="#handleEvents" />
-            <MenuItem fx:id="arrangements" text="%Primary.MenuItem.Arrangements.text"
-              onAction="#handleArrangements" />
-          </items>
-        </Menu>
-        <Menu text="Help">
-          <items>
-            <MenuItem text="Search" disable="true" />
-            <MenuItem text="Online Manual" visible="false" />
-            <SeparatorMenuItem />
-            <MenuItem text="About" onAction="#handleAboutAction" />
+            <MenuItem fx:id="eventsMitm" text="%PrimaryView.MenuItem.Events.text" onAction="#handleEvents" />
+            <MenuItem fx:id="divisionsMitm" text="%PrimaryView.MenuItem.Divisions.text"
+              onAction="#handleDivisions" />
           </items>
         </Menu>
       </menus>

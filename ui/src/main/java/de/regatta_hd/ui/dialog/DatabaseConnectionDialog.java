@@ -27,20 +27,20 @@ public class DatabaseConnectionDialog extends Dialog<ConnectionData> {
 		if (!decorated) {
 			initStyle(StageStyle.UNDECORATED);
 		}
-		setHeaderText(resources.getString("ConnectionDialog.title"));
+		setHeaderText(resources.getString("DatabaseConnectionDialog.title"));
 
 		GridPane gridpane = new GridPane();
 		gridpane.setPadding(new Insets(5));
 		gridpane.setHgap(5);
 		gridpane.setVgap(5);
 
-		Label dbHostLbl = new Label(resources.getString("ConnectionDialog.dbHost"));
+		Label dbHostLbl = new Label(resources.getString("DatabaseConnectionDialog.dbHost"));
 		gridpane.add(dbHostLbl, 0, 1);
-		Label dbNameLbl = new Label(resources.getString("ConnectionDialog.dbName"));
+		Label dbNameLbl = new Label(resources.getString("DatabaseConnectionDialog.dbName"));
 		gridpane.add(dbNameLbl, 0, 2);
-		Label userNameLbl = new Label(resources.getString("ConnectionDialog.userName"));
+		Label userNameLbl = new Label(resources.getString("DatabaseConnectionDialog.userName"));
 		gridpane.add(userNameLbl, 0, 3);
-		Label passwordLbl = new Label(resources.getString("ConnectionDialog.password"));
+		Label passwordLbl = new Label(resources.getString("DatabaseConnectionDialog.password"));
 		gridpane.add(passwordLbl, 0, 4);
 
 		TextField hostNameFld = new TextField(this.connectionData.getDbHost());
