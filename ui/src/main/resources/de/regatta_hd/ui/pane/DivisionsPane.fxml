@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/15.0.1"
+  xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.DivisionsController">
+  <children>
+    <ComboBox fx:id="eventCombo" promptText="choose">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Apple" />
+          <String fx:value="Orange" />
+          <String fx:value="Pear" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <!-- <TextField id="input" fx:id="inputField" layoutX="15.0" layoutY="25.0" />
+    <Label id="output" fx:id="label" layoutX="15.0" layoutY="84.0" text="TEXT GOES HERE" GridPane.rowIndex="1" />
+    Button id="action" fx:id="applyButton" layoutX="124.0" layoutY="160.0" mnemonicParsing="false" onAction="#applyButtonClicked"
+      text="Apply" GridPane.rowIndex="2" / -->
+  </children>
+  <columnConstraints>
+    <ColumnConstraints />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" />
+  </rowConstraints>
+</GridPane>

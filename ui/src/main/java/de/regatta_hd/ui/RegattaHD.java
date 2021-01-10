@@ -21,7 +21,7 @@ import javafx.stage.Stage;
  */
 public class RegattaHD extends Application {
 
-	private AppGuiceContext context = new AppGuiceContext(this,
+	private RegattaHDGuiceContext context = new RegattaHDGuiceContext(this,
 			() -> Arrays.asList(new GuiceModule(), new AquariusDBModule()));
 
 	@Inject
@@ -53,6 +53,7 @@ public class RegattaHD extends Application {
 		@Override
 		protected void configure() {
 			bind(FXMLLoaderFactory.class).toInstance(RegattaHD.this.context);
+			bind(ConnectionDataStore.class).to(ConnectionDataStoreImpl.class);
 		}
 	}
 }

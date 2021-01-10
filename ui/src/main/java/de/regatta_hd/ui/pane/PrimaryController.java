@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.ConnectionData;
+import de.regatta_hd.ui.ConnectionDataStore;
 import de.regatta_hd.ui.dialog.DatabaseConnectionDialog;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -21,6 +22,9 @@ public class PrimaryController extends AbstractBaseController {
 
 	@Inject
 	private AquariusDB aquarius;
+
+	@Inject
+	private ConnectionDataStore connectionDataStore;
 
 	@FXML
 	private MenuItem databaseConnect;
@@ -61,11 +65,17 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleDatabaseConnect() {
 		if (!this.aquarius.isOpen()) {
-			DatabaseConnectionDialog dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(),
-					true, this.resources);
-			Optional<ConnectionData> result = dialog.showAndWait();
-			if (result.isPresent()) {
-				this.aquarius.open(result.get());
+			DatabaseConnectionDialog dialog;
+			try {
+				dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, this.resources,
+						this.connectionDataStore.getLastSuccessful());
+				Optional<ConnectionData> result = dialog.showAndWait();
+				if (result.isPresent()) {
+					this.aquarius.open(result.get());
+					this.connectionDataStore.setLastSuccessful(result.get());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		updateControls();
@@ -80,7 +90,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleArrangements() {
 		try {
-			newWindow("arrangements.fxml", "Einstellungen");
+			newWindow("DivisionsPane.fxml", "Einteilungen");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -17,8 +17,12 @@ import javafx.stage.StageStyle;
 
 public class DatabaseConnectionDialog extends Dialog<ConnectionData> {
 
-	public DatabaseConnectionDialog(Stage primaryStage, boolean decorated, ResourceBundle resources) {
+	private ConnectionData connectionData;
+
+	public DatabaseConnectionDialog(Stage primaryStage, boolean decorated, ResourceBundle resources,
+			ConnectionData connectionData) {
 		initOwner(Objects.requireNonNull(primaryStage, "primaryStage"));
+		this.connectionData = Objects.requireNonNullElse(connectionData, ConnectionData.builder().build());
 
 		if (!decorated) {
 			initStyle(StageStyle.UNDECORATED);
@@ -39,26 +43,28 @@ public class DatabaseConnectionDialog extends Dialog<ConnectionData> {
 		Label passwordLbl = new Label(resources.getString("ConnectionDialog.password"));
 		gridpane.add(passwordLbl, 0, 4);
 
-		TextField hostNameFld = new TextField("192.168.0.130");
+		TextField hostNameFld = new TextField(this.connectionData.getDbHost());
 		gridpane.add(hostNameFld, 1, 1);
-		TextField dbNameFld = new TextField("rudern");
+		TextField dbNameFld = new TextField(this.connectionData.getDbName());
 		gridpane.add(dbNameFld, 1, 2);
-		TextField userNameFld = new TextField("sa");
+		TextField userNameFld = new TextField(this.connectionData.getUserName());
 		gridpane.add(userNameFld, 1, 3);
 		PasswordField passwordFld = new PasswordField();
-		passwordFld.setText("regatta");
+		passwordFld.setText(this.connectionData.getPassword());
 		gridpane.add(passwordFld, 1, 4);
 
 		getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		getDialogPane().setContent(gridpane);
 
 		setResultConverter((dialogButton) -> {
-			ConnectionData connection = null;
 			if (dialogButton.getButtonData() == ButtonData.OK_DONE) {
-				connection = ConnectionData.builder().dbHost(hostNameFld.getText()).dbName(dbNameFld.getText())
-						.userName(userNameFld.getText()).password(passwordFld.getText()).build();
+				this.connectionData.setDbHost(hostNameFld.getText());
+				this.connectionData.setDbName(dbNameFld.getText());
+				this.connectionData.setUserName(userNameFld.getText());
+				this.connectionData.setPassword(passwordFld.getText());
+				return this.connectionData;
 			}
-			return connection;
+			return null;
 		});
 	}
 }

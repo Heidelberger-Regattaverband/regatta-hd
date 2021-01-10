@@ -37,7 +37,7 @@ class AquariusDBTests {
 
 	private static final String DB_NAME = "rudern";
 
-	private static final String HOST_NAME = "192.168.0.130";
+	private static final String HOST_NAME = "192.168.3.104";
 
 	private static AquariusDB aquariusDb;
 

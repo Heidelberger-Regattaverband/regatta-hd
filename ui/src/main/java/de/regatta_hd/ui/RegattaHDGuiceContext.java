@@ -9,9 +9,9 @@ import com.google.inject.Module;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
-class AppGuiceContext extends GuiceContext implements FXMLLoaderFactory {
+class RegattaHDGuiceContext extends GuiceContext implements FXMLLoaderFactory {
 
-	AppGuiceContext(Application contextRoot, Supplier<Collection<Module>> modules) {
+	RegattaHDGuiceContext(Application contextRoot, Supplier<Collection<Module>> modules) {
 		super(contextRoot, modules);
 	}
 
