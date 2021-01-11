@@ -13,8 +13,11 @@
     <Label text="%DivisionsView.EventLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
     <ComboBox fx:id="eventCombo" promptText="Regatta" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-    <Label text="%DivisionsView.OfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <ComboBox fx:id="offerCombo" promptText="Rennen" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Label text="%DivisionsView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <ComboBox fx:id="targetOfferCombo" promptText="Rennen" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+    <Label text="%DivisionsView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <ComboBox fx:id="sourceOfferCombo" promptText="Rennen" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
     <!-- <TextField id="input" fx:id="inputField" layoutX="15.0" layoutY="25.0" /> <Label id="output" fx:id="label" layoutX="15.0"
       layoutY="84.0" text="TEXT GOES HERE" GridPane.rowIndex="1" /> Button id="action" fx:id="applyButton" layoutX="124.0" layoutY="160.0"
@@ -22,6 +25,7 @@
   </children>
   <columnConstraints>
     <ColumnConstraints />
+    <ColumnConstraints fillWidth="true" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints />

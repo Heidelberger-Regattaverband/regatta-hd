@@ -19,6 +19,9 @@ import de.regatta_hd.aquarius.db.AquariusDBModule;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
+import de.regatta_hd.aquarius.db.model.AgeClassId;
+import de.regatta_hd.aquarius.db.model.BoatClass;
+import de.regatta_hd.aquarius.db.model.BoatClassId;
 import de.regatta_hd.aquarius.db.model.Comp;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Crew;
@@ -88,6 +91,18 @@ class AquariusDBTests {
 	}
 
 	@Test
+	void testFindOffers() {
+		BoatClass boatClass = aquariusDb.getEntityManager().getReference(BoatClass.class, new BoatClassId(1));
+		AgeClass ageClass = aquariusDb.getEntityManager().getReference(AgeClass.class, new AgeClassId(11));
+
+		Event event = aquariusDb.getEntityManager().getReference(Event.class, new EventId(1));
+		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
+		Assertions.assertFalse(offers.isEmpty());
+
+		offers.forEach(offer -> trace(offer, 0));
+	}
+
+	@Test
 	void testGetEventOK() {
 		EventId id = new EventId(1);
 		Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
@@ -100,7 +115,6 @@ class AquariusDBTests {
 		Assertions.assertEquals("104", offer.getRaceNumber());
 
 		trace(offer, 1);
-//		event.getOffers().forEach(this::trace);
 	}
 
 	@Test

@@ -98,7 +98,7 @@ public class Offer {
 
 	@Basic
 	@Column(name = "Offer_IsLightweight")
-	private boolean isLightweight;
+	private boolean lightweight;
 
 	@Basic
 	@Column(name = "Offer_LongLabel", length = 64)

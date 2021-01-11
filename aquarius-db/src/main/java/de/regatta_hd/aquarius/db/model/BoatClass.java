@@ -43,6 +43,7 @@ public class BoatClass {
 
 	@Id
 	@Column(name = "BoatClass_ID", columnDefinition = "int identity")
+	@ToString.Include(rank = 1)
 	private int id;
 
 	@Basic

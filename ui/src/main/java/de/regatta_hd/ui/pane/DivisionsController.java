@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
@@ -19,7 +20,10 @@ public class DivisionsController extends AbstractBaseController {
 	private ComboBox<Event> eventCombo;
 
 	@FXML
-	private ComboBox<Offer> offerCombo;
+	private ComboBox<Offer> sourceOfferCombo;
+
+	@FXML
+	private ComboBox<Offer> targetOfferCombo;
 
 	@Inject
 	private EventDAO events;
@@ -28,27 +32,42 @@ public class DivisionsController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		// add your data to the table here.
 		this.eventCombo.setItems(getEvents());
 		this.eventCombo.setConverter(new EventStringConverter());
 		this.eventCombo.setOnAction(event -> {
-			this.offerCombo.setItems(getOffers());
+			this.targetOfferCombo.setItems(getTargetOffers());
 		});
 
-		this.offerCombo.setItems(getOffers());
-		this.offerCombo.setConverter(new OfferStringConverter());
+		this.targetOfferCombo.setItems(getTargetOffers());
+		this.targetOfferCombo.setConverter(new OfferStringConverter());
+		this.targetOfferCombo.setOnAction(event -> {
+			this.sourceOfferCombo.setItems(getSourceOffers());
+		});
+
+		this.sourceOfferCombo.setItems(getSourceOffers());
+		this.sourceOfferCombo.setConverter(new OfferStringConverter());
 	}
 
-	// add your data here from any source
 	private ObservableList<Event> getEvents() {
 		return FXCollections.observableArrayList(this.events.getEvents());
 	}
 
-	// add your data here from any source
-	private ObservableList<Offer> getOffers() {
+	private ObservableList<Offer> getTargetOffers() {
 		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
 		if (event != null) {
 			return FXCollections.observableArrayList(event.getOffers());
+		}
+		return FXCollections.emptyObservableList();
+	}
+
+	private ObservableList<Offer> getSourceOffers() {
+		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
+		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+
+		if (event != null && targetOffer != null) {
+			List<Offer> sourceOffers = this.events.findOffers(event, targetOffer.getBoatClass(),
+					targetOffer.getAgeClass(), targetOffer.isLightweight());
+			return FXCollections.observableArrayList(sourceOffers);
 		}
 		return FXCollections.emptyObservableList();
 	}

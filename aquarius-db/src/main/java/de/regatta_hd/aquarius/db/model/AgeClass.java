@@ -43,7 +43,6 @@ public class AgeClass {
 
 	@Basic
 	@Column(name = "AgeClass_Caption", nullable = false, length = 48)
-	@ToString.Include(rank = 9)
 	private String caption;
 
 	@Basic
@@ -53,6 +52,7 @@ public class AgeClass {
 
 	@Id
 	@Column(name = "AgeClass_ID", columnDefinition = "int identity")
+	@ToString.Include(rank = 1)
 	private int id;
 
 	@Basic
