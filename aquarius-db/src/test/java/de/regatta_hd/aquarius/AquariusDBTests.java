@@ -19,9 +19,7 @@ import de.regatta_hd.aquarius.db.AquariusDBModule;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
-import de.regatta_hd.aquarius.db.model.AgeClassId;
 import de.regatta_hd.aquarius.db.model.BoatClass;
-import de.regatta_hd.aquarius.db.model.BoatClassId;
 import de.regatta_hd.aquarius.db.model.Comp;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Crew;
@@ -92,8 +90,8 @@ class AquariusDBTests {
 
 	@Test
 	void testFindOffers() {
-		BoatClass boatClass = aquariusDb.getEntityManager().getReference(BoatClass.class, new BoatClassId(1));
-		AgeClass ageClass = aquariusDb.getEntityManager().getReference(AgeClass.class, new AgeClassId(11));
+		BoatClass boatClass = masterData.getBoatClass(1);
+		AgeClass ageClass = masterData.getAgeClass(11);
 
 		Event event = aquariusDb.getEntityManager().getReference(Event.class, new EventId(1));
 		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);

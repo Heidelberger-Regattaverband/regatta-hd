@@ -13,4 +13,8 @@ public interface MasterDataDAO {
 	List<BoatClass> getBoatClasses();
 
 	List<Club> getClubs();
+
+	AgeClass getAgeClass(int id);
+
+	BoatClass getBoatClass(int id);
 }
