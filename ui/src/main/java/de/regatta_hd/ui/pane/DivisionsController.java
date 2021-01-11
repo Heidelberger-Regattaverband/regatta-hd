@@ -12,6 +12,7 @@ import de.regatta_hd.aquarius.db.model.Offer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
@@ -24,6 +25,9 @@ public class DivisionsController extends AbstractBaseController {
 
 	@FXML
 	private ComboBox<Offer> targetOfferCombo;
+
+	@FXML
+	private Button setRaceButton;
 
 	@Inject
 	private EventDAO events;
@@ -46,6 +50,14 @@ public class DivisionsController extends AbstractBaseController {
 
 		this.sourceOfferCombo.setItems(getSourceOffers());
 		this.sourceOfferCombo.setConverter(new OfferStringConverter());
+		this.sourceOfferCombo.setOnAction(event -> {
+			this.setRaceButton.setDisable(false);
+		});
+
+		this.setRaceButton.setDisable(true);
+		this.setRaceButton.setOnAction(event -> {
+
+		});
 	}
 
 	private ObservableList<Event> getEvents() {
