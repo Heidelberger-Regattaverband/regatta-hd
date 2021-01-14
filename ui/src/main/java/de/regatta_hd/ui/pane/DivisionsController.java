@@ -3,6 +3,7 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ public class DivisionsController extends AbstractBaseController {
 	private Button setRaceButton;
 
 	@Inject
-	private EventDAO events;
+	private EventDAO eventsDAO;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -45,7 +46,11 @@ public class DivisionsController extends AbstractBaseController {
 		this.targetOfferCombo.setItems(getTargetOffers());
 		this.targetOfferCombo.setConverter(new OfferStringConverter());
 		this.targetOfferCombo.setOnAction(event -> {
-			this.sourceOfferCombo.setItems(getSourceOffers());
+			ObservableList<Offer> offers = getSourceOffers();
+			this.sourceOfferCombo.setItems(offers);
+			if (offers.size() == 1) {
+				this.sourceOfferCombo.getSelectionModel().selectFirst();
+			}
 		});
 
 		this.sourceOfferCombo.setItems(getSourceOffers());
@@ -61,7 +66,7 @@ public class DivisionsController extends AbstractBaseController {
 	}
 
 	private ObservableList<Event> getEvents() {
-		return FXCollections.observableArrayList(this.events.getEvents());
+		return FXCollections.observableArrayList(this.eventsDAO.getEvents());
 	}
 
 	private ObservableList<Offer> getTargetOffers() {
@@ -77,8 +82,14 @@ public class DivisionsController extends AbstractBaseController {
 		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
 
 		if (event != null && targetOffer != null) {
-			List<Offer> sourceOffers = this.events.findOffers(event, targetOffer.getBoatClass(),
+			// get all offers with same attributes
+			List<Offer> sourceOffers = this.eventsDAO.findOffers(event, targetOffer.getBoatClass(),
 					targetOffer.getAgeClass(), targetOffer.isLightweight());
+
+			// filter target offer
+			sourceOffers = sourceOffers.stream().filter(offer -> targetOffer.getId() != offer.getId())
+					.collect(Collectors.toList());
+
 			return FXCollections.observableArrayList(sourceOffers);
 		}
 		return FXCollections.emptyObservableList();
