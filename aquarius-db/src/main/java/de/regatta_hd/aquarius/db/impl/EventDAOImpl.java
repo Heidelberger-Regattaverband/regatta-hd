@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.db.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ import javax.persistence.criteria.Root;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
+import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
@@ -45,9 +47,10 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 				cb.equal(o.get("event"), eventParam) //
 		));
 
-		return createTypedQuery(query)
+		return createTypedQuery(query) //
 				.setParameter(raceNumberParam.getName(), Objects.requireNonNull(raceNumber, "raceNumber is null"))
-				.setParameter(eventParam.getName(), Objects.requireNonNull(event, "event is null")).getSingleResult();
+				.setParameter(eventParam.getName(), Objects.requireNonNull(event, "event is null")) //
+				.getSingleResult();
 	}
 
 	@Override
@@ -68,10 +71,23 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 				cb.equal(o.get("ageClass"), ageClassParam), //
 				cb.equal(o.get("event"), eventParam) //
 		));
-		return createTypedQuery(query).setParameter(lightweightParam.getName(), lightweight)
+
+		return createTypedQuery(query) //
+				.setParameter(lightweightParam.getName(), lightweight)
 				.setParameter(boatClassParam.getName(), Objects.requireNonNull(boatClass, "boatClass is null"))
 				.setParameter(ageClassParam.getName(), Objects.requireNonNull(ageClass, "ageClass is null"))
 				.setParameter(eventParam.getName(), Objects.requireNonNull(event, "event is null")) //
 				.getResultList();
+	}
+
+	@Override
+	public void setRace(Offer targetOffer, Offer sourceOffer) {
+		List<List<CompEntries>> raceEntries = new ArrayList<>();
+
+		sourceOffer.getComps().forEach(comps -> {
+			comps.getCompEntries().forEach(compEntry -> {
+				compEntry.getEntry().getCrews();
+			});
+		});
 	}
 }

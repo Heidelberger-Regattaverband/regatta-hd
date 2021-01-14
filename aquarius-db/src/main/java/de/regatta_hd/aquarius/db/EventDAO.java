@@ -17,4 +17,6 @@ public interface EventDAO {
 	Offer getOffer(Event event, String raceNumber);
 
 	List<Offer> findOffers(Event event, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
+
+	void setRace(Offer targetOffer, Offer sourceOffer);
 }
