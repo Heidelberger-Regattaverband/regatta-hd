@@ -13,5 +13,6 @@ public class AquariusDBModule extends AbstractModule {
 		bind(AquariusDB.class).to(AqauriusDBImpl.class);
 		bind(EventDAO.class).to(EventDAOImpl.class);
 		bind(MasterDataDAO.class).to(MasterDataDAOImpl.class);
+		bind(ConnectionDataStore.class).to(ConnectionDataStoreImpl.class);
 	}
 }

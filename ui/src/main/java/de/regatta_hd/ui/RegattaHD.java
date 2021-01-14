@@ -53,7 +53,6 @@ public class RegattaHD extends Application {
 		@Override
 		protected void configure() {
 			bind(FXMLLoaderFactory.class).toInstance(RegattaHD.this.context);
-			bind(ConnectionDataStore.class).to(ConnectionDataStoreImpl.class);
 		}
 	}
 }

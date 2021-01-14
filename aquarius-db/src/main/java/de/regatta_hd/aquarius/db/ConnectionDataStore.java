@@ -1,8 +1,6 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.aquarius.db;
 
 import java.io.IOException;
-
-import de.regatta_hd.aquarius.db.ConnectionData;
 
 public interface ConnectionDataStore {
 

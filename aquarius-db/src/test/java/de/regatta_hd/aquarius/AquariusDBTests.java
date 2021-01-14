@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -16,6 +17,8 @@ import com.google.inject.Injector;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
+import de.regatta_hd.aquarius.db.ConnectionData;
+import de.regatta_hd.aquarius.db.ConnectionDataStore;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
@@ -32,25 +35,23 @@ import de.regatta_hd.aquarius.db.model.Result;
 
 class AquariusDBTests {
 
-	private static final String PASSWORD = "regatta";
-
-	private static final String USER_NAME = "sa";
-
-	private static final String DB_NAME = "rudern";
-
-	private static final String HOST_NAME = "192.168.3.104";
-
 	private static AquariusDB aquariusDb;
 
 	private static EventDAO eventDAO;
 
 	private static MasterDataDAO masterData;
 
+	private static ConnectionData connectionData;
+
 	@BeforeAll
-	static void setUpBeforeClass() {
+	static void setUpBeforeClass() throws IOException {
 		Injector injector = Guice.createInjector(new AquariusDBModule());
+
+		ConnectionDataStore connStore = injector.getInstance(ConnectionDataStore.class);
+		connectionData = connStore.getLastSuccessful();
+
 		aquariusDb = injector.getInstance(AquariusDB.class);
-		aquariusDb.open(HOST_NAME, DB_NAME, USER_NAME, PASSWORD);
+		aquariusDb.open(connectionData);
 
 		eventDAO = injector.getInstance(EventDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
@@ -74,7 +75,7 @@ class AquariusDBTests {
 
 	@Test
 	void testOpen() {
-		aquariusDb.open(HOST_NAME, DB_NAME, USER_NAME, PASSWORD);
+		aquariusDb.open(connectionData);
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.aquarius.db;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -9,8 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
-
-import de.regatta_hd.aquarius.db.ConnectionData;
 
 class ConnectionDataStoreImpl implements ConnectionDataStore {
 
