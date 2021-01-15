@@ -36,8 +36,6 @@
   </children>
   <columnConstraints>
     <ColumnConstraints />
-    <ColumnConstraints fillWidth="true" />
+    <ColumnConstraints hgrow="ALWAYS" fillWidth="true" />
   </columnConstraints>
-  <rowConstraints>
-  </rowConstraints>
 </GridPane>
