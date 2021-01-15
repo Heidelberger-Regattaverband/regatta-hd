@@ -12,7 +12,6 @@ import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.Offer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
