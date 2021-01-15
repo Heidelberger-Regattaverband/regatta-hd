@@ -17,7 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 
-public class DivisionsController extends AbstractBaseController {
+public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private ComboBox<Event> eventCombo;
 
