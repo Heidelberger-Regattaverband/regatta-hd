@@ -24,7 +24,7 @@
           <items>
             <MenuItem fx:id="eventsMitm" text="%PrimaryView.MenuItem.Events.text" onAction="#handleEvents" />
             <MenuItem fx:id="divisionsMitm" text="%PrimaryView.MenuItem.SetRace.text"
-              onAction="#handleDivisions" />
+              onAction="#handleSetRace" />
           </items>
         </Menu>
       </menus>

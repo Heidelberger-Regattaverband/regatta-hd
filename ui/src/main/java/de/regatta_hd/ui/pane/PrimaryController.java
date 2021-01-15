@@ -77,7 +77,7 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void handleDivisions() {
+	private void handleSetRace() {
 		try {
 			newWindow("SetRaceView.fxml", this.resources.getString("PrimaryView.MenuItem.SetRace.text"));
 		} catch (IOException e) {
