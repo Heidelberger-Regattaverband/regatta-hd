@@ -7,6 +7,8 @@
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
+<?import de.regatta_hd.ui.pane.OfferStringConverter?>
+<?import de.regatta_hd.ui.pane.EventStringConverter?>
 
 <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
   fx:controller="de.regatta_hd.ui.pane.SetRaceController">
@@ -17,25 +19,37 @@
   <children>
     <Label text="%SetRaceView.EventLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
     <ComboBox fx:id="eventCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
-      GridPane.columnIndex="1" GridPane.rowIndex="0" />
+      GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleEventOnAction">
+      <converter>
+        <EventStringConverter />
+      </converter>
+    </ComboBox>
 
     <Label text="%SetRaceView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
     <ComboBox fx:id="targetOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
-      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleTargetOfferOnAction">
+      <converter>
+        <OfferStringConverter />
+      </converter>
+    </ComboBox>
 
     <Label text="%SetRaceView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
     <ComboBox fx:id="sourceOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
-      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#handleSourceOfferOnAction">
+      <converter>
+        <OfferStringConverter />
+      </converter>
+    </ComboBox>
 
     <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
       <children>
-        <Button fx:id="setRaceButton" prefWidth="100" defaultButton="true" text="Rennen setzen"
-          alignment="CENTER"></Button>
+        <Button fx:id="setRaceButton" prefWidth="100" defaultButton="true" text="%SetRaceView.SetRaceButton.text"
+          alignment="CENTER" onAction="#handleSetRaceOnAction" />
       </children>
     </HBox>
   </children>
   <columnConstraints>
     <ColumnConstraints />
-    <ColumnConstraints hgrow="ALWAYS" fillWidth="true" />
+    <ColumnConstraints hgrow="SOMETIMES" fillWidth="true" />
   </columnConstraints>
 </GridPane>

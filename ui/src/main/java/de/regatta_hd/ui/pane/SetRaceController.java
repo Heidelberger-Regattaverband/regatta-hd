@@ -12,12 +12,13 @@ import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.Offer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.util.StringConverter;
 
 public class SetRaceController extends AbstractBaseController {
+
 	@FXML
 	private ComboBox<Event> eventCombo;
 
@@ -38,31 +39,37 @@ public class SetRaceController extends AbstractBaseController {
 		super.initialize(location, resources);
 
 		this.eventCombo.setItems(getEvents());
-		this.eventCombo.setConverter(new EventStringConverter());
-		this.eventCombo.setOnAction(event -> {
-			this.targetOfferCombo.setItems(getTargetOffers());
-		});
 
 		this.targetOfferCombo.setItems(getTargetOffers());
-		this.targetOfferCombo.setConverter(new OfferStringConverter());
-		this.targetOfferCombo.setOnAction(event -> {
-			ObservableList<Offer> offers = getSourceOffers();
-			this.sourceOfferCombo.setItems(offers);
-			if (offers.size() == 1) {
-				this.sourceOfferCombo.getSelectionModel().selectFirst();
-			}
-		});
 
 		this.sourceOfferCombo.setItems(getSourceOffers());
-		this.sourceOfferCombo.setConverter(new OfferStringConverter());
-		this.sourceOfferCombo.setOnAction(event -> {
-			this.setRaceButton.setDisable(false);
-		});
 
 		this.setRaceButton.setDisable(true);
-		this.setRaceButton.setOnAction(event -> {
+	}
 
-		});
+	@FXML
+	private void handleEventOnAction() {
+		this.targetOfferCombo.setItems(getTargetOffers());
+	}
+
+	@FXML
+	private void handleTargetOfferOnAction() {
+		ObservableList<Offer> offers = getSourceOffers();
+		this.sourceOfferCombo.setItems(offers);
+		if (offers.size() == 1) {
+			this.sourceOfferCombo.getSelectionModel().selectFirst();
+		}
+	}
+
+	@FXML
+	private void handleSourceOfferOnAction() {
+		this.setRaceButton.setDisable(false);
+	}
+
+	@FXML
+	private void handleSetRaceOnAction() {
+		this.eventsDAO.setRace(this.targetOfferCombo.getSelectionModel().getSelectedItem(),
+				this.sourceOfferCombo.getSelectionModel().getSelectedItem());
 	}
 
 	private ObservableList<Event> getEvents() {
@@ -93,31 +100,5 @@ public class SetRaceController extends AbstractBaseController {
 			return FXCollections.observableArrayList(sourceOffers);
 		}
 		return FXCollections.emptyObservableList();
-	}
-
-	class EventStringConverter extends StringConverter<Event> {
-
-		@Override
-		public String toString(Event event) {
-			return event.getTitle();
-		}
-
-		@Override
-		public Event fromString(String string) {
-			return null;
-		}
-	}
-
-	class OfferStringConverter extends StringConverter<Offer> {
-
-		@Override
-		public String toString(Offer offer) {
-			return offer.getRaceNumber() + " - " + offer.getLongLabel();
-		}
-
-		@Override
-		public Offer fromString(String string) {
-			return null;
-		}
 	}
 }
