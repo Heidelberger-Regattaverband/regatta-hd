@@ -7,6 +7,9 @@ public class OfferStringConverter extends StringConverter<Offer> {
 
 	@Override
 	public String toString(Offer offer) {
+		if (offer == null) {
+			return null;
+		}
 		return offer.getRaceNumber() + " - " + offer.getLongLabel();
 	}
 
