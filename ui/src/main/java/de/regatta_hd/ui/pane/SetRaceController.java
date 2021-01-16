@@ -10,13 +10,19 @@ import javax.inject.Inject;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.Event;
 import de.regatta_hd.aquarius.db.model.Offer;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.VBox;
 
 public class SetRaceController extends AbstractBaseController {
+
+	private final SimpleListProperty<Offer> targetOffersProp = new SimpleListProperty<>();
+
+	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
 
 	@FXML
 	private ComboBox<Event> eventCombo;
@@ -26,6 +32,12 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private ComboBox<Offer> targetOfferCombo;
+
+	@FXML
+	private VBox sourceVBox;
+
+	@FXML
+	private VBox targetVBox;
 
 	@FXML
 	private Button setRaceButton;
@@ -39,22 +51,22 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.eventCombo.setItems(getEvents());
 
-		this.targetOfferCombo.setItems(getTargetOffers());
+		this.targetOfferCombo.itemsProperty().bind(this.targetOffersProp);
 
-		this.sourceOfferCombo.setItems(getSourceOffers());
+		this.sourceOfferCombo.itemsProperty().bind(this.sourceOffersProp);
 
 		this.setRaceButton.setDisable(true);
 	}
 
 	@FXML
 	private void handleEventOnAction() {
-		this.targetOfferCombo.setItems(getTargetOffers());
+		this.targetOffersProp.set(getTargetOffers());
 	}
 
 	@FXML
 	private void handleTargetOfferOnAction() {
 		ObservableList<Offer> offers = getSourceOffers();
-		this.sourceOfferCombo.setItems(offers);
+		this.sourceOffersProp.set(offers);
 		if (offers.size() == 1) {
 			this.sourceOfferCombo.getSelectionModel().selectFirst();
 		}

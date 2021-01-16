@@ -41,7 +41,18 @@
       </converter>
     </ComboBox>
 
-    <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+      <items>
+        <VBox fx:id="sourceVBox">
+          <Label>Left</Label>
+        </VBox>
+        <VBox fx:id="targetVBox">
+          <Label>Right</Label>
+        </VBox>
+      </items>
+    </SplitPane>
+
+    <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
       <children>
         <Button fx:id="setRaceButton" prefWidth="100" defaultButton="true" text="%SetRaceView.SetRaceButton.text"
           alignment="CENTER" onAction="#handleSetRaceOnAction" />
