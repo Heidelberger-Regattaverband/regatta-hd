@@ -43,11 +43,9 @@
 
     <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
       <items>
-        <VBox fx:id="sourceVBox">
-          <Label>Left</Label>
+        <VBox fx:id="sourceVBox" spacing="5">
         </VBox>
-        <VBox fx:id="targetVBox">
-          <Label>Right</Label>
+        <VBox fx:id="targetVBox" spacing="5">
         </VBox>
       </items>
     </SplitPane>

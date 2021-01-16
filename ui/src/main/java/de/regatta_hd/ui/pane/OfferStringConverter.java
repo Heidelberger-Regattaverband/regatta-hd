@@ -10,7 +10,7 @@ public class OfferStringConverter extends StringConverter<Offer> {
 		if (offer == null) {
 			return null;
 		}
-		return offer.getRaceNumber() + " - " + offer.getLongLabel();
+		return offer.getRaceNumber() + " - " + offer.getShortLabel() + " - " + offer.getLongLabel();
 	}
 
 	@Override

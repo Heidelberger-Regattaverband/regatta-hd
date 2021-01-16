@@ -35,7 +35,7 @@ abstract class AbstractBaseController implements Initializable {
 		loader.setResources(this.resources);
 		Parent parent = loader.load();
 
-		Scene scene = new Scene(parent, 600, 400);
+		Scene scene = new Scene(parent, 1024, 768);
 		Stage stage = new Stage();
 		stage.setTitle(title);
 		stage.setScene(scene);
