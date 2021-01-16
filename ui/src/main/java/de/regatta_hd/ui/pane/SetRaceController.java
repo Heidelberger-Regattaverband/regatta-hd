@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -109,8 +110,10 @@ public class SetRaceController extends AbstractBaseController {
 				heatNrLabel.setText("Abteilung " + comps.getHeatNumber());
 
 				TableView<CompEntries> compEntriesTable = createTableView();
-				compEntriesTable.setItems(FXCollections.observableArrayList(comps.getCompEntries()));
-				compEntriesTable.sort();
+				SortedList<CompEntries> sortedList = new SortedList<>(
+						FXCollections.observableArrayList(comps.getCompEntries()));
+				compEntriesTable.setItems(sortedList);
+				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
 				this.sourceVBox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
