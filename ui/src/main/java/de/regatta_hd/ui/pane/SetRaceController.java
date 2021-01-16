@@ -189,7 +189,8 @@ public class SetRaceController extends AbstractBaseController {
 	private ObservableList<Offer> getTargetOffers() {
 		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
 		if (event != null) {
-			return FXCollections.observableArrayList(event.getOffers());
+			List<Offer> offers = this.eventsDAO.findOffers(event, "2%");
+			return FXCollections.observableArrayList(offers);
 		}
 		return FXCollections.emptyObservableList();
 	}

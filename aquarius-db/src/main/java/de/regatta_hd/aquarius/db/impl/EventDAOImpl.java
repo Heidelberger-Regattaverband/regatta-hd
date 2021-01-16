@@ -90,4 +90,25 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 			});
 		});
 	}
+
+	@Override
+	public List<Offer> findOffers(Event event, String raceNumber) {
+		CriteriaBuilder cb = getCriteriaBuilder();
+
+		CriteriaQuery<Offer> query = cb.createQuery(Offer.class);
+		Root<Offer> o = query.from(Offer.class);
+
+		ParameterExpression<Event> eventParam = cb.parameter(Event.class, "event");
+		ParameterExpression<String> raceNumberParam = cb.parameter(String.class, "raceNumber");
+
+		query.where(cb.and( //
+				cb.like(o.get("raceNumber"), raceNumberParam), //
+				cb.equal(o.get("event"), eventParam) //
+		));
+
+		return createTypedQuery(query) //
+				.setParameter(raceNumberParam.getName(), Objects.requireNonNull(raceNumber, "raceNumber is null"))
+				.setParameter(eventParam.getName(), Objects.requireNonNull(event, "event is null")) //
+				.getResultList();
+	}
 }
