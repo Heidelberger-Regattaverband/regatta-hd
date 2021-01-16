@@ -133,8 +133,8 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<CompEntries, String> clubCol = new TableColumn<>("Boot");
-		clubCol.setCellValueFactory(row -> {
+		TableColumn<CompEntries, String> boatCol = new TableColumn<>("Boot");
+		boatCol.setCellValueFactory(row -> {
 			Entry entry = row.getValue().getEntry();
 			if (entry != null && entry.getClub() != null) {
 				String value = entry.getClub().getAbbr();
@@ -174,7 +174,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		compEntriesTable.getColumns().add(rankCol);
 		compEntriesTable.getColumns().add(startNrCol);
-		compEntriesTable.getColumns().add(clubCol);
+		compEntriesTable.getColumns().add(boatCol);
 		compEntriesTable.getColumns().add(resultCol);
 
 		compEntriesTable.getSortOrder().add(rankCol);
