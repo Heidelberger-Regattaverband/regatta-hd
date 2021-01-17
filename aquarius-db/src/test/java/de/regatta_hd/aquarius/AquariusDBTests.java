@@ -29,7 +29,6 @@ import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
 import de.regatta_hd.aquarius.db.model.EntryLabel;
 import de.regatta_hd.aquarius.db.model.Event;
-import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
 
@@ -94,7 +93,7 @@ class AquariusDBTests {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Event event = aquariusDb.getEntityManager().getReference(Event.class, new EventId(1));
+		Event event = aquariusDb.getEntityManager().getReference(Event.class, 1);
 		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
@@ -103,9 +102,8 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventOK() {
-		EventId id = new EventId(1);
-		Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
-		Assertions.assertEquals(id.getId(), event.getId());
+		Event event = aquariusDb.getEntityManager().getReference(Event.class, 1);
+		Assertions.assertEquals(1, event.getId());
 		Assertions.assertNotNull(event);
 
 		System.out.println(event.toString());
@@ -119,11 +117,10 @@ class AquariusDBTests {
 	@Test
 	void testGetEventFailed() {
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			EventId id = new EventId(2);
-			Event event = aquariusDb.getEntityManager().getReference(Event.class, id);
-			// as event with ID == 2 doesn't exist, calling any getter causes an
+			Event event = aquariusDb.getEntityManager().getReference(Event.class, 10);
+			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
-			event.getId();
+			event.getClub();
 		});
 	}
 
@@ -138,7 +135,7 @@ class AquariusDBTests {
 		System.out.println(offer.toString());
 
 		offer.getComps().forEach(comp -> trace(comp, indent + 1));
-		offer.getEntrys().forEach(entry -> trace(entry, indent + 1));
+		offer.getEntries().forEach(entry -> trace(entry, indent + 1));
 	}
 
 	private void trace(Comp comp, int indent) {

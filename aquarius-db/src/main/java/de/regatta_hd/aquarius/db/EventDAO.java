@@ -5,14 +5,13 @@ import java.util.List;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Event;
-import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
 
 public interface EventDAO {
 
 	List<Event> getEvents();
 
-	Event getEvent(EventId id);
+	Event getEvent(int id);
 
 	Offer getOffer(Event event, String raceNumber);
 

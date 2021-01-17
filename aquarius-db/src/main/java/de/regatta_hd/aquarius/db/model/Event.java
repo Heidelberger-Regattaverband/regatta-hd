@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -27,7 +26,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Event")
-@IdClass(EventId.class)
 // lombok
 @Data
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +38,7 @@ public class Event {
 	private Set<Comp> comps;
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "event", cascade = CascadeType.MERGE)
-	private Set<Entry> entrys;
+	private Set<Entry> entries;
 
 	@Basic
 	@Column(name = "Event_BoardMemberA", length = 32)

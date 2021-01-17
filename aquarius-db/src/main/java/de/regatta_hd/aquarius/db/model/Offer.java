@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -25,7 +24,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Offer")
-@IdClass(OfferId.class)
 // lombok
 @Getter
 @Setter
@@ -50,7 +48,7 @@ public class Offer {
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	@OrderBy("bib")
-	private Set<Entry> entrys;
+	private Set<Entry> entries;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_Event_ID_FK", nullable = false)

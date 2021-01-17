@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,7 +20,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "CompReferee")
-@IdClass(CompRefereeId.class)
 //lombok
 @Getter
 @Setter
@@ -33,11 +31,11 @@ public class CompReferee {
 
 	@Id
 	@Column(name = "CompReferee_ID", columnDefinition = "int identity")
-	private int compRefereeID;
+	private int id;
 
 	@Basic
 	@Column(name = "CompReferee_Role", length = 1)
-	private String compRefereeRole;
+	private String role;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "CompReferee_Referee_ID_FK", nullable = false)

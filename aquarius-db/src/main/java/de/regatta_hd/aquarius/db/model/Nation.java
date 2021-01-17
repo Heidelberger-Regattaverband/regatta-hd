@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,7 +20,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Nation")
-@IdClass(NationId.class)
 //lombok
 @Getter
 @Setter

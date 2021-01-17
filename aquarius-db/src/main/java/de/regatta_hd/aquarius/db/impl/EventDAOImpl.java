@@ -15,7 +15,6 @@ import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Event;
-import de.regatta_hd.aquarius.db.model.EventId;
 import de.regatta_hd.aquarius.db.model.Offer;
 
 @Singleton
@@ -27,7 +26,7 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 	}
 
 	@Override
-	public Event getEvent(EventId eventId) {
+	public Event getEvent(int eventId) {
 		return getEntity(Event.class, Objects.requireNonNull(eventId, "eventId is null"));
 	}
 

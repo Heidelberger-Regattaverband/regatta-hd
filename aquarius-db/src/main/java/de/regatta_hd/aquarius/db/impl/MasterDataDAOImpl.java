@@ -6,9 +6,7 @@ import javax.inject.Singleton;
 
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
-import de.regatta_hd.aquarius.db.model.AgeClassId;
 import de.regatta_hd.aquarius.db.model.BoatClass;
-import de.regatta_hd.aquarius.db.model.BoatClassId;
 import de.regatta_hd.aquarius.db.model.Club;
 
 @Singleton
@@ -31,11 +29,11 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public AgeClass getAgeClass(int id) {
-		return getEntity(AgeClass.class, new AgeClassId(id));
+		return getEntity(AgeClass.class, id);
 	}
 
 	@Override
 	public BoatClass getBoatClass(int id) {
-		return getEntity(BoatClass.class, new BoatClassId(id));
+		return getEntity(BoatClass.class, id);
 	}
 }

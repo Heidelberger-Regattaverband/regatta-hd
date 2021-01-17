@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -24,7 +23,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Club")
-@IdClass(ClubId.class)
 //lombok
 @Getter
 @Setter
@@ -66,7 +64,7 @@ public class Club {
 	private Set<Crew> crews;
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Entry> entrys;
+	private Set<Entry> entries;
 
 	@OneToMany(targetEntity = Event.class, mappedBy = "club", cascade = CascadeType.MERGE)
 	private Set<Event> events;
