@@ -91,7 +91,10 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSourceOfferOnAction() {
 		this.setRaceButton.setDisable(false);
 
-		showSourceOfferRaces();
+		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
+		showSourceOfferRaces(sourceOffer, this.sourceVBox);
+		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+		showSourceOfferRaces(targetOffer, this.targetVBox);
 	}
 
 	@FXML
@@ -100,12 +103,15 @@ public class SetRaceController extends AbstractBaseController {
 				this.sourceOfferCombo.getSelectionModel().getSelectedItem());
 	}
 
-	private void showSourceOfferRaces() {
-		this.sourceVBox.getChildren().clear();
+	private static void showSourceOfferRaces(Offer offer, VBox vbox) {
+		vbox.getChildren().clear();
 
-		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
-		if (sourceOffer != null) {
-			sourceOffer.getComps().forEach(comps -> {
+		Label title = new Label();
+		title.setText(new OfferStringConverter().toString(offer));
+		vbox.getChildren().add(title);
+
+		if (offer != null) {
+			offer.getComps().forEach(comps -> {
 				Label heatNrLabel = new Label();
 				heatNrLabel.setText("Abteilung " + comps.getHeatNumber());
 
@@ -115,12 +121,12 @@ public class SetRaceController extends AbstractBaseController {
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
-				this.sourceVBox.getChildren().addAll(heatNrLabel, compEntriesTable);
+				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
 		}
 	}
 
-	private TableView<CompEntries> createTableView() {
+	private static TableView<CompEntries> createTableView() {
 		TableView<CompEntries> compEntriesTable = new TableView<>();
 
 		TableColumn<CompEntries, Number> startNrCol = new TableColumn<>("Startnr.");
