@@ -2,6 +2,7 @@ package de.regatta_hd.ui.pane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -40,5 +41,13 @@ abstract class AbstractBaseController implements Initializable {
 		stage.setTitle(title);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	protected String getText(String key, Object... args) {
+		String text = this.resources.getString(key);
+		if (args.length >= 0) {
+			text = MessageFormat.format(text, args);
+		}
+		return text;
 	}
 }

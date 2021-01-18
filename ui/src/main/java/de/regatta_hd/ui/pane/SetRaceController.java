@@ -92,9 +92,9 @@ public class SetRaceController extends AbstractBaseController {
 		this.setRaceButton.setDisable(false);
 
 		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
-		showSourceOfferRaces(sourceOffer, this.sourceVBox);
+		showSourceOfferRaces(sourceOffer, this.sourceVBox, true);
 		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
-		showSourceOfferRaces(targetOffer, this.targetVBox);
+		showSourceOfferRaces(targetOffer, this.targetVBox, false);
 	}
 
 	@FXML
@@ -103,7 +103,7 @@ public class SetRaceController extends AbstractBaseController {
 				this.sourceOfferCombo.getSelectionModel().getSelectedItem());
 	}
 
-	private static void showSourceOfferRaces(Offer offer, VBox vbox) {
+	private void showSourceOfferRaces(Offer offer, VBox vbox, boolean withResult) {
 		vbox.getChildren().clear();
 
 		Label title = new Label();
@@ -112,10 +112,9 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (offer != null) {
 			offer.getComps().forEach(comps -> {
-				Label heatNrLabel = new Label();
-				heatNrLabel.setText("Abteilung " + comps.getHeatNumber());
+				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", comps.getHeatNumber()));
 
-				TableView<CompEntries> compEntriesTable = createTableView();
+				TableView<CompEntries> compEntriesTable = createTableView(withResult);
 				SortedList<CompEntries> sortedList = new SortedList<>(
 						FXCollections.observableArrayList(comps.getCompEntries()));
 				compEntriesTable.setItems(sortedList);
@@ -126,12 +125,13 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private static TableView<CompEntries> createTableView() {
+	private TableView<CompEntries> createTableView(boolean withResult) {
 		TableView<CompEntries> compEntriesTable = new TableView<>();
 
-		TableColumn<CompEntries, Number> startNrCol = new TableColumn<>("Startnr.");
-		startNrCol.setStyle("-fx-alignment: CENTER;");
-		startNrCol.setCellValueFactory(row -> {
+		TableColumn<CompEntries, Number> bibCol = new TableColumn<>(
+				getText("SetRaceView.CompEntriesTable.BibColumn.text"));
+		bibCol.setStyle("-fx-alignment: CENTER;");
+		bibCol.setCellValueFactory(row -> {
 			Entry entry = row.getValue().getEntry();
 			if (entry != null && entry.getBib() != null) {
 				return new SimpleIntegerProperty(entry.getBib().shortValue());
@@ -139,7 +139,8 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<CompEntries, String> boatCol = new TableColumn<>("Boot");
+		TableColumn<CompEntries, String> boatCol = new TableColumn<>(
+				getText("SetRaceView.CompEntriesTable.BoatColumn.text"));
 		boatCol.setCellValueFactory(row -> {
 			Entry entry = row.getValue().getEntry();
 			if (entry != null && entry.getClub() != null) {
@@ -152,38 +153,48 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<CompEntries, Number> rankCol = new TableColumn<>("Rang");
-		rankCol.setSortType(SortType.ASCENDING);
-		rankCol.setSortable(true);
-		rankCol.setStyle("-fx-alignment: CENTER;");
-		rankCol.setCellValueFactory(row -> {
-			Set<Result> results = row.getValue().getResults();
-			for (Result result : results) {
-				if (result.getSplitNr() == 64) {
-					return new SimpleIntegerProperty(result.getRank().byteValue());
+		TableColumn<CompEntries, Number> rankCol = null;
+		TableColumn<CompEntries, String> resultCol = null;
+		if (withResult) {
+			rankCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.RankColumn.text"));
+			rankCol.setSortType(SortType.ASCENDING);
+			rankCol.setSortable(true);
+			rankCol.setStyle("-fx-alignment: CENTER;");
+			rankCol.setCellValueFactory(row -> {
+				Set<Result> results = row.getValue().getResults();
+				for (Result result : results) {
+					if (result.getSplitNr() == 64) {
+						return new SimpleIntegerProperty(result.getRank().byteValue());
+					}
 				}
-			}
-			return null;
-		});
+				return null;
+			});
 
-		TableColumn<CompEntries, String> resultCol = new TableColumn<>("Ergebnis");
-		resultCol.setStyle("-fx-alignment: CENTER_RIGHT;");
-		resultCol.setCellValueFactory(row -> {
-			Set<Result> results = row.getValue().getResults();
-			for (Result result : results) {
-				if (result.getSplitNr() == 64) {
-					return new SimpleStringProperty(result.getDisplayValue());
+			resultCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.ResultColumn.text"));
+			resultCol.setStyle("-fx-alignment: CENTER_RIGHT;");
+			resultCol.setCellValueFactory(row -> {
+				Set<Result> results = row.getValue().getResults();
+				for (Result result : results) {
+					if (result.getSplitNr() == 64) {
+						return new SimpleStringProperty(result.getDisplayValue());
+					}
 				}
-			}
-			return null;
-		});
+				return null;
+			});
 
-		compEntriesTable.getColumns().add(rankCol);
-		compEntriesTable.getColumns().add(startNrCol);
+			compEntriesTable.getColumns().add(rankCol);
+		}
+
+		if (rankCol != null) {
+			compEntriesTable.getSortOrder().add(rankCol);
+		}
+
+		compEntriesTable.getColumns().add(bibCol);
 		compEntriesTable.getColumns().add(boatCol);
-		compEntriesTable.getColumns().add(resultCol);
 
-		compEntriesTable.getSortOrder().add(rankCol);
+		if (resultCol != null) {
+			compEntriesTable.getColumns().add(resultCol);
+		}
 
 		return compEntriesTable;
 	}

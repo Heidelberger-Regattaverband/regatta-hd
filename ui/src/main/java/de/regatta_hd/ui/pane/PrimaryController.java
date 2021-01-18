@@ -56,7 +56,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (!this.aquarius.isOpen()) {
 			DatabaseConnectionDialog dialog;
 			try {
-				dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, this.resources,
+				dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, super.resources,
 						this.connectionDataStore.getLastSuccessful());
 				Optional<ConnectionData> result = dialog.showAndWait();
 				if (result.isPresent()) {
@@ -79,7 +79,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleSetRace() {
 		try {
-			newWindow("SetRaceView.fxml", this.resources.getString("PrimaryView.MenuItem.SetRace.text"));
+			newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +88,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleEvents() {
 		try {
-			newWindow("EventsView.fxml", this.resources.getString("PrimaryView.MenuItem.Events.text"));
+			newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
