@@ -27,18 +27,20 @@ import lombok.ToString;
 public class EntryLabel {
 	@Basic
 	@Column(name = "EL_IsClubMultiNOC")
-	private boolean isClubMultiNOC;
+	private boolean clubMultiNOC;
 
 	@Basic
 	@Column(name = "EL_IsCrewClubMultiNOC")
-	private boolean isCrewClubMultiNOC;
+	private boolean crewClubMultiNOC;
 
 	@Basic
 	@Column(name = "EL_RoundFrom")
+	@ToString.Include(rank = 9)
 	private short roundFrom;
 
 	@Basic
 	@Column(name = "EL_RoundTo")
+	@ToString.Include(rank = 8)
 	private short roundTo;
 
 	@Id
@@ -51,6 +53,6 @@ public class EntryLabel {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "EL_Label_ID_FK", nullable = false)
-	@ToString.Include
+	@ToString.Include(rank = 10)
 	private Label label;
 }

@@ -27,10 +27,10 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class RaceMode {
 	@OneToMany(targetEntity = Event.class, mappedBy = "raceMode", cascade = CascadeType.MERGE)
-	private Set<Event> events = new HashSet<>();
+	private Set<Event> events;
 
 	@OneToMany(targetEntity = Offer.class, mappedBy = "raceMode", cascade = CascadeType.MERGE)
-	private Set<Offer> offers = new HashSet<>();
+	private Set<Offer> offers;
 
 	@Id
 	@Column(name = "RaceMode_ID", columnDefinition = "int identity")
@@ -47,7 +47,7 @@ public class RaceMode {
 	private short laneCount;
 
 	@OneToMany(targetEntity = RaceModeRange.class, mappedBy = "raceMode", cascade = CascadeType.MERGE)
-	private Set<RaceModeRange> ranges = new HashSet<>();
+	private Set<RaceModeRange> ranges;
 
 	@Basic
 	@Column(name = "RaceMode_Title", nullable = false, length = 32)

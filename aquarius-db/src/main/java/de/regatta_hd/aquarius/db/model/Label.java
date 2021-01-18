@@ -44,15 +44,16 @@ public class Label {
 
 	@Basic
 	@Column(name = "Label_IsTeam")
+	@ToString.Include(rank = 8)
 	private Boolean isTeam;
 
 	@Basic
 	@Column(name = "Label_Long", nullable = false, length = 512)
-	@ToString.Include
+	@ToString.Include(rank = 9)
 	private String labelLong;
 
 	@Basic
 	@Column(name = "Label_Short", nullable = false, length = 256)
-	@ToString.Include
+	@ToString.Include(rank = 10)
 	private String labelShort;
 }

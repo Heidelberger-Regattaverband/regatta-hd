@@ -130,6 +130,7 @@ public class Offer {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_RaceMode_ID_FK")
+	@ToString.Include(rank = 7)
 	private RaceMode raceMode;
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)

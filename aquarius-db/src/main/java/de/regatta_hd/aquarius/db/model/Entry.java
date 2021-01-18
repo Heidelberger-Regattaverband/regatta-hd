@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -36,7 +35,7 @@ public class Entry {
 	private Club club;
 
 	@OneToMany(targetEntity = CompEntries.class, mappedBy = "entry", cascade = CascadeType.MERGE)
-	private Set<CompEntries> compEntries = new HashSet<>();
+	private Set<CompEntries> compEntries;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "entry", cascade = CascadeType.MERGE)
 	@OrderBy("pos")
@@ -89,6 +88,7 @@ public class Entry {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")
+	@ToString.Include(rank = 8)
 	private Label label;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

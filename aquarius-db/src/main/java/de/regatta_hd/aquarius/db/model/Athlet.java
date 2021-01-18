@@ -1,7 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -83,7 +82,7 @@ public class Athlet {
 	private Club club;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "athlet", cascade = CascadeType.MERGE)
-	private Set<Crew> crews = new HashSet<>();
+	private Set<Crew> crews;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Athlet_Nation_ID_FK")

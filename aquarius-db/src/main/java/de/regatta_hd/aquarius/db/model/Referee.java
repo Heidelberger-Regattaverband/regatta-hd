@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -31,13 +30,13 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Referee {
 	@OneToMany(targetEntity = CompReferee.class, mappedBy = "referee", cascade = CascadeType.MERGE)
-	private Set<CompReferee> compReferees = new HashSet<>();
+	private Set<CompReferee> compReferees;
 
 	@OneToMany(targetEntity = Event.class, mappedBy = "referee", cascade = CascadeType.MERGE)
-	private Set<Event> events = new HashSet<>();
+	private Set<Event> events;
 
 	@ManyToMany(targetEntity = Event.class, mappedBy = "referees", cascade = CascadeType.MERGE)
-	private Set<Event> events2 = new HashSet<>();
+	private Set<Event> events2;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Referee_Nation_ID_FK")
