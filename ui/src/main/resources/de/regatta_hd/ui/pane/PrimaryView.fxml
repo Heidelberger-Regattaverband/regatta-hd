@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml"
+  fx:controller="de.regatta_hd.ui.pane.PrimaryController">
+  <top>
+    <MenuBar fx:id="menuBar">
+      <menus>
+        <Menu text="%PrimaryView.Menu.Database.text">
+          <items>
+            <MenuItem fx:id="databaseConnect" text="%PrimaryView.MenuItem.DatabaseConnect.text"
+              onAction="#handleDatabaseConnect" />
+            <MenuItem fx:id="databaseDisconnect" text="%PrimaryView.MenuItem.DatabaseDisconnect.text"
+              onAction="#handleDatabaseDisconnect" />
+            <SeparatorMenuItem />
+            <MenuItem text="%PrimaryView.MenuItem.Exit.text" onAction="#handleExit" />
+          </items>
+        </Menu>
+        <Menu text="%PrimaryView.Menu.Administration.text">
+          <items>
+            <MenuItem fx:id="eventsMitm" text="%PrimaryView.MenuItem.Events.text" onAction="#handleEvents" />
+            <MenuItem fx:id="divisionsMitm" text="%PrimaryView.MenuItem.SetRace.text"
+              onAction="#handleSetRace" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+  </top>
+
+  <left>
+  </left>
+
+  <center>
+  </center>
+
+  <right>
+  </right>
+
+  <bottom>
+  </bottom>
+
+</BorderPane>

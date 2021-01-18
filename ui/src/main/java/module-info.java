@@ -1,8 +1,20 @@
-module de.regatta_hd.ui {
+open module de.regatta_hd.ui {
+	requires javafx.base;
 	requires javafx.controls;
-	requires javafx.fxml;
+	requires transitive javafx.fxml;
+	requires transitive javafx.graphics;
 
-	opens de.regatta_hd.ui to javafx.fxml;
+	requires java.persistence;
+	requires java.sql;
+	requires javax.inject;
+
+	requires ignite.common;
+	requires ignite.guice;
+	requires transitive com.google.guice;
+	requires com.microsoft.sqlserver.jdbc;
+	requires org.hibernate.orm.core;
+
+	requires transitive de.regatta_hd.aquarius.db;
 
 	exports de.regatta_hd.ui;
 }
