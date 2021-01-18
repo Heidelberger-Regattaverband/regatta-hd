@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class PrimaryController extends AbstractBaseController {
@@ -39,6 +40,9 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private MenuBar menuBar;
+
+	@FXML
+	private Pane primaryPane;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -79,7 +83,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleSetRace() {
 		try {
-			newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"));
+			newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"), this.primaryPane);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +92,7 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleEvents() {
 		try {
-			newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"));
+			newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"), this.primaryPane);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

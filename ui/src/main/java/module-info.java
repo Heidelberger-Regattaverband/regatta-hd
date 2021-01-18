@@ -16,5 +16,7 @@ open module de.regatta_hd.ui {
 
 	requires transitive de.regatta_hd.aquarius.db;
 
+	requires transitive jfxtras.window;
+
 	exports de.regatta_hd.ui;
 }

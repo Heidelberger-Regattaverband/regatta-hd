@@ -11,9 +11,8 @@ import javax.inject.Inject;
 import de.regatta_hd.ui.FXMLLoaderFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
+import jfxtras.scene.control.window.Window;
 
 abstract class AbstractBaseController implements Initializable {
 
@@ -30,17 +29,21 @@ abstract class AbstractBaseController implements Initializable {
 		this.resources = Objects.requireNonNull(resources, "resources");
 	}
 
-	protected void newWindow(String resource, String title) throws IOException {
+	protected void newWindow(String resource, String title, Pane parent) throws IOException {
 		FXMLLoader loader = this.fxmlLoaderFactory.newLoader();
 		loader.setLocation(getClass().getResource(resource));
 		loader.setResources(this.resources);
-		Parent parent = loader.load();
+		Pane pane = loader.load();
 
-		Scene scene = new Scene(parent, 800, 600);
-		Stage stage = new Stage();
-		stage.setTitle(title);
-		stage.setScene(scene);
-		stage.show();
+		Window window = new Window(title);
+		window.getContentPane().getChildren().add(pane);
+		parent.getChildren().add(window);
+
+//		Scene scene = new Scene(parent, 800, 600);
+//		Stage stage = new Stage();
+//		stage.setTitle(title);
+//		stage.setScene(scene);
+//		stage.show();
 	}
 
 	protected String getText(String key, Object... args) {
