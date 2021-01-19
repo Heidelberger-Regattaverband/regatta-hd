@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -19,8 +18,27 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <java.version>11</java.version>
+
+    <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <javafx.version>15.0.1</javafx.version>
+
+    <!-- https://search.maven.org/artifact/com.gluonhq/ignite-guice -->
+    <ignite-guice.version>1.1.0</ignite-guice.version>
+
+    <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.16</lombok.version>
+
+    <!-- https://search.maven.org/artifact/com.google.inject/guice -->
+    <guice.version>4.2.3</guice.version>
+
+    <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
+    <hibernate.version>5.4.27.Final</hibernate.version>
+
+    <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+    <mssql.version>8.4.1.jre11</mssql.version>
+
+    <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
+    <commons-lang3.version>3.11</commons-lang3.version>
   </properties>
 
   <modules>
@@ -37,41 +55,35 @@
       <!-- ============== -->
       <!-- Database & JPA -->
       <!-- ============== -->
-      <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
-        <version>5.4.27.Final</version>
+        <version>${hibernate.version}</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
       <dependency>
         <groupId>com.microsoft.sqlserver</groupId>
         <artifactId>mssql-jdbc</artifactId>
-        <version>8.4.1.jre11</version>
+        <version>${mssql.version}</version>
       </dependency>
 
       <!-- =========== -->
       <!-- Open JavaFX -->
       <!-- =========== -->
-      <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-base</artifactId>
         <version>${javafx.version}</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.openjfx/javafx-controls -->
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
         <version>${javafx.version}</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.openjfx/javafx-fxml -->
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
         <version>${javafx.version}</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.openjfx/javafx-graphics -->
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-graphics</artifactId>
@@ -81,17 +93,15 @@
       <!-- ============ -->
       <!-- Google Guice -->
       <!-- ============ -->
-      <!-- https://search.maven.org/artifact/com.google.inject/guice -->
       <dependency>
         <groupId>com.google.inject</groupId>
         <artifactId>guice</artifactId>
-        <version>4.2.3</version>
+        <version>${guice.version}</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/com.gluonhq/ignite-guice -->
       <dependency>
         <groupId>com.gluonhq</groupId>
         <artifactId>ignite-guice</artifactId>
-        <version>1.1.0</version>
+        <version>${ignite-guice.version}</version>
         <exclusions>
           <exclusion>
             <groupId>org.openjfx</groupId>
@@ -115,17 +125,15 @@
       <!-- =========== -->
       <!-- Other Tools -->
       <!-- =========== -->
-      <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.11</version>
+        <version>${commons-lang3.version}</version>
       </dependency>
 
       <!-- ========== -->
@@ -254,14 +262,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
           <release>${java.version}</release>
           <annotationProcessorPaths>
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>${lombok.version}  </version>
+              <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
