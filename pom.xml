@@ -17,7 +17,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <java.version>11</java.version>
+    <java.version>14</java.version>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <javafx.version>15.0.1</javafx.version>
@@ -35,7 +35,7 @@
     <hibernate.version>5.4.27.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>8.4.1.jre11</mssql.version>
+    <mssql.version>8.4.1.jre14</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.11</commons-lang3.version>
@@ -238,7 +238,7 @@
         <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>3.0.0-M5</version>
         </plugin>
 
         <!-- https://search.maven.org/artifact/org.openjfx/javafx-maven-plugin -->
