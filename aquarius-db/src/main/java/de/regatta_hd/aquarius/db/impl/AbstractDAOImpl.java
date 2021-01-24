@@ -37,4 +37,8 @@ abstract class AbstractDAOImpl {
 	protected <T> T getEntity(Class<T> entityClass, Object id) {
 		return this.aquariusDb.getEntityManager().getReference(entityClass, id);
 	}
+	
+	protected void persist(Object entity) {
+		this.aquariusDb.getEntityManager().merge(entity);
+	}
 }

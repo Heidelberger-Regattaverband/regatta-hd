@@ -161,11 +161,9 @@ public class SetRaceController extends AbstractBaseController {
 			rankCol.setSortable(true);
 			rankCol.setStyle("-fx-alignment: CENTER;");
 			rankCol.setCellValueFactory(row -> {
-				Set<Result> results = row.getValue().getResults();
-				for (Result result : results) {
-					if (result.getSplitNr() == 64) {
-						return new SimpleIntegerProperty(result.getRank().byteValue());
-					}
+				Result result = row.getValue().getFinalResult();
+				if (result != null) {
+					return new SimpleIntegerProperty(result.getRank().byteValue());
 				}
 				return null;
 			});

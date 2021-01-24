@@ -142,7 +142,7 @@ class AquariusDBTests {
 		indent(indent);
 		System.out.println(comp.toString());
 
-		comp.getCompEntries().forEach(compEntries -> trace(compEntries, indent + 1));
+		comp.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
 	private void trace(Entry entry, int indent) {
