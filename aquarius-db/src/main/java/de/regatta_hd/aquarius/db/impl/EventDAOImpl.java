@@ -84,27 +84,34 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 	public void setRace(Offer targetOffer, Offer sourceOffer) {
 		List<CompEntries> targetCompEntries = new ArrayList<>();
 
-		List<Comp> sourceComps = sourceOffer.getComps();
-		List<List<CompEntries>> compEntries = new ArrayList<>();
+		List<List<CompEntries>> sourceCompEntries = new ArrayList<>();
 
+		// source comp
+		List<Comp> sourceComps = sourceOffer.getComps();
 		for (int i = 0; i < sourceComps.size(); i++) {
 			Comp comp = sourceComps.get(i);
 
-			compEntries.add(i, comp.getCompEntriesOrderedByRank());
+			sourceCompEntries.add(i, comp.getCompEntriesOrderedByRank());
 
-			if (!compEntries.get(i).isEmpty()) {
-				targetCompEntries.add(compEntries.get(i).get(0));
+			if (!sourceCompEntries.get(i).isEmpty()) {
+				targetCompEntries.add(sourceCompEntries.get(i).get(0));
 			}
 		}
 
-		Comp comp = Comp.builder().event(targetOffer.getEvent()).heatNumber((short) 1).compEntries(targetCompEntries)
-				.build();
+		// target comp
+		List<Comp> targetComps = targetOffer.getComps();
+		Comp comp = targetComps.get(0);
+		if (comp == null) {
+			comp = Comp.builder().offer(targetOffer).event(targetOffer.getEvent()).heatNumber((short) 1)
+					.compEntries(targetCompEntries).build();
+		}
 
-		List<Comp> targetComps = new ArrayList<>();
-		targetComps.add(comp);
-		targetOffer.setComps(targetComps);
+		for (int i = 0; i < sourceComps.size(); i++) {
+			  sourceComps.get(i);
+		}
 
-		persist(targetOffer);
+		comp.setCompEntries(targetCompEntries);
+		persist(comp);
 	}
 
 	@Override
