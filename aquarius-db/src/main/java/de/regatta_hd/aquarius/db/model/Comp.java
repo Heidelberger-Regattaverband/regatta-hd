@@ -1,6 +1,7 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -15,7 +16,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -28,6 +32,9 @@ import lombok.ToString;
 //lombok
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 public class Comp {
 	@Basic
@@ -44,7 +51,7 @@ public class Comp {
 
 	@OneToMany(targetEntity = CompEntries.class, mappedBy = "comp", cascade = CascadeType.MERGE)
 	@OrderBy("lane")
-	private Set<CompEntries> compEntries;
+	private List<CompEntries> compEntries;
 
 	@Basic
 	@Column(name = "Comp_GroupValue")
@@ -104,4 +111,17 @@ public class Comp {
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "comp", cascade = CascadeType.MERGE)
 	private Set<ReportInfo> reportInfos;
+
+	public List<CompEntries> getCompEntriesOrderedByRank() {
+		List<CompEntries> sorted = getCompEntries();
+		sorted.sort((entry1, entry2) -> {
+			Result result1 = entry1.getFinalResult();
+			Result result2 = entry2.getFinalResult();
+			if (result1 != null && result2 != null) {
+				return result1.getRank() > result2.getRank() ? 1 : -1;
+			}
+			return 0;
+		});
+		return sorted;
+	}
 }

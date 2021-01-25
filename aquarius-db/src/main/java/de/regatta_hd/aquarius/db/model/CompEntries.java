@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -49,4 +50,17 @@ public class CompEntries {
 	@OneToMany(targetEntity = Result.class, mappedBy = "compEntries", cascade = CascadeType.MERGE)
 	@OrderBy("rank")
 	private Set<Result> results;
+
+	/**
+	 * Returns result of final race.
+	 * 
+	 * @return {@link Result} of final or <code>null</code> if not available
+	 */
+	public Result getFinalResult() {
+		Optional<Result> resultOpt = getResults().stream().filter((Result::isFinalResult)).findFirst();
+		if (resultOpt.isPresent()) {
+			return resultOpt.get();
+		}
+		return null;
+	}
 }

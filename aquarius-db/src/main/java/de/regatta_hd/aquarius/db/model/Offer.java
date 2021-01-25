@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -41,7 +42,7 @@ public class Offer {
 
 	@OneToMany(targetEntity = Comp.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	@OrderBy("heatNumber")
-	private Set<Comp> comps;
+	private List<Comp> comps;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	private Set<Cup> cups;
@@ -60,7 +61,7 @@ public class Offer {
 
 	@Basic
 	@Column(name = "Offer_Cancelled")
-	private Boolean cancelled;
+	private boolean cancelled;
 
 	@Basic
 	@Column(name = "Offer_Comment", length = 32)
@@ -70,9 +71,13 @@ public class Offer {
 	@Column(name = "Offer_Distance")
 	private short distance;
 
+	/**
+	 * Indicates whether this race is driven or not. It depends on the number of
+	 * registrations for this offer.
+	 */
 	@Basic
 	@Column(name = "Offer_Driven")
-	private Boolean driven;
+	private boolean driven;
 
 	@Basic
 	@Column(name = "Offer_EventDay")

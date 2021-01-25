@@ -27,6 +27,9 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Result {
+	
+	private static final byte FINAL = 64;
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Result_CE_ID_FK")
 	private CompEntries compEntries;
@@ -87,4 +90,8 @@ public class Result {
 	@Column(name = "Result_SplitNr")
 	@ToString.Include
 	private byte splitNr;
+	
+	public boolean isFinalResult() {
+		return getSplitNr() == FINAL;
+	}
 }
