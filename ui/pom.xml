@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -52,6 +51,33 @@
             <option>java.base/java.lang=com.google.guice</option>
           </options>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.akman</groupId>
+        <artifactId>jpackage-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>jpackage</goal>
+            </goals>
+            <configuration>
+              <dest>${project.build.directory}/jpackage</dest>
+              <type>IMAGE</type>
+              <appversion>1.0.0</appversion>
+              <module>de.regatta_hd.ui/de.regatta_hd.ui.RegattaHD</module>
+              <verbose>true</verbose>
+              <modulepath>
+                <dependencysets>
+                  <dependencyset>
+                    <includeoutput>true</includeoutput>
+                    <excludeautomatic>true</excludeautomatic>
+                  </dependencyset>
+                </dependencysets>
+              </modulepath>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -200,6 +200,11 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>com.github.akman</groupId>
+          <artifactId>jpackage-maven-plugin</artifactId>
+          <version>0.1.2</version>
+        </plugin>
         <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
