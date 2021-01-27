@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -34,12 +35,12 @@ public class Entry {
 	@ToString.Include(rank = 9)
 	private Club club;
 
-	@OneToMany(targetEntity = CompEntries.class, mappedBy = "entry", cascade = CascadeType.MERGE)
-	private Set<CompEntries> compEntries;
+	@OneToMany(targetEntity = HeatEntry.class, mappedBy = "entry", cascade = CascadeType.MERGE)
+	private List<HeatEntry> heatEntries;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "entry", cascade = CascadeType.MERGE)
 	@OrderBy("pos")
-	private Set<Crew> crews;
+	private List<Crew> crews;
 
 	@Basic
 	@Column(name = "Entry_Bib")
@@ -84,7 +85,7 @@ public class Entry {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_Event_ID_FK", nullable = false)
-	private Event event;
+	private Regatta regatta;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")

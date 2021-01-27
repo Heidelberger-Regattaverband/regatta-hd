@@ -23,12 +23,12 @@ import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
-import de.regatta_hd.aquarius.db.model.Comp;
-import de.regatta_hd.aquarius.db.model.CompEntries;
+import de.regatta_hd.aquarius.db.model.Heat;
+import de.regatta_hd.aquarius.db.model.HeatEntry;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
 import de.regatta_hd.aquarius.db.model.EntryLabel;
-import de.regatta_hd.aquarius.db.model.Event;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
 
@@ -84,7 +84,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEvents() {
-		List<Event> events = eventDAO.getEvents();
+		List<Regatta> events = eventDAO.getEvents();
 		Assertions.assertFalse(events.isEmpty());
 	}
 
@@ -93,7 +93,7 @@ class AquariusDBTests {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Event event = aquariusDb.getEntityManager().getReference(Event.class, 1);
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
 		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
@@ -102,7 +102,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventOK() {
-		Event event = aquariusDb.getEntityManager().getReference(Event.class, 1);
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
 		Assertions.assertEquals(1, event.getId());
 		Assertions.assertNotNull(event);
 
@@ -117,7 +117,7 @@ class AquariusDBTests {
 	@Test
 	void testGetEventFailed() {
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			Event event = aquariusDb.getEntityManager().getReference(Event.class, 10);
+			Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
 			event.getClub();
@@ -134,15 +134,15 @@ class AquariusDBTests {
 		indent(indent);
 		System.out.println(offer.toString());
 
-		offer.getComps().forEach(comp -> trace(comp, indent + 1));
+		offer.getHeats().forEach(heat -> trace(heat, indent + 1));
 		offer.getEntries().forEach(entry -> trace(entry, indent + 1));
 	}
 
-	private void trace(Comp comp, int indent) {
+	private void trace(Heat heat, int indent) {
 		indent(indent);
-		System.out.println(comp.toString());
+		System.out.println(heat.toString());
 
-		comp.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
+		heat.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
 	private void trace(Entry entry, int indent) {
@@ -162,11 +162,11 @@ class AquariusDBTests {
 		System.out.println(entryLabel.toString());
 	}
 
-	private void trace(CompEntries compEntries, int indent) {
+	private void trace(HeatEntry heatEntry, int indent) {
 		indent(indent);
-		System.out.println(compEntries.toString());
-		trace(compEntries.getEntry(), indent + 1);
-		compEntries.getResults().forEach(result -> trace(result, indent + 1));
+		System.out.println(heatEntry.toString());
+		trace(heatEntry.getEntry(), indent + 1);
+		heatEntry.getResults().forEach(result -> trace(result, indent + 1));
 	}
 
 	private void trace(Result result, int indent) {
