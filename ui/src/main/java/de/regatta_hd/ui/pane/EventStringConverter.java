@@ -1,12 +1,12 @@
 package de.regatta_hd.ui.pane;
 
-import de.regatta_hd.aquarius.db.model.Event;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import javafx.util.StringConverter;
 
-public class EventStringConverter extends StringConverter<Event> {
+public class EventStringConverter extends StringConverter<Regatta> {
 
 	@Override
-	public String toString(Event event) {
+	public String toString(Regatta event) {
 		if (event == null) {
 			return null;
 		}
@@ -14,7 +14,7 @@ public class EventStringConverter extends StringConverter<Event> {
 	}
 
 	@Override
-	public Event fromString(String string) {
+	public Regatta fromString(String string) {
 		return null;
 	}
 }

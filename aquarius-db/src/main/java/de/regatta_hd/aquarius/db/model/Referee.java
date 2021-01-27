@@ -32,11 +32,11 @@ public class Referee {
 	@OneToMany(targetEntity = CompReferee.class, mappedBy = "referee", cascade = CascadeType.MERGE)
 	private Set<CompReferee> compReferees;
 
-	@OneToMany(targetEntity = Event.class, mappedBy = "referee", cascade = CascadeType.MERGE)
-	private Set<Event> events;
+	@OneToMany(targetEntity = Regatta.class, mappedBy = "referee", cascade = CascadeType.MERGE)
+	private Set<Regatta> regattas;
 
-	@ManyToMany(targetEntity = Event.class, mappedBy = "referees", cascade = CascadeType.MERGE)
-	private Set<Event> events2;
+	@ManyToMany(targetEntity = Regatta.class, mappedBy = "referees", cascade = CascadeType.MERGE)
+	private Set<Regatta> regattas2;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Referee_Nation_ID_FK")

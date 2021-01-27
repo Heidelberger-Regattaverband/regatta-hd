@@ -28,7 +28,7 @@ import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
 import de.regatta_hd.aquarius.db.model.EntryLabel;
-import de.regatta_hd.aquarius.db.model.Event;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
 
@@ -84,7 +84,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEvents() {
-		List<Event> events = eventDAO.getEvents();
+		List<Regatta> events = eventDAO.getEvents();
 		Assertions.assertFalse(events.isEmpty());
 	}
 
@@ -93,7 +93,7 @@ class AquariusDBTests {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Event event = aquariusDb.getEntityManager().getReference(Event.class, 1);
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
 		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
@@ -102,7 +102,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventOK() {
-		Event event = aquariusDb.getEntityManager().getReference(Event.class, 1);
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
 		Assertions.assertEquals(1, event.getId());
 		Assertions.assertNotNull(event);
 
@@ -117,7 +117,7 @@ class AquariusDBTests {
 	@Test
 	void testGetEventFailed() {
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			Event event = aquariusDb.getEntityManager().getReference(Event.class, 10);
+			Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
 			event.getClub();

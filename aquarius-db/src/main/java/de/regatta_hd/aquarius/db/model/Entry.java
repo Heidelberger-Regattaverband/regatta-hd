@@ -84,7 +84,7 @@ public class Entry {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_Event_ID_FK", nullable = false)
-	private Event event;
+	private Regatta regatta;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")

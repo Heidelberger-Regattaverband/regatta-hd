@@ -33,7 +33,7 @@ public class ReportInfo {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Report_Event_ID_FK")
-	private Event event;
+	private Regatta regatta;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Report_Race_ID_FK")

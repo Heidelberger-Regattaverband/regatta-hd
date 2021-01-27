@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Entry;
-import de.regatta_hd.aquarius.db.model.Event;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -31,14 +31,14 @@ import javafx.scene.layout.VBox;
 
 public class SetRaceController extends AbstractBaseController {
 
-	private final SimpleListProperty<Event> eventsProp = new SimpleListProperty<>();
+	private final SimpleListProperty<Regatta> eventsProp = new SimpleListProperty<>();
 
 	private final SimpleListProperty<Offer> targetOffersProp = new SimpleListProperty<>();
 
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
 
 	@FXML
-	private ComboBox<Event> eventCombo;
+	private ComboBox<Regatta> eventCombo;
 
 	@FXML
 	private ComboBox<Offer> sourceOfferCombo;
@@ -197,12 +197,12 @@ public class SetRaceController extends AbstractBaseController {
 		return compEntriesTable;
 	}
 
-	private ObservableList<Event> getEvents() {
+	private ObservableList<Regatta> getEvents() {
 		return FXCollections.observableArrayList(this.eventsDAO.getEvents());
 	}
 
 	private ObservableList<Offer> getTargetOffers() {
-		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
+		Regatta event = this.eventCombo.getSelectionModel().getSelectedItem();
 		if (event != null) {
 			List<Offer> offers = this.eventsDAO.findOffers(event, "2%");
 			return FXCollections.observableArrayList(offers);
@@ -211,7 +211,7 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private ObservableList<Offer> getSourceOffers() {
-		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
+		Regatta event = this.eventCombo.getSelectionModel().getSelectedItem();
 		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
 
 		if (event != null && targetOffer != null) {

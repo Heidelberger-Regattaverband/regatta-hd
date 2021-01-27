@@ -53,7 +53,7 @@ public class Offer {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_Event_ID_FK", nullable = false)
-	private Event event;
+	private Regatta regatta;
 
 	@Basic
 	@Column(name = "Offer_BibSeed")
