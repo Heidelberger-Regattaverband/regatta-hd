@@ -79,8 +79,8 @@ public class Heat {
 	@ToString.Include(rank = 8)
 	private short number;
 
-	@OneToMany(targetEntity = CompReferee.class, mappedBy = "heat", cascade = CascadeType.MERGE)
-	private Set<CompReferee> compReferees;
+	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "heat", cascade = CascadeType.MERGE)
+	private Set<HeatReferee> compReferees;
 
 	@Basic
 	@Column(name = "Comp_Round")

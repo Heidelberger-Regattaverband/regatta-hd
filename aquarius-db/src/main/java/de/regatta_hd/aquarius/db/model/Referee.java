@@ -29,8 +29,8 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Referee {
-	@OneToMany(targetEntity = CompReferee.class, mappedBy = "referee", cascade = CascadeType.MERGE)
-	private Set<CompReferee> compReferees;
+	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "referee", cascade = CascadeType.MERGE)
+	private Set<HeatReferee> heatReferees;
 
 	@OneToMany(targetEntity = Regatta.class, mappedBy = "referee", cascade = CascadeType.MERGE)
 	private Set<Regatta> regattas;
