@@ -28,8 +28,8 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class RaceModeDetail {
-	@OneToMany(targetEntity = Comp.class, mappedBy = "raceModeDetail", cascade = CascadeType.MERGE)
-	private Set<Comp> comps;
+	@OneToMany(targetEntity = Heat.class, mappedBy = "raceModeDetail", cascade = CascadeType.MERGE)
+	private Set<Heat> comps;
 
 	@OneToMany(targetEntity = ProgressionRule.class, mappedBy = "raceModeDetail", cascade = CascadeType.MERGE)
 	private Set<ProgressionRule> progressionRules;

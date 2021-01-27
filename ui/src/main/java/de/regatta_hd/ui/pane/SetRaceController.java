@@ -111,12 +111,12 @@ public class SetRaceController extends AbstractBaseController {
 		vbox.getChildren().add(title);
 
 		if (offer != null) {
-			offer.getComps().forEach(comps -> {
-				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", comps.getHeatNumber()));
+			offer.getHeats().forEach(heat -> {
+				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
 
 				TableView<CompEntries> compEntriesTable = createTableView(withResult);
 				SortedList<CompEntries> sortedList = new SortedList<>(
-						FXCollections.observableArrayList(comps.getCompEntries()));
+						FXCollections.observableArrayList(heat.getCompEntries()));
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 

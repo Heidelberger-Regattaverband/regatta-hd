@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
-import de.regatta_hd.aquarius.db.model.Comp;
+import de.regatta_hd.aquarius.db.model.Heat;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
@@ -84,11 +84,11 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 	public void setRace(Offer targetOffer, Offer sourceOffer) {
 		List<CompEntries> targetCompEntries = new ArrayList<>();
 
-		List<Comp> sourceComps = sourceOffer.getComps();
+		List<Heat> sourceComps = sourceOffer.getHeats();
 		List<List<CompEntries>> compEntries = new ArrayList<>();
 
 		for (int i = 0; i < sourceComps.size(); i++) {
-			Comp comp = sourceComps.get(i);
+			Heat comp = sourceComps.get(i);
 
 			compEntries.add(i, comp.getCompEntriesOrderedByRank());
 
@@ -97,12 +97,12 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 			}
 		}
 
-		Comp comp = Comp.builder().regatta(targetOffer.getRegatta()).heatNumber((short) 1).compEntries(targetCompEntries)
+		Heat comp = Heat.builder().regatta(targetOffer.getRegatta()).heatNumber((short) 1).compEntries(targetCompEntries)
 				.build();
 
-		List<Comp> targetComps = new ArrayList<>();
+		List<Heat> targetComps = new ArrayList<>();
 		targetComps.add(comp);
-		targetOffer.setComps(targetComps);
+		targetOffer.setHeats(targetComps);
 
 		persist(targetOffer);
 	}

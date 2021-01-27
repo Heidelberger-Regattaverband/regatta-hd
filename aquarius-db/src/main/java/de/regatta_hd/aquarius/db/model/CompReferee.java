@@ -27,7 +27,7 @@ import lombok.ToString;
 public class CompReferee {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "CompReferee_Comp_ID_FK", nullable = false)
-	private Comp comp;
+	private Heat heat;
 
 	@Id
 	@Column(name = "CompReferee_ID", columnDefinition = "int identity")

@@ -40,9 +40,9 @@ public class Offer {
 	@ToString.Include(rank = 3)
 	private BoatClass boatClass;
 
-	@OneToMany(targetEntity = Comp.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Heat.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	@OrderBy("heatNumber")
-	private List<Comp> comps;
+	private List<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	private Set<Cup> cups;

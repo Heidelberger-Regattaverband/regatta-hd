@@ -23,7 +23,7 @@ import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
-import de.regatta_hd.aquarius.db.model.Comp;
+import de.regatta_hd.aquarius.db.model.Heat;
 import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
@@ -134,11 +134,11 @@ class AquariusDBTests {
 		indent(indent);
 		System.out.println(offer.toString());
 
-		offer.getComps().forEach(comp -> trace(comp, indent + 1));
+		offer.getHeats().forEach(heat -> trace(heat, indent + 1));
 		offer.getEntries().forEach(entry -> trace(entry, indent + 1));
 	}
 
-	private void trace(Comp comp, int indent) {
+	private void trace(Heat comp, int indent) {
 		indent(indent);
 		System.out.println(comp.toString());
 

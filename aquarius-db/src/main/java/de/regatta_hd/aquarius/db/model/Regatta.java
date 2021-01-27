@@ -34,8 +34,8 @@ public class Regatta {
 	@JoinColumn(name = "Event_Club_ID_FK")
 	private Club club;
 
-	@OneToMany(targetEntity = Comp.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
-	private Set<Comp> comps;
+	@OneToMany(targetEntity = Heat.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
+	private Set<Heat> comps;
 
 	@OneToMany(targetEntity = Entry.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
 	private Set<Entry> entries;

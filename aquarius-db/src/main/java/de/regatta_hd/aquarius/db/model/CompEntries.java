@@ -41,7 +41,7 @@ public class CompEntries {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "CE_Comp_ID_FK")
-	private Comp comp;
+	private Heat heat;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "CE_Entry_ID_FK", nullable = false)
@@ -53,7 +53,7 @@ public class CompEntries {
 
 	/**
 	 * Returns result of final race.
-	 * 
+	 *
 	 * @return {@link Result} of final or <code>null</code> if not available
 	 */
 	public Result getFinalResult() {
