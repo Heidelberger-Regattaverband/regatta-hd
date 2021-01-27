@@ -24,7 +24,7 @@ import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
-import de.regatta_hd.aquarius.db.model.CompEntries;
+import de.regatta_hd.aquarius.db.model.HeatEntry;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Entry;
 import de.regatta_hd.aquarius.db.model.EntryLabel;
@@ -138,11 +138,11 @@ class AquariusDBTests {
 		offer.getEntries().forEach(entry -> trace(entry, indent + 1));
 	}
 
-	private void trace(Heat comp, int indent) {
+	private void trace(Heat heat, int indent) {
 		indent(indent);
-		System.out.println(comp.toString());
+		System.out.println(heat.toString());
 
-		comp.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
+		heat.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
 	private void trace(Entry entry, int indent) {
@@ -162,11 +162,11 @@ class AquariusDBTests {
 		System.out.println(entryLabel.toString());
 	}
 
-	private void trace(CompEntries compEntries, int indent) {
+	private void trace(HeatEntry heatEntry, int indent) {
 		indent(indent);
-		System.out.println(compEntries.toString());
-		trace(compEntries.getEntry(), indent + 1);
-		compEntries.getResults().forEach(result -> trace(result, indent + 1));
+		System.out.println(heatEntry.toString());
+		trace(heatEntry.getEntry(), indent + 1);
+		heatEntry.getResults().forEach(result -> trace(result, indent + 1));
 	}
 
 	private void trace(Result result, int indent) {

@@ -3,16 +3,15 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.EventDAO;
-import de.regatta_hd.aquarius.db.model.CompEntries;
 import de.regatta_hd.aquarius.db.model.Entry;
-import de.regatta_hd.aquarius.db.model.Regatta;
+import de.regatta_hd.aquarius.db.model.HeatEntry;
 import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Result;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -114,9 +113,9 @@ public class SetRaceController extends AbstractBaseController {
 			offer.getHeats().forEach(heat -> {
 				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
 
-				TableView<CompEntries> compEntriesTable = createTableView(withResult);
-				SortedList<CompEntries> sortedList = new SortedList<>(
-						FXCollections.observableArrayList(heat.getCompEntries()));
+				TableView<HeatEntry> compEntriesTable = createTableView(withResult);
+				SortedList<HeatEntry> sortedList = new SortedList<>(
+						FXCollections.observableArrayList(heat.getEntries()));
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
@@ -125,10 +124,10 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private TableView<CompEntries> createTableView(boolean withResult) {
-		TableView<CompEntries> compEntriesTable = new TableView<>();
+	private TableView<HeatEntry> createTableView(boolean withResult) {
+		TableView<HeatEntry> compEntriesTable = new TableView<>();
 
-		TableColumn<CompEntries, Number> bibCol = new TableColumn<>(
+		TableColumn<HeatEntry, Number> bibCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BibColumn.text"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
@@ -139,7 +138,7 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<CompEntries, String> boatCol = new TableColumn<>(
+		TableColumn<HeatEntry, String> boatCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BoatColumn.text"));
 		boatCol.setCellValueFactory(row -> {
 			Entry entry = row.getValue().getEntry();
@@ -153,8 +152,8 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<CompEntries, Number> rankCol = null;
-		TableColumn<CompEntries, String> resultCol = null;
+		TableColumn<HeatEntry, Number> rankCol = null;
+		TableColumn<HeatEntry, String> resultCol = null;
 		if (withResult) {
 			rankCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.RankColumn.text"));
 			rankCol.setSortType(SortType.ASCENDING);
@@ -171,7 +170,7 @@ public class SetRaceController extends AbstractBaseController {
 			resultCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.ResultColumn.text"));
 			resultCol.setStyle("-fx-alignment: CENTER_RIGHT;");
 			resultCol.setCellValueFactory(row -> {
-				Set<Result> results = row.getValue().getResults();
+				List<Result> results = row.getValue().getResults();
 				for (Result result : results) {
 					if (result.getSplitNr() == 64) {
 						return new SimpleStringProperty(result.getDisplayValue());
