@@ -1,6 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -30,13 +30,13 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Referee {
 	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "referee", cascade = CascadeType.MERGE)
-	private Set<HeatReferee> heatReferees;
+	private List<HeatReferee> heatReferees;
 
 	@OneToMany(targetEntity = Regatta.class, mappedBy = "referee", cascade = CascadeType.MERGE)
-	private Set<Regatta> regattas;
+	private List<Regatta> regattas;
 
 	@ManyToMany(targetEntity = Regatta.class, mappedBy = "referees", cascade = CascadeType.MERGE)
-	private Set<Regatta> regattas2;
+	private List<Regatta> regattas2;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Referee_Nation_ID_FK")
