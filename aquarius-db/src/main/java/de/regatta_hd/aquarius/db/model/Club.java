@@ -66,8 +66,8 @@ public class Club {
 	@OneToMany(targetEntity = Entry.class, mappedBy = "club", cascade = CascadeType.MERGE)
 	private Set<Entry> entries;
 
-	@OneToMany(targetEntity = Event.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Event> events;
+	@OneToMany(targetEntity = Regatta.class, mappedBy = "club", cascade = CascadeType.MERGE)
+	private Set<Regatta> regattas;
 
 	@OneToMany(targetEntity = Label.class, mappedBy = "club", cascade = CascadeType.MERGE)
 	private Set<Label> labels;

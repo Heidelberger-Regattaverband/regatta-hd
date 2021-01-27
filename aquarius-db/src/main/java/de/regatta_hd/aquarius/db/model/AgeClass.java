@@ -1,6 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -28,12 +29,12 @@ public class AgeClass {
 	@Basic
 	@Column(name = "AgeClass_Abbr", nullable = false, length = 8)
 	@ToString.Include(rank = 10)
-	private String abbr;
+	private String abbreviation;
 
 	@Basic
 	@Column(name = "AgeClass_AbbrSuffix", length = 8)
 	@ToString.Include(rank = 9)
-	private String abbrSuffix;
+	private String abbreviationSuffix;
 
 	@Basic
 	@Column(name = "AgeClass_AllowYounger")
@@ -86,5 +87,6 @@ public class AgeClass {
 	private String suffix;
 
 	@OneToMany(targetEntity = Offer.class, mappedBy = "ageClass", cascade = CascadeType.MERGE)
-	private Set<Offer> offers;
+	@OrderBy("raceNumber")
+	private List<Offer> offers;
 }

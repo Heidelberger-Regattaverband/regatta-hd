@@ -25,8 +25,8 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class RaceMode {
-	@OneToMany(targetEntity = Event.class, mappedBy = "raceMode", cascade = CascadeType.MERGE)
-	private Set<Event> events;
+	@OneToMany(targetEntity = Regatta.class, mappedBy = "raceMode", cascade = CascadeType.MERGE)
+	private Set<Regatta> events;
 
 	@OneToMany(targetEntity = Offer.class, mappedBy = "raceMode", cascade = CascadeType.MERGE)
 	private Set<Offer> offers;
