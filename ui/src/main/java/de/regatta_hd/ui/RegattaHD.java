@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import javafx.application.Application;
@@ -21,7 +20,7 @@ import javafx.stage.Stage;
  */
 public class RegattaHD extends Application {
 
-	private RegattaHDGuiceContext context = new RegattaHDGuiceContext(this,
+	private GuiceContext context = new GuiceContext(this,
 			() -> Arrays.asList(new GuiceModule(), new AquariusDBModule()));
 
 	@Inject

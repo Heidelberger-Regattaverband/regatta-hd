@@ -6,7 +6,7 @@ import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 import de.regatta_hd.ui.FXMLLoaderFactory;
 import javafx.fxml.FXMLLoader;

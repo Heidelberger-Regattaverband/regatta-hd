@@ -20,7 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Represents an entry of a heat.
+ * Assigns a {@link Registration registration} to a {@link Heat heat}.
  */
 @Entity
 @Table(schema = "dbo", name = "CompEntries")
@@ -28,7 +28,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class HeatEntry {
+public class HeatRegistration {
 	@Basic
 	@Column(name = "CE_Lane")
 	@ToString.Include(rank = 10)
@@ -44,9 +44,9 @@ public class HeatEntry {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "CE_Entry_ID_FK", nullable = false)
-	private Entry entry;
+	private Registration registration;
 
-	@OneToMany(targetEntity = Result.class, mappedBy = "heatEntry", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration", cascade = CascadeType.MERGE)
 	@OrderBy("rank")
 	private List<Result> results;
 

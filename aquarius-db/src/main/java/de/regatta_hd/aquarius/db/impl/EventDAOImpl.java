@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
+import com.google.inject.Singleton;
+
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
-import de.regatta_hd.aquarius.db.model.HeatEntry;
-import de.regatta_hd.aquarius.db.model.Regatta;
+import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Regatta;
 
 @Singleton
 public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
@@ -84,15 +85,15 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 	public void setRace(Offer targetOffer, Offer sourceOffer) {
 		short laneCount = targetOffer.getRaceMode().getLaneCount();
 
-		List<HeatEntry> targetHeatEntries = new ArrayList<>();
-		List<List<HeatEntry>> sourceCompEntries = new ArrayList<>();
+		List<HeatRegistration> targetHeatEntries = new ArrayList<>();
+		List<List<HeatRegistration>> sourceCompEntries = new ArrayList<>();
 
 		// source heats
 		List<Heat> sourceHeats = sourceOffer.getHeats();
 		for (int i = 0; i < sourceHeats.size(); i++) {
 			Heat heat = sourceHeats.get(i);
 
-			sourceCompEntries.add(i, heat.getCompEntriesOrderedByRank());
+			sourceCompEntries.add(i, heat.getHeatRegistrationsOrderedByRank());
 
 			if (!sourceCompEntries.get(i).isEmpty()) {
 				targetHeatEntries.add(sourceCompEntries.get(i).get(0));

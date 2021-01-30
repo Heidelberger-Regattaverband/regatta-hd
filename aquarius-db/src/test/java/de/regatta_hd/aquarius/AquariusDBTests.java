@@ -24,10 +24,10 @@ import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
-import de.regatta_hd.aquarius.db.model.HeatEntry;
+import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Crew;
-import de.regatta_hd.aquarius.db.model.Entry;
-import de.regatta_hd.aquarius.db.model.EntryLabel;
+import de.regatta_hd.aquarius.db.model.Registration;
+import de.regatta_hd.aquarius.db.model.RegistrationLabel;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
@@ -135,21 +135,21 @@ class AquariusDBTests {
 		System.out.println(offer.toString());
 
 		offer.getHeats().forEach(heat -> trace(heat, indent + 1));
-		offer.getEntries().forEach(entry -> trace(entry, indent + 1));
+		offer.getRegistrations().forEach(registration -> trace(registration, indent + 1));
 	}
 
 	private void trace(Heat heat, int indent) {
 		indent(indent);
 		System.out.println(heat.toString());
 
-		heat.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
+		heat.getHeatRegistrationsOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
-	private void trace(Entry entry, int indent) {
+	private void trace(Registration registration, int indent) {
 		indent(indent);
-		System.out.println(entry.toString());
-		entry.getCrews().forEach(crew -> trace(crew, indent + 1));
-		entry.getLabels().forEach(label -> trace(label, indent + 1));
+		System.out.println(registration.toString());
+		registration.getCrews().forEach(crew -> trace(crew, indent + 1));
+		registration.getLabels().forEach(label -> trace(label, indent + 1));
 	}
 
 	private void trace(Crew crew, int indent) {
@@ -157,15 +157,15 @@ class AquariusDBTests {
 		System.out.println(crew.toString());
 	}
 
-	private void trace(EntryLabel entryLabel, int indent) {
+	private void trace(RegistrationLabel registrationLabel, int indent) {
 		indent(indent);
-		System.out.println(entryLabel.toString());
+		System.out.println(registrationLabel.toString());
 	}
 
-	private void trace(HeatEntry heatEntry, int indent) {
+	private void trace(HeatRegistration heatEntry, int indent) {
 		indent(indent);
 		System.out.println(heatEntry.toString());
-		trace(heatEntry.getEntry(), indent + 1);
+		trace(heatEntry.getRegistration(), indent + 1);
 		heatEntry.getResults().forEach(result -> trace(result, indent + 1));
 	}
 
