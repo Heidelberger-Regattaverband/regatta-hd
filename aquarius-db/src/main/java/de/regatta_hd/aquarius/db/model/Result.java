@@ -32,7 +32,7 @@ public class Result {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Result_CE_ID_FK")
-	private HeatEntry heatEntry;
+	private HeatRegistration heatRegistration;
 
 	@Id
 	@Column(name = "Result_CE_ID_FK", insertable = false, updatable = false)

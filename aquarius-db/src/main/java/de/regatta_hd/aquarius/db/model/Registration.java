@@ -35,8 +35,8 @@ public class Registration {
 	@ToString.Include(rank = 9)
 	private Club club;
 
-	@OneToMany(targetEntity = HeatEntry.class, mappedBy = "registration", cascade = CascadeType.MERGE)
-	private List<HeatEntry> heatEntries;
+	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	private List<HeatRegistration> heatEntries;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "registration", cascade = CascadeType.MERGE)
 	@OrderBy("pos")

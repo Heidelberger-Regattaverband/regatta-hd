@@ -28,7 +28,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class HeatEntry {
+public class HeatRegistration {
 	@Basic
 	@Column(name = "CE_Lane")
 	@ToString.Include(rank = 10)
@@ -46,7 +46,7 @@ public class HeatEntry {
 	@JoinColumn(name = "CE_Entry_ID_FK", nullable = false)
 	private Registration registration;
 
-	@OneToMany(targetEntity = Result.class, mappedBy = "heatEntry", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration", cascade = CascadeType.MERGE)
 	@OrderBy("rank")
 	private List<Result> results;
 

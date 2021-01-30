@@ -24,7 +24,7 @@ import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
-import de.regatta_hd.aquarius.db.model.HeatEntry;
+import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.EntryLabel;
@@ -142,7 +142,7 @@ class AquariusDBTests {
 		indent(indent);
 		System.out.println(heat.toString());
 
-		heat.getCompEntriesOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
+		heat.getHeatRegistrationsOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
 	private void trace(Registration registration, int indent) {
@@ -162,7 +162,7 @@ class AquariusDBTests {
 		System.out.println(entryLabel.toString());
 	}
 
-	private void trace(HeatEntry heatEntry, int indent) {
+	private void trace(HeatRegistration heatEntry, int indent) {
 		indent(indent);
 		System.out.println(heatEntry.toString());
 		trace(heatEntry.getRegistration(), indent + 1);
