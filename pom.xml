@@ -26,7 +26,7 @@
     <ignite-guice.version>1.1.0</ignite-guice.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.16</lombok.version>
+    <lombok.version>1.18.18</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>4.2.3</guice.version>
@@ -35,7 +35,7 @@
     <hibernate.version>5.4.27.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>8.4.1.jre14</mssql.version>
+    <mssql.version>9.2.0.jre15</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.11</commons-lang3.version>
