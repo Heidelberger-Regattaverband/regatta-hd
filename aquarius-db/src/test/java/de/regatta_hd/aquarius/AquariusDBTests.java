@@ -27,7 +27,7 @@ import de.regatta_hd.aquarius.db.model.Heat;
 import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Registration;
-import de.regatta_hd.aquarius.db.model.EntryLabel;
+import de.regatta_hd.aquarius.db.model.RegistrationLabel;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
@@ -157,9 +157,9 @@ class AquariusDBTests {
 		System.out.println(crew.toString());
 	}
 
-	private void trace(EntryLabel entryLabel, int indent) {
+	private void trace(RegistrationLabel registrationLabel, int indent) {
 		indent(indent);
-		System.out.println(entryLabel.toString());
+		System.out.println(registrationLabel.toString());
 	}
 
 	private void trace(HeatRegistration heatEntry, int indent) {

@@ -76,8 +76,8 @@ public class Registration {
 	@Column(name = "Entry_IsLate")
 	private boolean isLate;
 
-	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "registration", cascade = CascadeType.MERGE)
-	private Set<EntryLabel> labels;
+	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	private Set<RegistrationLabel> labels;
 
 	@Basic
 	@Column(name = "Entry_Note", length = 128)

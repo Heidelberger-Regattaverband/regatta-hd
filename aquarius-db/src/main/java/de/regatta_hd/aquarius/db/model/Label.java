@@ -32,8 +32,8 @@ public class Label {
 	@JoinColumn(name = "Label_Club_ID_FK")
 	private Club club;
 
-	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "label", cascade = CascadeType.MERGE)
-	private Set<EntryLabel> labels;
+	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "label", cascade = CascadeType.MERGE)
+	private Set<RegistrationLabel> labels;
 
 	@OneToMany(targetEntity = Registration.class, mappedBy = "label", cascade = CascadeType.MERGE)
 	private Set<Registration> registrations;
