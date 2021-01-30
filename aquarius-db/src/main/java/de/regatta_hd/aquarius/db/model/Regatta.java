@@ -1,6 +1,7 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -37,8 +38,8 @@ public class Regatta {
 	@OneToMany(targetEntity = Heat.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
 	private Set<Heat> comps;
 
-	@OneToMany(targetEntity = Entry.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
-	private Set<Entry> entries;
+	@OneToMany(targetEntity = Registration.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
+	private List<Registration> registrations;
 
 	@Basic
 	@Column(name = "Event_BoardMemberA", length = 32)

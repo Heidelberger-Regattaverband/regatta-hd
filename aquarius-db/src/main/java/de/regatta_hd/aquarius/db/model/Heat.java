@@ -48,9 +48,9 @@ public class Heat {
 	@Column(name = "Comp_Dummy")
 	private boolean dummy;
 
-	@OneToMany(targetEntity = HeatEntry.class, mappedBy = "heat", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "heat", cascade = CascadeType.MERGE)
 	@OrderBy("lane")
-	private List<HeatEntry> entries;
+	private List<HeatRegistration> entries;
 
 	@Basic
 	@Column(name = "Comp_GroupValue")
@@ -111,8 +111,8 @@ public class Heat {
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "heat", cascade = CascadeType.MERGE)
 	private Set<ReportInfo> reportInfos;
 
-	public List<HeatEntry> getCompEntriesOrderedByRank() {
-		List<HeatEntry> sorted = getEntries();
+	public List<HeatRegistration> getHeatRegistrationsOrderedByRank() {
+		List<HeatRegistration> sorted = getEntries();
 		sorted.sort((entry1, entry2) -> {
 			Result result1 = entry1.getFinalResult();
 			Result result2 = entry2.getFinalResult();

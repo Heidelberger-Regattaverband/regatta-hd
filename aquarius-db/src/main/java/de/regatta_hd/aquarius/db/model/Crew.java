@@ -55,7 +55,10 @@ public class Crew {
 	@Column(name = "Crew_RoundTo")
 	private short roundTo;
 
+	/**
+	 * Contains the {@link Registration registration} this crew member belongs to.
+	 */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Crew_Entry_ID_FK", nullable = false)
-	private Entry entry;
+	private Registration registration;
 }

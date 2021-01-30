@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.EventDAO;
-import de.regatta_hd.aquarius.db.model.Entry;
-import de.regatta_hd.aquarius.db.model.HeatEntry;
+import de.regatta_hd.aquarius.db.model.Registration;
+import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Result;
@@ -113,8 +113,8 @@ public class SetRaceController extends AbstractBaseController {
 			offer.getHeats().forEach(heat -> {
 				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
 
-				TableView<HeatEntry> compEntriesTable = createTableView(withResult);
-				SortedList<HeatEntry> sortedList = new SortedList<>(
+				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
+				SortedList<HeatRegistration> sortedList = new SortedList<>(
 						FXCollections.observableArrayList(heat.getEntries()));
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
@@ -124,24 +124,24 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private TableView<HeatEntry> createTableView(boolean withResult) {
-		TableView<HeatEntry> compEntriesTable = new TableView<>();
+	private TableView<HeatRegistration> createTableView(boolean withResult) {
+		TableView<HeatRegistration> compEntriesTable = new TableView<>();
 
-		TableColumn<HeatEntry, Number> bibCol = new TableColumn<>(
+		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BibColumn.text"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
-			Entry entry = row.getValue().getEntry();
+			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getBib() != null) {
 				return new SimpleIntegerProperty(entry.getBib().shortValue());
 			}
 			return null;
 		});
 
-		TableColumn<HeatEntry, String> boatCol = new TableColumn<>(
+		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BoatColumn.text"));
 		boatCol.setCellValueFactory(row -> {
-			Entry entry = row.getValue().getEntry();
+			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
 				String value = entry.getClub().getAbbr();
 				if (entry.getBoatNumber() != null) {
@@ -152,8 +152,8 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<HeatEntry, Number> rankCol = null;
-		TableColumn<HeatEntry, String> resultCol = null;
+		TableColumn<HeatRegistration, Number> rankCol = null;
+		TableColumn<HeatRegistration, String> resultCol = null;
 		if (withResult) {
 			rankCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.RankColumn.text"));
 			rankCol.setSortType(SortType.ASCENDING);

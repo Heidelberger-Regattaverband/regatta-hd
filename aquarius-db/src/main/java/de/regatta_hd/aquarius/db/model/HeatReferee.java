@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Assigns a referee to a heat.
+ * Assigns a {@link Referee referee} to a {@link Heat heat}.
  */
 @Entity
 @Table(schema = "dbo", name = "CompReferee")
