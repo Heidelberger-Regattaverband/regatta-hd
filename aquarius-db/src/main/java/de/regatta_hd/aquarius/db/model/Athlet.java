@@ -1,7 +1,7 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -82,7 +82,7 @@ public class Athlet {
 	private Club club;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "athlet", cascade = CascadeType.MERGE)
-	private Set<Crew> crews;
+	private List<Crew> crews;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Athlet_Nation_ID_FK")
