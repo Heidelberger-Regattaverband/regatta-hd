@@ -35,8 +35,8 @@ public class Label {
 	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "label", cascade = CascadeType.MERGE)
 	private Set<EntryLabel> labels;
 
-	@OneToMany(targetEntity = Entry.class, mappedBy = "label", cascade = CascadeType.MERGE)
-	private Set<Entry> entries;
+	@OneToMany(targetEntity = Registration.class, mappedBy = "label", cascade = CascadeType.MERGE)
+	private Set<Registration> registrations;
 
 	@Id
 	@Column(name = "Label_ID", columnDefinition = "int identity")

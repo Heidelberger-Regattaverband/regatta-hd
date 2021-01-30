@@ -49,7 +49,7 @@ public class EntryLabel {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "EL_Entry_ID_FK", nullable = false)
-	private Entry entry;
+	private Registration registration;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "EL_Label_ID_FK", nullable = false)

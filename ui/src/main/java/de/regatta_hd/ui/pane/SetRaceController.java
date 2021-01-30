@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import de.regatta_hd.aquarius.db.EventDAO;
-import de.regatta_hd.aquarius.db.model.Entry;
+import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.HeatEntry;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
@@ -131,7 +131,7 @@ public class SetRaceController extends AbstractBaseController {
 				getText("SetRaceView.CompEntriesTable.BibColumn.text"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
-			Entry entry = row.getValue().getEntry();
+			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getBib() != null) {
 				return new SimpleIntegerProperty(entry.getBib().shortValue());
 			}
@@ -141,7 +141,7 @@ public class SetRaceController extends AbstractBaseController {
 		TableColumn<HeatEntry, String> boatCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BoatColumn.text"));
 		boatCol.setCellValueFactory(row -> {
-			Entry entry = row.getValue().getEntry();
+			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
 				String value = entry.getClub().getAbbr();
 				if (entry.getBoatNumber() != null) {

@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -63,8 +64,12 @@ public class Club {
 	@OneToMany(targetEntity = Crew.class, mappedBy = "club", cascade = CascadeType.MERGE)
 	private Set<Crew> crews;
 
-	@OneToMany(targetEntity = Entry.class, mappedBy = "club", cascade = CascadeType.MERGE)
-	private Set<Entry> entries;
+	/**
+	 * Contains all {@link Registration registrations} of this {@link Club club} to
+	 * available {@link Offer offers}.
+	 */
+	@OneToMany(targetEntity = Registration.class, mappedBy = "club", cascade = CascadeType.MERGE)
+	private List<Registration> registrations;
 
 	@OneToMany(targetEntity = Regatta.class, mappedBy = "club", cascade = CascadeType.MERGE)
 	private Set<Regatta> regattas;

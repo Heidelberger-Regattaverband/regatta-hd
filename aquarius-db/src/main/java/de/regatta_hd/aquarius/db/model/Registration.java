@@ -29,16 +29,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class Entry {
+public class Registration {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_OwnerClub_ID_FK", nullable = false)
 	@ToString.Include(rank = 9)
 	private Club club;
 
-	@OneToMany(targetEntity = HeatEntry.class, mappedBy = "entry", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = HeatEntry.class, mappedBy = "registration", cascade = CascadeType.MERGE)
 	private List<HeatEntry> heatEntries;
 
-	@OneToMany(targetEntity = Crew.class, mappedBy = "entry", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Crew.class, mappedBy = "registration", cascade = CascadeType.MERGE)
 	@OrderBy("pos")
 	private List<Crew> crews;
 
@@ -76,7 +76,7 @@ public class Entry {
 	@Column(name = "Entry_IsLate")
 	private boolean isLate;
 
-	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "entry", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "registration", cascade = CascadeType.MERGE)
 	private Set<EntryLabel> labels;
 
 	@Basic
