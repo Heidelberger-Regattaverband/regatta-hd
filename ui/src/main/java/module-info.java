@@ -6,7 +6,6 @@ open module de.regatta_hd.ui {
 
 	requires java.persistence;
 	requires java.sql;
-	requires javax.inject;
 
 	requires transitive com.google.guice;
 	requires com.microsoft.sqlserver.jdbc;
