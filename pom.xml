@@ -26,9 +26,6 @@
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.18</lombok.version>
 
-    <!-- https://search.maven.org/artifact/com.google.inject/guice -->
-    <guice.version>4.2.3</guice.version>
-
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
     <hibernate.version>5.4.27.Final</hibernate.version>
 
@@ -40,6 +37,7 @@
   </properties>
 
   <modules>
+    <module>3rd-party</module>
     <module>aquarius-db</module>
     <module>ui</module>
   </modules>
@@ -88,15 +86,6 @@
         <version>${javafx.version}</version>
       </dependency>
 
-      <!-- ============ -->
-      <!-- Google Guice -->
-      <!-- ============ -->
-      <dependency>
-        <groupId>com.google.inject</groupId>
-        <artifactId>guice</artifactId>
-        <version>${guice.version}</version>
-      </dependency>
-
       <!-- =========== -->
       <!-- Other Tools -->
       <!-- =========== -->
@@ -143,8 +132,10 @@
     <!-- Google Guice -->
     <!-- ============ -->
     <dependency>
-      <groupId>com.google.inject</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>guice</artifactId>
+      <version>${project.version}</version>
+      <classifier>module</classifier>
     </dependency>
 
     <dependency>
