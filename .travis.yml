@@ -1,0 +1,9 @@
+language:
+  java
+
+jdk:
+  - oraclejdk15
+
+script:
+  - java --version
+  - mvn clean install -B -U
