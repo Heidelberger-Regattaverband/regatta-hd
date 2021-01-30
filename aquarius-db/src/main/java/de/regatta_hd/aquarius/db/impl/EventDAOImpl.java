@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+
+import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.db.EventDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
 import de.regatta_hd.aquarius.db.model.HeatRegistration;
-import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Regatta;
 
 @Singleton
 public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {

@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import javafx.application.Application;
