@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
+
+import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.ConnectionData;

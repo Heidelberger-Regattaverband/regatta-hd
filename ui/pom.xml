@@ -33,10 +33,6 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.gluonhq</groupId>
-      <artifactId>ignite-guice</artifactId>
-    </dependency>
   </dependencies>
 
   <build>

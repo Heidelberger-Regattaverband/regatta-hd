@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -22,11 +23,8 @@
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <javafx.version>15.0.1</javafx.version>
 
-    <!-- https://search.maven.org/artifact/com.gluonhq/ignite-guice -->
-    <ignite-guice.version>1.1.0</ignite-guice.version>
-
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.16</lombok.version>
+    <lombok.version>1.18.18</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>4.2.3</guice.version>
@@ -35,7 +33,7 @@
     <hibernate.version>5.4.27.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>8.4.1.jre14</mssql.version>
+    <mssql.version>9.2.0.jre15</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.11</commons-lang3.version>
@@ -97,29 +95,6 @@
         <groupId>com.google.inject</groupId>
         <artifactId>guice</artifactId>
         <version>${guice.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.gluonhq</groupId>
-        <artifactId>ignite-guice</artifactId>
-        <version>${ignite-guice.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
 
       <!-- =========== -->

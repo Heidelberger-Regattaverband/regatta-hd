@@ -2,7 +2,7 @@ package de.regatta_hd.aquarius.db.impl;
 
 import java.util.List;
 
-import javax.inject.Singleton;
+import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
