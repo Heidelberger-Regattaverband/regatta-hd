@@ -1,8 +1,7 @@
-language:
-  java
+language: java
 
 jdk:
-  - oraclejdk15
+  - openjdk15
 
 script:
   - java --version
