@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  */
 public class RegattaHD extends Application {
 
-	private RegattaHDGuiceContext context = new RegattaHDGuiceContext(this,
+	private GuiceContext context = new GuiceContext(this,
 			() -> Arrays.asList(new GuiceModule(), new AquariusDBModule()));
 
 	@Inject

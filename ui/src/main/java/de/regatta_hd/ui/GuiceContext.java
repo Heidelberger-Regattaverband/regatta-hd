@@ -25,79 +25,70 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.ignite.guice;
+package de.regatta_hd.ui;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import com.gluonhq.ignite.DIContext;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
 /**
  * Implementation of dependency injection context for Guice
  */
-public class GuiceContext implements DIContext {
+public class GuiceContext implements FXMLLoaderFactory {
 
-    private final Object contextRoot;
-    
-    protected Injector injector;
+	private final Application contextRoot;
 
-    private final Supplier<Collection<Module>> modules;
+	private Injector injector;
 
-    /**
-     * Create the Guice context
-     * @param contextRoot root object to inject
-     * @param modules custom Guice modules
-     */
-    public GuiceContext( Object contextRoot, Supplier<Collection<Module>> modules ) {
-        this.contextRoot = Objects.requireNonNull(contextRoot);
-        this.modules = Objects.requireNonNull(modules);
-    }
+	private final Supplier<Collection<Module>> modules;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void injectMembers(Object obj) {
-        this.injector.injectMembers(obj);
-    }
+	/**
+	 * Create the Guice context
+	 * 
+	 * @param contextRoot root object to inject
+	 * @param modules     custom Guice modules
+	 */
+	public GuiceContext(Application contextRoot, Supplier<Collection<Module>> modules) {
+		this.contextRoot = Objects.requireNonNull(contextRoot);
+		this.modules = Objects.requireNonNull(modules);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T getInstance(Class<T> cls) {
-        return this.injector.getInstance(cls);
-    }
+	@Override
+	public FXMLLoader newLoader() {
+		return this.injector.getInstance(FXMLLoader.class);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void init() {
-        Collection<Module> uniqueModules = new HashSet<>(this.modules.get());
-        uniqueModules.add(new FXModule());
-        this.injector = Guice.createInjector(uniqueModules.toArray(new Module[0]));
-		injectMembers(this.contextRoot);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public final void init() {
+		Collection<Module> uniqueModules = new HashSet<>(this.modules.get());
+		uniqueModules.add(new FXModule());
+		this.injector = Guice.createInjector(uniqueModules.toArray(new Module[0]));
+		this.injector.injectMembers(this.contextRoot);
+	}
 
-    private class FXModule extends AbstractModule {
+	private class FXModule extends AbstractModule {
 
-        @Override
-        protected void configure() {}
+		@Override
+		protected void configure() {
+		}
 
-        @Provides
-        FXMLLoader provideFxmlLoader() {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setControllerFactory(GuiceContext.this::getInstance);
-            return loader;
-        }
-    }
+		@Provides
+		FXMLLoader provideFxmlLoader() {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setControllerFactory(GuiceContext.this.injector::getInstance);
+			return loader;
+		}
+	}
 }
