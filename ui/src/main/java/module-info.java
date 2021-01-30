@@ -8,8 +8,6 @@ open module de.regatta_hd.ui {
 	requires java.sql;
 	requires javax.inject;
 
-	requires ignite.common;
-	requires ignite.guice;
 	requires transitive com.google.guice;
 	requires com.microsoft.sqlserver.jdbc;
 	requires org.hibernate.orm.core;
