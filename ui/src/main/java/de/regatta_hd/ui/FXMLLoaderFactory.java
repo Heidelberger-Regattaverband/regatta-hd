@@ -4,5 +4,5 @@ import javafx.fxml.FXMLLoader;
 
 public interface FXMLLoaderFactory {
 
-	FXMLLoader newLoader();
+	FXMLLoader newFXMLLoader();
 }
