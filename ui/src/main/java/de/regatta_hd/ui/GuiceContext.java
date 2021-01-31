@@ -55,6 +55,7 @@ public class GuiceContext implements FXMLLoaderFactory {
 
 		@Override
 		protected void configure() {
+			bind(FXMLLoaderFactory.class).toInstance(GuiceContext.this);
 		}
 
 		@Provides
