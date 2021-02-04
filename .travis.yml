@@ -9,4 +9,5 @@ jdk:
 
 script:
   - java --version
+  - mvn --version
   - mvn clean install -B -DskipTests
