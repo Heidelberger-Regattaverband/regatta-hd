@@ -3,7 +3,6 @@ language: java
 os:
   - osx
   - linux
-  - windows
 
 jdk:
   - openjdk15
