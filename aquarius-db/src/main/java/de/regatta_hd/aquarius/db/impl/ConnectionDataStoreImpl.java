@@ -1,4 +1,4 @@
-package de.regatta_hd.aquarius.db;
+package de.regatta_hd.aquarius.db.impl;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -10,7 +10,10 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
-class ConnectionDataStoreImpl implements ConnectionDataStore {
+import de.regatta_hd.aquarius.db.ConnectionData;
+import de.regatta_hd.aquarius.db.ConnectionDataStore;
+
+public class ConnectionDataStoreImpl implements ConnectionDataStore {
 
 	private static final String DB_HOST = "dbHost";
 	private static final String DB_NAME = "dbName";
@@ -52,7 +55,6 @@ class ConnectionDataStoreImpl implements ConnectionDataStore {
 
 	private Path getSettingsPath() {
 		String userHome = System.getProperty("user.home");
-		Path regattaProps = Paths.get(userHome, "RegattaHD.properties");
-		return regattaProps;
+		return Paths.get(userHome, "RegattaHD.properties");
 	}
 }

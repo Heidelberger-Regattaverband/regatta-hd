@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.EventDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +29,7 @@ public class EventsController extends AbstractBaseController {
 	public TableColumn<Regatta, String> end;
 
 	@Inject
-	private EventDAO events;
+	private RegattaDAO events;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -47,6 +47,6 @@ public class EventsController extends AbstractBaseController {
 
 	// add your data here from any source
 	private ObservableList<Regatta> getEvents() {
-		return FXCollections.observableArrayList(this.events.getEvents());
+		return FXCollections.observableArrayList(this.events.getRegattas());
 	}
 }

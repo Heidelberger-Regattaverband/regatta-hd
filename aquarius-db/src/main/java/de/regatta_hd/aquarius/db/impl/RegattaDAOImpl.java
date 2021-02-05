@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 import com.google.inject.Singleton;
 
-import de.regatta_hd.aquarius.db.EventDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
@@ -20,16 +20,11 @@ import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
 
 @Singleton
-public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
+public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
-	public List<Regatta> getEvents() {
+	public List<Regatta> getRegattas() {
 		return getEntities(Regatta.class);
-	}
-
-	@Override
-	public Regatta getEvent(int eventId) {
-		return getEntity(Regatta.class, Objects.requireNonNull(eventId, "eventId is null"));
 	}
 
 	@Override
@@ -83,22 +78,22 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 
 	@Override
 	public void setRace(Offer targetOffer, Offer sourceOffer) {
-		List<HeatRegistration> targetCompEntries = new ArrayList<>();
+		List<HeatRegistration> targetHeatRegistrations = new ArrayList<>();
 
-		List<Heat> sourceComps = sourceOffer.getHeats();
-		List<List<HeatRegistration>> heatEntries = new ArrayList<>();
+		List<Heat> sourceHeats = sourceOffer.getHeats();
+		List<List<HeatRegistration>> heatRegistrations = new ArrayList<>();
 
-		for (int i = 0; i < sourceComps.size(); i++) {
-			Heat comp = sourceComps.get(i);
+		for (int i = 0; i < sourceHeats.size(); i++) {
+			Heat comp = sourceHeats.get(i);
 
-			heatEntries.add(i, comp.getHeatRegistrationsOrderedByRank());
+			heatRegistrations.add(i, comp.getHeatRegistrationsOrderedByRank());
 
-			if (!heatEntries.get(i).isEmpty()) {
-				targetCompEntries.add(heatEntries.get(i).get(0));
+			if (!heatRegistrations.get(i).isEmpty()) {
+				targetHeatRegistrations.add(heatRegistrations.get(i).get(0));
 			}
 		}
 
-		Heat comp = Heat.builder().regatta(targetOffer.getRegatta()).heatNumber((short) 1).entries(targetCompEntries)
+		Heat comp = Heat.builder().regatta(targetOffer.getRegatta()).heatNumber((short) 1).entries(targetHeatRegistrations)
 				.build();
 
 		List<Heat> targetComps = new ArrayList<>();
