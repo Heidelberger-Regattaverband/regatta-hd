@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.ConnectionData;
@@ -40,6 +40,10 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private MenuBar menuBar;
 
+	private Stage setRaceStage;
+
+	private Stage eventViewStage;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -56,8 +60,8 @@ public class PrimaryController extends AbstractBaseController {
 		if (!this.aquarius.isOpen()) {
 			DatabaseConnectionDialog dialog;
 			try {
-				dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, super.resources,
-						this.connectionDataStore.getLastSuccessful());
+				dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true,
+						super.resources, this.connectionDataStore.getLastSuccessful());
 				Optional<ConnectionData> result = dialog.showAndWait();
 				if (result.isPresent()) {
 					this.aquarius.open(result.get());
@@ -78,19 +82,33 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleSetRace() {
-		try {
-			newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (this.setRaceStage == null) {
+			try {
+				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"),
+						(event) -> {
+							this.setRaceStage = null;
+						});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			this.setRaceStage.requestFocus();
 		}
 	}
 
 	@FXML
 	private void handleEvents() {
-		try {
-			newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (this.eventViewStage == null) {
+			try {
+				this.eventViewStage = newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"),
+						(event) -> {
+							this.setRaceStage = null;
+						});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			this.eventViewStage.requestFocus();
 		}
 	}
 

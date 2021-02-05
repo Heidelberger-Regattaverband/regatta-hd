@@ -2,11 +2,12 @@ package de.regatta_hd.aquarius.db.impl;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 

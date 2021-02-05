@@ -22,11 +22,8 @@
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <javafx.version>15.0.1</javafx.version>
 
-    <!-- https://search.maven.org/artifact/com.gluonhq/ignite-guice -->
-    <ignite-guice.version>1.1.0</ignite-guice.version>
-
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.16</lombok.version>
+    <lombok.version>1.18.18</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>4.2.3</guice.version>
@@ -35,10 +32,13 @@
     <hibernate.version>5.4.27.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>8.4.1.jre14</mssql.version>
+    <mssql.version>9.2.0.jre15</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.11</commons-lang3.version>
+
+    <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
+    <junit.version>5.7.1</junit.version>
   </properties>
 
   <modules>
@@ -98,29 +98,6 @@
         <artifactId>guice</artifactId>
         <version>${guice.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.gluonhq</groupId>
-        <artifactId>ignite-guice</artifactId>
-        <version>${ignite-guice.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
 
       <!-- =========== -->
       <!-- Other Tools -->
@@ -146,18 +123,18 @@
         <version>2.2</version>
         <scope>test</scope>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
+
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.7.0</version>
+        <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-engine -->
+
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.7.0</version>
+        <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

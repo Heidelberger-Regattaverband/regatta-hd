@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -28,18 +29,18 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class Entry {
+public class Registration {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_OwnerClub_ID_FK", nullable = false)
 	@ToString.Include(rank = 9)
 	private Club club;
 
-	@OneToMany(targetEntity = CompEntries.class, mappedBy = "entry", cascade = CascadeType.MERGE)
-	private Set<CompEntries> compEntries;
+	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	private List<HeatRegistration> heatEntries;
 
-	@OneToMany(targetEntity = Crew.class, mappedBy = "entry", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Crew.class, mappedBy = "registration", cascade = CascadeType.MERGE)
 	@OrderBy("pos")
-	private Set<Crew> crews;
+	private List<Crew> crews;
 
 	@Basic
 	@Column(name = "Entry_Bib")
@@ -75,8 +76,8 @@ public class Entry {
 	@Column(name = "Entry_IsLate")
 	private boolean isLate;
 
-	@OneToMany(targetEntity = EntryLabel.class, mappedBy = "entry", cascade = CascadeType.MERGE)
-	private Set<EntryLabel> labels;
+	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	private Set<RegistrationLabel> labels;
 
 	@Basic
 	@Column(name = "Entry_Note", length = 128)
@@ -84,7 +85,7 @@ public class Entry {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_Event_ID_FK", nullable = false)
-	private Event event;
+	private Regatta regatta;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")

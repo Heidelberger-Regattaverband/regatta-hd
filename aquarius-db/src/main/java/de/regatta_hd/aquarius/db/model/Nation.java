@@ -31,8 +31,8 @@ public class Nation {
 	@OneToMany(targetEntity = Club.class, mappedBy = "nation", cascade = CascadeType.MERGE)
 	private Set<Club> clubs;
 
-	@OneToMany(targetEntity = Event.class, mappedBy = "nation", cascade = CascadeType.MERGE)
-	private Set<Event> events;
+	@OneToMany(targetEntity = Regatta.class, mappedBy = "nation", cascade = CascadeType.MERGE)
+	private Set<Regatta> regattas;
 
 	@Id
 	@Column(name = "Nation_ID", columnDefinition = "int identity")

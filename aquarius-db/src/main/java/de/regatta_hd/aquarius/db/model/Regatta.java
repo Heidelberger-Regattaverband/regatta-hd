@@ -1,6 +1,7 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -29,16 +30,16 @@ import lombok.ToString;
 // lombok
 @Data
 @ToString(onlyExplicitlyIncluded = true)
-public class Event {
+public class Regatta {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Event_Club_ID_FK")
 	private Club club;
 
-	@OneToMany(targetEntity = Comp.class, mappedBy = "event", cascade = CascadeType.MERGE)
-	private Set<Comp> comps;
+	@OneToMany(targetEntity = Heat.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
+	private Set<Heat> comps;
 
-	@OneToMany(targetEntity = Entry.class, mappedBy = "event", cascade = CascadeType.MERGE)
-	private Set<Entry> entries;
+	@OneToMany(targetEntity = Registration.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
+	private List<Registration> registrations;
 
 	@Basic
 	@Column(name = "Event_BoardMemberA", length = 32)
@@ -106,7 +107,7 @@ public class Event {
 	@JoinColumn(name = "Event_Venue_Nation_ID_FK")
 	private Nation nation;
 
-	@OneToMany(targetEntity = Offer.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Offer.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
 	@OrderBy("raceNumber")
 	private Set<Offer> offers;
 
@@ -122,6 +123,6 @@ public class Event {
 	@JoinTable(schema = "dbo", name = "EventReferee", joinColumns = @JoinColumn(name = "ER_Event_ID_FK"), inverseJoinColumns = @JoinColumn(name = "ER_Referee_ID_FK"))
 	private Set<Referee> referees;
 
-	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "event", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
 	private Set<ReportInfo> reportInfos;
 }

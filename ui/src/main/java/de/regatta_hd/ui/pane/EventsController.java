@@ -4,10 +4,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.EventDAO;
-import de.regatta_hd.aquarius.db.model.Event;
+import de.regatta_hd.aquarius.db.RegattaDAO;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,19 +17,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class EventsController extends AbstractBaseController {
 	@FXML
-	private TableView<Event> tbData;
+	private TableView<Regatta> tbData;
 
 	@FXML
-	public TableColumn<Event, String> title;
+	public TableColumn<Regatta, String> title;
 
 	@FXML
-	public TableColumn<Event, Date> begin;
+	public TableColumn<Regatta, Date> begin;
 
 	@FXML
-	public TableColumn<Event, String> end;
+	public TableColumn<Regatta, String> end;
 
 	@Inject
-	private EventDAO events;
+	private RegattaDAO events;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -46,7 +46,7 @@ public class EventsController extends AbstractBaseController {
 	}
 
 	// add your data here from any source
-	private ObservableList<Event> getEvents() {
-		return FXCollections.observableArrayList(this.events.getEvents());
+	private ObservableList<Regatta> getEvents() {
+		return FXCollections.observableArrayList(this.events.getRegattas());
 	}
 }

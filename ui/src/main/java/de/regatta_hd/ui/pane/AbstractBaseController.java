@@ -5,8 +5,9 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 import de.regatta_hd.ui.FXMLLoaderFactory;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 abstract class AbstractBaseController implements Initializable {
 
@@ -30,17 +32,21 @@ abstract class AbstractBaseController implements Initializable {
 		this.resources = Objects.requireNonNull(resources, "resources");
 	}
 
-	protected void newWindow(String resource, String title) throws IOException {
-		FXMLLoader loader = this.fxmlLoaderFactory.newLoader();
+	protected Stage newWindow(String resource, String title, Consumer<WindowEvent> closeHandler) throws IOException {
+		FXMLLoader loader = this.fxmlLoaderFactory.newFXMLLoader();
 		loader.setLocation(getClass().getResource(resource));
 		loader.setResources(this.resources);
 		Parent parent = loader.load();
 
-		Scene scene = new Scene(parent, 800, 600);
 		Stage stage = new Stage();
 		stage.setTitle(title);
-		stage.setScene(scene);
+		stage.setScene(new Scene(parent, 800, 600));
 		stage.show();
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
+			closeHandler.accept(event);
+		});
+
+		return stage;
 	}
 
 	protected String getText(String key, Object... args) {

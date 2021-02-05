@@ -29,11 +29,11 @@ import lombok.ToString;
 public class ReportInfo {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Report_Comp_ID_FK")
-	private Comp comp;
+	private Heat heat;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Report_Event_ID_FK")
-	private Event event;
+	private Regatta regatta;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Report_Race_ID_FK")

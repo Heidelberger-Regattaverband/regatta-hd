@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-
-import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import javafx.application.Application;
@@ -21,8 +19,7 @@ import javafx.stage.Stage;
  */
 public class RegattaHD extends Application {
 
-	private RegattaHDGuiceContext context = new RegattaHDGuiceContext(this,
-			() -> Arrays.asList(new GuiceModule(), new AquariusDBModule()));
+	private final GuiceContext context = new GuiceContext(this, () -> Arrays.asList(new AquariusDBModule()));
 
 	@Inject
 	private FXMLLoader fxmlLoader;
@@ -47,12 +44,5 @@ public class RegattaHD extends Application {
 
 	public static void main(String[] args) {
 		launch();
-	}
-
-	class GuiceModule extends AbstractModule {
-		@Override
-		protected void configure() {
-			bind(FXMLLoaderFactory.class).toInstance(RegattaHD.this.context);
-		}
 	}
 }

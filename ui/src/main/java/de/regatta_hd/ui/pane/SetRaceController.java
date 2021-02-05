@@ -3,16 +3,15 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.EventDAO;
-import de.regatta_hd.aquarius.db.model.CompEntries;
-import de.regatta_hd.aquarius.db.model.Entry;
-import de.regatta_hd.aquarius.db.model.Event;
+import de.regatta_hd.aquarius.db.RegattaDAO;
+import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Regatta;
+import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.Result;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -31,14 +30,14 @@ import javafx.scene.layout.VBox;
 
 public class SetRaceController extends AbstractBaseController {
 
-	private final SimpleListProperty<Event> eventsProp = new SimpleListProperty<>();
+	private final SimpleListProperty<Regatta> eventsProp = new SimpleListProperty<>();
 
 	private final SimpleListProperty<Offer> targetOffersProp = new SimpleListProperty<>();
 
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
 
 	@FXML
-	private ComboBox<Event> eventCombo;
+	private ComboBox<Regatta> eventCombo;
 
 	@FXML
 	private ComboBox<Offer> sourceOfferCombo;
@@ -56,7 +55,7 @@ public class SetRaceController extends AbstractBaseController {
 	private Button setRaceButton;
 
 	@Inject
-	private EventDAO eventsDAO;
+	private RegattaDAO eventsDAO;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -111,12 +110,12 @@ public class SetRaceController extends AbstractBaseController {
 		vbox.getChildren().add(title);
 
 		if (offer != null) {
-			offer.getComps().forEach(comps -> {
-				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", comps.getHeatNumber()));
+			offer.getHeats().forEach(heat -> {
+				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
 
-				TableView<CompEntries> compEntriesTable = createTableView(withResult);
-				SortedList<CompEntries> sortedList = new SortedList<>(
-						FXCollections.observableArrayList(comps.getCompEntries()));
+				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
+				SortedList<HeatRegistration> sortedList = new SortedList<>(
+						FXCollections.observableArrayList(heat.getEntries()));
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
@@ -125,24 +124,24 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private TableView<CompEntries> createTableView(boolean withResult) {
-		TableView<CompEntries> compEntriesTable = new TableView<>();
+	private TableView<HeatRegistration> createTableView(boolean withResult) {
+		TableView<HeatRegistration> compEntriesTable = new TableView<>();
 
-		TableColumn<CompEntries, Number> bibCol = new TableColumn<>(
+		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BibColumn.text"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
-			Entry entry = row.getValue().getEntry();
+			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getBib() != null) {
 				return new SimpleIntegerProperty(entry.getBib().shortValue());
 			}
 			return null;
 		});
 
-		TableColumn<CompEntries, String> boatCol = new TableColumn<>(
+		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(
 				getText("SetRaceView.CompEntriesTable.BoatColumn.text"));
 		boatCol.setCellValueFactory(row -> {
-			Entry entry = row.getValue().getEntry();
+			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
 				String value = entry.getClub().getAbbr();
 				if (entry.getBoatNumber() != null) {
@@ -153,8 +152,8 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<CompEntries, Number> rankCol = null;
-		TableColumn<CompEntries, String> resultCol = null;
+		TableColumn<HeatRegistration, Number> rankCol = null;
+		TableColumn<HeatRegistration, String> resultCol = null;
 		if (withResult) {
 			rankCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.RankColumn.text"));
 			rankCol.setSortType(SortType.ASCENDING);
@@ -171,7 +170,7 @@ public class SetRaceController extends AbstractBaseController {
 			resultCol = new TableColumn<>(getText("SetRaceView.CompEntriesTable.ResultColumn.text"));
 			resultCol.setStyle("-fx-alignment: CENTER_RIGHT;");
 			resultCol.setCellValueFactory(row -> {
-				Set<Result> results = row.getValue().getResults();
+				List<Result> results = row.getValue().getResults();
 				for (Result result : results) {
 					if (result.getSplitNr() == 64) {
 						return new SimpleStringProperty(result.getDisplayValue());
@@ -197,12 +196,12 @@ public class SetRaceController extends AbstractBaseController {
 		return compEntriesTable;
 	}
 
-	private ObservableList<Event> getEvents() {
-		return FXCollections.observableArrayList(this.eventsDAO.getEvents());
+	private ObservableList<Regatta> getEvents() {
+		return FXCollections.observableArrayList(this.eventsDAO.getRegattas());
 	}
 
 	private ObservableList<Offer> getTargetOffers() {
-		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
+		Regatta event = this.eventCombo.getSelectionModel().getSelectedItem();
 		if (event != null) {
 			List<Offer> offers = this.eventsDAO.findOffers(event, "2%");
 			return FXCollections.observableArrayList(offers);
@@ -211,7 +210,7 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private ObservableList<Offer> getSourceOffers() {
-		Event event = this.eventCombo.getSelectionModel().getSelectedItem();
+		Regatta event = this.eventCombo.getSelectionModel().getSelectedItem();
 		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
 
 		if (event != null && targetOffer != null) {
