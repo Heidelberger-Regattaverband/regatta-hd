@@ -78,20 +78,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public void setRace(Offer targetOffer, Offer sourceOffer) {
-		short laneCount = targetOffer.getRaceMode().getLaneCount();
-
 		List<HeatRegistration> targetHeatEntries = new ArrayList<>();
-		List<List<HeatRegistration>> sourceCompEntries = new ArrayList<>();
+		List<List<HeatRegistration>> sourceHeatRegistrations = new ArrayList<>();
 
 		// source heats
 		List<Heat> sourceHeats = sourceOffer.getHeats();
 		for (int i = 0; i < sourceHeats.size(); i++) {
 			Heat heat = sourceHeats.get(i);
 
-			sourceCompEntries.add(i, heat.getHeatRegistrationsOrderedByRank());
+			sourceHeatRegistrations.add(i, heat.getHeatRegistrationsOrderedByRank());
 
-			if (!sourceCompEntries.get(i).isEmpty()) {
-				targetHeatEntries.add(sourceCompEntries.get(i).get(0));
+			if (!sourceHeatRegistrations.get(i).isEmpty()) {
+				targetHeatEntries.add(sourceHeatRegistrations.get(i).get(0));
 			}
 		}
 
