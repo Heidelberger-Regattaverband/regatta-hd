@@ -19,7 +19,7 @@ import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import de.regatta_hd.aquarius.db.ConnectionData;
 import de.regatta_hd.aquarius.db.ConnectionDataStore;
-import de.regatta_hd.aquarius.db.EventDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
@@ -36,7 +36,7 @@ class AquariusDBTests {
 
 	private static AquariusDB aquariusDb;
 
-	private static EventDAO eventDAO;
+	private static RegattaDAO eventDAO;
 
 	private static MasterDataDAO masterData;
 
@@ -52,7 +52,7 @@ class AquariusDBTests {
 		aquariusDb = injector.getInstance(AquariusDB.class);
 		aquariusDb.open(connectionData);
 
-		eventDAO = injector.getInstance(EventDAO.class);
+		eventDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 	}
 
@@ -84,7 +84,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEvents() {
-		List<Regatta> events = eventDAO.getEvents();
+		List<Regatta> events = eventDAO.getRegattas();
 		Assertions.assertFalse(events.isEmpty());
 	}
 

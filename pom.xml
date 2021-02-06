@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +17,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <java.version>14</java.version>
+    <java.version>15</java.version>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <javafx.version>15.0.1</javafx.version>
@@ -34,6 +33,9 @@
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.11</commons-lang3.version>
+
+    <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
+    <junit.version>5.7.1</junit.version>
   </properties>
 
   <modules>
@@ -110,18 +112,18 @@
         <version>2.2</version>
         <scope>test</scope>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
+
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.7.0</version>
+        <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
-      <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-engine -->
+
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.7.0</version>
+        <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -166,6 +168,11 @@
   <build>
     <pluginManagement>
       <plugins>
+        <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-shade-plugin -->
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.4</version>
+        </plugin>
         <!-- https://search.maven.org/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
