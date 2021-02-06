@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 import com.google.inject.Singleton;
 
-import de.regatta_hd.aquarius.db.EventDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Heat;
@@ -20,16 +20,11 @@ import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
 
 @Singleton
-public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
+public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
-	public List<Regatta> getEvents() {
+	public List<Regatta> getRegattas() {
 		return getEntities(Regatta.class);
-	}
-
-	@Override
-	public Regatta getEvent(int eventId) {
-		return getEntity(Regatta.class, Objects.requireNonNull(eventId, "eventId is null"));
 	}
 
 	@Override
@@ -108,7 +103,6 @@ public class EventDAOImpl extends AbstractDAOImpl implements EventDAO {
 				heat = Heat.builder().offer(targetOffer).regatta(targetOffer.getRegatta()).heatNumber((short) i)
 						.entries(targetHeatEntries).build();
 			}
-
 		}
 
 		persist(targetOffer);

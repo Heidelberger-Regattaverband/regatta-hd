@@ -28,7 +28,7 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public CriteriaBuilder getCriteriaBuilder() {
+	public synchronized CriteriaBuilder getCriteriaBuilder() {
 		return getEntityManager().getCriteriaBuilder();
 	}
 
@@ -44,15 +44,24 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public void open(ConnectionData connectionData) {
+	public synchronized void open(ConnectionData connectionData) {
 		Objects.requireNonNull(connectionData, "connectionData is null.");
 
 		open(connectionData.getDbHost(), connectionData.getDbName(), connectionData.getUserName(),
 				connectionData.getPassword());
 	}
 
-	@Override
-	public synchronized void open(String hostName, String dbName, String userName, String password) {
+	private void checkIsOpen() {
+		if (!isOpenImpl()) {
+			throw new IllegalStateException("Not connected.");
+		}
+	}
+
+	private boolean isOpenImpl() {
+		return this.entityManager != null && this.entityManager.isOpen();
+	}
+
+	private void open(String hostName, String dbName, String userName, String password) {
 		close();
 
 		Map<String, String> props = new HashMap<>();
@@ -65,15 +74,5 @@ public class AqauriusDBImpl implements AquariusDB {
 
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
-	}
-
-	private void checkIsOpen() {
-		if (!isOpenImpl()) {
-			throw new IllegalStateException("Not connected.");
-		}
-	}
-
-	private boolean isOpenImpl() {
-		return this.entityManager != null && this.entityManager.isOpen();
 	}
 }

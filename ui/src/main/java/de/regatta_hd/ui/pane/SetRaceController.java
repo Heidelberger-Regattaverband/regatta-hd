@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.EventDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
@@ -55,7 +55,7 @@ public class SetRaceController extends AbstractBaseController {
 	private Button setRaceButton;
 
 	@Inject
-	private EventDAO eventsDAO;
+	private RegattaDAO eventsDAO;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -197,7 +197,7 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private ObservableList<Regatta> getEvents() {
-		return FXCollections.observableArrayList(this.eventsDAO.getEvents());
+		return FXCollections.observableArrayList(this.eventsDAO.getRegattas());
 	}
 
 	private ObservableList<Offer> getTargetOffers() {
