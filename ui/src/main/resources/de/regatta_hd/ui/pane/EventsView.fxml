@@ -6,7 +6,7 @@
 <?import java.lang.Object?>
 
 <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
-  fx:controller="de.regatta_hd.ui.pane.EventsController">
+  fx:controller="de.regatta_hd.ui.pane.RegattasController">
   <padding>
     <Insets top="10" right="10" bottom="10" left="10" />
   </padding>

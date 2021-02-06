@@ -15,7 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class EventsController extends AbstractBaseController {
+public class RegattasController extends AbstractBaseController {
 	@FXML
 	private TableView<Regatta> tbData;
 

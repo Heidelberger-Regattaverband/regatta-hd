@@ -8,7 +8,7 @@
 <?import java.net.*?>
 <?import java.util.*?>
 <?import de.regatta_hd.ui.pane.OfferStringConverter?>
-<?import de.regatta_hd.ui.pane.EventStringConverter?>
+<?import de.regatta_hd.ui.pane.RegattaStringConverter?>
 
 <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
   fx:controller="de.regatta_hd.ui.pane.SetRaceController">
@@ -21,7 +21,7 @@
     <ComboBox fx:id="eventCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
       GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleEventOnAction">
       <converter>
-        <EventStringConverter />
+        <RegattaStringConverter />
       </converter>
     </ComboBox>
 
