@@ -24,7 +24,7 @@ abstract class AbstractDAOImpl {
 		return getCriteriaBuilder().createQuery(entityClass);
 	}
 
-	protected <T> List<T> getEntities(Class<T> entityClass){
+	protected <T> List<T> getEntities(Class<T> entityClass) {
 		CriteriaQuery<T> query = createCriteriaQuery(entityClass);
 		Root<T> from = query.from(entityClass);
 		query.select(from);
@@ -38,8 +38,12 @@ abstract class AbstractDAOImpl {
 	protected <T> T getEntity(Class<T> entityClass, Object id) {
 		return this.aquariusDb.getEntityManager().getReference(entityClass, id);
 	}
-	
-	protected void persist(Object entity) {
+
+	protected void merge(Object entity) {
 		this.aquariusDb.getEntityManager().merge(entity);
+	}
+
+	protected void persist(Object entity) {
+		this.aquariusDb.getEntityManager().persist(entity);
 	}
 }

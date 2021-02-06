@@ -78,27 +78,32 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public void setRace(Offer targetOffer, Offer sourceOffer) {
-		List<HeatRegistration> targetHeatRegistrations = new ArrayList<>();
+		short laneCount = targetOffer.getRaceMode().getLaneCount();
 
+		List<HeatRegistration> targetHeatEntries = new ArrayList<>();
+		List<List<HeatRegistration>> sourceCompEntries = new ArrayList<>();
+
+		// source heats
 		List<Heat> sourceHeats = sourceOffer.getHeats();
-		List<List<HeatRegistration>> heatRegistrations = new ArrayList<>();
-
 		for (int i = 0; i < sourceHeats.size(); i++) {
-			Heat comp = sourceHeats.get(i);
+			Heat heat = sourceHeats.get(i);
 
-			heatRegistrations.add(i, comp.getHeatRegistrationsOrderedByRank());
+			sourceCompEntries.add(i, heat.getHeatRegistrationsOrderedByRank());
 
-			if (!heatRegistrations.get(i).isEmpty()) {
-				targetHeatRegistrations.add(heatRegistrations.get(i).get(0));
+			if (!sourceCompEntries.get(i).isEmpty()) {
+				targetHeatEntries.add(sourceCompEntries.get(i).get(0));
 			}
 		}
 
-		Heat comp = Heat.builder().regatta(targetOffer.getRegatta()).heatNumber((short) 1).entries(targetHeatRegistrations)
-				.build();
-
-		List<Heat> targetComps = new ArrayList<>();
-		targetComps.add(comp);
-		targetOffer.setHeats(targetComps);
+		// target heats
+		List<Heat> targetHeats = targetOffer.getHeats();
+		for (int i = 0; i < targetHeats.size(); i++) {
+			Heat heat = targetHeats.get(i);
+			if (heat == null) {
+				heat = Heat.builder().offer(targetOffer).regatta(targetOffer.getRegatta()).heatNumber((short) i)
+						.entries(targetHeatEntries).build();
+			}
+		}
 
 		persist(targetOffer);
 	}
