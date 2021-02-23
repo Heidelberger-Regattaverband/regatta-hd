@@ -12,10 +12,6 @@
   <artifactId>aquarius-db</artifactId>
   <name>Regatta HD - Aquarius Database Model</name>
 
-  <properties>
-    <db.driver.class>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver.class>
-  </properties>
-
   <dependencies>
     <!-- ============== -->
     <!-- Database & JPA -->
