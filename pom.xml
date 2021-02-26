@@ -5,7 +5,7 @@
   <parent>
     <groupId>de.ofterdinger</groupId>
     <artifactId>parent</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.4</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
@@ -19,6 +19,13 @@
     <name>Heidelberger Regattaverband e. V.</name>
     <url>http://www.regatta-hd.de/</url>
   </organization>
+
+  <scm>
+    <connection>scm:git:git@github.com:ofterdinger/de.ofterdinger.parent/regatta-hd</connection>
+    <developerConnection>scm:git:git@github.com:ofterdinger/de.ofterdinger.parent/regatta-hd</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/Heidelberger-Regattaverband/regatta-hd</url>
+  </scm>
 
   <properties>
     <maven.compiler.release>15</maven.compiler.release>
