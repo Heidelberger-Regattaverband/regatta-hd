@@ -21,8 +21,8 @@
   </organization>
 
   <scm>
-    <connection>scm:git:git@github.com:ofterdinger/de.ofterdinger.parent/regatta-hd</connection>
-    <developerConnection>scm:git:git@github.com:ofterdinger/de.ofterdinger.parent/regatta-hd</developerConnection>
+    <connection>scm:git:git@github.com:Heidelberger-Regattaverband/regatta-hd.git</connection>
+    <developerConnection>scm:git:git@github.com:Heidelberger-Regattaverband/regatta-hd.git</developerConnection>
     <tag>HEAD</tag>
     <url>https://github.com/Heidelberger-Regattaverband/regatta-hd</url>
   </scm>
