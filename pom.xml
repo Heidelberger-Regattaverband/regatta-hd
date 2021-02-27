@@ -30,7 +30,7 @@
     <lombok.version>1.18.18</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
-    <guice.version>4.2.3</guice.version>
+    <guice.version>5.0.1</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
     <hibernate.version>5.4.28.Final</hibernate.version>
