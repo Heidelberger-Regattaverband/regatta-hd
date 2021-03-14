@@ -21,10 +21,10 @@ import javafx.stage.Stage;
 public class PrimaryController extends AbstractBaseController {
 
 	@Inject
-	private AquariusDB aquarius;
+	private AquariusDB aquariusDb;
 
 	@Inject
-	private DBConfigurationStore connectionDataStore;
+	private DBConfigurationStore dbCfgStore;
 
 	@FXML
 	private MenuItem databaseConnect;
@@ -58,18 +58,18 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleDatabaseConnect() {
-		if (!this.aquarius.isOpen()) {
+		if (!this.aquariusDb.isOpen()) {
 			DBConnectionDialog dialog;
 			try {
 				dialog = new DBConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true,
-						super.resources, this.connectionDataStore.getLastSuccessful());
+						super.resources, this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfiguration> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					Task<DBConfiguration> dbOpenTask = new Task<>() {
 						@Override
 						protected DBConfiguration call() throws IOException {
-							PrimaryController.this.aquarius.open(connectionData.get());
-							PrimaryController.this.connectionDataStore.setLastSuccessful(connectionData.get());
+							PrimaryController.this.aquariusDb.open(connectionData.get());
+							PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
 							updateControls();
 							return connectionData.get();
 						}
@@ -86,7 +86,7 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleDatabaseDisconnect() {
-		this.aquarius.close();
+		this.aquariusDb.close();
 		updateControls();
 	}
 
@@ -128,9 +128,9 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	private void updateControls() {
-		this.databaseConnect.setDisable(this.aquarius.isOpen());
-		this.databaseDisconnect.setDisable(!this.aquarius.isOpen());
-		this.eventsMitm.setDisable(!this.aquarius.isOpen());
-		this.divisionsMitm.setDisable(!this.aquarius.isOpen());
+		this.databaseConnect.setDisable(this.aquariusDb.isOpen());
+		this.databaseDisconnect.setDisable(!this.aquariusDb.isOpen());
+		this.eventsMitm.setDisable(!this.aquariusDb.isOpen());
+		this.divisionsMitm.setDisable(!this.aquariusDb.isOpen());
 	}
 }

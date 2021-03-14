@@ -4,9 +4,13 @@ import com.google.inject.AbstractModule;
 
 import de.regatta_hd.aquarius.db.impl.AqauriusDBImpl;
 import de.regatta_hd.aquarius.db.impl.DBConfigurationStoreImpl;
-import de.regatta_hd.aquarius.db.impl.RegattaDAOImpl;
 import de.regatta_hd.aquarius.db.impl.MasterDataDAOImpl;
+import de.regatta_hd.aquarius.db.impl.RegattaDAOImpl;
 
+/**
+ * The guice module to register aquarius database bindings and additional
+ * services.
+ */
 public class AquariusDBModule extends AbstractModule {
 
 	@Override
