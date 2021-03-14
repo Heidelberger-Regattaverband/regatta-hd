@@ -4,11 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * Contains database connection information like user credentials and database name.
+ * Contains database connection configuration like user credentials and database name.
  */
 @Data
 @Builder
-public class ConnectionData {
+public class DBConfiguration {
 
 	/**
 	 * The database host name or IP address.

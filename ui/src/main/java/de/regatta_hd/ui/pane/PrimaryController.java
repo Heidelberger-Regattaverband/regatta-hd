@@ -8,10 +8,11 @@ import java.util.ResourceBundle;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.ConnectionData;
-import de.regatta_hd.aquarius.db.ConnectionDataStore;
-import de.regatta_hd.ui.dialog.DatabaseConnectionDialog;
+import de.regatta_hd.aquarius.db.DBConfiguration;
+import de.regatta_hd.aquarius.db.DBConfigurationStore;
+import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -23,7 +24,7 @@ public class PrimaryController extends AbstractBaseController {
 	private AquariusDB aquarius;
 
 	@Inject
-	private ConnectionDataStore connectionDataStore;
+	private DBConfigurationStore connectionDataStore;
 
 	@FXML
 	private MenuItem databaseConnect;
@@ -58,14 +59,23 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private void handleDatabaseConnect() {
 		if (!this.aquarius.isOpen()) {
-			DatabaseConnectionDialog dialog;
+			DBConnectionDialog dialog;
 			try {
-				dialog = new DatabaseConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true,
+				dialog = new DBConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true,
 						super.resources, this.connectionDataStore.getLastSuccessful());
-				Optional<ConnectionData> result = dialog.showAndWait();
-				if (result.isPresent()) {
-					this.aquarius.open(result.get());
-					this.connectionDataStore.setLastSuccessful(result.get());
+				Optional<DBConfiguration> connectionData = dialog.showAndWait();
+				if (connectionData.isPresent()) {
+					Task<DBConfiguration> dbOpenTask = new Task<>() {
+						@Override
+						protected DBConfiguration call() throws IOException {
+							PrimaryController.this.aquarius.open(connectionData.get());
+							PrimaryController.this.connectionDataStore.setLastSuccessful(connectionData.get());
+							updateControls();
+							return connectionData.get();
+						}
+					};
+					// start Task
+					new Thread(dbOpenTask).start();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -17,8 +17,8 @@ import com.google.inject.Injector;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
-import de.regatta_hd.aquarius.db.ConnectionData;
-import de.regatta_hd.aquarius.db.ConnectionDataStore;
+import de.regatta_hd.aquarius.db.DBConfiguration;
+import de.regatta_hd.aquarius.db.DBConfigurationStore;
 import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
@@ -40,13 +40,13 @@ class AquariusDBTests {
 
 	private static MasterDataDAO masterData;
 
-	private static ConnectionData connectionData;
+	private static DBConfiguration connectionData;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
 		Injector injector = Guice.createInjector(new AquariusDBModule());
 
-		ConnectionDataStore connStore = injector.getInstance(ConnectionDataStore.class);
+		DBConfigurationStore connStore = injector.getInstance(DBConfigurationStore.class);
 		connectionData = connStore.getLastSuccessful();
 
 		aquariusDb = injector.getInstance(AquariusDB.class);

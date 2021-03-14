@@ -10,10 +10,10 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
-import de.regatta_hd.aquarius.db.ConnectionData;
-import de.regatta_hd.aquarius.db.ConnectionDataStore;
+import de.regatta_hd.aquarius.db.DBConfiguration;
+import de.regatta_hd.aquarius.db.DBConfigurationStore;
 
-public class ConnectionDataStoreImpl implements ConnectionDataStore {
+public class DBConfigurationStoreImpl implements DBConfigurationStore {
 
 	private static final String DB_HOST = "dbHost";
 	private static final String DB_NAME = "dbName";
@@ -21,7 +21,7 @@ public class ConnectionDataStoreImpl implements ConnectionDataStore {
 	private static final String PASSWORD = "password"; // TODO: don't store password
 
 	@Override
-	public ConnectionData getLastSuccessful() throws IOException {
+	public DBConfiguration getLastSuccessful() throws IOException {
 		Path settingsPath = getSettingsPath();
 
 		if (Files.exists(settingsPath)) {
@@ -29,7 +29,7 @@ public class ConnectionDataStoreImpl implements ConnectionDataStore {
 			try (InputStream input = Files.newInputStream(settingsPath)) {
 				props.load(input);
 			}
-			return ConnectionData.builder() //
+			return DBConfiguration.builder() //
 					.dbHost(props.getProperty(DB_HOST)) //
 					.dbName(props.getProperty(DB_NAME)) //
 					.userName(props.getProperty(USERNAME)) //
@@ -39,7 +39,7 @@ public class ConnectionDataStoreImpl implements ConnectionDataStore {
 	}
 
 	@Override
-	public void setLastSuccessful(ConnectionData connectionData) throws IOException {
+	public void setLastSuccessful(DBConfiguration connectionData) throws IOException {
 		Objects.requireNonNull(connectionData, "connectionData");
 
 		Properties props = new Properties();

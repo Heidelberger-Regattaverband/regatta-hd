@@ -12,7 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.ConnectionData;
+import de.regatta_hd.aquarius.db.DBConfiguration;
 
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {
@@ -44,7 +44,7 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public synchronized void open(ConnectionData connectionData) {
+	public synchronized void open(DBConfiguration connectionData) {
 		Objects.requireNonNull(connectionData, "connectionData is null.");
 
 		open(connectionData.getDbHost(), connectionData.getDbName(), connectionData.getUserName(),
