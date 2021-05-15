@@ -42,16 +42,14 @@ abstract class AbstractBaseController implements Initializable {
 		stage.setTitle(title);
 		stage.setScene(new Scene(parent, 800, 600));
 		stage.show();
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
-			closeHandler.accept(event);
-		});
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, closeHandler::accept);
 
 		return stage;
 	}
 
 	protected String getText(String key, Object... args) {
 		String text = this.resources.getString(key);
-		if (args.length >= 0) {
+		if (args.length > 0) {
 			text = MessageFormat.format(text, args);
 		}
 		return text;

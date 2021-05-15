@@ -56,7 +56,7 @@ public class DBConnectionDialog extends Dialog<DBConfiguration> {
 		getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		getDialogPane().setContent(gridpane);
 
-		setResultConverter((dialogButton) -> {
+		setResultConverter(dialogButton -> {
 			if (dialogButton.getButtonData() == ButtonData.OK_DONE) {
 				this.connectionData.setDbHost(hostNameFld.getText());
 				this.connectionData.setDbName(dbNameFld.getText());

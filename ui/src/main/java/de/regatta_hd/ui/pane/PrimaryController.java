@@ -51,9 +51,7 @@ public class PrimaryController extends AbstractBaseController {
 
 		updateControls();
 
-		Platform.runLater(() -> {
-			handleDatabaseConnect();
-		});
+		Platform.runLater(this::handleDatabaseConnect);
 	}
 
 	@FXML
@@ -61,8 +59,8 @@ public class PrimaryController extends AbstractBaseController {
 		if (!this.aquariusDb.isOpen()) {
 			DBConnectionDialog dialog;
 			try {
-				dialog = new DBConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true,
-						super.resources, this.dbCfgStore.getLastSuccessful());
+				dialog = new DBConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, super.resources,
+						this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfiguration> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					Task<DBConfiguration> dbOpenTask = new Task<>() {
@@ -95,9 +93,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (this.setRaceStage == null) {
 			try {
 				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"),
-						(event) -> {
-							this.setRaceStage = null;
-						});
+						event -> this.setRaceStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -111,9 +107,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (this.eventViewStage == null) {
 			try {
 				this.eventViewStage = newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"),
-						(event) -> {
-							this.setRaceStage = null;
-						});
+						event -> this.setRaceStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
