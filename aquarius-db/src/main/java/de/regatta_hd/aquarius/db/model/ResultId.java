@@ -23,7 +23,7 @@ public class ResultId implements Serializable {
 		}
 	}
 
-	private int CEIDFK;
+	private int heatRegistrationId;
 
 	private byte splitNr;
 }

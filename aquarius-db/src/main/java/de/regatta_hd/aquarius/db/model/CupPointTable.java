@@ -34,9 +34,9 @@ public class CupPointTable {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Parent_ID")
-	private CupPointTable cupPointTable;
+	private CupPointTable parent;
 
-	@OneToMany(targetEntity = CupPointTable.class, mappedBy = "cupPointTable", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = CupPointTable.class, mappedBy = "parent", cascade = CascadeType.MERGE)
 	private Set<CupPointTable> cupPointTables ;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "pointTable", cascade = CascadeType.MERGE)

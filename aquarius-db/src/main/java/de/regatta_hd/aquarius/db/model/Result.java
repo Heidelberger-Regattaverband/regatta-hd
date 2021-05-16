@@ -36,7 +36,7 @@ public class Result {
 
 	@Id
 	@Column(name = "Result_CE_ID_FK", insertable = false, updatable = false)
-	private int CEIDFK;
+	private int heatRegistrationId;
 
 	@Basic
 	@Column(name = "Result_Comment")
