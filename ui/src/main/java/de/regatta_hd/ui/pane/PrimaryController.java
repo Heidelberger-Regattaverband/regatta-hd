@@ -107,7 +107,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (this.eventViewStage == null) {
 			try {
 				this.eventViewStage = newWindow("EventsView.fxml", getText("PrimaryView.MenuItem.Events.text"),
-						event -> this.setRaceStage = null);
+						event -> this.eventViewStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
