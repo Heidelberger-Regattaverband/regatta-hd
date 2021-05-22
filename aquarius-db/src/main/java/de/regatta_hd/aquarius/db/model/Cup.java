@@ -33,13 +33,13 @@ public class Cup {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Parent_ID")
-	private Cup cup;
+	private Cup parent;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "PointTable_ID_FK")
 	private CupPointTable pointTable;
 
-	@OneToMany(targetEntity = Cup.class, mappedBy = "cup", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Cup.class, mappedBy = "parent", cascade = CascadeType.MERGE)
 	private Set<Cup> cups;
 
 	@Id

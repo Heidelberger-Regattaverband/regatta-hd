@@ -75,6 +75,7 @@ class AquariusDBTests {
 	@Test
 	void testOpen() {
 		aquariusDb.open(connectionData);
+		Assertions.assertTrue(aquariusDb.isOpen());
 	}
 
 	@Test
