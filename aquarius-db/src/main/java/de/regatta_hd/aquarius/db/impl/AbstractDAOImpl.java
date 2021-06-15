@@ -1,15 +1,12 @@
 package de.regatta_hd.aquarius.db.impl;
 
-import java.util.List;
-
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import com.google.inject.Inject;
-
 import de.regatta_hd.aquarius.db.AquariusDB;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import java.util.List;
 
 abstract class AbstractDAOImpl {
 

@@ -4,7 +4,6 @@ open module de.regatta_hd.ui {
 	requires transitive javafx.fxml;
 	requires transitive javafx.graphics;
 
-	requires java.persistence;
 	requires java.sql;
 
 	requires transitive com.google.guice;

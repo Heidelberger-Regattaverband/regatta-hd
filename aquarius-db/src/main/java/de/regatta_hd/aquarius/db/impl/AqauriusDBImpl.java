@@ -1,18 +1,15 @@
 package de.regatta_hd.aquarius.db.impl;
 
+import com.google.inject.Singleton;
+import de.regatta_hd.aquarius.db.AquariusDB;
+import de.regatta_hd.aquarius.db.DBConfiguration;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaBuilder;
-
-import com.google.inject.Singleton;
-
-import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.DBConfiguration;
 
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {

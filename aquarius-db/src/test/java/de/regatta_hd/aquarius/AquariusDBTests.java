@@ -1,36 +1,32 @@
 package de.regatta_hd.aquarius;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import de.regatta_hd.aquarius.db.AquariusDB;
+import de.regatta_hd.aquarius.db.AquariusDBModule;
+import de.regatta_hd.aquarius.db.DBConfiguration;
+import de.regatta_hd.aquarius.db.DBConfigurationStore;
+import de.regatta_hd.aquarius.db.MasterDataDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
+import de.regatta_hd.aquarius.db.model.AgeClass;
+import de.regatta_hd.aquarius.db.model.BoatClass;
+import de.regatta_hd.aquarius.db.model.Crew;
+import de.regatta_hd.aquarius.db.model.Heat;
+import de.regatta_hd.aquarius.db.model.HeatRegistration;
+import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Regatta;
+import de.regatta_hd.aquarius.db.model.Registration;
+import de.regatta_hd.aquarius.db.model.RegistrationLabel;
+import de.regatta_hd.aquarius.db.model.Result;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
-
-import javax.persistence.EntityNotFoundException;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
-import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.AquariusDBModule;
-import de.regatta_hd.aquarius.db.DBConfiguration;
-import de.regatta_hd.aquarius.db.DBConfigurationStore;
-import de.regatta_hd.aquarius.db.RegattaDAO;
-import de.regatta_hd.aquarius.db.MasterDataDAO;
-import de.regatta_hd.aquarius.db.model.AgeClass;
-import de.regatta_hd.aquarius.db.model.BoatClass;
-import de.regatta_hd.aquarius.db.model.Heat;
-import de.regatta_hd.aquarius.db.model.HeatRegistration;
-import de.regatta_hd.aquarius.db.model.Crew;
-import de.regatta_hd.aquarius.db.model.Registration;
-import de.regatta_hd.aquarius.db.model.RegistrationLabel;
-import de.regatta_hd.aquarius.db.model.Regatta;
-import de.regatta_hd.aquarius.db.model.Offer;
-import de.regatta_hd.aquarius.db.model.Result;
 
 class AquariusDBTests {
 
