@@ -90,7 +90,7 @@ class AquariusDBTests {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
 		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
@@ -99,8 +99,8 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventOK() {
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
-		Assertions.assertEquals(1, event.getId());
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
+		Assertions.assertEquals(3, event.getId());
 		Assertions.assertNotNull(event);
 
 		System.out.println(event.toString());

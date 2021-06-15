@@ -4,7 +4,7 @@ open module de.regatta_hd.aquarius.db {
 	requires com.google.guice;
 	requires com.microsoft.sqlserver.jdbc;
 	requires lombok;
-	requires jakarta.persistence;
+	requires transitive jakarta.persistence;
 
 	exports de.regatta_hd.aquarius.db;
 	exports de.regatta_hd.aquarius.db.model;
