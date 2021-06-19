@@ -18,7 +18,7 @@
 
   <children>
     <Label text="%SetRaceView.EventLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <ComboBox fx:id="eventCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
+    <ComboBox fx:id="regattaCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
       GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleEventOnAction">
       <converter>
         <RegattaStringConverter />

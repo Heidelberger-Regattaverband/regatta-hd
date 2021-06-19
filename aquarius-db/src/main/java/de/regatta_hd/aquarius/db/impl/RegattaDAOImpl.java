@@ -19,6 +19,8 @@ import java.util.Objects;
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
+	private Regatta activeRegatta;
+
 	@Override
 	public List<Regatta> getRegattas() {
 		return getEntities(Regatta.class);
@@ -47,8 +49,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Offer> findOffers(Regatta regatta, BoatClass boatClass, AgeClass ageClass, boolean lightweight) {
-		CriteriaBuilder cb = getCriteriaBuilder();
+	public List<Offer> findOffers(BoatClass boatClass, AgeClass ageClass, boolean lightweight) {
+		var cb = getCriteriaBuilder();
 
 		CriteriaQuery<Offer> query = cb.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
@@ -69,7 +71,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				.setParameter(lightweightParam.getName(), lightweight)
 				.setParameter(boatClassParam.getName(), Objects.requireNonNull(boatClass, "boatClass is null"))
 				.setParameter(ageClassParam.getName(), Objects.requireNonNull(ageClass, "ageClass is null"))
-				.setParameter(regattaParam.getName(), Objects.requireNonNull(regatta, "regatta is null")) //
+				.setParameter(regattaParam.getName(), Objects.requireNonNull(
+						this.activeRegatta, "activeRegatta is null")) //
 				.getResultList();
 	}
 
@@ -104,23 +107,51 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Offer> findOffers(Regatta regatta, String raceNumber) {
-		CriteriaBuilder cb = getCriteriaBuilder();
+	public List<Offer> findOffers(String raceNumber) {
+		var critBuilder = getCriteriaBuilder();
 
-		CriteriaQuery<Offer> query = cb.createQuery(Offer.class);
+		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
 
-		ParameterExpression<Regatta> regattaParam = cb.parameter(Regatta.class, "regatta");
-		ParameterExpression<String> raceNumberParam = cb.parameter(String.class, "raceNumber");
+		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, "regatta");
+		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "raceNumber");
 
-		query.where(cb.and( //
-				cb.like(o.get("raceNumber"), raceNumberParam), //
-				cb.equal(o.get("regatta"), regattaParam) //
+		query.where(critBuilder.and( //
+				critBuilder.like(o.get("raceNumber"), raceNumberParam), //
+				critBuilder.equal(o.get("regatta"), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
 				.setParameter(raceNumberParam.getName(), Objects.requireNonNull(raceNumber, "raceNumber is null"))
-				.setParameter(regattaParam.getName(), Objects.requireNonNull(regatta, "regatta is null")) //
+				.setParameter(regattaParam.getName(), Objects.requireNonNull(this.activeRegatta, "activeRegatta is null")) //
 				.getResultList();
+	}
+
+	@Override
+	public List<Offer> getOffers() {
+		var critBuilder = getCriteriaBuilder();
+
+		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
+		Root<Offer> o = query.from(Offer.class);
+
+		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, "regatta");
+
+		query.where(critBuilder.and( //
+				critBuilder.equal(o.get("regatta"), regattaParam) //
+		));
+
+		return createTypedQuery(query) //
+				.setParameter(regattaParam.getName(), Objects.requireNonNull(this.activeRegatta, "activeRegatta is null")) //
+				.getResultList();
+	}
+
+	@Override
+	public void setActiveRegatta(Regatta regatta) {
+		this.activeRegatta = regatta;
+	}
+
+	@Override
+	public Regatta getActiveRegatta() {
+		return this.activeRegatta;
 	}
 }

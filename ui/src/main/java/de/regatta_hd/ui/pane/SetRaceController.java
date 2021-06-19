@@ -37,7 +37,7 @@ public class SetRaceController extends AbstractBaseController {
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
 
 	@FXML
-	private ComboBox<Regatta> eventCombo;
+	private ComboBox<Regatta> regattaCombo;
 
 	@FXML
 	private ComboBox<Offer> sourceOfferCombo;
@@ -55,15 +55,15 @@ public class SetRaceController extends AbstractBaseController {
 	private Button setRaceButton;
 
 	@Inject
-	private RegattaDAO eventsDAO;
+	private RegattaDAO regattaDAO;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.eventsProp.set(getEvents());
+		this.eventsProp.set(getRegattas());
 
-		this.eventCombo.itemsProperty().bind(this.eventsProp);
+		this.regattaCombo.itemsProperty().bind(this.eventsProp);
 
 		this.targetOfferCombo.itemsProperty().bind(this.targetOffersProp);
 
@@ -98,7 +98,7 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		this.eventsDAO.setRace(this.targetOfferCombo.getSelectionModel().getSelectedItem(),
+		this.regattaDAO.setRace(this.targetOfferCombo.getSelectionModel().getSelectedItem(),
 				this.sourceOfferCombo.getSelectionModel().getSelectedItem());
 	}
 
@@ -196,26 +196,28 @@ public class SetRaceController extends AbstractBaseController {
 		return compEntriesTable;
 	}
 
-	private ObservableList<Regatta> getEvents() {
-		return FXCollections.observableArrayList(this.eventsDAO.getRegattas());
+	private ObservableList<Regatta> getRegattas() {
+		return FXCollections.observableArrayList(this.regattaDAO.getRegattas());
 	}
 
 	private ObservableList<Offer> getTargetOffers() {
-		Regatta event = this.eventCombo.getSelectionModel().getSelectedItem();
-		if (event != null) {
-			List<Offer> offers = this.eventsDAO.findOffers(event, "2%");
+		Regatta regatta = this.regattaCombo.getSelectionModel().getSelectedItem();
+		this.regattaDAO.setActiveRegatta(regatta);
+
+		if (regatta != null) {
+			List<Offer> offers = this.regattaDAO.findOffers("2%");
 			return FXCollections.observableArrayList(offers);
 		}
 		return FXCollections.emptyObservableList();
 	}
 
 	private ObservableList<Offer> getSourceOffers() {
-		Regatta event = this.eventCombo.getSelectionModel().getSelectedItem();
+		Regatta event = this.regattaCombo.getSelectionModel().getSelectedItem();
 		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
 
 		if (event != null && targetOffer != null) {
 			// get all offers with same attributes
-			List<Offer> sourceOffers = this.eventsDAO.findOffers(event, targetOffer.getBoatClass(),
+			List<Offer> sourceOffers = this.regattaDAO.findOffers(targetOffer.getBoatClass(),
 					targetOffer.getAgeClass(), targetOffer.isLightweight());
 
 			// filter target offer

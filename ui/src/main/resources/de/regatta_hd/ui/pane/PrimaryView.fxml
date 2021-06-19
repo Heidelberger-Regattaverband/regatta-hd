@@ -23,6 +23,7 @@
         <Menu text="%PrimaryView.Menu.Administration.text">
           <items>
             <MenuItem fx:id="eventsMitm" text="%PrimaryView.MenuItem.Events.text" onAction="#handleEvents" />
+            <MenuItem fx:id="offersMitm" text="%PrimaryView.MenuItem.Offers.text" onAction="#handleOffers" />
             <MenuItem fx:id="divisionsMitm" text="%PrimaryView.MenuItem.SetRace.text"
               onAction="#handleSetRace" />
           </items>

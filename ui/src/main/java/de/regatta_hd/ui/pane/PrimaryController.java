@@ -36,6 +36,9 @@ public class PrimaryController extends AbstractBaseController {
 	private MenuItem eventsMitm;
 
 	@FXML
+	private MenuItem offersMitm;
+
+	@FXML
 	private MenuItem divisionsMitm;
 
 	@FXML
@@ -44,6 +47,8 @@ public class PrimaryController extends AbstractBaseController {
 	private Stage setRaceStage;
 
 	private Stage eventViewStage;
+
+	private Stage offersViewStage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -117,6 +122,20 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
+	private void handleOffers() {
+		if (this.offersViewStage == null) {
+			try {
+				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.MenuItem.Offers.text"),
+						event -> this.eventViewStage = null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			this.offersViewStage.requestFocus();
+		}
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
@@ -125,6 +144,7 @@ public class PrimaryController extends AbstractBaseController {
 		this.databaseConnect.setDisable(this.aquariusDb.isOpen());
 		this.databaseDisconnect.setDisable(!this.aquariusDb.isOpen());
 		this.eventsMitm.setDisable(!this.aquariusDb.isOpen());
+		this.offersMitm.setDisable(!this.aquariusDb.isOpen());
 		this.divisionsMitm.setDisable(!this.aquariusDb.isOpen());
 	}
 }

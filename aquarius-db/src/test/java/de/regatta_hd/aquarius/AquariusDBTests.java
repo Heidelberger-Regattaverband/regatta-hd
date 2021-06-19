@@ -32,7 +32,7 @@ class AquariusDBTests {
 
 	private static AquariusDB aquariusDb;
 
-	private static RegattaDAO eventDAO;
+	private static RegattaDAO regattaDAO;
 
 	private static MasterDataDAO masterData;
 
@@ -48,7 +48,7 @@ class AquariusDBTests {
 		aquariusDb = injector.getInstance(AquariusDB.class);
 		aquariusDb.open(connectionData);
 
-		eventDAO = injector.getInstance(RegattaDAO.class);
+		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 	}
 
@@ -81,7 +81,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEvents() {
-		List<Regatta> events = eventDAO.getRegattas();
+		List<Regatta> events = regattaDAO.getRegattas();
 		Assertions.assertFalse(events.isEmpty());
 	}
 
@@ -91,7 +91,8 @@ class AquariusDBTests {
 		AgeClass ageClass = masterData.getAgeClass(11);
 
 		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
-		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
+		regattaDAO.setActiveRegatta(event);
+		List<Offer> offers = regattaDAO.findOffers(boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
 		offers.forEach(offer -> trace(offer, 0));
@@ -99,13 +100,13 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventOK() {
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
-		Assertions.assertEquals(3, event.getId());
-		Assertions.assertNotNull(event);
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
+		Assertions.assertEquals(3, regatta.getId());
+		Assertions.assertNotNull(regatta);
 
-		System.out.println(event.toString());
+		System.out.println(regatta.toString());
 
-		Offer offer = eventDAO.getOffer(event, "104");
+		Offer offer = regattaDAO.getOffer(regatta, "104");
 		Assertions.assertEquals("104", offer.getRaceNumber());
 
 		trace(offer, 1);
@@ -113,11 +114,10 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventFailed() {
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
-			// as event with ID == 10 doesn't exist, calling any getter causes an
-			// EntityNotFoundException
-			event.getClub();
+			// as event with ID == 10 doesn't exist, calling any getter causes an EntityNotFoundException
+			regatta.getClub();
 		});
 	}
 
