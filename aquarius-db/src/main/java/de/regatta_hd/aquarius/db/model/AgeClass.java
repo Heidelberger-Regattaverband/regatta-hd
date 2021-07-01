@@ -43,7 +43,7 @@ public class AgeClass {
 
 	@Basic
 	@Column(name = "AgeClass_AllowYounger")
-	private byte allowYounger;
+	private boolean allowYounger;
 
 	@Basic
 	@Column(name = "AgeClass_Caption", nullable = false, length = 48)
