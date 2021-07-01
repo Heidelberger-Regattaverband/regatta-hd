@@ -9,6 +9,7 @@ import de.regatta_hd.aquarius.db.DBConfigurationStore;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
+import de.regatta_hd.aquarius.db.model.AgeClassExt;
 import de.regatta_hd.aquarius.db.model.BoatClass;
 import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Heat;
@@ -105,8 +106,8 @@ class AquariusDBTests {
 		Assertions.assertNotNull(regatta);
 
 		System.out.println(regatta.toString());
-
-		Offer offer = regattaDAO.getOffer(regatta, "104");
+		regattaDAO.setActiveRegatta(regatta);
+		Offer offer = regattaDAO.getOffer("104");
 		Assertions.assertEquals("104", offer.getRaceNumber());
 
 		trace(offer, 1);
@@ -125,6 +126,9 @@ class AquariusDBTests {
 	void testGetAgeClasses() {
 		List<AgeClass> ageClasses = masterData.getAgeClasses();
 		Assertions.assertFalse(ageClasses.isEmpty());
+
+		AgeClass ageClass = ageClasses.get(0);
+		AgeClassExt ageClassExt = ageClass.getExtension();
 	}
 
 	private void trace(Offer offer, int indent) {

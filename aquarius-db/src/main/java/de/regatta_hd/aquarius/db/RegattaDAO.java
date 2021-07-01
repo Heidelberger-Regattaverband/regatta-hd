@@ -19,7 +19,7 @@ public interface RegattaDAO {
 
 	List<Offer> getOffers();
 
-	Offer getOffer(Regatta regatta, String raceNumber);
+	Offer getOffer(String raceNumber);
 
 	List<Offer> findOffers(BoatClass boatClass, AgeClass ageClass, boolean lightweight);
 

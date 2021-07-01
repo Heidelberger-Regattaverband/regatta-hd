@@ -6,7 +6,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Getter;
@@ -24,6 +26,11 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class AgeClass {
+	@Id
+	@Column(name = "AgeClass_ID")
+	@ToString.Include(rank = 1)
+	private int id;
+
 	@Basic
 	@Column(name = "AgeClass_Abbr", nullable = false, length = 8)
 	@ToString.Include(rank = 10)
@@ -47,11 +54,6 @@ public class AgeClass {
 	@ToString.Include(rank = 8)
 	private String gender;
 
-	@Id
-	@Column(name = "AgeClass_ID", columnDefinition = "int identity")
-	@ToString.Include(rank = 1)
-	private int id;
-
 	@Basic
 	@Column(name = "AgeClass_LW_AvgLimit")
 	private Integer lwAvgLimit;
@@ -69,12 +71,12 @@ public class AgeClass {
 	private Integer lwUpperLimit;
 
 	@Basic
-	@Column(name = "AgeClass_MaxAge")
-	private byte maxAge;
-
-	@Basic
 	@Column(name = "AgeClass_MinAge")
 	private byte minAge;
+
+	@Basic
+	@Column(name = "AgeClass_MaxAge")
+	private byte maxAge;
 
 	@Basic
 	@Column(name = "AgeClass_NumSubClasses")
@@ -87,4 +89,8 @@ public class AgeClass {
 	@OneToMany(targetEntity = Offer.class, mappedBy = "ageClass", cascade = CascadeType.MERGE)
 	@OrderBy("raceNumber")
 	private List<Offer> offers;
+
+	@OneToOne(mappedBy = "ageClass")
+    @PrimaryKeyJoinColumn
+	private AgeClassExt extension;
 }

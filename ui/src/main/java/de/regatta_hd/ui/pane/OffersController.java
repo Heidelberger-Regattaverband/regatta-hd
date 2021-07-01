@@ -33,9 +33,11 @@ public class OffersController extends AbstractBaseController {
 		super.initialize(location, resources);
 
 		this.raceNumber.setCellValueFactory(new PropertyValueFactory<>("raceNumber"));
+		this.raceNumber.setStyle("-fx-alignment: CENTER;");
 		this.labelShort.setCellValueFactory(new PropertyValueFactory<>("shortLabel"));
 		this.labelLong.setCellValueFactory(new PropertyValueFactory<>("longLabel"));
 		this.distance.setCellValueFactory(new PropertyValueFactory<>("distance"));
+		this.distance.setStyle("-fx-alignment: CENTER-RIGHT;");
 
 		// add your data to the table here.
 		this.tbData.setItems(getOffers());

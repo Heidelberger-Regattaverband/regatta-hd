@@ -14,13 +14,13 @@
   <children>
     <TableView fx:id="tbData" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <columns>
-        <TableColumn fx:id="raceNumber" text="Nummer" minWidth="10" prefWidth="20" />
+        <TableColumn fx:id="raceNumber" text="Nummer"/>
         <TableColumn fx:id="labelShort" text="Kurzbezeichnung" />
         <TableColumn fx:id="labelLong" text="Bezeichnung" />
-        <TableColumn fx:id="distance" text="Länge (m)" />
+        <TableColumn fx:id="distance" text="Länge (m)"/>
       </columns>
       <columnResizePolicy>
-        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
     </TableView>
   </children>

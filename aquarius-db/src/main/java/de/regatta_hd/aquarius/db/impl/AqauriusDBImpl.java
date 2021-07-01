@@ -10,6 +10,15 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import org.hibernate.Session;
 
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {
@@ -71,5 +80,20 @@ public class AqauriusDBImpl implements AquariusDB {
 
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
+
+		if (this.entityManager.isOpen()) {
+			Session session = this.entityManager.unwrap(Session.class);
+			session.doWork(connection -> {
+				try {
+					Database database = DatabaseFactory.getInstance()
+							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
+					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
+							new ClassLoaderResourceAccessor(), database);
+					liquibase.update(new Contexts(), new LabelExpression());
+				} catch (LiquibaseException e) {
+					e.printStackTrace();
+				}
+			});
+		}
 	}
 }

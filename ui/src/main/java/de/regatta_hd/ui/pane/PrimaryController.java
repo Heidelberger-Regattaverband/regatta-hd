@@ -126,7 +126,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (this.offersViewStage == null) {
 			try {
 				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.MenuItem.Offers.text"),
-						event -> this.eventViewStage = null);
+						event -> this.offersViewStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
