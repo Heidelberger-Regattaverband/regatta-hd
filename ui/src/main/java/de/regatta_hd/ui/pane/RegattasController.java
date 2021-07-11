@@ -1,13 +1,11 @@
 package de.regatta_hd.ui.pane;
 
+import com.google.inject.Inject;
+import de.regatta_hd.aquarius.db.RegattaDAO;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
-
-import com.google.inject.Inject;
-
-import de.regatta_hd.aquarius.db.RegattaDAO;
-import de.regatta_hd.aquarius.db.model.Regatta;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class RegattasController extends AbstractBaseController {
 	@FXML
-	private TableView<Regatta> tbData;
+	private TableView<Regatta> regattasTable;
 
 	@FXML
 	public TableColumn<Regatta, String> title;
@@ -35,18 +33,22 @@ public class RegattasController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		// make sure the property value factory should be exactly same as the e.g
-		// getStudentId from your model class
 		this.title.setCellValueFactory(new PropertyValueFactory<>("title"));
 		this.begin.setCellValueFactory(new PropertyValueFactory<>("startDate"));
 		this.end.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
 		// add your data to the table here.
-		this.tbData.setItems(getEvents());
+		this.regattasTable.setItems(getEvents());
 	}
 
 	// add your data here from any source
 	private ObservableList<Regatta> getEvents() {
 		return FXCollections.observableArrayList(this.events.getRegattas());
+	}
+
+	@FXML
+	private void selectRegatta() {
+		Regatta regatta = this.regattasTable.getSelectionModel().getSelectedItem();
+		this.events.setActiveRegatta(regatta);
 	}
 }
