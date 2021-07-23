@@ -5,6 +5,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
@@ -21,7 +22,9 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "AgeClass")
-//lombok
+@NamedQuery(name = "AgeClass.findAll", query = "SELECT a FROM AgeClass a")
+@NamedQuery(name = "AgeClass.findByAbbrevation", query = "SELECT a FROM AgeClass a WHERE a.abbreviation = :abbreviation")
+// lombok
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
@@ -91,6 +94,6 @@ public class AgeClass {
 	private List<Offer> offers;
 
 	@OneToOne(mappedBy = "ageClass")
-    @PrimaryKeyJoinColumn
+	@PrimaryKeyJoinColumn
 	private AgeClassExt extension;
 }

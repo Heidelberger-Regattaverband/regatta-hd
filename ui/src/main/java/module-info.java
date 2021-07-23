@@ -11,6 +11,7 @@ open module de.regatta_hd.ui {
 	requires org.hibernate.orm.core;
 
 	requires transitive de.regatta_hd.aquarius.db;
+	requires org.apache.commons.lang3;
 
 	exports de.regatta_hd.ui;
 }

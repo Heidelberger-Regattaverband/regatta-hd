@@ -1,18 +1,16 @@
 package de.regatta_hd.ui.pane;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 import com.google.inject.Inject;
-
 import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.Result;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,6 +25,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.StringUtils;
 
 public class SetRaceController extends AbstractBaseController {
 
@@ -206,7 +205,11 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (regatta != null) {
 			List<Offer> offers = this.regattaDAO.findOffers("2%");
-			return FXCollections.observableArrayList(offers);
+			List<Offer> filteredOffers = offers.stream().filter(offer -> {
+				String abbrevation = offer.getAgeClass().getAbbreviation();
+				return !StringUtils.equalsAny(abbrevation, "MM", "MW", "MM/W");
+			}).collect(Collectors.toList());
+			return FXCollections.observableArrayList(filteredOffers);
 		}
 		return FXCollections.emptyObservableList();
 	}
@@ -217,8 +220,8 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (event != null && targetOffer != null) {
 			// get all offers with same attributes
-			List<Offer> sourceOffers = this.regattaDAO.findOffers(targetOffer.getBoatClass(),
-					targetOffer.getAgeClass(), targetOffer.isLightweight());
+			List<Offer> sourceOffers = this.regattaDAO.findOffers(targetOffer.getBoatClass(), targetOffer.getAgeClass(),
+					targetOffer.isLightweight());
 
 			// filter target offer
 			sourceOffers = sourceOffers.stream().filter(offer -> targetOffer.getId() != offer.getId())
