@@ -7,6 +7,8 @@ import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.Result;
+import de.regatta_hd.ui.control.FilterComboBox;
+
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -31,8 +33,6 @@ public class SetRaceController extends AbstractBaseController {
 
 	private final SimpleListProperty<Regatta> eventsProp = new SimpleListProperty<>();
 
-	private final SimpleListProperty<Offer> targetOffersProp = new SimpleListProperty<>();
-
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
 
 	@FXML
@@ -42,7 +42,7 @@ public class SetRaceController extends AbstractBaseController {
 	private ComboBox<Offer> sourceOfferCombo;
 
 	@FXML
-	private ComboBox<Offer> targetOfferCombo;
+	private FilterComboBox<Offer> targetOfferCombo;
 
 	@FXML
 	private VBox sourceVBox;
@@ -64,8 +64,6 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.regattaCombo.itemsProperty().bind(this.eventsProp);
 
-		this.targetOfferCombo.itemsProperty().bind(this.targetOffersProp);
-
 		this.sourceOfferCombo.itemsProperty().bind(this.sourceOffersProp);
 
 		this.setRaceButton.setDisable(true);
@@ -73,7 +71,7 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleEventOnAction() {
-		this.targetOffersProp.set(getTargetOffers());
+		this.targetOfferCombo.setInitialItems(getTargetOffers());
 	}
 
 	@FXML
