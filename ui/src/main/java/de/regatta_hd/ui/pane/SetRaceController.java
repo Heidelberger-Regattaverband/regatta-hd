@@ -8,7 +8,6 @@ import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -213,10 +212,9 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private ObservableList<Offer> getSourceOffers() {
-		Regatta event = this.regattaCombo.getSelectionModel().getSelectedItem();
 		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
 
-		if (event != null && targetOffer != null) {
+		if (targetOffer != null) {
 			// get all offers with same attributes
 			List<Offer> sourceOffers = this.regattaDAO.findOffers(targetOffer.getBoatClass(), targetOffer.getAgeClass(),
 					targetOffer.isLightweight());
