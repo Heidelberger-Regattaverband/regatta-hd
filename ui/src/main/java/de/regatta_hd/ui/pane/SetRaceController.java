@@ -94,8 +94,12 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		this.regattaDAO.setRace(this.targetOfferCombo.getSelectionModel().getSelectedItem(),
-				this.sourceOfferCombo.getSelectionModel().getSelectedItem());
+		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
+
+		if (targetOffer != null && sourceOffer != null) {
+			this.regattaDAO.setRace(targetOffer, sourceOffer);
+		}
 	}
 
 	private void showSourceOfferRaces(Offer offer, VBox vbox, boolean withResult) {

@@ -5,6 +5,7 @@ import java.util.Collection;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -27,6 +28,8 @@ public class FilterComboBox<T> extends ComboBox<T> {
 	 */
 	private final boolean startsWithCheck;
 
+	private final TextChangeListener textChangeListener = new TextChangeListener();
+
 	public FilterComboBox() {
 		this(false);
 	}
@@ -40,7 +43,7 @@ public class FilterComboBox<T> extends ComboBox<T> {
 	public FilterComboBox(@NamedArg("startsWithCheck") boolean startsWithCheck) {
 		this.startsWithCheck = startsWithCheck;
 		setEditable(true);
-		configAutoFilterListener();
+		addTextChangeListener();
 	}
 
 	/**
@@ -56,7 +59,7 @@ public class FilterComboBox<T> extends ComboBox<T> {
 		this.startsWithCheck = startsWithCheck;
 		this.initialList = items;
 		setEditable(true);
-		configAutoFilterListener();
+		addTextChangeListener();
 	}
 
 	/**
@@ -70,25 +73,12 @@ public class FilterComboBox<T> extends ComboBox<T> {
 		this.initialList = initial;
 	}
 
-	/**
-	 * Set up the auto filter on the combo.
-	 */
-	private void configAutoFilterListener() {
-		getEditor().textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-			T selected = getSelectionModel().getSelectedItem();
+	private void addTextChangeListener() {
+		getEditor().textProperty().addListener(this.textChangeListener);
+	}
 
-			if (selected == null || !getConverter().toString(selected).equals(getEditor().getText())) {
-				filterItems(newValue);
-
-				if (getItems().size() == 1) {
-					setUserInputToOnlyOption();
-					hide();
-				} else if (!getItems().isEmpty()) {
-					show();
-					getEditor().setText(newValue);
-				}
-			}
-		});
+	private void removeTextChangeListener() {
+		getEditor().textProperty().removeListener(this.textChangeListener);
 	}
 
 	/**
@@ -100,9 +90,8 @@ public class FilterComboBox<T> extends ComboBox<T> {
 		ObservableList<T> filteredList = FXCollections.observableArrayList();
 		for (T item : this.initialList) {
 			String itemString = getConverter().toString(item).toLowerCase();
-			if (this.startsWithCheck && itemString.startsWith(filter.toLowerCase())) {
-				filteredList.add(item);
-			} else if (itemString.contains(filter.toLowerCase())) {
+			if (this.startsWithCheck && itemString.startsWith(filter.toLowerCase())
+					|| itemString.contains(filter.toLowerCase())) {
 				filteredList.add(item);
 			}
 		}
@@ -121,6 +110,38 @@ public class FilterComboBox<T> extends ComboBox<T> {
 		if (onlyOption.length() > currentText.length()) {
 			getEditor().setText(onlyOption);
 			Platform.runLater(() -> getEditor().selectAll());
+		}
+	}
+
+	private class TextChangeListener implements ChangeListener<String> {
+
+		@Override
+		public synchronized void changed(ObservableValue<? extends String> observable, String oldValue,
+				String newValue) {
+			T selected = getSelectionModel().getSelectedItem();
+
+			if (selected == null || !getConverter().toString(selected).equals(getEditor().getText())) {
+				filterItems(newValue);
+
+				if (getItems().size() == 1) {
+					// only one item satisfies filter -> select it
+					setUserInputToOnlyOption();
+
+					// hide drop down list as item is selected
+					hide();
+				} else if (!getItems().isEmpty()) {
+					removeTextChangeListener();
+
+					// several items satisfy filter -> clear current selection and show drop down
+					// list
+					FilterComboBox.this.selectionModelProperty().getValue().clearSelection();
+
+					addTextChangeListener();
+
+					// show drop down list for selection
+					show();
+				}
+			}
 		}
 	}
 }
