@@ -108,8 +108,10 @@ public class FilterComboBox<T> extends ComboBox<T> {
 		String onlyOption = getConverter().toString(getItems().get(0));
 		String currentText = getEditor().getText();
 		if (onlyOption.length() > currentText.length()) {
-			getEditor().setText(onlyOption);
-			Platform.runLater(() -> getEditor().selectAll());
+			Platform.runLater(() -> {
+				getEditor().setText(onlyOption);
+				getEditor().selectAll();
+			});
 		}
 	}
 
@@ -130,16 +132,18 @@ public class FilterComboBox<T> extends ComboBox<T> {
 					// hide drop down list as item is selected
 					hide();
 				} else if (!getItems().isEmpty()) {
-					removeTextChangeListener();
+					Platform.runLater(() -> {
+						removeTextChangeListener();
 
-					// several items satisfy filter -> clear current selection and show drop down
-					// list
-					FilterComboBox.this.selectionModelProperty().getValue().clearSelection();
+						// several items satisfy filter -> clear current selection and show drop down
+						// list
+						FilterComboBox.this.selectionModelProperty().getValue().clearSelection();
 
-					addTextChangeListener();
+						addTextChangeListener();
 
-					// show drop down list for selection
-					show();
+						// show drop down list for selection
+						show();
+					});
 				}
 			}
 		}
