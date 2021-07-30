@@ -49,8 +49,8 @@
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
 
-    <!-- https://search.maven.org/artifact/org.apache.commons/commons-text -->
-    <commons-text.version>1.9</commons-text.version>
+    <!-- https://search.maven.org/artifact/org.apache.commons/commons-configuration2 -->
+    <commons-configuration2.version>2.7</commons-configuration2.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
     <junit.version>5.7.2</junit.version>
@@ -60,6 +60,7 @@
   </properties>
 
   <modules>
+    <module>common</module>
     <module>aquarius-db</module>
     <module>ui</module>
   </modules>
@@ -134,6 +135,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-configuration2</artifactId>
+        <version>${commons-configuration2.version}</version>
       </dependency>
 
       <!-- ========== -->
