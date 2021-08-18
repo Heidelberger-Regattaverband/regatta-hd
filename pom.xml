@@ -28,6 +28,19 @@
     <url>https://github.com/Heidelberger-Regattaverband/regatta-hd</url>
   </scm>
 
+  <repositories>
+    <repository>
+      <id>oss.sonatype.org-snapshot</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <properties>
     <maven.compiler.release>16</maven.compiler.release>
 
