@@ -94,15 +94,15 @@ class AquariusDBTests {
 		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
 		regattaDAO.setActiveRegatta(event);
 		List<Offer> offers = regattaDAO.findOffers(boatClass, ageClass, true);
-		Assertions.assertFalse(offers.isEmpty());
+		Assertions.assertTrue(offers.isEmpty());
 
 		offers.forEach(offer -> trace(offer, 0));
 	}
 
 	@Test
 	void testGetEventOK() {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
-		Assertions.assertEquals(3, regatta.getId());
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
+		Assertions.assertEquals(2, regatta.getId());
 		Assertions.assertNotNull(regatta);
 
 		System.out.println(regatta.toString());
