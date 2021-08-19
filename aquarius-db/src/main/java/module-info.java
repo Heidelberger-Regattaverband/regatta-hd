@@ -8,6 +8,8 @@ open module de.regatta_hd.aquarius.db {
 	requires liquibase.core;
 	requires org.hibernate.orm.core;
 
+	requires de.regatta_hd.common;
+
 	exports de.regatta_hd.aquarius.db;
 	exports de.regatta_hd.aquarius.db.model;
 }

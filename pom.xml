@@ -28,24 +28,11 @@
     <url>https://github.com/Heidelberger-Regattaverband/regatta-hd</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <id>oss.sonatype.org-snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <properties>
     <maven.compiler.release>16</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>17-ea+16</openjfx.version>
+    <openjfx.version>17-ea+17</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.20</lombok.version>
@@ -84,6 +71,21 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- ========== -->
+      <!-- Regatta HD -->
+      <!-- ========== -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>aquarius-db</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ============== -->
       <!-- Database & JPA -->
       <!-- ============== -->

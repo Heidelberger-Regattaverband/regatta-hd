@@ -1,7 +1,18 @@
 package de.regatta_hd.aquarius;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import de.regatta_hd.aquarius.db.DBConfiguration;
@@ -20,14 +31,6 @@ import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.RegistrationLabel;
 import de.regatta_hd.aquarius.db.model.Result;
 import jakarta.persistence.EntityNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class AquariusDBTests {
 
@@ -117,7 +120,8 @@ class AquariusDBTests {
 	void testGetEventFailed() {
 		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			// as event with ID == 10 doesn't exist, calling any getter causes an EntityNotFoundException
+			// as event with ID == 10 doesn't exist, calling any getter causes an
+			// EntityNotFoundException
 			regatta.getClub();
 		});
 	}
