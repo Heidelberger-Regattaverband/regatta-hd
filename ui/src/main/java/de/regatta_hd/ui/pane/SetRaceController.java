@@ -66,6 +66,12 @@ public class SetRaceController extends AbstractBaseController {
 		this.sourceOfferCombo.itemsProperty().bind(this.sourceOffersProp);
 
 		this.setRaceButton.setDisable(true);
+
+		Regatta activeRegatta = this.regattaDAO.getActiveRegatta();
+		if (activeRegatta != null) {
+			this.regattaCombo.getSelectionModel().select(activeRegatta);
+			handleEventOnAction();
+		}
 	}
 
 	@FXML

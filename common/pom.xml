@@ -12,14 +12,4 @@
   <artifactId>common</artifactId>
   <name>Regatta HD - Common</name>
 
-  <dependencies>
-    <!-- ============== -->
-    <!-- Database & JPA -->
-    <!-- ============== -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-configuration2</artifactId>
-    </dependency>
-  </dependencies>
-
 </project>

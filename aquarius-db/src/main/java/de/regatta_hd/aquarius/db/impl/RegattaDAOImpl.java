@@ -162,7 +162,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		try {
 			if (this.activeRegatta != null) {
-				this.cfgService.setProperty(ACTIVE_REGATTA, Integer.toString(this.activeRegatta.getId()));
+				this.cfgService.setProperty(ACTIVE_REGATTA, this.activeRegatta.getId());
 			} else {
 				this.cfgService.removeProperty(ACTIVE_REGATTA);
 			}

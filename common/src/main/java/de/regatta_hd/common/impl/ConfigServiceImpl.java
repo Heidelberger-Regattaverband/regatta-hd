@@ -29,6 +29,11 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
 	@Override
+	public void setProperty(String key, int value) throws IOException {
+		setProperty(key, Integer.toString(value));
+	}
+
+	@Override
 	public synchronized void removeProperty(String key) throws IOException {
 		getProperties().remove(key);
 	}
