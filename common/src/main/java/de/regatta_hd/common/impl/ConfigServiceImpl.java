@@ -16,16 +16,21 @@ public class ConfigServiceImpl implements ConfigService {
 	private Properties properties;
 
 	@Override
-	public String getProperty(String name) throws IOException {
+	public synchronized String getProperty(String name) throws IOException {
 		return getProperties().getProperty(name);
 	}
 
 	@Override
-	public void setProperty(String key, String value) throws IOException {
+	public synchronized void setProperty(String key, String value) throws IOException {
 		getProperties().setProperty(key, value);
 		try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(getSettingsPath()))) {
 			this.properties.store(output, "Last succesful database connection settings.");
 		}
+	}
+
+	@Override
+	public synchronized void removeProperty(String key) throws IOException {
+		getProperties().remove(key);
 	}
 
 	private Properties getProperties() throws IOException {

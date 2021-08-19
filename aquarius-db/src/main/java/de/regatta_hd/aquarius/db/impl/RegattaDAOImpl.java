@@ -2,7 +2,15 @@ package de.regatta_hd.aquarius.db.impl;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.BoatClass;
@@ -10,16 +18,20 @@ import de.regatta_hd.aquarius.db.model.Heat;
 import de.regatta_hd.aquarius.db.model.HeatRegistration;
 import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Regatta;
+import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
+	private static final String ACTIVE_REGATTA = "activeRegatta";
+
 	private Regatta activeRegatta;
+
+	@Inject
+	private ConfigService cfgService;
 
 	@Override
 	public List<Regatta> getRegattas() {
@@ -44,7 +56,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		return createTypedQuery(query) //
 				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber is null"))
-				.setParameter(regattaParam.getName(), requireNonNull(this.activeRegatta, "activeRegatta is null")) //
+				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
 				.getSingleResult();
 	}
 
@@ -71,7 +83,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				.setParameter(lightweightParam.getName(), lightweight)
 				.setParameter(boatClassParam.getName(), requireNonNull(boatClass, "boatClass is null"))
 				.setParameter(ageClassParam.getName(), requireNonNull(ageClass, "ageClass is null"))
-				.setParameter(regattaParam.getName(), requireNonNull(this.activeRegatta, "activeRegatta is null")) //
+				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
 				.getResultList();
 	}
 
@@ -122,7 +134,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		return createTypedQuery(query) //
 				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber is null"))
-				.setParameter(regattaParam.getName(), requireNonNull(this.activeRegatta, "activeRegatta is null")) //
+				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
 				.getResultList();
 	}
 
@@ -140,17 +152,37 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		));
 
 		return createTypedQuery(query) //
-				.setParameter(regattaParam.getName(), requireNonNull(this.activeRegatta, "activeRegatta is null")) //
+				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
 				.getResultList();
 	}
 
 	@Override
 	public void setActiveRegatta(Regatta regatta) {
 		this.activeRegatta = regatta;
+
+		try {
+			if (this.activeRegatta != null) {
+				this.cfgService.setProperty(ACTIVE_REGATTA, Integer.toString(this.activeRegatta.getId()));
+			} else {
+				this.cfgService.removeProperty(ACTIVE_REGATTA);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public Regatta getActiveRegatta() {
+		if (this.activeRegatta == null) {
+			try {
+				String regattaId = this.cfgService.getProperty(ACTIVE_REGATTA);
+				if (StringUtils.isNotBlank(regattaId)) {
+					this.activeRegatta = getEntity(Regatta.class, Integer.parseInt(regattaId));
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return this.activeRegatta;
 	}
 }
