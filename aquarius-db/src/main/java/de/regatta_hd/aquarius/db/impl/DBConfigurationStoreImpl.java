@@ -13,7 +13,7 @@ public class DBConfigurationStoreImpl implements DBConfigurationStore {
 
 	private static final String DB_HOST = "dbHost";
 	private static final String DB_NAME = "dbName";
-	private static final String USERNAME = "username";
+	private static final String USERNAME = "userName";
 	private static final String PASSWORD = "password"; // TODO: don't store password
 
 	@Inject

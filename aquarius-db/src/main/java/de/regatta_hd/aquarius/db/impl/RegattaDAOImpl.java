@@ -26,6 +26,8 @@ import jakarta.persistence.criteria.Root;
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
+	private static final String PARAM_REGATTA = "regatta";
+
 	private static final String ACTIVE_REGATTA = "activeRegatta";
 
 	private Regatta activeRegatta;
@@ -47,11 +49,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Root<Offer> o = query.from(Offer.class);
 
 		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, "regatta");
+		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 
 		query.where(critBuilder.and( //
 				critBuilder.equal(o.get("raceNumber"), raceNumberParam), //
-				critBuilder.equal(o.get("regatta"), regattaParam) //
+				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
@@ -67,7 +69,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
 
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, "regatta");
+		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 		ParameterExpression<BoatClass> boatClassParam = critBuilder.parameter(BoatClass.class, "boatClass");
 		ParameterExpression<AgeClass> ageClassParam = critBuilder.parameter(AgeClass.class, "ageClass");
 		ParameterExpression<Boolean> lightweightParam = critBuilder.parameter(Boolean.class, "lightweight");
@@ -76,7 +78,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				critBuilder.equal(o.get("lightweight"), lightweightParam), //
 				critBuilder.equal(o.get("boatClass"), boatClassParam), //
 				critBuilder.equal(o.get("ageClass"), ageClassParam), //
-				critBuilder.equal(o.get("regatta"), regattaParam) //
+				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
@@ -124,12 +126,12 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
 
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, "regatta");
+		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "raceNumber");
 
 		query.where(critBuilder.and( //
 				critBuilder.like(o.get("raceNumber"), raceNumberParam), //
-				critBuilder.equal(o.get("regatta"), regattaParam) //
+				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
@@ -145,10 +147,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
 
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, "regatta");
+		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 
 		query.where(critBuilder.and( //
-				critBuilder.equal(o.get("regatta"), regattaParam) //
+				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //

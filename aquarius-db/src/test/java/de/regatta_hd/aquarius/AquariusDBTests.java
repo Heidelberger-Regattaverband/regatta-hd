@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.util.Modules;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
@@ -44,7 +43,8 @@ class AquariusDBTests {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
-		Injector injector = Guice.createInjector(new AquariusDBModule());
+		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
+		Injector injector = Guice.createInjector(testModules);
 
 		DBConfigurationStore connStore = injector.getInstance(DBConfigurationStore.class);
 		connectionData = connStore.getLastSuccessful();
@@ -62,14 +62,6 @@ class AquariusDBTests {
 			aquariusDb.close();
 			aquariusDb = null;
 		}
-	}
-
-	@BeforeEach
-	void setUp() {
-	}
-
-	@AfterEach
-	void tearDown() {
 	}
 
 	@Test
@@ -143,38 +135,38 @@ class AquariusDBTests {
 		offer.getRegistrations().forEach(registration -> trace(registration, indent + 1));
 	}
 
-	private void trace(Heat heat, int indent) {
+	private static void trace(Heat heat, int indent) {
 		indent(indent);
 		System.out.println(heat.toString());
 
 		heat.getHeatRegistrationsOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
-	private void trace(Registration registration, int indent) {
+	private static void trace(Registration registration, int indent) {
 		indent(indent);
 		System.out.println(registration.toString());
 		registration.getCrews().forEach(crew -> trace(crew, indent + 1));
 		registration.getLabels().forEach(label -> trace(label, indent + 1));
 	}
 
-	private void trace(Crew crew, int indent) {
+	private static void trace(Crew crew, int indent) {
 		indent(indent);
 		System.out.println(crew.toString());
 	}
 
-	private void trace(RegistrationLabel registrationLabel, int indent) {
+	private static void trace(RegistrationLabel registrationLabel, int indent) {
 		indent(indent);
 		System.out.println(registrationLabel.toString());
 	}
 
-	private void trace(HeatRegistration heatEntry, int indent) {
+	private static void trace(HeatRegistration heatEntry, int indent) {
 		indent(indent);
 		System.out.println(heatEntry.toString());
 		trace(heatEntry.getRegistration(), indent + 1);
 		heatEntry.getResults().forEach(result -> trace(result, indent + 1));
 	}
 
-	private void trace(Result result, int indent) {
+	private static void trace(Result result, int indent) {
 		indent(indent);
 		System.out.println(result.toString());
 	}
