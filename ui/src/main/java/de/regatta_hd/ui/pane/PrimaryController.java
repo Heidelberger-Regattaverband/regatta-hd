@@ -8,8 +8,8 @@ import java.util.ResourceBundle;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.DBConfiguration;
-import de.regatta_hd.aquarius.db.DBConfigurationStore;
+import de.regatta_hd.aquarius.db.DBConfig;
+import de.regatta_hd.aquarius.db.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -24,7 +24,7 @@ public class PrimaryController extends AbstractBaseController {
 	private AquariusDB aquariusDb;
 
 	@Inject
-	private DBConfigurationStore dbCfgStore;
+	private DBConfigStore dbCfgStore;
 
 	@FXML
 	private MenuItem databaseConnect;
@@ -66,11 +66,11 @@ public class PrimaryController extends AbstractBaseController {
 			try {
 				dialog = new DBConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, super.resources,
 						this.dbCfgStore.getLastSuccessful());
-				Optional<DBConfiguration> connectionData = dialog.showAndWait();
+				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
-					Task<DBConfiguration> dbOpenTask = new Task<>() {
+					Task<DBConfig> dbOpenTask = new Task<>() {
 						@Override
-						protected DBConfiguration call() throws IOException {
+						protected DBConfig call() throws IOException {
 							PrimaryController.this.aquariusDb.open(connectionData.get());
 							PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
 							updateControls();

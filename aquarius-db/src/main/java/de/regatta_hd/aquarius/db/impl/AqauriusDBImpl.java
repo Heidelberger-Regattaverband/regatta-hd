@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.DBConfiguration;
+import de.regatta_hd.aquarius.db.DBConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -54,7 +54,7 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public synchronized void open(DBConfiguration connectionData) {
+	public synchronized void open(DBConfig connectionData) {
 		requireNonNull(connectionData, "connectionData is null.");
 
 		open(connectionData.getDbHost(), connectionData.getDbName(), connectionData.getUserName(),

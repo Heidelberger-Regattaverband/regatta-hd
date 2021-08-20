@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class DBConfiguration {
+public class DBConfig {
 
 	/**
 	 * The database host name or IP address.

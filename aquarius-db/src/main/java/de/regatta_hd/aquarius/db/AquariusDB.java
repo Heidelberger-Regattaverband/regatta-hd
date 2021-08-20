@@ -38,7 +38,7 @@ public interface AquariusDB {
 	/**
 	 * Opens connection to Aquarius database.
 	 *
-	 * @param connectionData the {@link DBConfiguration connection data}
+	 * @param connectionData the {@link DBConfig connection data}
 	 */
-	void open(DBConfiguration connectionData);
+	void open(DBConfig connectionData);
 }

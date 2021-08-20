@@ -14,8 +14,8 @@ import com.google.inject.util.Modules;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
-import de.regatta_hd.aquarius.db.DBConfiguration;
-import de.regatta_hd.aquarius.db.DBConfigurationStore;
+import de.regatta_hd.aquarius.db.DBConfig;
+import de.regatta_hd.aquarius.db.DBConfigStore;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
 import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
@@ -39,14 +39,14 @@ class AquariusDBTests {
 
 	private static MasterDataDAO masterData;
 
-	private static DBConfiguration connectionData;
+	private static DBConfig connectionData;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
 		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
 		Injector injector = Guice.createInjector(testModules);
 
-		DBConfigurationStore connStore = injector.getInstance(DBConfigurationStore.class);
+		DBConfigStore connStore = injector.getInstance(DBConfigStore.class);
 		connectionData = connStore.getLastSuccessful();
 
 		aquariusDb = injector.getInstance(AquariusDB.class);
@@ -127,7 +127,7 @@ class AquariusDBTests {
 		AgeClassExt ageClassExt = ageClass.getExtension();
 	}
 
-	private void trace(Offer offer, int indent) {
+	private static void trace(Offer offer, int indent) {
 		indent(indent);
 		System.out.println(offer.toString());
 

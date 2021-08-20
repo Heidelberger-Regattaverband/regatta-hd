@@ -3,7 +3,7 @@ package de.regatta_hd.ui.dialog;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import de.regatta_hd.aquarius.db.DBConfiguration;
+import de.regatta_hd.aquarius.db.DBConfig;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -15,14 +15,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class DBConnectionDialog extends Dialog<DBConfiguration> {
+public class DBConnectionDialog extends Dialog<DBConfig> {
 
-	private DBConfiguration connectionData;
+	private DBConfig connectionData;
 
 	public DBConnectionDialog(Stage primaryStage, boolean decorated, ResourceBundle resources,
-			DBConfiguration connectionData) {
+			DBConfig connectionData) {
 		initOwner(Objects.requireNonNull(primaryStage, "primaryStage"));
-		this.connectionData = Objects.requireNonNullElse(connectionData, DBConfiguration.builder().build());
+		this.connectionData = Objects.requireNonNullElse(connectionData, DBConfig.builder().build());
 
 		if (!decorated) {
 			initStyle(StageStyle.UNDECORATED);
