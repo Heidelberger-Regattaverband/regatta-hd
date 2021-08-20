@@ -1,7 +1,6 @@
 package de.regatta_hd.aquarius.db.model;
 
 import java.io.Serializable;
-
 import lombok.Data;
 
 /**

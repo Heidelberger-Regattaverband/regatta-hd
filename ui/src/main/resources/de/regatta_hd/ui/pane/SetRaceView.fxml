@@ -7,6 +7,7 @@
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
+<?import de.regatta_hd.ui.control.FilterComboBox?>
 <?import de.regatta_hd.ui.pane.OfferStringConverter?>
 <?import de.regatta_hd.ui.pane.RegattaStringConverter?>
 
@@ -18,7 +19,7 @@
 
   <children>
     <Label text="%SetRaceView.EventLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <ComboBox fx:id="eventCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
+    <ComboBox fx:id="regattaCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
       GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleEventOnAction">
       <converter>
         <RegattaStringConverter />
@@ -26,12 +27,12 @@
     </ComboBox>
 
     <Label text="%SetRaceView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <ComboBox fx:id="targetOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
+    <FilterComboBox fx:id="targetOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
       maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleTargetOfferOnAction">
       <converter>
         <OfferStringConverter />
       </converter>
-    </ComboBox>
+    </FilterComboBox>
 
     <Label text="%SetRaceView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
     <ComboBox fx:id="sourceOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"

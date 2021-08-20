@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.Object?>
+
+<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
+  fx:controller="de.regatta_hd.ui.pane.OffersController">
+  <padding>
+    <Insets top="10" right="10" bottom="10" left="10" />
+  </padding>
+
+  <children>
+    <TableView fx:id="tbData" GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <columns>
+        <TableColumn fx:id="raceNumber" text="Nummer"/>
+        <TableColumn fx:id="labelShort" text="Kurzbezeichnung" />
+        <TableColumn fx:id="labelLong" text="Bezeichnung" />
+        <TableColumn fx:id="distance" text="Länge (m)"/>
+      </columns>
+      <columnResizePolicy>
+        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+      </columnResizePolicy>
+    </TableView>
+  </children>
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" fillWidth="true" />
+  </columnConstraints>
+</GridPane>

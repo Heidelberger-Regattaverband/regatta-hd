@@ -1,7 +1,7 @@
 package de.regatta_hd.aquarius.db;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 /**
  * This interface encapsulates access to Aquarius database.

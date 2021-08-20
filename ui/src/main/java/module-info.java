@@ -4,7 +4,6 @@ open module de.regatta_hd.ui {
 	requires transitive javafx.fxml;
 	requires transitive javafx.graphics;
 
-	requires java.persistence;
 	requires java.sql;
 
 	requires transitive com.google.guice;
@@ -12,6 +11,8 @@ open module de.regatta_hd.ui {
 	requires org.hibernate.orm.core;
 
 	requires transitive de.regatta_hd.aquarius.db;
+	requires org.apache.commons.lang3;
+	requires de.regatta_hd.common;
 
 	exports de.regatta_hd.ui;
 }

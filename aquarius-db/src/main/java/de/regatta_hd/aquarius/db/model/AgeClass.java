@@ -1,16 +1,17 @@
 package de.regatta_hd.aquarius.db.model;
 
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import java.util.List;
-
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,11 +22,18 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "AgeClass")
-//lombok
+@NamedQuery(name = "AgeClass.findAll", query = "SELECT a FROM AgeClass a")
+@NamedQuery(name = "AgeClass.findByAbbrevation", query = "SELECT a FROM AgeClass a WHERE a.abbreviation = :abbreviation")
+// lombok
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class AgeClass {
+	@Id
+	@Column(name = "AgeClass_ID")
+	@ToString.Include(rank = 1)
+	private int id;
+
 	@Basic
 	@Column(name = "AgeClass_Abbr", nullable = false, length = 8)
 	@ToString.Include(rank = 10)
@@ -38,7 +46,7 @@ public class AgeClass {
 
 	@Basic
 	@Column(name = "AgeClass_AllowYounger")
-	private byte allowYounger;
+	private boolean allowYounger;
 
 	@Basic
 	@Column(name = "AgeClass_Caption", nullable = false, length = 48)
@@ -48,11 +56,6 @@ public class AgeClass {
 	@Column(name = "AgeClass_Gender", nullable = false, length = 1)
 	@ToString.Include(rank = 8)
 	private String gender;
-
-	@Id
-	@Column(name = "AgeClass_ID", columnDefinition = "int identity")
-	@ToString.Include(rank = 1)
-	private int id;
 
 	@Basic
 	@Column(name = "AgeClass_LW_AvgLimit")
@@ -71,12 +74,12 @@ public class AgeClass {
 	private Integer lwUpperLimit;
 
 	@Basic
-	@Column(name = "AgeClass_MaxAge")
-	private byte maxAge;
-
-	@Basic
 	@Column(name = "AgeClass_MinAge")
 	private byte minAge;
+
+	@Basic
+	@Column(name = "AgeClass_MaxAge")
+	private byte maxAge;
 
 	@Basic
 	@Column(name = "AgeClass_NumSubClasses")
@@ -89,4 +92,8 @@ public class AgeClass {
 	@OneToMany(targetEntity = Offer.class, mappedBy = "ageClass", cascade = CascadeType.MERGE)
 	@OrderBy("raceNumber")
 	private List<Offer> offers;
+
+	@OneToOne(mappedBy = "ageClass")
+	@PrimaryKeyJoinColumn
+	private AgeClassExt extension;
 }

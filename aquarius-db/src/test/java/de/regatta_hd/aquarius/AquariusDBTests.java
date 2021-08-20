@@ -3,40 +3,39 @@ package de.regatta_hd.aquarius;
 import java.io.IOException;
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.util.Modules;
 
 import de.regatta_hd.aquarius.db.AquariusDB;
 import de.regatta_hd.aquarius.db.AquariusDBModule;
 import de.regatta_hd.aquarius.db.DBConfiguration;
 import de.regatta_hd.aquarius.db.DBConfigurationStore;
-import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.MasterDataDAO;
+import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
+import de.regatta_hd.aquarius.db.model.AgeClassExt;
 import de.regatta_hd.aquarius.db.model.BoatClass;
+import de.regatta_hd.aquarius.db.model.Crew;
 import de.regatta_hd.aquarius.db.model.Heat;
 import de.regatta_hd.aquarius.db.model.HeatRegistration;
-import de.regatta_hd.aquarius.db.model.Crew;
+import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.db.model.Regatta;
 import de.regatta_hd.aquarius.db.model.Registration;
 import de.regatta_hd.aquarius.db.model.RegistrationLabel;
-import de.regatta_hd.aquarius.db.model.Regatta;
-import de.regatta_hd.aquarius.db.model.Offer;
 import de.regatta_hd.aquarius.db.model.Result;
+import jakarta.persistence.EntityNotFoundException;
 
 class AquariusDBTests {
 
 	private static AquariusDB aquariusDb;
 
-	private static RegattaDAO eventDAO;
+	private static RegattaDAO regattaDAO;
 
 	private static MasterDataDAO masterData;
 
@@ -44,7 +43,8 @@ class AquariusDBTests {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
-		Injector injector = Guice.createInjector(new AquariusDBModule());
+		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
+		Injector injector = Guice.createInjector(testModules);
 
 		DBConfigurationStore connStore = injector.getInstance(DBConfigurationStore.class);
 		connectionData = connStore.getLastSuccessful();
@@ -52,7 +52,7 @@ class AquariusDBTests {
 		aquariusDb = injector.getInstance(AquariusDB.class);
 		aquariusDb.open(connectionData);
 
-		eventDAO = injector.getInstance(RegattaDAO.class);
+		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 	}
 
@@ -62,14 +62,6 @@ class AquariusDBTests {
 			aquariusDb.close();
 			aquariusDb = null;
 		}
-	}
-
-	@BeforeEach
-	void setUp() {
-	}
-
-	@AfterEach
-	void tearDown() {
 	}
 
 	@Test
@@ -85,7 +77,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEvents() {
-		List<Regatta> events = eventDAO.getRegattas();
+		List<Regatta> events = regattaDAO.getRegattas();
 		Assertions.assertFalse(events.isEmpty());
 	}
 
@@ -94,22 +86,23 @@ class AquariusDBTests {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
-		List<Offer> offers = eventDAO.findOffers(event, boatClass, ageClass, true);
-		Assertions.assertFalse(offers.isEmpty());
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
+		regattaDAO.setActiveRegatta(event);
+		List<Offer> offers = regattaDAO.findOffers(boatClass, ageClass, true);
+		Assertions.assertTrue(offers.isEmpty());
 
 		offers.forEach(offer -> trace(offer, 0));
 	}
 
 	@Test
 	void testGetEventOK() {
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 1);
-		Assertions.assertEquals(1, event.getId());
-		Assertions.assertNotNull(event);
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
+		Assertions.assertEquals(2, regatta.getId());
+		Assertions.assertNotNull(regatta);
 
-		System.out.println(event.toString());
-
-		Offer offer = eventDAO.getOffer(event, "104");
+		System.out.println(regatta.toString());
+		regattaDAO.setActiveRegatta(regatta);
+		Offer offer = regattaDAO.getOffer("104");
 		Assertions.assertEquals("104", offer.getRaceNumber());
 
 		trace(offer, 1);
@@ -117,11 +110,11 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventFailed() {
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
-			Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
-			event.getClub();
+			regatta.getClub();
 		});
 	}
 
@@ -129,6 +122,9 @@ class AquariusDBTests {
 	void testGetAgeClasses() {
 		List<AgeClass> ageClasses = masterData.getAgeClasses();
 		Assertions.assertFalse(ageClasses.isEmpty());
+
+		AgeClass ageClass = ageClasses.get(0);
+		AgeClassExt ageClassExt = ageClass.getExtension();
 	}
 
 	private void trace(Offer offer, int indent) {
@@ -139,38 +135,38 @@ class AquariusDBTests {
 		offer.getRegistrations().forEach(registration -> trace(registration, indent + 1));
 	}
 
-	private void trace(Heat heat, int indent) {
+	private static void trace(Heat heat, int indent) {
 		indent(indent);
 		System.out.println(heat.toString());
 
 		heat.getHeatRegistrationsOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
-	private void trace(Registration registration, int indent) {
+	private static void trace(Registration registration, int indent) {
 		indent(indent);
 		System.out.println(registration.toString());
 		registration.getCrews().forEach(crew -> trace(crew, indent + 1));
 		registration.getLabels().forEach(label -> trace(label, indent + 1));
 	}
 
-	private void trace(Crew crew, int indent) {
+	private static void trace(Crew crew, int indent) {
 		indent(indent);
 		System.out.println(crew.toString());
 	}
 
-	private void trace(RegistrationLabel registrationLabel, int indent) {
+	private static void trace(RegistrationLabel registrationLabel, int indent) {
 		indent(indent);
 		System.out.println(registrationLabel.toString());
 	}
 
-	private void trace(HeatRegistration heatEntry, int indent) {
+	private static void trace(HeatRegistration heatEntry, int indent) {
 		indent(indent);
 		System.out.println(heatEntry.toString());
 		trace(heatEntry.getRegistration(), indent + 1);
 		heatEntry.getResults().forEach(result -> trace(result, indent + 1));
 	}
 
-	private void trace(Result result, int indent) {
+	private static void trace(Result result, int indent) {
 		indent(indent);
 		System.out.println(result.toString());
 	}
