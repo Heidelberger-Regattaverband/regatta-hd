@@ -34,7 +34,7 @@ abstract class AbstractDAOImpl {
 		return this.aquariusDb.getEntityManager().createQuery(criteriaQuery);
 	}
 
-	protected <T> T getEntity(Class<T> entityClass, Object id) {
+	protected <T> T find(Class<T> entityClass, Object id) {
 		return this.aquariusDb.getEntityManager().find(entityClass, id);
 	}
 

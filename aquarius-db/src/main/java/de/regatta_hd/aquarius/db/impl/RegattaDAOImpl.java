@@ -179,7 +179,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			try {
 				String regattaId = this.cfgService.getProperty(ACTIVE_REGATTA);
 				if (StringUtils.isNotBlank(regattaId)) {
-					this.activeRegatta = getEntity(Regatta.class, Integer.parseInt(regattaId));
+					this.activeRegatta = find(Regatta.class, Integer.parseInt(regattaId));
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

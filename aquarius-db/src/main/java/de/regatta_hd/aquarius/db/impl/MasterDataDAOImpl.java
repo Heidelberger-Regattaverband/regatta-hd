@@ -29,11 +29,11 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public AgeClass getAgeClass(int id) {
-		return getEntity(AgeClass.class, id);
+		return find(AgeClass.class, id);
 	}
 
 	@Override
 	public BoatClass getBoatClass(int id) {
-		return getEntity(BoatClass.class, id);
+		return find(BoatClass.class, id);
 	}
 }
