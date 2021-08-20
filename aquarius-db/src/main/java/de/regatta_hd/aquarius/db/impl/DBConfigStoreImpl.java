@@ -1,15 +1,16 @@
 package de.regatta_hd.aquarius.db.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.IOException;
-import java.util.Objects;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.DBConfiguration;
-import de.regatta_hd.aquarius.db.DBConfigurationStore;
+import de.regatta_hd.aquarius.db.DBConfig;
+import de.regatta_hd.aquarius.db.DBConfigStore;
 import de.regatta_hd.common.ConfigService;
 
-public class DBConfigurationStoreImpl implements DBConfigurationStore {
+public class DBConfigStoreImpl implements DBConfigStore {
 
 	private static final String DB_HOST = "dbHost";
 	private static final String DB_NAME = "dbName";
@@ -20,8 +21,8 @@ public class DBConfigurationStoreImpl implements DBConfigurationStore {
 	private ConfigService cfgService;
 
 	@Override
-	public DBConfiguration getLastSuccessful() throws IOException {
-		return DBConfiguration.builder() //
+	public DBConfig getLastSuccessful() throws IOException {
+		return DBConfig.builder() //
 				.dbHost(this.cfgService.getProperty(DB_HOST)) //
 				.dbName(this.cfgService.getProperty(DB_NAME)) //
 				.userName(this.cfgService.getProperty(USERNAME)) //
@@ -29,8 +30,8 @@ public class DBConfigurationStoreImpl implements DBConfigurationStore {
 	}
 
 	@Override
-	public void setLastSuccessful(DBConfiguration connectionData) throws IOException {
-		Objects.requireNonNull(connectionData, "connectionData");
+	public void setLastSuccessful(DBConfig connectionData) throws IOException {
+		requireNonNull(connectionData, "connectionData");
 
 		this.cfgService.setProperty(DB_HOST, connectionData.getDbHost());
 		this.cfgService.setProperty(DB_NAME, connectionData.getDbName());
