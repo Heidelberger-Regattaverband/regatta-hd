@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * JavaFX App
+ * Regatta HD JavaFX application.
  */
 public class RegattaHD extends Application {
 
@@ -25,15 +25,15 @@ public class RegattaHD extends Application {
 	private FXMLLoader fxmlLoader;
 
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage primaryStage) throws IOException {
 		this.context.init();
 
 		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
 
 		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/PrimaryView.fxml", bundle), 800, 600);
-		stage.setScene(scene);
-		stage.setTitle(bundle.getString("MainWindow.title"));
-		stage.show();
+		primaryStage.setScene(scene);
+		primaryStage.setTitle(bundle.getString("MainWindow.title"));
+		primaryStage.show();
 	}
 
 	private Parent loadFXML(String fxml, ResourceBundle bundle) throws IOException {
