@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
@@ -46,7 +47,7 @@ public class DateTableCell<B> extends TableCell<B, Instant> {
 				setText(null);
 				setGraphic(this.datePicker);
 			} else {
-				setText(getDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+				setText(getDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.GERMANY)));
 				setGraphic(null);
 			}
 		}

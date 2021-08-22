@@ -28,7 +28,7 @@ public class RegattaHD extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		this.context.init();
 
-		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMAN);
+		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
 		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/PrimaryView.fxml", bundle), 800, 600);
 		primaryStage.setScene(scene);
