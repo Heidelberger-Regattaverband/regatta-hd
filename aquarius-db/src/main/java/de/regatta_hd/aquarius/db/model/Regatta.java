@@ -1,5 +1,9 @@
 package de.regatta_hd.aquarius.db.model;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,9 +17,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 import lombok.Data;
 import lombok.ToString;
 
@@ -29,6 +30,21 @@ import lombok.ToString;
 @Data
 @ToString(onlyExplicitlyIncluded = true)
 public class Regatta {
+	@Id
+	@Column(name = "Event_ID", columnDefinition = "int identity")
+	@ToString.Include(rank = 20)
+	private int id;
+
+	@Column(name = "Event_Title", nullable = false, length = 64)
+	@ToString.Include(rank = 18)
+	private String title;
+
+	@Column(name = "Event_StartDate", nullable = false)
+	private Instant startDate;
+
+	@Column(name = "Event_EndDate", nullable = false)
+	private Instant endDate;
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Event_Club_ID_FK")
 	private Club club;
@@ -52,10 +68,6 @@ public class Regatta {
 	private Integer defaultDistance;
 
 	@Basic
-	@Column(name = "Event_EndDate", columnDefinition = "datetime", nullable = false)
-	private Date endDate;
-
-	@Basic
 	@Column(name = "Event_FootLogo", length = 64)
 	private String footLogo;
 
@@ -67,23 +79,9 @@ public class Regatta {
 	@Column(name = "Event_HeadLogo_B", length = 64)
 	private String headLogoB;
 
-	@Id
-	@Column(name = "Event_ID", columnDefinition = "int identity")
-	@ToString.Include(rank = 20)
-	private int id;
-
-	@Basic
-	@Column(name = "Event_StartDate", columnDefinition = "datetime", nullable = false)
-	private Date startDate;
-
 	@Basic
 	@Column(name = "Event_SubTitle", length = 32)
 	private String subTitle;
-
-	@Basic
-	@Column(name = "Event_Title", nullable = false, length = 64)
-	@ToString.Include(rank = 18)
-	private String title;
 
 	@Basic
 	@Column(name = "Event_TrackDirection", length = 3)
