@@ -4,4 +4,5 @@ module de.regatta_hd.common {
 	opens de.regatta_hd.common.impl to com.google.guice;
 
 	exports de.regatta_hd.common;
+	exports de.regatta_hd.common.impl to de.regatta_hd.aquarius.db;
 }
