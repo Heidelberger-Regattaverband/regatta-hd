@@ -55,7 +55,7 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	@Override
 	public synchronized void open(DBConfig connectionData) {
-		requireNonNull(connectionData, "connectionData is null.");
+		requireNonNull(connectionData, "connectionData must not be null");
 
 		open(connectionData.getDbHost(), connectionData.getDbName(), connectionData.getUserName(),
 				connectionData.getPassword());
@@ -75,11 +75,12 @@ public class AqauriusDBImpl implements AquariusDB {
 		close();
 
 		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;database=%s", requireNonNull(hostName, "hostName is null."),
-				requireNonNull(dbName, "dbName is null."));
+		String url = String.format("jdbc:sqlserver://%s;database=%s",
+				requireNonNull(hostName, "hostName must not be null"),
+				requireNonNull(dbName, "dbName must not be null"));
 		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName is null."));
-		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password is null."));
+		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
+		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
 
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();

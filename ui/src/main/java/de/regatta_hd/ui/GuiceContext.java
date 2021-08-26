@@ -1,8 +1,9 @@
 package de.regatta_hd.ui;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.google.inject.AbstractModule;
@@ -27,13 +28,13 @@ public class GuiceContext implements FXMLLoaderFactory {
 
 	/**
 	 * Create the Guice context
-	 * 
+	 *
 	 * @param contextRoot root object to inject
 	 * @param modules     custom Guice modules
 	 */
 	public GuiceContext(Application contextRoot, Supplier<Collection<Module>> modules) {
-		this.contextRoot = Objects.requireNonNull(contextRoot);
-		this.modules = Objects.requireNonNull(modules);
+		this.contextRoot = requireNonNull(contextRoot);
+		this.modules = requireNonNull(modules);
 	}
 
 	@Override
