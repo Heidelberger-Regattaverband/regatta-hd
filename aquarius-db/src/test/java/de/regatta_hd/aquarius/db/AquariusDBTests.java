@@ -12,12 +12,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
-import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.AquariusDBModule;
-import de.regatta_hd.aquarius.db.DBConfig;
-import de.regatta_hd.aquarius.db.DBConfigStore;
-import de.regatta_hd.aquarius.db.MasterDataDAO;
-import de.regatta_hd.aquarius.db.RegattaDAO;
 import de.regatta_hd.aquarius.db.model.AgeClass;
 import de.regatta_hd.aquarius.db.model.AgeClassExt;
 import de.regatta_hd.aquarius.db.model.BoatClass;
@@ -86,10 +80,10 @@ class AquariusDBTests {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 3);
+		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
 		regattaDAO.setActiveRegatta(event);
 		List<Offer> offers = regattaDAO.findOffers("1%", boatClass, ageClass, true);
-		Assertions.assertTrue(offers.isEmpty());
+		Assertions.assertFalse(offers.isEmpty());
 
 		offers.forEach(offer -> trace(offer, 0));
 	}
@@ -125,6 +119,7 @@ class AquariusDBTests {
 
 		AgeClass ageClass = ageClasses.get(0);
 		AgeClassExt ageClassExt = ageClass.getExtension();
+		Assertions.assertNull(ageClassExt);
 	}
 
 	private static void trace(Offer offer, int indent) {

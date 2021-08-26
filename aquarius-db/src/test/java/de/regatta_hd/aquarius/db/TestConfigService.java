@@ -1,6 +1,7 @@
 package de.regatta_hd.aquarius.db;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +14,10 @@ class TestConfigService implements ConfigService {
 		String property = System.getProperty(key);
 		if (StringUtils.isBlank(property)) {
 			property = System.getenv(key);
+			if (StringUtils.isBlank(property)) {
+				String envKey = key.replaceAll("([A-Z])", "_$1").toUpperCase(Locale.ENGLISH);
+				property = System.getenv(envKey);
+			}
 		}
 		return property;
 	}

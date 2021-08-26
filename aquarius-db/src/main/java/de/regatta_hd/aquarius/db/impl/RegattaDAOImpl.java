@@ -35,6 +35,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Inject
 	private ConfigService cfgService;
 
+	private int activeRegattaId = -1;
+
 	@Override
 	public List<Regatta> getRegattas() {
 		return getEntities(Regatta.class);
@@ -169,8 +171,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	public void setActiveRegatta(Regatta regatta) {
 		try {
 			if (regatta != null) {
+				this.activeRegattaId = regatta.getId();
 				this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
 			} else {
+				this.activeRegattaId = -1;
 				this.cfgService.removeProperty(ACTIVE_REGATTA);
 			}
 		} catch (IOException e) {
@@ -181,11 +185,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Override
 	public Regatta getActiveRegatta() {
 		try {
-			String regattaId = this.cfgService.getProperty(ACTIVE_REGATTA);
-			if (StringUtils.isNotBlank(regattaId)) {
-				return find(Regatta.class, Integer.parseInt(regattaId));
+			if (this.activeRegattaId == -1) {
+				String property = this.cfgService.getProperty(ACTIVE_REGATTA);
+				if (StringUtils.isNotBlank(property)) {
+					this.activeRegattaId = Integer.parseInt(property);
+				}
 			}
-		} catch (IOException e) {
+			return find(Regatta.class, this.activeRegattaId);
+		} catch (
+
+		IOException e) {
 			e.printStackTrace();
 		}
 		return null;
