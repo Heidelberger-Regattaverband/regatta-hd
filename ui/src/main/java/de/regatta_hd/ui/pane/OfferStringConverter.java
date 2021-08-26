@@ -16,6 +16,9 @@ public class OfferStringConverter extends StringConverter<Offer> {
 			return null;
 		}
 		String toString = offer.getRaceNumber() + " - " + offer.getShortLabel() + " - " + offer.getLongLabel();
+		if (offer.isLightweight()) {
+			toString += " - LW";
+		}
 		this.offerToString.put(toString, offer);
 		return toString;
 	}

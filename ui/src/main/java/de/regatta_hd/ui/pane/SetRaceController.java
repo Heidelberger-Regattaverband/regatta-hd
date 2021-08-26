@@ -212,6 +212,8 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (regatta != null) {
 			List<Offer> offers = this.regattaDAO.findOffers("2%");
+
+			// remove master races as they will not be set
 			List<Offer> filteredOffers = offers.stream().filter(offer -> {
 				String abbrevation = offer.getAgeClass().getAbbreviation();
 				return !StringUtils.equalsAny(abbrevation, "MM", "MW", "MM/W");
@@ -226,7 +228,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (targetOffer != null) {
 			// get all offers with same attributes
-			List<Offer> sourceOffers = this.regattaDAO.findOffers(targetOffer.getBoatClass(), targetOffer.getAgeClass(),
+			List<Offer> sourceOffers = this.regattaDAO.findOffers("1%", targetOffer.getBoatClass(), targetOffer.getAgeClass(),
 					targetOffer.isLightweight());
 
 			// filter target offer

@@ -26,11 +26,11 @@ import jakarta.persistence.criteria.Root;
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
+	private static final String PARAM_RACE_NUMBER = "raceNumber";
+
 	private static final String PARAM_REGATTA = "regatta";
 
 	private static final String ACTIVE_REGATTA = "activeRegatta";
-
-	private Regatta activeRegatta;
 
 	@Inject
 	private ConfigService cfgService;
@@ -48,33 +48,37 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
 
-		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
+		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
 
 		query.where(critBuilder.and( //
-				critBuilder.equal(o.get("raceNumber"), raceNumberParam), //
+				critBuilder.equal(o.get(PARAM_RACE_NUMBER), raceNumberParam), //
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
-				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber is null"))
-				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
+				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
+				.setParameter(regattaParam.getName(),
+						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
 				.getSingleResult();
 	}
 
 	@Override
-	public List<Offer> findOffers(BoatClass boatClass, AgeClass ageClass, boolean lightweight) {
+	public List<Offer> findOffers(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass,
+			boolean lightweight) {
 		var critBuilder = getCriteriaBuilder();
 
 		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
 		Root<Offer> o = query.from(Offer.class);
 
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
+		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, PARAM_RACE_NUMBER);
 		ParameterExpression<BoatClass> boatClassParam = critBuilder.parameter(BoatClass.class, "boatClass");
 		ParameterExpression<AgeClass> ageClassParam = critBuilder.parameter(AgeClass.class, "ageClass");
 		ParameterExpression<Boolean> lightweightParam = critBuilder.parameter(Boolean.class, "lightweight");
 
 		query.where(critBuilder.and( //
+				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam),
 				critBuilder.equal(o.get("lightweight"), lightweightParam), //
 				critBuilder.equal(o.get("boatClass"), boatClassParam), //
 				critBuilder.equal(o.get("ageClass"), ageClassParam), //
@@ -82,10 +86,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		));
 
 		return createTypedQuery(query) //
+				.setParameter(raceNumberParam.getName(),
+						requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
 				.setParameter(lightweightParam.getName(), lightweight)
-				.setParameter(boatClassParam.getName(), requireNonNull(boatClass, "boatClass is null"))
-				.setParameter(ageClassParam.getName(), requireNonNull(ageClass, "ageClass is null"))
-				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
+				.setParameter(boatClassParam.getName(), requireNonNull(boatClass, "boatClass must not be null"))
+				.setParameter(ageClassParam.getName(), requireNonNull(ageClass, "ageClass must not be null"))
+				.setParameter(regattaParam.getName(),
+						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
 				.getResultList();
 	}
 
@@ -127,10 +134,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Root<Offer> o = query.from(Offer.class);
 
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
-		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "raceNumber");
+		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, PARAM_RACE_NUMBER);
 
 		query.where(critBuilder.and( //
-				critBuilder.like(o.get("raceNumber"), raceNumberParam), //
+				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam), //
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
@@ -160,11 +167,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public void setActiveRegatta(Regatta regatta) {
-		this.activeRegatta = regatta;
-
 		try {
-			if (this.activeRegatta != null) {
-				this.cfgService.setProperty(ACTIVE_REGATTA, this.activeRegatta.getId());
+			if (regatta != null) {
+				this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
 			} else {
 				this.cfgService.removeProperty(ACTIVE_REGATTA);
 			}
@@ -175,16 +180,14 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public Regatta getActiveRegatta() {
-		if (this.activeRegatta == null) {
-			try {
-				String regattaId = this.cfgService.getProperty(ACTIVE_REGATTA);
-				if (StringUtils.isNotBlank(regattaId)) {
-					this.activeRegatta = find(Regatta.class, Integer.parseInt(regattaId));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			String regattaId = this.cfgService.getProperty(ACTIVE_REGATTA);
+			if (StringUtils.isNotBlank(regattaId)) {
+				return find(Regatta.class, Integer.parseInt(regattaId));
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return this.activeRegatta;
+		return null;
 	}
 }
