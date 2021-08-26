@@ -5,9 +5,15 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.inject.Inject;
+
 import de.regatta_hd.common.ConfigService;
+import de.regatta_hd.common.impl.ConfigServiceImpl;
 
 class TestConfigService implements ConfigService {
+
+	@Inject
+	private ConfigServiceImpl cfgService;
 
 	@Override
 	public String getProperty(String key) throws IOException {
@@ -17,6 +23,9 @@ class TestConfigService implements ConfigService {
 			if (StringUtils.isBlank(property)) {
 				String envKey = key.replaceAll("([A-Z])", "_$1").toUpperCase(Locale.ENGLISH);
 				property = System.getenv(envKey);
+				if (StringUtils.isBlank(property)) {
+					property = this.cfgService.getProperty(key);
+				}
 			}
 		}
 		return property;
