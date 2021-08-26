@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Object?>
+<?import de.regatta_hd.ui.control.*?>
 
 <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
   fx:controller="de.regatta_hd.ui.pane.RegattasController">
@@ -15,8 +16,16 @@
     <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <columns>
         <TableColumn fx:id="title" text="%RegattasView.title" />
-        <TableColumn fx:id="begin" text="%RegattasView.begin" />
-        <TableColumn fx:id="end" text="%RegattasView.end" />
+        <TableColumn fx:id="begin" text="%RegattasView.begin">
+			<cellFactory>
+       			<DateTableCellFactory />
+    		</cellFactory>
+        </TableColumn>
+        <TableColumn fx:id="end" text="%RegattasView.end">
+			<cellFactory>
+       			<DateTableCellFactory />
+    		</cellFactory>
+        </TableColumn>
       </columns>
       <columnResizePolicy>
         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
