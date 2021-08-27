@@ -17,14 +17,14 @@
       <columns>
         <TableColumn fx:id="title" text="%RegattasView.title" />
         <TableColumn fx:id="begin" text="%RegattasView.begin">
-			<cellFactory>
-       			<DateTableCellFactory />
-    		</cellFactory>
+          <cellFactory>
+            <DateTableCellFactory />
+          </cellFactory>
         </TableColumn>
         <TableColumn fx:id="end" text="%RegattasView.end">
-			<cellFactory>
-       			<DateTableCellFactory />
-    		</cellFactory>
+          <cellFactory>
+            <DateTableCellFactory />
+          </cellFactory>
         </TableColumn>
       </columns>
       <columnResizePolicy>
