@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.AquariusDBModule;
+import de.regatta_hd.aquarius.AquariusDBModule;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

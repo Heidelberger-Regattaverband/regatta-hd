@@ -1,4 +1,4 @@
-open module de.regatta_hd.aquarius.db {
+open module de.regatta_hd.aquarius {
 	requires java.base;
 
 	requires com.google.guice;
@@ -11,6 +11,6 @@ open module de.regatta_hd.aquarius.db {
 	requires de.regatta_hd.common;
 	requires org.apache.commons.lang3;
 
-	exports de.regatta_hd.aquarius.db;
-	exports de.regatta_hd.aquarius.db.model;
+	exports de.regatta_hd.aquarius;
+	exports de.regatta_hd.aquarius.model;
 }

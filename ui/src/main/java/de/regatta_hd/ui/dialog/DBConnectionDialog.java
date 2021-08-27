@@ -3,7 +3,7 @@ package de.regatta_hd.ui.dialog;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import de.regatta_hd.aquarius.db.DBConfig;
+import de.regatta_hd.aquarius.DBConfig;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;

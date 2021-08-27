@@ -3,7 +3,7 @@ package de.regatta_hd.ui.pane;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.regatta_hd.aquarius.db.model.Offer;
+import de.regatta_hd.aquarius.model.Offer;
 import javafx.util.StringConverter;
 
 public class OfferStringConverter extends StringConverter<Offer> {

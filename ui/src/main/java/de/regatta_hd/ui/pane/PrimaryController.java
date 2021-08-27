@@ -7,9 +7,9 @@ import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.db.AquariusDB;
-import de.regatta_hd.aquarius.db.DBConfig;
-import de.regatta_hd.aquarius.db.DBConfigStore;
+import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.aquarius.DBConfig;
+import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
