@@ -19,7 +19,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>aquarius-db</artifactId>
+      <artifactId>aquarius</artifactId>
     </dependency>
 
     <!-- =========== -->

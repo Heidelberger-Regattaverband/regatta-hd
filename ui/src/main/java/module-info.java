@@ -10,7 +10,7 @@ open module de.regatta_hd.ui {
 	requires com.microsoft.sqlserver.jdbc;
 	requires org.hibernate.orm.core;
 
-	requires transitive de.regatta_hd.aquarius.db;
+	requires transitive de.regatta_hd.aquarius;
 	requires org.apache.commons.lang3;
 	requires de.regatta_hd.common;
 

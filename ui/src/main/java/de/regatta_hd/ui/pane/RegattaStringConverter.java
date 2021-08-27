@@ -1,6 +1,6 @@
 package de.regatta_hd.ui.pane;
 
-import de.regatta_hd.aquarius.db.model.Regatta;
+import de.regatta_hd.aquarius.model.Regatta;
 import javafx.util.StringConverter;
 
 public class RegattaStringConverter extends StringConverter<Regatta> {

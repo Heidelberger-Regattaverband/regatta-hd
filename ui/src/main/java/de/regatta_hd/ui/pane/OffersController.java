@@ -1,8 +1,10 @@
 package de.regatta_hd.ui.pane;
 
 import com.google.inject.Inject;
-import de.regatta_hd.aquarius.db.RegattaDAO;
-import de.regatta_hd.aquarius.db.model.Offer;
+
+import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.model.Offer;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;

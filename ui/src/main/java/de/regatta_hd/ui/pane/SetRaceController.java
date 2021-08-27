@@ -1,12 +1,13 @@
 package de.regatta_hd.ui.pane;
 
 import com.google.inject.Inject;
-import de.regatta_hd.aquarius.db.RegattaDAO;
-import de.regatta_hd.aquarius.db.model.HeatRegistration;
-import de.regatta_hd.aquarius.db.model.Offer;
-import de.regatta_hd.aquarius.db.model.Regatta;
-import de.regatta_hd.aquarius.db.model.Registration;
-import de.regatta_hd.aquarius.db.model.Result;
+
+import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
 import java.net.URL;
 import java.util.List;
