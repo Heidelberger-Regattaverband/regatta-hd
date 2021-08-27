@@ -9,8 +9,8 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>aquarius-db</artifactId>
-  <name>Regatta HD - Aquarius Database Model</name>
+  <artifactId>aquarius</artifactId>
+  <name>Regatta HD - Aquarius Database</name>
 
   <dependencies>
     <dependency>

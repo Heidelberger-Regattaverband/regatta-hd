@@ -58,7 +58,7 @@
 
   <modules>
     <module>common</module>
-    <module>aquarius-db</module>
+    <module>aquarius</module>
     <module>ui</module>
   </modules>
 
@@ -79,7 +79,7 @@
 
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>aquarius-db</artifactId>
+        <artifactId>aquarius</artifactId>
         <version>${project.version}</version>
       </dependency>
 
