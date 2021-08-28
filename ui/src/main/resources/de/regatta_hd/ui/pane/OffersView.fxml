@@ -14,10 +14,10 @@
   <children>
     <TableView fx:id="tbData" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <columns>
-        <TableColumn fx:id="raceNumber" text="Nummer"/>
-        <TableColumn fx:id="labelShort" text="Kurzbezeichnung" />
-        <TableColumn fx:id="labelLong" text="Bezeichnung" />
-        <TableColumn fx:id="distance" text="Länge (m)"/>
+        <TableColumn fx:id="raceNumberCol" text="%OffersView.raceNumber" />
+        <TableColumn fx:id="labelShortCol" text="%OffersView.labelShort" />
+        <TableColumn fx:id="labelLongCol" text="%OffersView.labelLong" />
+        <TableColumn fx:id="distanceCol" text="%OffersView.distance" />
       </columns>
       <columnResizePolicy>
         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />

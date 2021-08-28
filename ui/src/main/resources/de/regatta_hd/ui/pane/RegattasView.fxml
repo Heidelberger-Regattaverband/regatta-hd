@@ -15,13 +15,13 @@
   <children>
     <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <columns>
-        <TableColumn fx:id="title" text="%RegattasView.title" />
-        <TableColumn fx:id="begin" text="%RegattasView.begin">
+        <TableColumn fx:id="titleCol" text="%RegattasView.title" />
+        <TableColumn fx:id="beginCol" text="%RegattasView.begin">
           <cellFactory>
             <DateTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn fx:id="end" text="%RegattasView.end">
+        <TableColumn fx:id="endCol" text="%RegattasView.end">
           <cellFactory>
             <DateTableCellFactory />
           </cellFactory>

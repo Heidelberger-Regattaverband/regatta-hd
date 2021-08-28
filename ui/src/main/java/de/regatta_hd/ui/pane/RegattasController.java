@@ -20,24 +20,24 @@ public class RegattasController extends AbstractBaseController {
 	private TableView<Regatta> regattasTable;
 
 	@FXML
-	public TableColumn<Regatta, String> title;
+	public TableColumn<Regatta, String> titleCol;
 
 	@FXML
-	public TableColumn<Regatta, Date> begin;
+	public TableColumn<Regatta, Date> beginCol;
 
 	@FXML
-	public TableColumn<Regatta, String> end;
+	public TableColumn<Regatta, String> endCol;
 
 	@Inject
-	private RegattaDAO events;
+	private RegattaDAO regattaDAO;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.title.setCellValueFactory(new PropertyValueFactory<>("title"));
-		this.begin.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-		this.end.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+		this.titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+		this.beginCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+		this.endCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
 		// add your data to the table here.
 		this.regattasTable.setItems(getEvents());
@@ -45,12 +45,12 @@ public class RegattasController extends AbstractBaseController {
 
 	// add your data here from any source
 	private ObservableList<Regatta> getEvents() {
-		return FXCollections.observableArrayList(this.events.getRegattas());
+		return FXCollections.observableArrayList(this.regattaDAO.getRegattas());
 	}
 
 	@FXML
 	private void selectRegatta() {
 		Regatta regatta = this.regattasTable.getSelectionModel().getSelectedItem();
-		this.events.setActiveRegatta(regatta);
+		this.regattaDAO.setActiveRegatta(regatta);
 	}
 }
