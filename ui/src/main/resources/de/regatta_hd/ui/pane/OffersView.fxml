@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Object?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 
 <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
   fx:controller="de.regatta_hd.ui.pane.OffersController">
@@ -14,10 +15,41 @@
   <children>
     <TableView fx:id="tbData" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <columns>
-        <TableColumn fx:id="raceNumberCol" text="%OffersView.raceNumber" />
-        <TableColumn fx:id="labelShortCol" text="%OffersView.labelShort" />
-        <TableColumn fx:id="labelLongCol" text="%OffersView.labelLong" />
-        <TableColumn fx:id="distanceCol" text="%OffersView.distance" />
+        <TableColumn text="%OffersView.raceNumber" style="-fx-alignment: CENTER;">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>raceNumber</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%OffersView.labelShort">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>shortLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%OffersView.labelLong">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>longLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%OffersView.distance" style="-fx-alignment: CENTER-RIGHT;">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>distance</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%OffersView.lightweight" style="-fx-alignment: CENTER;">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>lightweight</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
       </columns>
       <columnResizePolicy>
         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
