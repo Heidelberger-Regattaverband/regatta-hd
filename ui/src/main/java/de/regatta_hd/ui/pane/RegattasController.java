@@ -1,32 +1,20 @@
 package de.regatta_hd.ui.pane;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
-
-import java.net.URL;
-import java.util.Date;
-import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class RegattasController extends AbstractBaseController {
 	@FXML
 	private TableView<Regatta> regattasTable;
-
-	@FXML
-	public TableColumn<Regatta, String> titleCol;
-
-	@FXML
-	public TableColumn<Regatta, Date> beginCol;
-
-	@FXML
-	public TableColumn<Regatta, String> endCol;
 
 	@Inject
 	private RegattaDAO regattaDAO;
@@ -34,10 +22,6 @@ public class RegattasController extends AbstractBaseController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-
-		this.titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-		this.beginCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-		this.endCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
 		// add your data to the table here.
 		this.regattasTable.setItems(getEvents());

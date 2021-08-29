@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.Object?>
@@ -15,13 +19,29 @@
   <children>
     <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <columns>
-        <TableColumn fx:id="titleCol" text="%RegattasView.title" />
-        <TableColumn fx:id="beginCol" text="%RegattasView.begin">
+        <TableColumn text="%RegattasView.title">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>title</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%RegattasView.begin">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>startDate</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
           <cellFactory>
             <DateTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn fx:id="endCol" text="%RegattasView.end">
+        <TableColumn text="%RegattasView.end">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>endDate</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
           <cellFactory>
             <DateTableCellFactory />
           </cellFactory>
@@ -31,7 +51,7 @@
         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
       <contextMenu>
-        <ContextMenu fx:id="cmTF">
+        <ContextMenu>
           <items>
             <MenuItem text="Auswählen" onAction="#selectRegatta" />
           </items>
