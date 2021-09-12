@@ -1,5 +1,8 @@
 package de.regatta_hd.aquarius.model;
 
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,8 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.List;
-import java.util.Set;
+import jakarta.persistence.Transient;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,6 +32,28 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Offer {
+
+	@Id
+	@Column(name = "Offer_ID")
+	private int id;
+
+	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
+	@ToString.Include(rank = 9)
+	private String raceNumber;
+
+	@Column(name = "Offer_LongLabel", length = 64)
+	@ToString.Include(rank = 8)
+	private String longLabel;
+
+	@Column(name = "Offer_ShortLabel", length = 32)
+	private String shortLabel;
+
+	@Column(name = "Offer_Distance")
+	private short distance;
+
+	@Column(name = "Offer_IsLightweight")
+	private boolean lightweight;
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Offer_AgeClass_ID_FK", nullable = false)
 	@ToString.Include(rank = 2)
@@ -68,10 +94,6 @@ public class Offer {
 	@Column(name = "Offer_Comment", length = 32)
 	private String comment;
 
-	@Basic
-	@Column(name = "Offer_Distance")
-	private short distance;
-
 	/**
 	 * Indicates whether this race is driven or not. It depends on the number of
 	 * registrations for this offer.
@@ -84,8 +106,7 @@ public class Offer {
 	@Column(name = "Offer_EventDay")
 	private Integer eventDay;
 
-	@Basic
-	@Column(name = "Offer_Fee", columnDefinition = "smallmoney")
+	@Column(name = "Offer_Fee")
 	private double fee;
 
 	@Basic
@@ -96,35 +117,13 @@ public class Offer {
 	@Column(name = "Offer_GroupMode")
 	private byte groupMode;
 
-	@Id
-	@Column(name = "Offer_ID", columnDefinition = "int identity")
-	private int id;
-
-	@Basic
-	@Column(name = "Offer_IsLightweight")
-	private boolean lightweight;
-
-	@Basic
-	@Column(name = "Offer_LongLabel", length = 64)
-	@ToString.Include(rank = 8)
-	private String longLabel;
-
 	@Basic
 	@Column(name = "Offer_Prize", length = 128)
 	private String prize;
 
 	@Basic
-	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
-	@ToString.Include(rank = 9)
-	private String raceNumber;
-
-	@Basic
 	@Column(name = "Offer_RaceType")
 	private byte raceType;
-
-	@Basic
-	@Column(name = "Offer_ShortLabel", length = 32)
-	private String shortLabel;
 
 	@Basic
 	@Column(name = "Offer_SortValue")
@@ -141,4 +140,15 @@ public class Offer {
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)
 	private Set<ReportInfo> reportInfos;
+
+	// JavaFX properties
+	@Transient
+	private SimpleBooleanProperty lightweightProp;
+
+	public ObservableBooleanValue lightweightProperty() {
+		if (this.lightweightProp == null) {
+			this.lightweightProp = new SimpleBooleanProperty(this.lightweight);
+		}
+		return this.lightweightProp;
+	}
 }

@@ -18,6 +18,14 @@
       <artifactId>common</artifactId>
     </dependency>
 
+    <!-- =========== -->
+    <!-- Open JavaFX -->
+    <!-- =========== -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+    </dependency>
+
     <!-- ============== -->
     <!-- Database & JPA -->
     <!-- ============== -->
