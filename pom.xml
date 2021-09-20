@@ -32,7 +32,7 @@
     <maven.compiler.release>16</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>17-ea+18</openjfx.version>
+    <openjfx.version>17.0.0.1</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.20</lombok.version>
@@ -50,7 +50,7 @@
     <commons-lang3.version>3.12.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.7.2</junit.version>
+    <junit.version>5.8.0</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>4.4.3</liquibase.version>
