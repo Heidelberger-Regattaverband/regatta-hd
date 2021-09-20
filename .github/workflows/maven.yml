@@ -23,7 +23,7 @@ jobs:
       with:
         java-version: 17
 
-    - name: Cache Maven repository
+    - name: Cache Maven Repository
       uses: actions/cache@v2
       with:
         path: ~/.m2
