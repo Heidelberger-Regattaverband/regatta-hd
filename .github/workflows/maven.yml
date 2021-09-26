@@ -18,6 +18,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Set up WireGuard
+      uses: egor-tensin/setup-wireguard@v1
+      with:
+        endpoint: '${{ secrets.WG_ENDPOINT }}'
+        endpoint_public_key: '${{ secrets.WG_ENDPOINT_PUBLIC_KEY }}'
+        ips: '10.0.0.2/32'
+        allowed_ips: '0.0.0.0/0, ::/0'
+        private_key: '${{ secrets.WG_PRIVATE_KEY }}'
+#        preshared_key: '${{ secrets.WG_PRESHARED_KEY }}'
+
     - name: Setup JDK 17
       uses: actions/setup-java@v1
       with:
