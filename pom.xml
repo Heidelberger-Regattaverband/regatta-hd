@@ -53,7 +53,7 @@
     <junit.version>5.8.1</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.4.3</liquibase.version>
+    <liquibase.version>4.5.0</liquibase.version>
   </properties>
 
   <modules>
