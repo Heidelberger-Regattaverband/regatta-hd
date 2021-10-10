@@ -29,7 +29,7 @@
   </scm>
 
   <properties>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>16</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <openjfx.version>17.0.0.1</openjfx.version>
