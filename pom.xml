@@ -35,7 +35,7 @@
     <openjfx.version>17.0.0.1</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.20</lombok.version>
+    <lombok.version>1.18.22</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>5.0.1</guice.version>
