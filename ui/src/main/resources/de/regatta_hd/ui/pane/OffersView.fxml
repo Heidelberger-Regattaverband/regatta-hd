@@ -50,6 +50,13 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
+        <TableColumn fx:id="groupModeCol" text="Gruppierung" style="-fx-alignment: CENTER;">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>groupMode</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
         <TableColumn text="%OffersView.lightweight" style="-fx-alignment: CENTER;">
           <cellValueFactory>
             <PropertyValueFactory>

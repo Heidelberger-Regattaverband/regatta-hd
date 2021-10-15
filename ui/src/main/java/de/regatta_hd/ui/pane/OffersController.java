@@ -14,12 +14,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class OffersController extends AbstractBaseController {
 	@FXML
 	private TableView<Offer> table;
-
+	@FXML
+	private TableColumn<Offer, Offer.GroupMode> groupModeCol;
 	@FXML
 	private Button refreshBtn;
 
@@ -38,6 +41,8 @@ public class OffersController extends AbstractBaseController {
 
 		// add your data to the table here.
 		this.table.setItems(getOffers());
+
+		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 	}
 
 	private ObservableList<Offer> getOffers() {

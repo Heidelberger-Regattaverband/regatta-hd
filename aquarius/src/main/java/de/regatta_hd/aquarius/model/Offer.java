@@ -7,6 +7,8 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -112,12 +114,11 @@ public class Offer {
 	private boolean forceDriven;
 
 	/*
-	 * 1 = Leistungsgruppe
-	 * 2 = Altersklasse
-	 * 3 = Leistungsgruppe und Altersklasse
+	 * 1 = Leistungsgruppe 2 = Altersklasse 3 = Leistungsgruppe und Altersklasse
 	 */
+	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "Offer_GroupMode")
-	private byte groupMode;
+	private GroupMode groupMode;
 
 	@Basic
 	@Column(name = "Offer_Prize", length = 128)
@@ -152,5 +153,12 @@ public class Offer {
 			this.lightweightProp = new SimpleBooleanProperty(this.lightweight);
 		}
 		return this.lightweightProp;
+	}
+
+	public enum GroupMode {
+		NONE,
+		PERFORMANCE,
+		AGE,
+		PERFORMANCE_AGE
 	}
 }
