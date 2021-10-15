@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius.model;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,9 +23,8 @@ public class AgeClassExt {
 	@Column(name = "id")
 	private int id;
 
-	@Basic
 	@Column(name = "distance")
-	private int distance;
+	private short distance;
 
 	@OneToOne
 	@MapsId
