@@ -12,7 +12,7 @@ public class GroupModeStringConverter extends StringConverter<Offer.GroupMode> {
 		}
 		switch (groupMode) {
 		case NONE:
-			return "";
+			return "-";
 		case AGE:
 			return "AK";
 		case PERFORMANCE:
