@@ -95,9 +95,9 @@ public class OffersController extends AbstractBaseController {
 
 		List<Offer> updatedOffers = task.get();
 		if (updatedOffers.isEmpty()) {
-			showDialog("Keine Auschreibungen geändert.");
+			showDialog("Keine Ausschreibungen geändert.");
 		} else {
-			showDialog(String.format("%d Auschreibungen geändert.", updatedOffers.size()));
+			showDialog(String.format("%d Ausschreibungen geändert.", updatedOffers.size()));
 		}
 
 		refresh();
