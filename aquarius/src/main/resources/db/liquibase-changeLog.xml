@@ -22,4 +22,13 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="liquibase-docs" id="2" runOnChange="true">
+    <loadUpdateData encoding="UTF-8" file="AgeClassExt.csv" quotchar="&quot;"
+      relativeToChangelogFile="true" separator="," tableName="AgeClassExt" primaryKey="id">
+      <column header="id" name="id" type="NUMERIC" />
+      <column header="distance" name="distance" type="NUMERIC" />
+      <column header="comment" type="SKIP" />
+    </loadUpdateData>
+  </changeSet>
+
 </databaseChangeLog>

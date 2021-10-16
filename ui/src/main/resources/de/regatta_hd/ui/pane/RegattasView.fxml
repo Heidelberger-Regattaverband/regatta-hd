@@ -17,7 +17,7 @@
   </padding>
 
   <children>
-    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
       <columns>
         <TableColumn text="%RegattasView.title">
           <cellValueFactory>

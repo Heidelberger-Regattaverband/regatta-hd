@@ -119,7 +119,7 @@ class AquariusDBTests {
 
 		AgeClass ageClass = ageClasses.get(0);
 		AgeClassExt ageClassExt = ageClass.getExtension();
-		Assertions.assertNull(ageClassExt);
+		Assertions.assertEquals(1500, ageClassExt.getDistance());
 	}
 
 	private static void trace(Offer offer, int indent) {
