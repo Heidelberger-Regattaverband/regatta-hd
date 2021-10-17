@@ -13,7 +13,7 @@ import jakarta.persistence.criteria.Root;
 abstract class AbstractDAOImpl {
 
 	@Inject
-	private AquariusDB aquariusDb;
+	protected AquariusDB aquariusDb;
 
 	protected CriteriaBuilder getCriteriaBuilder() {
 		return this.aquariusDb.getCriteriaBuilder();

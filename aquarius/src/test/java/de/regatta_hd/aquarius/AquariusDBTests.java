@@ -76,7 +76,7 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testFindOffers() {
+	void testFindOffers() throws IOException {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
@@ -89,7 +89,7 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testGetEventOK() {
+	void testGetEventOK() throws IOException {
 		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
 		Assertions.assertEquals(2, regatta.getId());
 		Assertions.assertNotNull(regatta);

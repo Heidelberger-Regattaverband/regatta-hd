@@ -9,6 +9,8 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -71,12 +73,16 @@ public class SetRaceController extends AbstractBaseController {
 		Regatta activeRegatta = this.regattaDAO.getActiveRegatta();
 		if (activeRegatta != null) {
 			this.regattaCombo.getSelectionModel().select(activeRegatta);
-			handleEventOnAction();
+			try {
+				handleEventOnAction();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@FXML
-	private void handleEventOnAction() {
+	private void handleEventOnAction() throws IOException {
 		this.targetOfferCombo.setInitialItems(getTargetOffers());
 	}
 
@@ -207,7 +213,7 @@ public class SetRaceController extends AbstractBaseController {
 		return FXCollections.observableArrayList(this.regattaDAO.getRegattas());
 	}
 
-	private ObservableList<Offer> getTargetOffers() {
+	private ObservableList<Offer> getTargetOffers() throws IOException {
 		Regatta regatta = this.regattaCombo.getSelectionModel().getSelectedItem();
 		this.regattaDAO.setActiveRegatta(regatta);
 

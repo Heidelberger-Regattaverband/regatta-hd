@@ -155,6 +155,19 @@ public class Offer {
 		return this.lightweightProp;
 	}
 
+	public List<Heat> getHeatsOrderedByNumber() {
+		List<Heat> sorted = getHeats();
+		sorted.sort((entry1, entry2) -> {
+			Short result1 = entry1.getHeatNumber();
+			Short result2 = entry2.getHeatNumber();
+			if (result1 != null && result2 != null) {
+				return result1 > result2 ? 1 : -1;
+			}
+			return 0;
+		});
+		return sorted;
+	}
+
 	public enum GroupMode {
 		NONE,
 		PERFORMANCE,
