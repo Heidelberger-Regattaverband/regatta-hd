@@ -181,7 +181,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		List<Heat> targetHeats = targetOffer.getHeatsOrderedByNumber();
 
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
-//		entityManager.getTransaction().begin();
+		entityManager.getTransaction().begin();
 
 		for (short heatNumber = 0; heatNumber <= numHeats; heatNumber++) {
 			Heat heat = targetHeats.get(heatNumber);
@@ -189,19 +189,20 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 				int startIndex = heatNumber * laneCount;
 				int endIndex = startIndex + laneCount;
-				for (int r = startIndex; r < endIndex; r++) {
+				for (int r = startIndex; r < endIndex && r < numRegistrations; r++) {
 					Registration targetRegistration = targetRegAll.get(r);
 
 					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration)
 							.build();
-					heat.getEntries().add(heatReg);
+					entityManager.merge(heatReg);
+//					heat.getEntries().add(heatReg);
 				}
 
 				entityManager.merge(heat);
 			}
 		}
 
-//		entityManager.getTransaction().commit();
+		entityManager.getTransaction().commit();
 	}
 
 	@Override
