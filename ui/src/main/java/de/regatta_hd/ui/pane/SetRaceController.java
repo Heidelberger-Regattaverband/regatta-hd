@@ -1,5 +1,12 @@
 package de.regatta_hd.ui.pane;
 
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.RegattaDAO;
@@ -9,12 +16,6 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,15 +30,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
-import org.apache.commons.lang3.StringUtils;
 
 public class SetRaceController extends AbstractBaseController {
 
-	private final SimpleListProperty<Regatta> regattasProp = new SimpleListProperty<>();
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
-
-	@FXML
-	private ComboBox<Regatta> regattaCombo;
 
 	@FXML
 	private ComboBox<Offer> sourceOfferCombo;
@@ -63,33 +59,16 @@ public class SetRaceController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.regattasProp.set(getRegattas());
-
-		this.regattaCombo.itemsProperty().bind(this.regattasProp);
-
 		this.sourceOfferCombo.itemsProperty().bind(this.sourceOffersProp);
 
 		this.setRaceButton.setDisable(true);
 
-		Regatta activeRegatta = this.regattaDAO.getActiveRegatta();
-		if (activeRegatta != null) {
-			this.regattaCombo.getSelectionModel().select(activeRegatta);
-			try {
-				handleEventOnAction();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		this.targetOfferCombo.setInitialItems(getTargetOffers());
 	}
 
 	@FXML
 	private void handleRefreshOnAction() {
-		//this.regattaDAO.clear();
-	}
-
-	@FXML
-	private void handleEventOnAction() throws IOException {
-		this.targetOfferCombo.setInitialItems(getTargetOffers());
+		// this.regattaDAO.clear();
 	}
 
 	@FXML
@@ -228,21 +207,15 @@ public class SetRaceController extends AbstractBaseController {
 		return FXCollections.observableArrayList(this.regattaDAO.getRegattas());
 	}
 
-	private ObservableList<Offer> getTargetOffers() throws IOException {
-		Regatta regatta = this.regattaCombo.getSelectionModel().getSelectedItem();
-		this.regattaDAO.setActiveRegatta(regatta);
+	private ObservableList<Offer> getTargetOffers() {
+		List<Offer> offers = this.regattaDAO.findOffers("2%");
 
-		if (regatta != null) {
-			List<Offer> offers = this.regattaDAO.findOffers("2%");
-
-			// remove master races as they will not be set
-			List<Offer> filteredOffers = offers.stream().filter(offer -> {
-				String abbrevation = offer.getAgeClass().getAbbreviation();
-				return !StringUtils.equalsAny(abbrevation, "MM", "MW", "MM/W");
-			}).collect(Collectors.toList());
-			return FXCollections.observableArrayList(filteredOffers);
-		}
-		return FXCollections.emptyObservableList();
+		// remove master races as they will not be set
+		List<Offer> filteredOffers = offers.stream().filter(offer -> {
+			String abbrevation = offer.getAgeClass().getAbbreviation();
+			return !StringUtils.equalsAny(abbrevation, "MM", "MW", "MM/W");
+		}).collect(Collectors.toList());
+		return FXCollections.observableArrayList(filteredOffers);
 	}
 
 	private ObservableList<Offer> getSourceOffers() {
@@ -250,8 +223,8 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (targetOffer != null) {
 			// get all offers with same attributes
-			List<Offer> sourceOffers = this.regattaDAO.findOffers("1%", targetOffer.getBoatClass(), targetOffer.getAgeClass(),
-					targetOffer.isLightweight());
+			List<Offer> sourceOffers = this.regattaDAO.findOffers("1%", targetOffer.getBoatClass(),
+					targetOffer.getAgeClass(), targetOffer.isLightweight());
 
 			// filter target offer
 			sourceOffers = sourceOffers.stream().filter(offer -> targetOffer.getId() != offer.getId())

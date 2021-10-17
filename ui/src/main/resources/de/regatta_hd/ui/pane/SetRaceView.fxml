@@ -18,37 +18,29 @@
   </padding>
 
   <children>
-    <Label text="%SetRaceView.EventLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <ComboBox fx:id="regattaCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
-      GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleEventOnAction">
-      <converter>
-        <RegattaStringConverter />
-      </converter>
-    </ComboBox>
-
-    <Label text="%SetRaceView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <Label text="%SetRaceView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
     <FilterComboBox fx:id="targetOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
-      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleTargetOfferOnAction">
+      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleTargetOfferOnAction">
       <converter>
         <OfferStringConverter />
       </converter>
     </FilterComboBox>
 
-    <Label text="%SetRaceView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <Label text="%SetRaceView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
     <ComboBox fx:id="sourceOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
-      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#handleSourceOfferOnAction">
+      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleSourceOfferOnAction">
       <converter>
         <OfferStringConverter />
       </converter>
     </ComboBox>
 
-    <ToolBar GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <ToolBar GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2">
         <Button fx:id="refreshBtn" text="Aktualisieren" onAction="#handleRefreshOnAction" />
         <Button fx:id="setRaceButton" text="%SetRaceView.SetRaceButton.text" onAction="#handleSetRaceOnAction" />
         <Button fx:id="deleteBtn" text="Einteilung löschen" onAction="#handleDeleteOnAction" />
     </ToolBar>
 
-    <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
       <items>
         <VBox fx:id="sourceVBox" spacing="5">
         </VBox>
