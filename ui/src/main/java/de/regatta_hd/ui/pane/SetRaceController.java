@@ -3,7 +3,6 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +11,6 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Offer;
-import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
@@ -34,19 +32,16 @@ import javafx.scene.layout.VBox;
 public class SetRaceController extends AbstractBaseController {
 
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
-
 	@FXML
-	private ComboBox<Offer> sourceOfferCombo;
-
+	private FilterComboBox<Offer> targetRaceCbo;
 	@FXML
-	private FilterComboBox<Offer> targetOfferCombo;
-
+	private ComboBox<Offer> srcRaceCbo;
 	@FXML
 	private VBox sourceVBox;
 	@FXML
 	private VBox targetVBox;
 	@FXML
-	private Button setRaceButton;
+	private Button setRaceBtn;
 	@FXML
 	private Button deleteBtn;
 	@FXML
@@ -59,11 +54,11 @@ public class SetRaceController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.sourceOfferCombo.itemsProperty().bind(this.sourceOffersProp);
+		this.srcRaceCbo.itemsProperty().bind(this.sourceOffersProp);
 
-		this.setRaceButton.setDisable(true);
+		this.setRaceBtn.setDisable(true);
 
-		this.targetOfferCombo.setInitialItems(getTargetOffers());
+		this.targetRaceCbo.setInitialItems(getTargetOffers());
 	}
 
 	@FXML
@@ -76,24 +71,24 @@ public class SetRaceController extends AbstractBaseController {
 		ObservableList<Offer> offers = getSourceOffers();
 		this.sourceOffersProp.set(offers);
 		if (offers.size() == 1) {
-			this.sourceOfferCombo.getSelectionModel().selectFirst();
+			this.srcRaceCbo.getSelectionModel().selectFirst();
 		}
 	}
 
 	@FXML
 	private void handleSourceOfferOnAction() {
-		this.setRaceButton.setDisable(false);
+		this.setRaceBtn.setDisable(false);
 
-		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
+		Offer sourceOffer = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		showSourceOfferRaces(sourceOffer, this.sourceVBox, true);
-		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+		Offer targetOffer = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		showSourceOfferRaces(targetOffer, this.targetVBox, false);
 	}
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
-		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
+		Offer targetOffer = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		Offer sourceOffer = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 
 		if (targetOffer != null && sourceOffer != null) {
 			this.regattaDAO.assignRace(targetOffer, sourceOffer);
@@ -102,7 +97,7 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleDeleteOnAction() {
-		Offer race = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+		Offer race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 
 		if (race != null) {
 			this.regattaDAO.deleteAssignment(race);
@@ -203,10 +198,6 @@ public class SetRaceController extends AbstractBaseController {
 		return compEntriesTable;
 	}
 
-	private ObservableList<Regatta> getRegattas() {
-		return FXCollections.observableArrayList(this.regattaDAO.getRegattas());
-	}
-
 	private ObservableList<Offer> getTargetOffers() {
 		List<Offer> offers = this.regattaDAO.findOffers("2%");
 
@@ -214,12 +205,12 @@ public class SetRaceController extends AbstractBaseController {
 		List<Offer> filteredOffers = offers.stream().filter(offer -> {
 			String abbrevation = offer.getAgeClass().getAbbreviation();
 			return !StringUtils.equalsAny(abbrevation, "MM", "MW", "MM/W");
-		}).collect(Collectors.toList());
+		}).toList();
 		return FXCollections.observableArrayList(filteredOffers);
 	}
 
 	private ObservableList<Offer> getSourceOffers() {
-		Offer targetOffer = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+		Offer targetOffer = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 
 		if (targetOffer != null) {
 			// get all offers with same attributes
@@ -227,8 +218,7 @@ public class SetRaceController extends AbstractBaseController {
 					targetOffer.getAgeClass(), targetOffer.isLightweight());
 
 			// filter target offer
-			sourceOffers = sourceOffers.stream().filter(offer -> targetOffer.getId() != offer.getId())
-					.collect(Collectors.toList());
+			sourceOffers = sourceOffers.stream().filter(offer -> targetOffer.getId() != offer.getId()).toList();
 
 			return FXCollections.observableArrayList(sourceOffers);
 		}
