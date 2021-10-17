@@ -129,7 +129,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return true;
 	}
 
-	private List<Registration> getTargetRegistrationsOrdered(Offer targetOffer, Offer sourceOffer) {
+	private static List<Registration> getTargetRegistrationsOrdered(Offer targetOffer, Offer sourceOffer) {
 		Map<Integer, Registration> sameCrews = new HashMap<>();
 
 		for (Registration targetRegistration : targetOffer.getRegistrations()) {
@@ -150,14 +150,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
 
-			HeatRegistration winner = byRank.get(0);
-			Registration targetRegistration = sameCrews.get(winner.getRegistration().getId());
+			Registration targetRegistration = sameCrews.get(byRank.get(0).getRegistration().getId());
 			if (targetRegistration != null) {
 				targetRegWinner.add(targetRegistration);
 			}
 
 			for (int j = 1; j < byRank.size(); j++) {
-				targetRegistration = sameCrews.get(winner.getRegistration().getId());
+				targetRegistration = sameCrews.get(byRank.get(j).getRegistration().getId());
 				if (targetRegistration != null) {
 					targetRegOrdered.add(targetRegistration);
 				}
@@ -175,27 +174,36 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		List<Registration> targetRegAll = getTargetRegistrationsOrdered(targetOffer, sourceOffer);
 
-		short laneCount = targetOffer.getRaceMode().getLaneCount();
 		int numRegistrations = targetRegAll.size();
-		short numHeats = (short) ((numRegistrations / laneCount) + (numRegistrations % laneCount == 0 ? 0 : 1));
+		short laneCount = targetOffer.getRaceMode().getLaneCount();
+
+		// get all planed heats ordered by the heat number
 		List<Heat> targetHeats = targetOffer.getHeatsOrderedByNumber();
+
+		// get number of heats
+		int heatCount = targetHeats.size();
 
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
 		entityManager.getTransaction().begin();
 
-		for (short heatNumber = 0; heatNumber <= numHeats; heatNumber++) {
+		for (short heatNumber = 0; heatNumber < heatCount; heatNumber++) {
 			Heat heat = targetHeats.get(heatNumber);
+
 			if (heat != null) {
+				// first clean existing heat assignments
+				heat.getEntries().forEach(entry -> {
+					entityManager.remove(entry);
+				});
 
 				int startIndex = heatNumber * laneCount;
 				int endIndex = startIndex + laneCount;
+				short lane = 1;
 				for (int r = startIndex; r < endIndex && r < numRegistrations; r++) {
 					Registration targetRegistration = targetRegAll.get(r);
 
 					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration)
-							.build();
+							.lane(lane++).build();
 					entityManager.merge(heatReg);
-//					heat.getEntries().add(heatReg);
 				}
 
 				entityManager.merge(heat);
@@ -203,6 +211,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		entityManager.getTransaction().commit();
+
+		entityManager.clear();
 	}
 
 	@Override
