@@ -26,8 +26,6 @@ public interface RegattaDAO {
 
 	List<Offer> findOffers(String raceNumberFilter);
 
-	void setRace(Offer targetOffer, Offer sourceOffer);
-
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
 	 *
@@ -42,4 +40,14 @@ public interface RegattaDAO {
 	 * @return the active {@link Regatta regatta} or <code>null</code> if not selected.
 	 */
 	Regatta getActiveRegatta();
+
+	// race assignment
+
+	void assignRace(Offer targetRace, Offer sourceRace);
+
+	void deleteAssignment(Offer race);
+
+	// db
+
+	void clear();
 }

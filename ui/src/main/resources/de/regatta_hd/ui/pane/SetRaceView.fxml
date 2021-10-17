@@ -42,7 +42,13 @@
       </converter>
     </ComboBox>
 
-    <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <ToolBar GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <Button fx:id="refreshBtn" text="Aktualisieren" onAction="#handleRefreshOnAction" />
+        <Button fx:id="setRaceButton" text="%SetRaceView.SetRaceButton.text" onAction="#handleSetRaceOnAction" />
+        <Button fx:id="deleteBtn" text="Einteilung löschen" onAction="#handleDeleteOnAction" />
+    </ToolBar>
+
+    <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
       <items>
         <VBox fx:id="sourceVBox" spacing="5">
         </VBox>
@@ -51,12 +57,6 @@
       </items>
     </SplitPane>
 
-    <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
-      <children>
-        <Button fx:id="setRaceButton" prefWidth="100" defaultButton="true" text="%SetRaceView.SetRaceButton.text"
-          alignment="CENTER" onAction="#handleSetRaceOnAction" />
-      </children>
-    </HBox>
   </children>
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />

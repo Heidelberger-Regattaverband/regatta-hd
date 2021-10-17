@@ -44,6 +44,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	private int activeRegattaId = -1;
 
+	public void clear() {
+		super.aquariusDb.getEntityManager().clear();
+	}
+
 	@Override
 	public List<Regatta> getRegattas() {
 		return getEntities(Regatta.class);
@@ -170,7 +174,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void setRace(Offer targetOffer, Offer sourceOffer) {
+	public void assignRace(Offer targetOffer, Offer sourceOffer) {
 
 		List<Registration> targetRegAll = getTargetRegistrationsOrdered(targetOffer, sourceOffer);
 
@@ -279,5 +283,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void deleteAssignment(Offer race) {
+		EntityManager entityManager = super.aquariusDb.getEntityManager();
+		entityManager.getTransaction().begin();
+
+		race.getHeats().forEach(heat -> {
+			heat.getEntries().forEach(reg -> entityManager.remove(reg));
+		});
+
+		entityManager.getTransaction().commit();
 	}
 }

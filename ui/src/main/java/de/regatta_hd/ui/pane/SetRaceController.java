@@ -33,8 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class SetRaceController extends AbstractBaseController {
 
-	private final SimpleListProperty<Regatta> eventsProp = new SimpleListProperty<>();
-
+	private final SimpleListProperty<Regatta> regattasProp = new SimpleListProperty<>();
 	private final SimpleListProperty<Offer> sourceOffersProp = new SimpleListProperty<>();
 
 	@FXML
@@ -48,12 +47,14 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private VBox sourceVBox;
-
 	@FXML
 	private VBox targetVBox;
-
 	@FXML
 	private Button setRaceButton;
+	@FXML
+	private Button deleteBtn;
+	@FXML
+	private Button refreshBtn;
 
 	@Inject
 	private RegattaDAO regattaDAO;
@@ -62,9 +63,9 @@ public class SetRaceController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.eventsProp.set(getRegattas());
+		this.regattasProp.set(getRegattas());
 
-		this.regattaCombo.itemsProperty().bind(this.eventsProp);
+		this.regattaCombo.itemsProperty().bind(this.regattasProp);
 
 		this.sourceOfferCombo.itemsProperty().bind(this.sourceOffersProp);
 
@@ -79,6 +80,11 @@ public class SetRaceController extends AbstractBaseController {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@FXML
+	private void handleRefreshOnAction() {
+		//this.regattaDAO.clear();
 	}
 
 	@FXML
@@ -111,7 +117,16 @@ public class SetRaceController extends AbstractBaseController {
 		Offer sourceOffer = this.sourceOfferCombo.getSelectionModel().getSelectedItem();
 
 		if (targetOffer != null && sourceOffer != null) {
-			this.regattaDAO.setRace(targetOffer, sourceOffer);
+			this.regattaDAO.assignRace(targetOffer, sourceOffer);
+		}
+	}
+
+	@FXML
+	private void handleDeleteOnAction() {
+		Offer race = this.targetOfferCombo.getSelectionModel().getSelectedItem();
+
+		if (race != null) {
+			this.regattaDAO.deleteAssignment(race);
 		}
 	}
 
