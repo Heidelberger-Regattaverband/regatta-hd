@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import com.google.inject.Inject;
 
@@ -15,8 +14,8 @@ import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Offer;
 import de.regatta_hd.aquarius.model.Offer.GroupMode;
 import jakarta.persistence.EntityManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -48,10 +47,10 @@ public class OffersController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
+
 		// add your data to the table here.
 		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getOffers()));
-
-		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 	}
 
 	@FXML
@@ -61,10 +60,10 @@ public class OffersController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void setDistances() throws InterruptedException, ExecutionException {
+	private void setDistances() {
 		disableButtons(true);
 
-		Task<List<Offer>> task = TaskUtils.createAndRunTask(() -> {
+		TaskUtils.createAndRunTask(() -> {
 			List<Offer> updatedOffers = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
@@ -83,25 +82,26 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			entityManager.getTransaction().commit();
+
+			Platform.runLater(() -> {
+				if (updatedOffers.isEmpty()) {
+					showDialog("Keine Ausschreibungen geändert.");
+				} else {
+					refresh();
+					showDialog(String.format("%d Ausschreibungen geändert.", updatedOffers.size()));
+				}
+				disableButtons(false);
+			});
+
 			return updatedOffers;
 		});
-
-		List<Offer> updatedOffers = task.get();
-		if (updatedOffers.isEmpty()) {
-			showDialog("Keine Ausschreibungen geändert.");
-		} else {
-			showDialog(String.format("%d Ausschreibungen geändert.", updatedOffers.size()));
-		}
-
-		refresh();
-		disableButtons(false);
 	}
 
 	@FXML
-	private void setMastersAgeClasses() throws InterruptedException, ExecutionException {
+	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		Task<List<Offer>> task = TaskUtils.createAndRunTask(() -> {
+		TaskUtils.createAndRunTask(() -> {
 			List<Offer> updatedOffers = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
@@ -117,18 +117,18 @@ public class OffersController extends AbstractBaseController {
 				}
 			});
 			entityManager.getTransaction().commit();
+
+			Platform.runLater(() -> {
+				if (updatedOffers.isEmpty()) {
+					showDialog("Keine Masters Rennen geändert.");
+				} else {
+					refresh();
+					showDialog(String.format("%d Masters Rennen geändert.", updatedOffers.size()));
+				}
+				disableButtons(false);
+			});
 			return updatedOffers;
 		});
-
-		List<Offer> updatedOffers = task.get();
-		if (updatedOffers.isEmpty()) {
-			showDialog("Keine Masters Rennen geändert.");
-		} else {
-			showDialog(String.format("%d Masters Rennen geändert.", updatedOffers.size()));
-		}
-
-		refresh();
-		disableButtons(false);
 	}
 
 	private static void showDialog(String msg) {
