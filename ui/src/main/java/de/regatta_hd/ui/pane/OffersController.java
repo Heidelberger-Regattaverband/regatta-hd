@@ -64,34 +64,27 @@ public class OffersController extends AbstractBaseController {
 	private void setDistances() throws InterruptedException, ExecutionException {
 		disableButtons(true);
 
-		Task<List<Offer>> task = new Task<>() {
-			@Override
-			protected List<Offer> call() {
-				List<Offer> updatedOffers = new ArrayList<>();
+		Task<List<Offer>> task = TaskUtils.createAndRunTask(() -> {
+			List<Offer> updatedOffers = new ArrayList<>();
 
-				EntityManager entityManager = OffersController.this.db.getEntityManager();
-				entityManager.getTransaction().begin();
+			EntityManager entityManager = OffersController.this.db.getEntityManager();
+			entityManager.getTransaction().begin();
 
-				OffersController.this.regatta.getOffers().forEach(offer -> {
-					AgeClassExt ageClassExt = offer.getAgeClass().getExtension();
-					if (ageClassExt != null) {
-						short distance = ageClassExt.getDistance();
-						if (distance > 0 && distance != offer.getDistance()) {
-							offer.setDistance(distance);
-							entityManager.merge(offer);
-							updatedOffers.add(offer);
-						}
+			OffersController.this.regatta.getOffers().forEach(offer -> {
+				AgeClassExt ageClassExt = offer.getAgeClass().getExtension();
+				if (ageClassExt != null) {
+					short distance = ageClassExt.getDistance();
+					if (distance > 0 && distance != offer.getDistance()) {
+						offer.setDistance(distance);
+						entityManager.merge(offer);
+						updatedOffers.add(offer);
 					}
-				});
+				}
+			});
 
-				entityManager.getTransaction().commit();
-				return updatedOffers;
-			}
-		};
-
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
+			entityManager.getTransaction().commit();
+			return updatedOffers;
+		});
 
 		List<Offer> updatedOffers = task.get();
 		if (updatedOffers.isEmpty()) {
@@ -108,31 +101,24 @@ public class OffersController extends AbstractBaseController {
 	private void setMastersAgeClasses() throws InterruptedException, ExecutionException {
 		disableButtons(true);
 
-		Task<List<Offer>> task = new Task<>() {
-			@Override
-			protected List<Offer> call() {
-				List<Offer> updatedOffers = new ArrayList<>();
+		Task<List<Offer>> task = TaskUtils.createAndRunTask(() -> {
+			List<Offer> updatedOffers = new ArrayList<>();
 
-				EntityManager entityManager = OffersController.this.db.getEntityManager();
-				entityManager.getTransaction().begin();
+			EntityManager entityManager = OffersController.this.db.getEntityManager();
+			entityManager.getTransaction().begin();
 
-				OffersController.this.regatta.getOffers().forEach(offer -> {
-					AgeClass ageClass = offer.getAgeClass();
-					GroupMode mode = offer.getGroupMode();
-					if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
-						offer.setGroupMode(GroupMode.AGE);
-						entityManager.merge(offer);
-						updatedOffers.add(offer);
-					}
-				});
-				entityManager.getTransaction().commit();
-				return updatedOffers;
-			}
-		};
-
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
+			OffersController.this.regatta.getOffers().forEach(offer -> {
+				AgeClass ageClass = offer.getAgeClass();
+				GroupMode mode = offer.getGroupMode();
+				if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
+					offer.setGroupMode(GroupMode.AGE);
+					entityManager.merge(offer);
+					updatedOffers.add(offer);
+				}
+			});
+			entityManager.getTransaction().commit();
+			return updatedOffers;
+		});
 
 		List<Offer> updatedOffers = task.get();
 		if (updatedOffers.isEmpty()) {
