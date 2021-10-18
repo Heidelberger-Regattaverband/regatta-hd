@@ -136,12 +136,12 @@ public class Offer {
 	@Column(name = "Offer_Splits")
 	private Integer splits;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Offer_RaceMode_ID_FK")
 	@ToString.Include(rank = 7)
 	private RaceMode raceMode;
 
-	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer")
 	private Set<ReportInfo> reportInfos;
 
 	// JavaFX properties

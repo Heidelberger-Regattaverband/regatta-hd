@@ -102,11 +102,12 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		Offer targetOffer = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		Offer sourceOffer = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+		Offer targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		Offer sourceRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 
-		if (targetOffer != null && sourceOffer != null) {
-			this.regattaDAO.assignRace(targetOffer, sourceOffer);
+		if (targetRace != null && sourceRace != null) {
+			this.regattaDAO.assignRace(targetRace, sourceRace);
+			handleRefreshOnAction();
 		}
 	}
 
@@ -118,6 +119,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (race != null) {
 			this.regattaDAO.deleteAssignment(race);
+			handleRefreshOnAction();
 		}
 	}
 
