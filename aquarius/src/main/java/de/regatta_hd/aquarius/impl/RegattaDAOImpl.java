@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -110,18 +109,20 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	private static boolean isSameCrew(Registration reg1, Registration reg2) {
-		List<Crew> crews1 = reg1.getCrews();
-		List<Crew> crews2 = reg2.getCrews();
-		if (crews1.size() != crews2.size()) {
-			return false;
-		}
 		Comparator<Crew> posComparator = (c1, c2) -> {
 			if (c1.getAthlet().getId() == c2.getAthlet().getId()) {
 				return 0;
 			}
 			return c1.getAthlet().getId() > c2.getAthlet().getId() ? 1 : -1;
 		};
-		Collections.sort(crews1, posComparator);
+
+		// remove cox from comparison
+		List<Crew> crews1 = reg1.getCrews().stream().filter(crew -> !crew.isCox()).sorted(posComparator).toList();
+		List<Crew> crews2 = reg2.getCrews().stream().filter(crew -> !crew.isCox()).sorted(posComparator).toList();
+
+		if (crews1.size() != crews2.size()) {
+			return false;
+		}
 
 		for (int i = 0; i < crews1.size(); i++) {
 			Crew crew1 = crews1.get(i);
