@@ -156,7 +156,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			Heat heat = sourceHeats.get(i);
 
 			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
-
 			for (int j = 0; j < byRank.size(); j++) {
 				srcHeatRegsAll.get(j).add(byRank.get(j));
 			}
@@ -164,16 +163,14 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		List<Registration> targetRegsOrdered = new ArrayList<>();
 		for (List<HeatRegistration> srcHeatRegs : srcHeatRegsAll) {
-			srcHeatRegs.sort((reg1, reg2) -> {
-				return reg1.getFinalResult().getNetTime() > reg2.getFinalResult().getNetTime() ? 1 : -1;
-			});
-
-			for (HeatRegistration srcHeatReg : srcHeatRegs) {
+			srcHeatRegs.stream().sorted((heatReg1, heatReg2) -> {
+				return heatReg1.getFinalResult().getNetTime() > heatReg2.getFinalResult().getNetTime() ? 1 : -1;
+			}).forEach(srcHeatReg -> {
 				Registration targetRegistration = sameCrews.get(srcHeatReg.getRegistration().getId());
 				if (targetRegistration != null) {
 					targetRegsOrdered.add(targetRegistration);
 				}
-			}
+			});
 		}
 		return targetRegsOrdered;
 	}
