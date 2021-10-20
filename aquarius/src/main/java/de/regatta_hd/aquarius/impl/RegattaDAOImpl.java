@@ -145,33 +145,37 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 		}
 
-		List<Registration> targetRegWinner = new ArrayList<>();
-		List<Registration> targetRegOrdered = new ArrayList<>();
+		List<List<HeatRegistration>> srcHeatRegsAll = new ArrayList<>();
+		for (int i = 0; i < sourceOffer.getRaceMode().getLaneCount(); i++) {
+			srcHeatRegsAll.add(new ArrayList<>());
+		}
 
-		// loop over source offer heats
+		// loop over source offer heats and get all heat registrations sorted by time
 		List<Heat> sourceHeats = sourceOffer.getHeats();
 		for (int i = 0; i < sourceHeats.size(); i++) {
 			Heat heat = sourceHeats.get(i);
 
 			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
 
-			Registration targetRegistration = sameCrews.get(byRank.get(0).getRegistration().getId());
-			if (targetRegistration != null) {
-				targetRegWinner.add(targetRegistration);
-			}
-
-			for (int j = 1; j < byRank.size(); j++) {
-				targetRegistration = sameCrews.get(byRank.get(j).getRegistration().getId());
-				if (targetRegistration != null) {
-					targetRegOrdered.add(targetRegistration);
-				}
+			for (int j = 0; j < byRank.size(); j++) {
+				srcHeatRegsAll.get(j).add(byRank.get(j));
 			}
 		}
 
-		List<Registration> targetRegAll = new ArrayList<>();
-		targetRegAll.addAll(targetRegWinner);
-		targetRegAll.addAll(targetRegOrdered);
-		return targetRegAll;
+		List<Registration> targetRegsOrdered = new ArrayList<>();
+		for (List<HeatRegistration> srcHeatRegs : srcHeatRegsAll) {
+			srcHeatRegs.sort((reg1, reg2) -> {
+				return reg1.getFinalResult().getNetTime() > reg2.getFinalResult().getNetTime() ? 1 : -1;
+			});
+
+			for (HeatRegistration srcHeatReg : srcHeatRegs) {
+				Registration targetRegistration = sameCrews.get(srcHeatReg.getRegistration().getId());
+				if (targetRegistration != null) {
+					targetRegsOrdered.add(targetRegistration);
+				}
+			}
+		}
+		return targetRegsOrdered;
 	}
 
 	@Override
