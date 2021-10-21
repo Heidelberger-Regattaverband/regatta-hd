@@ -36,7 +36,7 @@
     <ToolBar GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2">
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%SetRaceView.RefreshBtn.text" />
         <Button fx:id="setRaceBtn" onAction="#handleSetRaceOnAction" text="%SetRaceView.SetRaceBtn.text" />
-        <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="Einteilung löschen" />
+        <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%SetRaceView.DeleteBtn.text" />
     </ToolBar>
 
     <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3">
