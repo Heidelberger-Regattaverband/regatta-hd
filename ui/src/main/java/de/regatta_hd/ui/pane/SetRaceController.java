@@ -98,6 +98,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		if (targetRace != null) {
+			targetRace = this.regattaDAO.getOffer(targetRace.getRaceNumber());
 			showRace(targetRace, this.targetVBox, false);
 		}
 
