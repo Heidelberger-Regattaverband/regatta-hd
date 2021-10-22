@@ -6,7 +6,7 @@ import java.util.Map;
 import de.regatta_hd.aquarius.model.Race;
 import javafx.util.StringConverter;
 
-public class OfferStringConverter extends StringConverter<Race> {
+public class RaceStringConverter extends StringConverter<Race> {
 
 	private final Map<String, Race> offerToString = new HashMap<>();
 

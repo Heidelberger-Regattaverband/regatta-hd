@@ -64,19 +64,19 @@ public class OffersController extends AbstractBaseController {
 		disableButtons(true);
 
 		TaskUtils.createAndRunTask(() -> {
-			List<Race> updatedOffers = new ArrayList<>();
+			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 			entityManager.getTransaction().begin();
 
-			OffersController.this.regatta.getRaces().forEach(offer -> {
-				AgeClassExt ageClassExt = offer.getAgeClass().getExtension();
+			OffersController.this.regatta.getRaces().forEach(race -> {
+				AgeClassExt ageClassExt = race.getAgeClass().getExtension();
 				if (ageClassExt != null) {
 					short distance = ageClassExt.getDistance();
-					if (distance > 0 && distance != offer.getDistance()) {
-						offer.setDistance(distance);
-						entityManager.merge(offer);
-						updatedOffers.add(offer);
+					if (distance > 0 && distance != race.getDistance()) {
+						race.setDistance(distance);
+						entityManager.merge(race);
+						races.add(race);
 					}
 				}
 			});
@@ -84,16 +84,16 @@ public class OffersController extends AbstractBaseController {
 			entityManager.getTransaction().commit();
 
 			Platform.runLater(() -> {
-				if (updatedOffers.isEmpty()) {
-					showDialog("Keine Ausschreibungen geändert.");
+				if (races.isEmpty()) {
+					showDialog("Keine Rennen geändert.");
 				} else {
 					refresh();
-					showDialog(String.format("%d Ausschreibungen geändert.", updatedOffers.size()));
+					showDialog(String.format("%d Rennen geändert.", races.size()));
 				}
 				disableButtons(false);
 			});
 
-			return updatedOffers;
+			return races;
 		});
 	}
 
@@ -102,32 +102,32 @@ public class OffersController extends AbstractBaseController {
 		disableButtons(true);
 
 		TaskUtils.createAndRunTask(() -> {
-			List<Race> updatedOffers = new ArrayList<>();
+			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 			entityManager.getTransaction().begin();
 
-			OffersController.this.regatta.getRaces().forEach(offer -> {
-				AgeClass ageClass = offer.getAgeClass();
-				GroupMode mode = offer.getGroupMode();
+			OffersController.this.regatta.getRaces().forEach(race -> {
+				AgeClass ageClass = race.getAgeClass();
+				GroupMode mode = race.getGroupMode();
 				if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
-					offer.setGroupMode(GroupMode.AGE);
-					entityManager.merge(offer);
-					updatedOffers.add(offer);
+					race.setGroupMode(GroupMode.AGE);
+					entityManager.merge(race);
+					races.add(race);
 				}
 			});
 			entityManager.getTransaction().commit();
 
 			Platform.runLater(() -> {
-				if (updatedOffers.isEmpty()) {
+				if (races.isEmpty()) {
 					showDialog("Keine Masters Rennen geändert.");
 				} else {
 					refresh();
-					showDialog(String.format("%d Masters Rennen geändert.", updatedOffers.size()));
+					showDialog(String.format("%d Masters Rennen geändert.", races.size()));
 				}
 				disableButtons(false);
 			});
-			return updatedOffers;
+			return races;
 		});
 	}
 

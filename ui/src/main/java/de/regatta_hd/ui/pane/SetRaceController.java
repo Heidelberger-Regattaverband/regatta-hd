@@ -148,7 +148,7 @@ public class SetRaceController extends AbstractBaseController {
 		vbox.getChildren().clear();
 
 		Label title = new Label();
-		title.setText(new OfferStringConverter().toString(race));
+		title.setText(new RaceStringConverter().toString(race));
 		vbox.getChildren().add(title);
 
 		if (race != null) {

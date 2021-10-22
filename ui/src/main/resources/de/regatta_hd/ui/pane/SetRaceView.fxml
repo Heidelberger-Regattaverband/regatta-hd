@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.regatta_hd.ui.control.FilterComboBox?>
-<?import de.regatta_hd.ui.pane.OfferStringConverter?>
+<?import de.regatta_hd.ui.pane.RaceStringConverter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -22,14 +22,14 @@
     <Label text="%SetRaceView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
     <FilterComboBox fx:id="targetRaceCbo" maxWidth="Infinity" onAction="#handleTargetOfferOnAction" promptText="%SetRaceView.TargetOfferComboBox.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
-        <OfferStringConverter />
+        <RaceStringConverter />
       </converter>
     </FilterComboBox>
 
     <Label text="%SetRaceView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
     <ComboBox fx:id="srcRaceCbo" maxWidth="Infinity" onAction="#handleSourceOfferOnAction" promptText="%SetRaceView.TargetOfferComboBox.promptText" GridPane.columnIndex="1" GridPane.rowIndex="1">
       <converter>
-        <OfferStringConverter />
+        <RaceStringConverter />
       </converter>
     </ComboBox>
 
