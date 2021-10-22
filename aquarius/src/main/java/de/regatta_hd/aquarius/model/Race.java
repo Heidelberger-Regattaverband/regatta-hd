@@ -41,7 +41,7 @@ public class Race {
 
 	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
 	@ToString.Include(rank = 9)
-	private String raceNumber;
+	private String number;
 
 	@Column(name = "Offer_LongLabel", length = 64)
 	@ToString.Include(rank = 8)

@@ -97,7 +97,7 @@ class AquariusDBTests {
 		System.out.println(regatta.toString());
 		regattaDAO.setActiveRegatta(regatta);
 		Race offer = regattaDAO.getOffer("104");
-		Assertions.assertEquals("104", offer.getRaceNumber());
+		Assertions.assertEquals("104", offer.getNumber());
 
 		trace(offer, 1);
 	}

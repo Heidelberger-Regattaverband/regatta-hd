@@ -27,7 +27,7 @@
         <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.raceNumber">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>raceNumber</property>
+              <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>

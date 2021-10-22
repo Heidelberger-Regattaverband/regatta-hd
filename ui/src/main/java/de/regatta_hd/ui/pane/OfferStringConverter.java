@@ -15,7 +15,7 @@ public class OfferStringConverter extends StringConverter<Race> {
 		if (offer == null) {
 			return null;
 		}
-		String toString = offer.getRaceNumber() + " - " + offer.getShortLabel() + " - " + offer.getLongLabel();
+		String toString = offer.getNumber() + " - " + offer.getShortLabel() + " - " + offer.getLongLabel();
 		this.offerToString.put(toString, offer);
 		return toString;
 	}

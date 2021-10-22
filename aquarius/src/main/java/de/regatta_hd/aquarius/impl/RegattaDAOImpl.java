@@ -32,7 +32,7 @@ import jakarta.persistence.criteria.Root;
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
-	private static final String PARAM_RACE_NUMBER = "raceNumber";
+	private static final String PARAM_RACE_NUMBER = "number";
 
 	private static final String PARAM_REGATTA = "regatta";
 

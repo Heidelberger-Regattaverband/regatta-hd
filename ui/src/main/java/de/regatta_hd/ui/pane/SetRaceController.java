@@ -92,13 +92,13 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSourceOfferOnAction() {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getOffer(srcRace.getRaceNumber());
+			srcRace = this.regattaDAO.getOffer(srcRace.getNumber());
 			showRace(srcRace, this.sourceVBox, true);
 		}
 
 		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		if (targetRace != null) {
-			targetRace = this.regattaDAO.getOffer(targetRace.getRaceNumber());
+			targetRace = this.regattaDAO.getOffer(targetRace.getNumber());
 			showRace(targetRace, this.targetVBox, false);
 		}
 
@@ -109,13 +109,13 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleRefreshOnAction() {
 		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		if (targetRace != null) {
-			targetRace = this.regattaDAO.getOffer(targetRace.getRaceNumber());
+			targetRace = this.regattaDAO.getOffer(targetRace.getNumber());
 			this.db.getEntityManager().refresh(targetRace);
 		}
 
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getOffer(srcRace.getRaceNumber());
+			srcRace = this.regattaDAO.getOffer(srcRace.getNumber());
 			this.db.getEntityManager().refresh(srcRace);
 		}
 
@@ -136,7 +136,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleDeleteOnAction() {
 		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		race = this.regattaDAO.getOffer(race.getRaceNumber());
+		race = this.regattaDAO.getOffer(race.getNumber());
 
 		if (race != null) {
 			this.regattaDAO.deleteAssignment(race);
@@ -144,15 +144,15 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private void showRace(Race offer, VBox vbox, boolean withResult) {
+	private void showRace(Race race, VBox vbox, boolean withResult) {
 		vbox.getChildren().clear();
 
 		Label title = new Label();
-		title.setText(new OfferStringConverter().toString(offer));
+		title.setText(new OfferStringConverter().toString(race));
 		vbox.getChildren().add(title);
 
-		if (offer != null) {
-			offer.getHeats().forEach(heat -> {
+		if (race != null) {
+			race.getHeats().forEach(heat -> {
 				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
 
 				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
