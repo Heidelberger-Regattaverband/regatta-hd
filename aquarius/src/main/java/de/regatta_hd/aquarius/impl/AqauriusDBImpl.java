@@ -2,6 +2,7 @@ package de.regatta_hd.aquarius.impl;
 
 import static java.util.Objects.requireNonNull;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,26 +83,22 @@ public class AqauriusDBImpl implements AquariusDB {
 		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
 		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
 
-		try {
-			EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
-			this.entityManager = factory.createEntityManager();
+		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
+		this.entityManager = factory.createEntityManager();
 
-			if (this.entityManager.isOpen()) {
-				Session session = this.entityManager.unwrap(Session.class);
-				session.doWork(connection -> {
-					try {
-						Database database = DatabaseFactory.getInstance()
-								.findCorrectDatabaseImplementation(new JdbcConnection(connection));
-						Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
-								new ClassLoaderResourceAccessor(), database);
-						liquibase.update(new Contexts(), new LabelExpression());
-					} catch (LiquibaseException e) {
-						e.printStackTrace();
-					}
-				});
-			}
-		} catch (RuntimeException e) {
-			e.printStackTrace();
+		if (this.entityManager.isOpen()) {
+			Session session = this.entityManager.unwrap(Session.class);
+			session.doWork(connection -> {
+				try {
+					Database database = DatabaseFactory.getInstance()
+							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
+					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
+							new ClassLoaderResourceAccessor(), database);
+					liquibase.update(new Contexts(), new LabelExpression());
+				} catch (LiquibaseException e) {
+					throw new SQLException(e);
+				}
+			});
 		}
 	}
 }

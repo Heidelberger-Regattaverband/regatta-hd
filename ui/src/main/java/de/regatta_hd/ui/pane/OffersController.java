@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import com.google.inject.Inject;
 
@@ -15,8 +14,8 @@ import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Offer;
 import de.regatta_hd.aquarius.model.Offer.GroupMode;
 import jakarta.persistence.EntityManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -48,10 +47,10 @@ public class OffersController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
+
 		// add your data to the table here.
 		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getOffers()));
-
-		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 	}
 
 	@FXML
@@ -61,88 +60,75 @@ public class OffersController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void setDistances() throws InterruptedException, ExecutionException {
+	private void setDistances() {
 		disableButtons(true);
 
-		Task<List<Offer>> task = new Task<>() {
-			@Override
-			protected List<Offer> call() {
-				List<Offer> updatedOffers = new ArrayList<>();
+		TaskUtils.createAndRunTask(() -> {
+			List<Offer> updatedOffers = new ArrayList<>();
 
-				EntityManager entityManager = OffersController.this.db.getEntityManager();
-				entityManager.getTransaction().begin();
+			EntityManager entityManager = OffersController.this.db.getEntityManager();
+			entityManager.getTransaction().begin();
 
-				OffersController.this.regatta.getOffers().forEach(offer -> {
-					AgeClassExt ageClassExt = offer.getAgeClass().getExtension();
-					if (ageClassExt != null) {
-						short distance = ageClassExt.getDistance();
-						if (distance > 0 && distance != offer.getDistance()) {
-							offer.setDistance(distance);
-							entityManager.merge(offer);
-							updatedOffers.add(offer);
-						}
-					}
-				});
-
-				entityManager.getTransaction().commit();
-				return updatedOffers;
-			}
-		};
-
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
-
-		List<Offer> updatedOffers = task.get();
-		if (updatedOffers.isEmpty()) {
-			showDialog("Keine Auschreibungen geändert.");
-		} else {
-			showDialog(String.format("%d Auschreibungen geändert.", updatedOffers.size()));
-		}
-
-		refresh();
-		disableButtons(false);
-	}
-
-	@FXML
-	private void setMastersAgeClasses() throws InterruptedException, ExecutionException {
-		disableButtons(true);
-
-		Task<List<Offer>> task = new Task<>() {
-			@Override
-			protected List<Offer> call() {
-				List<Offer> updatedOffers = new ArrayList<>();
-
-				EntityManager entityManager = OffersController.this.db.getEntityManager();
-				entityManager.getTransaction().begin();
-
-				OffersController.this.regatta.getOffers().forEach(offer -> {
-					AgeClass ageClass = offer.getAgeClass();
-					GroupMode mode = offer.getGroupMode();
-					if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
-						offer.setGroupMode(GroupMode.AGE);
+			OffersController.this.regatta.getOffers().forEach(offer -> {
+				AgeClassExt ageClassExt = offer.getAgeClass().getExtension();
+				if (ageClassExt != null) {
+					short distance = ageClassExt.getDistance();
+					if (distance > 0 && distance != offer.getDistance()) {
+						offer.setDistance(distance);
 						entityManager.merge(offer);
 						updatedOffers.add(offer);
 					}
-				});
-				entityManager.getTransaction().commit();
-				return updatedOffers;
-			}
-		};
+				}
+			});
 
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
+			entityManager.getTransaction().commit();
 
-		List<Offer> updatedOffers = task.get();
-		if (updatedOffers.isEmpty()) {
-			showDialog("Keine Masters Rennen geändert.");
-		} else {
-			showDialog(String.format("%d Masters Rennen geändert.", updatedOffers.size()));
-		}
+			Platform.runLater(() -> {
+				if (updatedOffers.isEmpty()) {
+					showDialog("Keine Ausschreibungen geändert.");
+				} else {
+					refresh();
+					showDialog(String.format("%d Ausschreibungen geändert.", updatedOffers.size()));
+				}
+				disableButtons(false);
+			});
 
-		refresh();
-		disableButtons(false);
+			return updatedOffers;
+		});
+	}
+
+	@FXML
+	private void setMastersAgeClasses() {
+		disableButtons(true);
+
+		TaskUtils.createAndRunTask(() -> {
+			List<Offer> updatedOffers = new ArrayList<>();
+
+			EntityManager entityManager = OffersController.this.db.getEntityManager();
+			entityManager.getTransaction().begin();
+
+			OffersController.this.regatta.getOffers().forEach(offer -> {
+				AgeClass ageClass = offer.getAgeClass();
+				GroupMode mode = offer.getGroupMode();
+				if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
+					offer.setGroupMode(GroupMode.AGE);
+					entityManager.merge(offer);
+					updatedOffers.add(offer);
+				}
+			});
+			entityManager.getTransaction().commit();
+
+			Platform.runLater(() -> {
+				if (updatedOffers.isEmpty()) {
+					showDialog("Keine Masters Rennen geändert.");
+				} else {
+					refresh();
+					showDialog(String.format("%d Masters Rennen geändert.", updatedOffers.size()));
+				}
+				disableButtons(false);
+			});
+			return updatedOffers;
+		});
 	}
 
 	private static void showDialog(String msg) {

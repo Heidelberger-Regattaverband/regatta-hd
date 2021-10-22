@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.regatta_hd.aquarius.model.AgeClass;
@@ -13,8 +14,7 @@ import de.regatta_hd.aquarius.model.Regatta;
 public interface RegattaDAO {
 
 	/**
-	 * @return a {@link List} with all available {@link Regatta regattas} in
-	 *         Aquarius database.
+	 * @return a {@link List} with all available {@link Regatta regattas} in Aquarius database.
 	 */
 	List<Regatta> getRegattas();
 
@@ -26,20 +26,28 @@ public interface RegattaDAO {
 
 	List<Offer> findOffers(String raceNumberFilter);
 
-	void setRace(Offer targetOffer, Offer sourceOffer);
-
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
 	 *
 	 * @param regatta the active regatta
+	 * @throws IOException if setting active regatta failed
 	 */
-	void setActiveRegatta(Regatta regatta);
+	void setActiveRegatta(Regatta regatta) throws IOException;
 
 	/**
 	 * Returns active regatta.
 	 *
-	 * @return the active {@link Regatta regatta} or <code>null</code> if not
-	 *         selected.
+	 * @return the active {@link Regatta regatta} or <code>null</code> if not selected.
 	 */
 	Regatta getActiveRegatta();
+
+	// race assignment
+
+	void assignRace(Offer targetRace, Offer sourceRace);
+
+	void deleteAssignment(Offer race);
+
+	// db
+
+	void clear();
 }

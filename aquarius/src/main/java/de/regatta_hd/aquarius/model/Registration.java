@@ -28,6 +28,11 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Registration {
+
+	@Id
+	@Column(name = "Entry_ID", columnDefinition = "int identity")
+	private int id;
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Entry_OwnerClub_ID_FK", nullable = false)
 	@ToString.Include(rank = 9)
@@ -40,35 +45,26 @@ public class Registration {
 	@OrderBy("pos")
 	private List<Crew> crews;
 
-	@Basic
 	@Column(name = "Entry_Bib")
 	@ToString.Include(rank = 10)
 	private Short bib;
 
-	@Basic
 	@Column(name = "Entry_BoatNumber")
 	@ToString.Include(rank = 7)
 	private Short boatNumber;
 
-	@Basic
 	@Column(name = "Entry_CancelValue")
 	private byte cancelValue;
 
-	@Basic
 	@Column(name = "Entry_Comment", length = 50)
 	private String comment;
 
-	@Basic
 	@Column(name = "Entry_ExternID")
 	private Integer externId;
 
 	@Basic
 	@Column(name = "Entry_GroupValue")
 	private Short groupValue;
-
-	@Id
-	@Column(name = "Entry_ID", columnDefinition = "int identity")
-	private int id;
 
 	@Basic
 	@Column(name = "Entry_IsLate")

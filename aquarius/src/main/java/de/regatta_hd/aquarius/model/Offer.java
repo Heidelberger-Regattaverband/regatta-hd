@@ -136,12 +136,12 @@ public class Offer {
 	@Column(name = "Offer_Splits")
 	private Integer splits;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Offer_RaceMode_ID_FK")
 	@ToString.Include(rank = 7)
 	private RaceMode raceMode;
 
-	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer")
 	private Set<ReportInfo> reportInfos;
 
 	// JavaFX properties
@@ -153,6 +153,19 @@ public class Offer {
 			this.lightweightProp = new SimpleBooleanProperty(this.lightweight);
 		}
 		return this.lightweightProp;
+	}
+
+	public List<Heat> getHeatsOrderedByNumber() {
+		List<Heat> sorted = getHeats();
+		sorted.sort((entry1, entry2) -> {
+			Short result1 = entry1.getHeatNumber();
+			Short result2 = entry2.getHeatNumber();
+			if (result1 != null && result2 != null) {
+				return result1 > result2 ? 1 : -1;
+			}
+			return 0;
+		});
+		return sorted;
 	}
 
 	public enum GroupMode {

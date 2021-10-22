@@ -1,19 +1,23 @@
 package de.regatta_hd.aquarius.model;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
+import java.util.List;
+import java.util.Optional;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.List;
-import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -23,28 +27,32 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "CompEntries")
 //lombok
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class HeatRegistration {
-	@Basic
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "CE_ID")
+	private int id;
+
 	@Column(name = "CE_Lane")
 	@ToString.Include(rank = 10)
 	private Short lane;
 
-	@Id
-	@Column(name = "CE_ID", columnDefinition = "int identity")
-	private int id;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CE_Comp_ID_FK")
 	private Heat heat;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CE_Entry_ID_FK", nullable = false)
 	private Registration registration;
 
-	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration")
 	@OrderBy("rank")
 	private List<Result> results;
 
