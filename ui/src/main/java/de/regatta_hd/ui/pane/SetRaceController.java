@@ -15,6 +15,7 @@ import de.regatta_hd.aquarius.model.Offer;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -58,46 +59,66 @@ public class SetRaceController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		updateControls();
+
 		this.srcRaceCbo.itemsProperty().bind(this.sourceOffersProp);
 
-		this.targetRaceCbo.setInitialItems(getTargetOffers());
-
-		disableButtons(true);
-	}
-
-	@FXML
-	private void handleRefreshOnAction() {
-		Offer selectedSrcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
-		Offer srcRace = this.regattaDAO.getOffer(selectedSrcRace.getRaceNumber());
-		this.db.getEntityManager().refresh(srcRace);
-
-		Offer selectedTargetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		Offer targetRace = this.regattaDAO.getOffer(selectedTargetRace.getRaceNumber());
-		this.db.getEntityManager().refresh(targetRace);
-
-		handleSourceOfferOnAction();
+		TaskUtils.createAndRunTask(() -> {
+			this.targetRaceCbo.setInitialItems(getTargetOffers());
+			this.targetRaceCbo.setDisable(false);
+			updateControls();
+			return Void.TYPE;
+		});
 	}
 
 	@FXML
 	private void handleTargetOfferOnAction() {
-		ObservableList<Offer> offers = getSourceOffers();
-		this.sourceOffersProp.set(offers);
-		if (offers.size() == 1) {
-			this.srcRaceCbo.getSelectionModel().selectFirst();
-		}
+		TaskUtils.createAndRunTask(() -> {
+			ObservableList<Offer> offers = getSourceOffers();
+
+			Platform.runLater(() -> {
+				this.sourceOffersProp.set(offers);
+				if (offers.size() == 1) {
+					this.srcRaceCbo.getSelectionModel().selectFirst();
+				}
+
+				updateControls();
+			});
+			return Void.TYPE;
+		});
 	}
 
 	@FXML
 	private void handleSourceOfferOnAction() {
-		disableButtons(false);
+		Offer srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+		if (srcRace != null) {
+			srcRace = this.regattaDAO.getOffer(srcRace.getRaceNumber());
+			showRace(srcRace, this.sourceVBox, true);
+		}
 
-		Offer selectedSrcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
-		Offer srcRace = this.regattaDAO.getOffer(selectedSrcRace.getRaceNumber());
-		showRace(srcRace, this.sourceVBox, true);
+		Offer targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		if (targetRace != null) {
+			showRace(targetRace, this.targetVBox, false);
+		}
 
-		Offer selectedTargetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		Offer targetRace = this.regattaDAO.getOffer(selectedTargetRace.getRaceNumber());
-		showRace(targetRace, this.targetVBox, false);
+		updateControls();
+	}
+
+	@FXML
+	private void handleRefreshOnAction() {
+		Offer targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		if (targetRace != null) {
+			targetRace = this.regattaDAO.getOffer(targetRace.getRaceNumber());
+			this.db.getEntityManager().refresh(targetRace);
+		}
+
+		Offer srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+		if (srcRace != null) {
+			srcRace = this.regattaDAO.getOffer(srcRace.getRaceNumber());
+			this.db.getEntityManager().refresh(srcRace);
+		}
+
+		handleSourceOfferOnAction();
 	}
 
 	@FXML
@@ -114,7 +135,6 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleDeleteOnAction() {
 		Offer race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-
 		race = this.regattaDAO.getOffer(race.getRaceNumber());
 
 		if (race != null) {
@@ -244,10 +264,14 @@ public class SetRaceController extends AbstractBaseController {
 		return FXCollections.emptyObservableList();
 	}
 
-	private void disableButtons(boolean disabled) {
+	private void updateControls() {
+		Offer targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		Offer srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+
+		this.srcRaceCbo.setDisable(targetRace == null);
+		boolean disabled = !(targetRace != null && srcRace != null);
 		this.refreshBtn.setDisable(disabled);
 		this.deleteBtn.setDisable(disabled);
 		this.setRaceBtn.setDisable(disabled);
 	}
-
 }
