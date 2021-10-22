@@ -50,13 +50,13 @@ public class OffersController extends AbstractBaseController {
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
 		// add your data to the table here.
-		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getOffers()));
+		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getRaces()));
 	}
 
 	@FXML
 	private void refresh() {
 		this.db.getEntityManager().clear();
-		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getOffers()));
+		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getRaces()));
 	}
 
 	@FXML
@@ -69,7 +69,7 @@ public class OffersController extends AbstractBaseController {
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 			entityManager.getTransaction().begin();
 
-			OffersController.this.regatta.getOffers().forEach(offer -> {
+			OffersController.this.regatta.getRaces().forEach(offer -> {
 				AgeClassExt ageClassExt = offer.getAgeClass().getExtension();
 				if (ageClassExt != null) {
 					short distance = ageClassExt.getDistance();
@@ -107,7 +107,7 @@ public class OffersController extends AbstractBaseController {
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 			entityManager.getTransaction().begin();
 
-			OffersController.this.regatta.getOffers().forEach(offer -> {
+			OffersController.this.regatta.getRaces().forEach(offer -> {
 				AgeClass ageClass = offer.getAgeClass();
 				GroupMode mode = offer.getGroupMode();
 				if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {

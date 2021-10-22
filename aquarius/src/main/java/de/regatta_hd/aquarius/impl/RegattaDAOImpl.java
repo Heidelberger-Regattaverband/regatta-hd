@@ -76,7 +76,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Race> findOffers(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass,
+	public List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass,
 			boolean lightweight) {
 		var critBuilder = getCriteriaBuilder();
 
@@ -176,7 +176,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void assignRace(Race targetOffer, Race sourceOffer) {
+	public void setRaceHeats(Race targetOffer, Race sourceOffer) {
 
 		List<Registration> targetRegAll = getTargetRegistrationsOrdered(targetOffer, sourceOffer);
 
@@ -222,7 +222,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Race> findOffers(String raceNumber) {
+	public List<Race> findRaces(String raceNumber) {
 		var critBuilder = getCriteriaBuilder();
 
 		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
@@ -243,7 +243,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Race> getOffers() {
+	public List<Race> getRaces() {
 		var critBuilder = getCriteriaBuilder();
 
 		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
@@ -287,7 +287,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return null;
 	}
 
-	public void deleteAssignment(Race race) {
+	public void cleanRaceHeats(Race race) {
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
 		entityManager.getTransaction().begin();
 

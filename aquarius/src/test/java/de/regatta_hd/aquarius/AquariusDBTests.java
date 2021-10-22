@@ -82,7 +82,7 @@ class AquariusDBTests {
 
 		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
 		regattaDAO.setActiveRegatta(event);
-		List<Race> offers = regattaDAO.findOffers("1%", boatClass, ageClass, true);
+		List<Race> offers = regattaDAO.findRaces("1%", boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
 		offers.forEach(offer -> trace(offer, 0));

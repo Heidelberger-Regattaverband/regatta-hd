@@ -128,7 +128,7 @@ public class SetRaceController extends AbstractBaseController {
 		Race sourceRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 
 		if (targetRace != null && sourceRace != null) {
-			this.regattaDAO.assignRace(targetRace, sourceRace);
+			this.regattaDAO.setRaceHeats(targetRace, sourceRace);
 			handleRefreshOnAction();
 		}
 	}
@@ -139,7 +139,7 @@ public class SetRaceController extends AbstractBaseController {
 		race = this.regattaDAO.getOffer(race.getNumber());
 
 		if (race != null) {
-			this.regattaDAO.deleteAssignment(race);
+			this.regattaDAO.cleanRaceHeats(race);
 			handleRefreshOnAction();
 		}
 	}
@@ -239,7 +239,7 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private ObservableList<Race> getTargetOffers() {
-		List<Race> offers = this.regattaDAO.findOffers("2%");
+		List<Race> offers = this.regattaDAO.findRaces("2%");
 
 		// remove master races as they will not be set
 		List<Race> filteredOffers = offers.stream().filter(offer -> {
@@ -254,7 +254,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (targetOffer != null) {
 			// get all offers with same attributes
-			List<Race> sourceOffers = this.regattaDAO.findOffers("1%", targetOffer.getBoatClass(),
+			List<Race> sourceOffers = this.regattaDAO.findRaces("1%", targetOffer.getBoatClass(),
 					targetOffer.getAgeClass(), targetOffer.isLightweight());
 
 			// filter target offer

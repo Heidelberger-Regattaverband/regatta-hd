@@ -18,13 +18,13 @@ public interface RegattaDAO {
 	 */
 	List<Regatta> getRegattas();
 
-	List<Race> getOffers();
+	List<Race> getRaces();
 
 	Race getOffer(String raceNumber);
 
-	List<Race> findOffers(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
+	List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
 
-	List<Race> findOffers(String raceNumberFilter);
+	List<Race> findRaces(String raceNumberFilter);
 
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
@@ -43,9 +43,9 @@ public interface RegattaDAO {
 
 	// race assignment
 
-	void assignRace(Race targetRace, Race sourceRace);
+	void setRaceHeats(Race targetRace, Race sourceRace);
 
-	void deleteAssignment(Race race);
+	void cleanRaceHeats(Race race);
 
 	// db
 
