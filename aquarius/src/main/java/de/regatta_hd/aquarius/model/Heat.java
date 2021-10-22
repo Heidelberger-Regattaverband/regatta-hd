@@ -100,7 +100,7 @@ public class Heat {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Comp_Race_ID_FK")
-	private Offer offer;
+	private Race race;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Comp_RMDetail_ID_FK")

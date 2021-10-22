@@ -18,7 +18,7 @@ import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
@@ -82,7 +82,7 @@ class AquariusDBTests {
 
 		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
 		regattaDAO.setActiveRegatta(event);
-		List<Offer> offers = regattaDAO.findOffers("1%", boatClass, ageClass, true);
+		List<Race> offers = regattaDAO.findOffers("1%", boatClass, ageClass, true);
 		Assertions.assertFalse(offers.isEmpty());
 
 		offers.forEach(offer -> trace(offer, 0));
@@ -96,7 +96,7 @@ class AquariusDBTests {
 
 		System.out.println(regatta.toString());
 		regattaDAO.setActiveRegatta(regatta);
-		Offer offer = regattaDAO.getOffer("104");
+		Race offer = regattaDAO.getOffer("104");
 		Assertions.assertEquals("104", offer.getRaceNumber());
 
 		trace(offer, 1);
@@ -122,7 +122,7 @@ class AquariusDBTests {
 		Assertions.assertEquals(1500, ageClassExt.getDistance());
 	}
 
-	private static void trace(Offer offer, int indent) {
+	private static void trace(Race offer, int indent) {
 		indent(indent);
 		System.out.println(offer.toString());
 

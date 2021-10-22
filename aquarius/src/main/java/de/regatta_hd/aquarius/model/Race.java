@@ -3,13 +3,13 @@ package de.regatta_hd.aquarius.model;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -32,9 +32,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class Offer {
+public class Race {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Offer_ID")
 	private int id;
 
@@ -55,61 +56,55 @@ public class Offer {
 	@Column(name = "Offer_IsLightweight")
 	private boolean lightweight;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Offer_AgeClass_ID_FK", nullable = false)
 	@ToString.Include(rank = 2)
 	private AgeClass ageClass;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Offer_BoatClass_ID_FK", nullable = false)
 	@ToString.Include(rank = 3)
 	private BoatClass boatClass;
 
-	@OneToMany(targetEntity = Heat.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
 	@OrderBy("heatNumber")
 	private List<Heat> heats;
 
-	@OneToMany(targetEntity = Cup.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
 	private Set<Cup> cups;
 
 	/**
-	 * Contains all {@link Registration registrations} to this {@link Offer offer}.
+	 * Contains all {@link Registration registrations} to this {@link Race offer}.
 	 */
-	@OneToMany(targetEntity = Registration.class, mappedBy = "offer", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Registration.class, mappedBy = "race")
 	@OrderBy("bib")
 	private Set<Registration> registrations;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Offer_Event_ID_FK", nullable = false)
 	private Regatta regatta;
 
-	@Basic
 	@Column(name = "Offer_BibSeed")
 	private Short bibSeed;
 
-	@Basic
 	@Column(name = "Offer_Cancelled")
 	private boolean cancelled;
 
-	@Basic
 	@Column(name = "Offer_Comment", length = 32)
 	private String comment;
 
 	/**
 	 * Indicates whether this race is driven or not. It depends on the number of registrations for this offer.
 	 */
-	@Basic
 	@Column(name = "Offer_Driven")
 	private boolean driven;
 
-	@Basic
 	@Column(name = "Offer_EventDay")
 	private Integer eventDay;
 
 	@Column(name = "Offer_Fee")
 	private double fee;
 
-	@Basic
 	@Column(name = "Offer_ForceDriven")
 	private boolean forceDriven;
 
@@ -120,19 +115,15 @@ public class Offer {
 	@Column(name = "Offer_GroupMode")
 	private GroupMode groupMode;
 
-	@Basic
 	@Column(name = "Offer_Prize", length = 128)
 	private String prize;
 
-	@Basic
 	@Column(name = "Offer_RaceType")
 	private byte raceType;
 
-	@Basic
 	@Column(name = "Offer_SortValue")
 	private int sortValue;
 
-	@Basic
 	@Column(name = "Offer_Splits")
 	private Integer splits;
 
@@ -141,7 +132,7 @@ public class Offer {
 	@ToString.Include(rank = 7)
 	private RaceMode raceMode;
 
-	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "offer")
+	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "race")
 	private Set<ReportInfo> reportInfos;
 
 	// JavaFX properties
@@ -169,9 +160,6 @@ public class Offer {
 	}
 
 	public enum GroupMode {
-		NONE,
-		PERFORMANCE,
-		AGE,
-		PERFORMANCE_AGE
+		NONE, PERFORMANCE, AGE, PERFORMANCE_AGE
 	}
 }

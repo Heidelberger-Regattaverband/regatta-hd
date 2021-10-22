@@ -11,8 +11,8 @@ import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.AgeClassExt;
-import de.regatta_hd.aquarius.model.Offer;
-import de.regatta_hd.aquarius.model.Offer.GroupMode;
+import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Race.GroupMode;
 import jakarta.persistence.EntityManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,9 +27,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class OffersController extends AbstractBaseController {
 	@FXML
-	private TableView<Offer> offersTbl;
+	private TableView<Race> offersTbl;
 	@FXML
-	private TableColumn<Offer, Offer.GroupMode> groupModeCol;
+	private TableColumn<Race, Race.GroupMode> groupModeCol;
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -64,7 +64,7 @@ public class OffersController extends AbstractBaseController {
 		disableButtons(true);
 
 		TaskUtils.createAndRunTask(() -> {
-			List<Offer> updatedOffers = new ArrayList<>();
+			List<Race> updatedOffers = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 			entityManager.getTransaction().begin();
@@ -102,7 +102,7 @@ public class OffersController extends AbstractBaseController {
 		disableButtons(true);
 
 		TaskUtils.createAndRunTask(() -> {
-			List<Offer> updatedOffers = new ArrayList<>();
+			List<Race> updatedOffers = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 			entityManager.getTransaction().begin();

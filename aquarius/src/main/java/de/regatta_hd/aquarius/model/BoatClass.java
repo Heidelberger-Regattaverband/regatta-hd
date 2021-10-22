@@ -47,7 +47,7 @@ public class BoatClass {
 	@Column(name = "BoatClass_NumRowers")
 	private byte numRowers;
 
-	@OneToMany(targetEntity = Offer.class, mappedBy = "boatClass", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Race.class, mappedBy = "boatClass", cascade = CascadeType.MERGE)
 	@OrderBy("raceNumber")
-	private List<Offer> offers;
+	private List<Race> races;
 }

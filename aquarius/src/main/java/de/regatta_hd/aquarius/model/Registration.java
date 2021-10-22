@@ -1,7 +1,8 @@
 package de.regatta_hd.aquarius.model;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,8 +12,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.List;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,18 +29,18 @@ import lombok.ToString;
 public class Registration {
 
 	@Id
-	@Column(name = "Entry_ID", columnDefinition = "int identity")
+	@Column(name = "Entry_ID")
 	private int id;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_OwnerClub_ID_FK", nullable = false)
 	@ToString.Include(rank = 9)
 	private Club club;
 
-	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "registration")
 	private List<HeatRegistration> heatEntries;
 
-	@OneToMany(targetEntity = Crew.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Crew.class, mappedBy = "registration")
 	@OrderBy("pos")
 	private List<Crew> crews;
 
@@ -62,31 +61,28 @@ public class Registration {
 	@Column(name = "Entry_ExternID")
 	private Integer externId;
 
-	@Basic
 	@Column(name = "Entry_GroupValue")
 	private Short groupValue;
 
-	@Basic
 	@Column(name = "Entry_IsLate")
 	private boolean isLate;
 
-	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "registration", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "registration")
 	private Set<RegistrationLabel> labels;
 
-	@Basic
 	@Column(name = "Entry_Note", length = 128)
 	private String note;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_Event_ID_FK", nullable = false)
 	private Regatta regatta;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")
 	@ToString.Include(rank = 8)
 	private Label label;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_Race_ID_FK", nullable = false)
-	private Offer offer;
+	private Race race;
 }

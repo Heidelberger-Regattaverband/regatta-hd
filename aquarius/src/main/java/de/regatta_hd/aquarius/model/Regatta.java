@@ -103,9 +103,9 @@ public class Regatta {
 	@JoinColumn(name = "Event_Venue_Nation_ID_FK")
 	private Nation nation;
 
-	@OneToMany(targetEntity = Offer.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Race.class, mappedBy = "regatta", cascade = CascadeType.MERGE)
 	@OrderBy("raceNumber")
-	private Set<Offer> offers;
+	private Set<Race> races;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Event_DefaultRaceMode_ID_FK")

@@ -64,7 +64,7 @@ public class Club {
 
 	/**
 	 * Contains all {@link Registration registrations} of this {@link Club club} to
-	 * available {@link Offer offers}.
+	 * available {@link Race offers}.
 	 */
 	@OneToMany(targetEntity = Registration.class, mappedBy = "club", cascade = CascadeType.MERGE)
 	private List<Registration> registrations;

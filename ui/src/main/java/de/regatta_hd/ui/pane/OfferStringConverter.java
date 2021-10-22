@@ -3,15 +3,15 @@ package de.regatta_hd.ui.pane;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Race;
 import javafx.util.StringConverter;
 
-public class OfferStringConverter extends StringConverter<Offer> {
+public class OfferStringConverter extends StringConverter<Race> {
 
-	private final Map<String, Offer> offerToString = new HashMap<>();
+	private final Map<String, Race> offerToString = new HashMap<>();
 
 	@Override
-	public String toString(Offer offer) {
+	public String toString(Race offer) {
 		if (offer == null) {
 			return null;
 		}
@@ -21,7 +21,7 @@ public class OfferStringConverter extends StringConverter<Offer> {
 	}
 
 	@Override
-	public Offer fromString(String string) {
+	public Race fromString(String string) {
 		return this.offerToString.get(string);
 	}
 }
