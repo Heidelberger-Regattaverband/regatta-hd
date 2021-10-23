@@ -16,7 +16,7 @@ public class TaskUtils {
 	private static final Logger logger = Logger.getLogger(TaskUtils.class.getName());
 
 	// executes database operations concurrent to JavaFX operations.
-	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());;
+	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
 
 	private TaskUtils() {
 	}
