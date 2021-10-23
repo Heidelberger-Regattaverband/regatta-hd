@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 
 /**
@@ -18,13 +18,13 @@ public interface RegattaDAO {
 	 */
 	List<Regatta> getRegattas();
 
-	List<Offer> getOffers();
+	List<Race> getRaces();
 
-	Offer getOffer(String raceNumber);
+	Race getOffer(String raceNumber);
 
-	List<Offer> findOffers(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
+	List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
 
-	List<Offer> findOffers(String raceNumberFilter);
+	List<Race> findRaces(String raceNumberFilter);
 
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
@@ -43,9 +43,9 @@ public interface RegattaDAO {
 
 	// race assignment
 
-	void assignRace(Offer targetRace, Offer sourceRace);
+	void setRaceHeats(Race targetRace, Race sourceRace);
 
-	void deleteAssignment(Offer race);
+	void cleanRaceHeats(Race race);
 
 	// db
 

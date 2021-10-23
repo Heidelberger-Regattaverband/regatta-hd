@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius.model;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,33 +22,30 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class RegistrationLabel {
-	@Basic
+
+	@Id
+	@Column(name = "EL_ID")
+	private int id;
+
 	@Column(name = "EL_IsClubMultiNOC")
 	private boolean clubMultiNOC;
 
-	@Basic
 	@Column(name = "EL_IsCrewClubMultiNOC")
 	private boolean crewClubMultiNOC;
 
-	@Basic
 	@Column(name = "EL_RoundFrom")
 	@ToString.Include(rank = 9)
 	private short roundFrom;
 
-	@Basic
 	@Column(name = "EL_RoundTo")
 	@ToString.Include(rank = 8)
 	private short roundTo;
 
-	@Id
-	@Column(name = "EL_ID", columnDefinition = "int identity")
-	private int id;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EL_Entry_ID_FK", nullable = false)
 	private Registration registration;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EL_Label_ID_FK", nullable = false)
 	@ToString.Include(rank = 10)
 	private Label label;

@@ -20,7 +20,7 @@ import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.common.ConfigService;
@@ -32,7 +32,7 @@ import jakarta.persistence.criteria.Root;
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
-	private static final String PARAM_RACE_NUMBER = "raceNumber";
+	private static final String PARAM_RACE_NUMBER = "number";
 
 	private static final String PARAM_REGATTA = "regatta";
 
@@ -53,12 +53,12 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public Offer getOffer(String raceNumber) {
+	public Race getOffer(String raceNumber) {
 		var critBuilder = getCriteriaBuilder();
 
 		// SELECT o FROM Offer o WHERE o.raceNumber == :nr
-		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
-		Root<Offer> o = query.from(Offer.class);
+		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
+		Root<Race> o = query.from(Race.class);
 
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
@@ -76,12 +76,12 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Offer> findOffers(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass,
+	public List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass,
 			boolean lightweight) {
 		var critBuilder = getCriteriaBuilder();
 
-		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
-		Root<Offer> o = query.from(Offer.class);
+		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
+		Root<Race> o = query.from(Race.class);
 
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, PARAM_RACE_NUMBER);
@@ -134,7 +134,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return true;
 	}
 
-	private static List<Registration> getTargetRegistrationsOrdered(Offer targetOffer, Offer sourceOffer) {
+	private static List<Registration> getTargetRegistrationsOrdered(Race targetOffer, Race sourceOffer) {
 		Map<Integer, Registration> sameCrews = new HashMap<>();
 
 		for (Registration targetRegistration : targetOffer.getRegistrations()) {
@@ -176,7 +176,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void assignRace(Offer targetOffer, Offer sourceOffer) {
+	public void setRaceHeats(Race targetOffer, Race sourceOffer) {
 
 		List<Registration> targetRegAll = getTargetRegistrationsOrdered(targetOffer, sourceOffer);
 
@@ -222,11 +222,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Offer> findOffers(String raceNumber) {
+	public List<Race> findRaces(String raceNumber) {
 		var critBuilder = getCriteriaBuilder();
 
-		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
-		Root<Offer> o = query.from(Offer.class);
+		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
+		Root<Race> o = query.from(Race.class);
 
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, PARAM_RACE_NUMBER);
@@ -243,11 +243,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Offer> getOffers() {
+	public List<Race> getRaces() {
 		var critBuilder = getCriteriaBuilder();
 
-		CriteriaQuery<Offer> query = critBuilder.createQuery(Offer.class);
-		Root<Offer> o = query.from(Offer.class);
+		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
+		Root<Race> o = query.from(Race.class);
 
 		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
 
@@ -287,7 +287,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return null;
 	}
 
-	public void deleteAssignment(Offer race) {
+	public void cleanRaceHeats(Race race) {
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
 		entityManager.getTransaction().begin();
 

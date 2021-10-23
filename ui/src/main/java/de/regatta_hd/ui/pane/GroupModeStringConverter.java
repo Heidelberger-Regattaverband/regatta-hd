@@ -1,12 +1,12 @@
 package de.regatta_hd.ui.pane;
 
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Race;
 import javafx.util.StringConverter;
 
-public class GroupModeStringConverter extends StringConverter<Offer.GroupMode> {
+public class GroupModeStringConverter extends StringConverter<Race.GroupMode> {
 
 	@Override
-	public String toString(Offer.GroupMode groupMode) {
+	public String toString(Race.GroupMode groupMode) {
 		if (groupMode == null) {
 			return null;
 		}
@@ -25,7 +25,7 @@ public class GroupModeStringConverter extends StringConverter<Offer.GroupMode> {
 	}
 
 	@Override
-	public Offer.GroupMode fromString(String string) {
+	public Race.GroupMode fromString(String string) {
 		return null;
 	}
 }
