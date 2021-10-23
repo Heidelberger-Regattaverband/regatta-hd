@@ -23,7 +23,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Represents a heat of a race.
+ * This entity represents a heat of a race.
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
@@ -38,7 +38,7 @@ public class Heat {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Comp_ID", columnDefinition = "int identity")
+	@Column(name = "Comp_ID")
 	private int id;
 
 	@Column(name = "Comp_HeatNumber")
@@ -48,7 +48,7 @@ public class Heat {
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
 
-	@Column(name = "Comp_DateTime", columnDefinition = "datetime")
+	@Column(name = "Comp_DateTime")
 	private Date dateTime;
 
 	@Column(name = "Comp_Dummy")
@@ -73,7 +73,7 @@ public class Heat {
 	private short number;
 
 	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "heat")
-	private Set<HeatReferee> compReferees;
+	private List<HeatReferee> heatReferees;
 
 	@Column(name = "Comp_Round")
 	@ToString.Include(rank = 7)

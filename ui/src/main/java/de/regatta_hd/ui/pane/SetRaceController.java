@@ -4,8 +4,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
@@ -64,7 +62,7 @@ public class SetRaceController extends AbstractBaseController {
 		this.srcRaceCbo.itemsProperty().bind(this.sourceOffersProp);
 
 		TaskUtils.createAndRunTask(() -> {
-			this.targetRaceCbo.setInitialItems(getTargetOffers());
+			this.targetRaceCbo.setInitialItems(getTargetRaces());
 			this.targetRaceCbo.setDisable(false);
 			updateControls();
 			return Void.TYPE;
@@ -74,7 +72,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleTargetOfferOnAction() {
 		TaskUtils.createAndRunTask(() -> {
-			ObservableList<Race> offers = getSourceOffers();
+			ObservableList<Race> offers = getSourceRaces();
 
 			Platform.runLater(() -> {
 				this.sourceOffersProp.set(offers);
@@ -96,10 +94,10 @@ public class SetRaceController extends AbstractBaseController {
 			showRace(srcRace, this.sourceVBox, true);
 		}
 
-		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		if (targetRace != null) {
-			targetRace = this.regattaDAO.getOffer(targetRace.getNumber());
-			showRace(targetRace, this.targetVBox, false);
+		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		if (race != null) {
+			race = this.regattaDAO.getOffer(race.getNumber());
+			showRace(race, this.targetVBox, false);
 		}
 
 		updateControls();
@@ -238,39 +236,36 @@ public class SetRaceController extends AbstractBaseController {
 		return compEntriesTable;
 	}
 
-	private ObservableList<Race> getTargetOffers() {
-		List<Race> offers = this.regattaDAO.findRaces("2%");
+	private ObservableList<Race> getTargetRaces() {
+		List<Race> races = this.regattaDAO.findRaces("2%");
 
 		// remove master races as they will not be set
-		List<Race> filteredOffers = offers.stream().filter(offer -> {
-			String abbrevation = offer.getAgeClass().getAbbreviation();
-			return !StringUtils.equalsAny(abbrevation, "MM", "MW", "MM/W");
-		}).toList();
-		return FXCollections.observableArrayList(filteredOffers);
+		List<Race> filteredRaces = races.stream().filter(race -> !race.getAgeClass().isMasters()).toList();
+
+		return FXCollections.observableArrayList(filteredRaces);
 	}
 
-	private ObservableList<Race> getSourceOffers() {
-		Race targetOffer = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+	private ObservableList<Race> getSourceRaces() {
+		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 
-		if (targetOffer != null) {
-			// get all offers with same attributes
-			List<Race> sourceOffers = this.regattaDAO.findRaces("1%", targetOffer.getBoatClass(),
-					targetOffer.getAgeClass(), targetOffer.isLightweight());
+		if (race != null) {
+			// get all races with same attributes
+			List<Race> srcRaces = this.regattaDAO.findRaces("1%", race.getBoatClass(),
+					race.getAgeClass(), race.isLightweight());
 
-			// filter target offer
-			sourceOffers = sourceOffers.stream().filter(offer -> targetOffer.getId() != offer.getId()).toList();
+			srcRaces = srcRaces.stream().filter(srcRace -> race.getId() != srcRace.getId()).toList();
 
-			return FXCollections.observableArrayList(sourceOffers);
+			return FXCollections.observableArrayList(srcRaces);
 		}
 		return FXCollections.emptyObservableList();
 	}
 
 	private void updateControls() {
-		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 
-		this.srcRaceCbo.setDisable(targetRace == null);
-		boolean disabled = !(targetRace != null && srcRace != null);
+		this.srcRaceCbo.setDisable(race == null);
+		boolean disabled = !(race != null && srcRace != null);
 		this.refreshBtn.setDisable(disabled);
 		this.deleteBtn.setDisable(disabled);
 		this.setRaceBtn.setDisable(disabled);
