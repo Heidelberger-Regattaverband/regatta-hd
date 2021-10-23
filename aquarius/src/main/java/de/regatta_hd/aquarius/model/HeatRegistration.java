@@ -1,7 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
 import java.util.List;
-import java.util.Optional;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,10 +61,6 @@ public class HeatRegistration {
 	 * @return {@link Result} of final or <code>null</code> if not available
 	 */
 	public Result getFinalResult() {
-		Optional<Result> resultOpt = getResults().stream().filter((Result::isFinalResult)).findFirst();
-		if (resultOpt.isPresent()) {
-			return resultOpt.get();
-		}
-		return null;
+		return getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
 	}
 }
