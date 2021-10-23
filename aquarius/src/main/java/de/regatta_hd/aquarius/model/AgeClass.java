@@ -2,9 +2,10 @@ package de.regatta_hd.aquarius.model;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -30,6 +31,7 @@ import lombok.ToString;
 public class AgeClass {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "AgeClass_ID")
 	@ToString.Include(rank = 1)
 	private int id;
@@ -76,7 +78,7 @@ public class AgeClass {
 	@Column(name = "AgeClass_Suffix", length = 16)
 	private String suffix;
 
-	@OneToMany(targetEntity = Race.class, mappedBy = "ageClass", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Race.class, mappedBy = "ageClass")
 	@OrderBy("raceNumber")
 	private List<Race> races;
 
