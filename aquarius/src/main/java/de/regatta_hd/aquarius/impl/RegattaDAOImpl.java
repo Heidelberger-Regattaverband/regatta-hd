@@ -53,7 +53,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public Race getOffer(String raceNumber) {
+	public Race getRace(String raceNumber) {
 		var critBuilder = getCriteriaBuilder();
 
 		// SELECT o FROM Offer o WHERE o.raceNumber == :nr
@@ -197,9 +197,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 			if (heat != null) {
 				// first clean existing heat assignments
-				heat.getEntries().forEach(entry -> {
-					entityManager.remove(entry);
-				});
+				heat.getEntries().forEach(entityManager::remove);
 
 				int startIndex = heatNumber * laneCount;
 				int endIndex = startIndex + laneCount;

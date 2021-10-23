@@ -1,7 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.util.Objects;
-import java.util.function.Supplier;
+import java.util.concurrent.Callable;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -12,24 +12,24 @@ public class TaskUtils {
 	private TaskUtils() {
 	}
 
-	public static <V> Task<V> createAndRunTask(Supplier<V> supplier) {
-		return runTask(createTask(supplier));
+	public static <V> Task<V> createAndRunTask(Callable<V> callable) {
+		return runTask(createTask(callable));
 	}
 
-	public static <V> Task<V> createAndRunTask(Supplier<V> supplier,
+	public static <V> Task<V> createAndRunTask(Callable<V> callable,
 			EventHandler<WorkerStateEvent> onSucceededHandler) {
-		return runTask(createTask(supplier, onSucceededHandler));
+		return runTask(createTask(callable, onSucceededHandler));
 	}
 
-	public static <V> Task<V> createTask(Supplier<V> supplier) {
-		return createTask(supplier, null);
+	public static <V> Task<V> createTask(Callable<V> callable) {
+		return createTask(callable, null);
 	}
 
-	public static <V> Task<V> createTask(Supplier<V> supplier, EventHandler<WorkerStateEvent> onSucceededHandler) {
+	public static <V> Task<V> createTask(Callable<V> callable, EventHandler<WorkerStateEvent> onSucceededHandler) {
 		Task<V> task = new Task<>() {
 			@Override
 			protected V call() throws Exception {
-				return supplier.get();
+				return callable.call();
 			}
 		};
 

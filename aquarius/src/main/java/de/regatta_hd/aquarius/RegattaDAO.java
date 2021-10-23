@@ -20,7 +20,7 @@ public interface RegattaDAO {
 
 	List<Race> getRaces();
 
-	Race getOffer(String raceNumber);
+	Race getRace(String raceNumber);
 
 	List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
 

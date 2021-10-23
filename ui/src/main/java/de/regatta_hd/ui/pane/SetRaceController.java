@@ -90,13 +90,13 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSourceOfferOnAction() {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getOffer(srcRace.getNumber());
+			srcRace = this.regattaDAO.getRace(srcRace.getNumber());
 			showRace(srcRace, this.sourceVBox, true);
 		}
 
 		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
-			race = this.regattaDAO.getOffer(race.getNumber());
+			race = this.regattaDAO.getRace(race.getNumber());
 			showRace(race, this.targetVBox, false);
 		}
 
@@ -107,13 +107,13 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleRefreshOnAction() {
 		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		if (targetRace != null) {
-			targetRace = this.regattaDAO.getOffer(targetRace.getNumber());
+			targetRace = this.regattaDAO.getRace(targetRace.getNumber());
 			this.db.getEntityManager().refresh(targetRace);
 		}
 
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getOffer(srcRace.getNumber());
+			srcRace = this.regattaDAO.getRace(srcRace.getNumber());
 			this.db.getEntityManager().refresh(srcRace);
 		}
 
@@ -134,7 +134,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleDeleteOnAction() {
 		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		race = this.regattaDAO.getOffer(race.getNumber());
+		race = this.regattaDAO.getRace(race.getNumber());
 
 		if (race != null) {
 			this.regattaDAO.cleanRaceHeats(race);
