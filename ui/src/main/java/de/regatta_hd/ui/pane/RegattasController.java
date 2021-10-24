@@ -28,7 +28,6 @@ public class RegattasController extends AbstractBaseController {
 		this.regattasTable.setItems(getEvents());
 	}
 
-	// add your data here from any source
 	private ObservableList<Regatta> getEvents() {
 		return FXCollections.observableArrayList(this.regattaDAO.getRegattas());
 	}
