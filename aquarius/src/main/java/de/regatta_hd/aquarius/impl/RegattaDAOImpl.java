@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,6 +33,7 @@ import jakarta.persistence.criteria.Root;
 
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
+	private static final Logger logger = Logger.getLogger(RegattaDAOImpl.class.getName());
 
 	private static final String PARAM_RACE_NUMBER = "number";
 
@@ -53,7 +56,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public Race getOffer(String raceNumber) {
+	public Race getRace(String raceNumber) {
 		var critBuilder = getCriteriaBuilder();
 
 		// SELECT o FROM Offer o WHERE o.raceNumber == :nr
@@ -76,8 +79,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass,
-			boolean lightweight) {
+	public List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight) {
 		var critBuilder = getCriteriaBuilder();
 
 		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
@@ -164,6 +166,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		List<Registration> targetRegsOrdered = new ArrayList<>();
 		for (List<HeatRegistration> srcHeatRegs : srcHeatRegsAll) {
 			srcHeatRegs.stream().sorted((heatReg1, heatReg2) -> {
+				if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
+					return 0;
+				}
 				return heatReg1.getFinalResult().getNetTime() > heatReg2.getFinalResult().getNetTime() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
 				Registration targetRegistration = sameCrews.get(srcHeatReg.getRegistration().getId());
@@ -197,9 +202,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 			if (heat != null) {
 				// first clean existing heat assignments
-				heat.getEntries().forEach(entry -> {
-					entityManager.remove(entry);
-				});
+				heat.getEntries().forEach(entityManager::remove);
 
 				int startIndex = heatNumber * laneCount;
 				int endIndex = startIndex + laneCount;
@@ -282,7 +285,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 			return find(Regatta.class, this.activeRegattaId);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e, null);
 		}
 		return null;
 	}

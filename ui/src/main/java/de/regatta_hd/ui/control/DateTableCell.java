@@ -6,11 +6,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 
 public class DateTableCell<B> extends TableCell<B, Instant> {
+	private static final Logger logger = Logger.getLogger(DateTableCell.class.getName());
 
 	private DatePicker datePicker;
 
@@ -47,7 +50,8 @@ public class DateTableCell<B> extends TableCell<B, Instant> {
 				setText(null);
 				setGraphic(this.datePicker);
 			} else {
-				setText(getDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.GERMANY)));
+				setText(getDate()
+						.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.GERMANY)));
 				setGraphic(null);
 			}
 		}
@@ -57,7 +61,7 @@ public class DateTableCell<B> extends TableCell<B, Instant> {
 		this.datePicker = new DatePicker(getDate());
 		this.datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 		this.datePicker.setOnAction(e -> {
-			System.out.println("Committed: " + this.datePicker.getValue().toString());
+			logger.log(Level.FINE, "Committed: {0}", this.datePicker.getValue());
 			commitEdit(this.datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		});
 //        datePicker.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {

@@ -12,7 +12,6 @@ import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -68,17 +67,12 @@ public class PrimaryController extends AbstractBaseController {
 						this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
-					Task<DBConfig> dbOpenTask = new Task<>() {
-						@Override
-						protected DBConfig call() throws IOException {
-							PrimaryController.this.aquariusDb.open(connectionData.get());
-							PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
-							updateControls();
-							return connectionData.get();
-						}
-					};
-					// start Task
-					new Thread(dbOpenTask).start();
+					TaskUtils.createAndRunTask(() -> {
+						PrimaryController.this.aquariusDb.open(connectionData.get());
+						PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
+						updateControls();
+						return connectionData.get();
+					});
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

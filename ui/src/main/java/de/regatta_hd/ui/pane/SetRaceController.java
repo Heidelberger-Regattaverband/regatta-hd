@@ -57,6 +57,7 @@ public class SetRaceController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.targetRaceCbo.setDisable(true);
 		updateControls();
 
 		this.srcRaceCbo.itemsProperty().bind(this.sourceOffersProp);
@@ -90,14 +91,20 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSourceOfferOnAction() {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getOffer(srcRace.getNumber());
-			showRace(srcRace, this.sourceVBox, true);
+			TaskUtils.createAndRunTask(() -> {
+				Race race = this.regattaDAO.getRace(srcRace.getNumber());
+				showRace(race, this.sourceVBox, true);
+				return Void.TYPE;
+			});
 		}
 
-		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		if (race != null) {
-			race = this.regattaDAO.getOffer(race.getNumber());
-			showRace(race, this.targetVBox, false);
+		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		if (targetRace != null) {
+			TaskUtils.createAndRunTask(() -> {
+				Race race = this.regattaDAO.getRace(targetRace.getNumber());
+				showRace(race, this.targetVBox, false);
+				return Void.TYPE;
+			});
 		}
 
 		updateControls();
@@ -107,13 +114,13 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleRefreshOnAction() {
 		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		if (targetRace != null) {
-			targetRace = this.regattaDAO.getOffer(targetRace.getNumber());
+			targetRace = this.regattaDAO.getRace(targetRace.getNumber());
 			this.db.getEntityManager().refresh(targetRace);
 		}
 
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getOffer(srcRace.getNumber());
+			srcRace = this.regattaDAO.getRace(srcRace.getNumber());
 			this.db.getEntityManager().refresh(srcRace);
 		}
 
@@ -134,7 +141,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleDeleteOnAction() {
 		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		race = this.regattaDAO.getOffer(race.getNumber());
+		race = this.regattaDAO.getRace(race.getNumber());
 
 		if (race != null) {
 			this.regattaDAO.cleanRaceHeats(race);
@@ -143,25 +150,32 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private void showRace(Race race, VBox vbox, boolean withResult) {
-		vbox.getChildren().clear();
+		Platform.runLater(() -> {
+			vbox.getChildren().clear();
+			Label title = new Label();
+			title.setText(new RaceStringConverter().toString(race));
+			vbox.getChildren().add(title);
+		});
 
-		Label title = new Label();
-		title.setText(new RaceStringConverter().toString(race));
-		vbox.getChildren().add(title);
+		race.getHeats().forEach(heat -> {
+			List<HeatRegistration> entries = heat.getEntries();
+			entries.forEach(entry -> {
+				entry.getResults();
+				entry.getRegistration().getClub().getAbbreviation();
+				entry.getRegistration();
+				entry.getFinalResult();
+			});
+			SortedList<HeatRegistration> sortedList = new SortedList<>(FXCollections.observableArrayList(entries));
 
-		if (race != null) {
-			race.getHeats().forEach(heat -> {
+			Platform.runLater(() -> {
 				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
-
 				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-				SortedList<HeatRegistration> sortedList = new SortedList<>(
-						FXCollections.observableArrayList(heat.getEntries()));
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
 				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
-		}
+		});
 	}
 
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
@@ -183,7 +197,7 @@ public class SetRaceController extends AbstractBaseController {
 		boatCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
-				String value = entry.getClub().getAbbr();
+				String value = entry.getClub().getAbbreviation();
 				if (entry.getBoatNumber() != null) {
 					value += " - Boot " + entry.getBoatNumber();
 				}
@@ -250,8 +264,8 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (race != null) {
 			// get all races with same attributes
-			List<Race> srcRaces = this.regattaDAO.findRaces("1%", race.getBoatClass(),
-					race.getAgeClass(), race.isLightweight());
+			List<Race> srcRaces = this.regattaDAO.findRaces("1%", race.getBoatClass(), race.getAgeClass(),
+					race.isLightweight());
 
 			srcRaces = srcRaces.stream().filter(srcRace -> race.getId() != srcRace.getId()).toList();
 
