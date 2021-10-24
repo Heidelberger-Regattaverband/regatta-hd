@@ -63,7 +63,7 @@ public class SetRaceController extends AbstractBaseController {
 		this.srcRaceCbo.itemsProperty().bind(this.sourceOffersProp);
 
 		TaskUtils.createAndRunTask(() -> {
-			this.targetRaceCbo.setInitialItems(getTargetRaces());
+			this.targetRaceCbo.setInitialItems(getRaces());
 			this.targetRaceCbo.setDisable(false);
 			updateControls();
 			return Void.TYPE;
@@ -73,14 +73,13 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleTargetOfferOnAction() {
 		TaskUtils.createAndRunTask(() -> {
-			ObservableList<Race> offers = getSourceRaces();
+			ObservableList<Race> srcRaces = getSourceRaces();
 
 			Platform.runLater(() -> {
-				this.sourceOffersProp.set(offers);
-				if (offers.size() == 1) {
+				this.sourceOffersProp.set(srcRaces);
+				if (srcRaces.size() == 1) {
 					this.srcRaceCbo.getSelectionModel().selectFirst();
 				}
-
 				updateControls();
 			});
 			return Void.TYPE;
@@ -112,10 +111,10 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleRefreshOnAction() {
-		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		if (targetRace != null) {
-			targetRace = this.regattaDAO.getRace(targetRace.getNumber());
-			this.db.getEntityManager().refresh(targetRace);
+		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		if (race != null) {
+			race = this.regattaDAO.getRace(race.getNumber());
+			this.db.getEntityManager().refresh(race);
 		}
 
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
@@ -129,11 +128,11 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
 		Race sourceRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 
-		if (targetRace != null && sourceRace != null) {
-			this.regattaDAO.setRaceHeats(targetRace, sourceRace);
+		if (race != null && sourceRace != null) {
+			this.regattaDAO.setRaceHeats(race, sourceRace);
 			handleRefreshOnAction();
 		}
 	}
@@ -141,9 +140,8 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleDeleteOnAction() {
 		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		race = this.regattaDAO.getRace(race.getNumber());
-
 		if (race != null) {
+			race = this.regattaDAO.getRace(race.getNumber());
 			this.regattaDAO.cleanRaceHeats(race);
 			handleRefreshOnAction();
 		}
@@ -162,7 +160,6 @@ public class SetRaceController extends AbstractBaseController {
 			entries.forEach(entry -> {
 				entry.getResults();
 				entry.getRegistration().getClub().getAbbreviation();
-				entry.getRegistration();
 				entry.getFinalResult();
 			});
 			SortedList<HeatRegistration> sortedList = new SortedList<>(FXCollections.observableArrayList(entries));
@@ -250,7 +247,7 @@ public class SetRaceController extends AbstractBaseController {
 		return compEntriesTable;
 	}
 
-	private ObservableList<Race> getTargetRaces() {
+	private ObservableList<Race> getRaces() {
 		List<Race> races = this.regattaDAO.findRaces("2%");
 
 		// remove master races as they will not be set
