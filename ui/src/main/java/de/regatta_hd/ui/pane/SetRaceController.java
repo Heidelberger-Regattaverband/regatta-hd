@@ -8,7 +8,6 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
-import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
@@ -58,6 +57,7 @@ public class SetRaceController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.targetRaceCbo.setDisable(true);
 		updateControls();
 
 		this.srcRaceCbo.itemsProperty().bind(this.sourceOffersProp);
@@ -93,8 +93,7 @@ public class SetRaceController extends AbstractBaseController {
 		if (srcRace != null) {
 			TaskUtils.createAndRunTask(() -> {
 				Race race = this.regattaDAO.getRace(srcRace.getNumber());
-				List<Heat> heats = race.getHeats();
-				showRace(race, heats, this.sourceVBox, true);
+				showRace(race, this.sourceVBox, true);
 				return Void.TYPE;
 			});
 		}
@@ -103,8 +102,7 @@ public class SetRaceController extends AbstractBaseController {
 		if (targetRace != null) {
 			TaskUtils.createAndRunTask(() -> {
 				Race race = this.regattaDAO.getRace(targetRace.getNumber());
-				List<Heat> heats = race.getHeats();
-				showRace(race, heats, this.targetVBox, false);
+				showRace(race, this.targetVBox, false);
 				return Void.TYPE;
 			});
 		}
@@ -151,7 +149,7 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private void showRace(Race race, List<Heat> heats, VBox vbox, boolean withResult) {
+	private void showRace(Race race, VBox vbox, boolean withResult) {
 		Platform.runLater(() -> {
 			vbox.getChildren().clear();
 			Label title = new Label();
@@ -159,11 +157,11 @@ public class SetRaceController extends AbstractBaseController {
 			vbox.getChildren().add(title);
 		});
 
-		heats.forEach(heat -> {
+		race.getHeats().forEach(heat -> {
 			List<HeatRegistration> entries = heat.getEntries();
 			entries.forEach(entry -> {
 				entry.getResults();
-				entry.getRegistration().getClub().getAbbr();
+				entry.getRegistration().getClub().getAbbreviation();
 				entry.getRegistration();
 				entry.getFinalResult();
 			});
@@ -199,7 +197,7 @@ public class SetRaceController extends AbstractBaseController {
 		boatCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
-				String value = entry.getClub().getAbbr();
+				String value = entry.getClub().getAbbreviation();
 				if (entry.getBoatNumber() != null) {
 					value += " - Boot " + entry.getBoatNumber();
 				}

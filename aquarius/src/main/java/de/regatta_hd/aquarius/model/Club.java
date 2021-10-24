@@ -37,7 +37,7 @@ public class Club {
 	private Set<Athlet> athlets;
 
 	@Column(name = "Club_Abbr", length = 50)
-	private String abbr;
+	private String abbreviation;
 
 	@Column(name = "Club_City", length = 64)
 	private String city;
