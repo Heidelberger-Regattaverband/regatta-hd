@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
@@ -90,14 +91,22 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSourceOfferOnAction() {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getRace(srcRace.getNumber());
-			showRace(srcRace, this.sourceVBox, true);
+			TaskUtils.createAndRunTask(() -> {
+				Race race = this.regattaDAO.getRace(srcRace.getNumber());
+				List<Heat> heats = race.getHeats();
+				showRace(race, heats, this.sourceVBox, true);
+				return Void.TYPE;
+			});
 		}
 
-		Race race = this.targetRaceCbo.getSelectionModel().getSelectedItem();
-		if (race != null) {
-			race = this.regattaDAO.getRace(race.getNumber());
-			showRace(race, this.targetVBox, false);
+		Race targetRace = this.targetRaceCbo.getSelectionModel().getSelectedItem();
+		if (targetRace != null) {
+			TaskUtils.createAndRunTask(() -> {
+				Race race = this.regattaDAO.getRace(targetRace.getNumber());
+				List<Heat> heats = race.getHeats();
+				showRace(race, heats, this.targetVBox, false);
+				return Void.TYPE;
+			});
 		}
 
 		updateControls();
@@ -142,26 +151,33 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private void showRace(Race race, VBox vbox, boolean withResult) {
-		vbox.getChildren().clear();
+	private void showRace(Race race, List<Heat> heats, VBox vbox, boolean withResult) {
+		Platform.runLater(() -> {
+			vbox.getChildren().clear();
+			Label title = new Label();
+			title.setText(new RaceStringConverter().toString(race));
+			vbox.getChildren().add(title);
+		});
 
-		Label title = new Label();
-		title.setText(new RaceStringConverter().toString(race));
-		vbox.getChildren().add(title);
+		heats.forEach(heat -> {
+			List<HeatRegistration> entries = heat.getEntries();
+			entries.forEach(entry -> {
+				entry.getResults();
+				entry.getRegistration().getClub().getAbbr();
+				entry.getRegistration();
+				entry.getFinalResult();
+			});
+			SortedList<HeatRegistration> sortedList = new SortedList<>(FXCollections.observableArrayList(entries));
 
-		if (race != null) {
-			race.getHeats().forEach(heat -> {
+			Platform.runLater(() -> {
 				Label heatNrLabel = new Label(getText("SetRaceView.HeatNumberLabel.text", heat.getHeatNumber()));
-
 				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-				SortedList<HeatRegistration> sortedList = new SortedList<>(
-						FXCollections.observableArrayList(heat.getEntries()));
 				compEntriesTable.setItems(sortedList);
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
 				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
-		}
+		});
 	}
 
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
@@ -250,8 +266,8 @@ public class SetRaceController extends AbstractBaseController {
 
 		if (race != null) {
 			// get all races with same attributes
-			List<Race> srcRaces = this.regattaDAO.findRaces("1%", race.getBoatClass(),
-					race.getAgeClass(), race.isLightweight());
+			List<Race> srcRaces = this.regattaDAO.findRaces("1%", race.getBoatClass(), race.getAgeClass(),
+					race.isLightweight());
 
 			srcRaces = srcRaces.stream().filter(srcRace -> race.getId() != srcRace.getId()).toList();
 
