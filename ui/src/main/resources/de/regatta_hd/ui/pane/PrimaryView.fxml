@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml"
-  fx:controller="de.regatta_hd.ui.pane.PrimaryController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.PrimaryController">
   <top>
     <MenuBar fx:id="menuBar">
       <menus>
         <Menu text="%PrimaryView.Menu.Database.text">
           <items>
-            <MenuItem fx:id="databaseConnect" text="%PrimaryView.MenuItem.DatabaseConnect.text"
-              onAction="#handleDatabaseConnect" />
-            <MenuItem fx:id="databaseDisconnect" text="%PrimaryView.MenuItem.DatabaseDisconnect.text"
-              onAction="#handleDatabaseDisconnect" />
+            <MenuItem fx:id="databaseConnect" onAction="#handleDatabaseConnect" text="%PrimaryView.MenuItem.DatabaseConnect.text" />
+            <MenuItem fx:id="databaseDisconnect" onAction="#handleDatabaseDisconnect" text="%PrimaryView.MenuItem.DatabaseDisconnect.text" />
             <SeparatorMenuItem />
-            <MenuItem text="%PrimaryView.MenuItem.Exit.text" onAction="#handleExit" />
+            <MenuItem onAction="#handleExit" text="%PrimaryView.MenuItem.Exit.text" />
           </items>
         </Menu>
         <Menu text="%PrimaryView.Menu.Administration.text">
           <items>
-            <MenuItem fx:id="eventsMitm" text="%PrimaryView.MenuItem.Events.text" onAction="#handleEvents" />
-            <MenuItem fx:id="offersMitm" text="%PrimaryView.MenuItem.Offers.text" onAction="#handleOffers" />
-            <MenuItem fx:id="divisionsMitm" text="%PrimaryView.MenuItem.SetRace.text"
-              onAction="#handleSetRace" />
+            <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.MenuItem.Events.text" />
+            <MenuItem fx:id="offersMitm" onAction="#handleOffers" text="%PrimaryView.MenuItem.Offers.text" />
+            <MenuItem fx:id="divisionsMitm" onAction="#handleSetRace" text="%PrimaryView.MenuItem.SetRace.text" />
           </items>
         </Menu>
       </menus>

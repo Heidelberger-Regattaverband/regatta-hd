@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.pane;
+package de.regatta_hd.ui.util;
 
 import de.regatta_hd.aquarius.model.Race;
 import javafx.util.StringConverter;

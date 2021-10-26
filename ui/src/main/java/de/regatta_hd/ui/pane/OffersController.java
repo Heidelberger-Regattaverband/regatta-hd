@@ -13,6 +13,7 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
+import de.regatta_hd.ui.util.GroupModeStringConverter;
 import jakarta.persistence.EntityManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

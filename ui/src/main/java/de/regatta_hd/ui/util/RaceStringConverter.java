@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.pane;
+package de.regatta_hd.ui.util;
 
 import java.util.HashMap;
 import java.util.Map;
