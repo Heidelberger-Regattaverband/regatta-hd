@@ -8,21 +8,21 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.PrimaryController">
   <top>
-    <MenuBar fx:id="menuBar">
+    <MenuBar fx:id="mainMbar">
       <menus>
-        <Menu text="%PrimaryView.Menu.Database.text">
+        <Menu text="%PrimaryView.dbMenu.text">
           <items>
-            <MenuItem fx:id="databaseConnect" onAction="#handleDatabaseConnect" text="%PrimaryView.MenuItem.DatabaseConnect.text" />
-            <MenuItem fx:id="databaseDisconnect" onAction="#handleDatabaseDisconnect" text="%PrimaryView.MenuItem.DatabaseDisconnect.text" />
+            <MenuItem fx:id="dbConnectMitm" onAction="#handleDatabaseConnect" text="%PrimaryView.dbConnectMitm.text" />
+            <MenuItem fx:id="dbDisconnectMitm" onAction="#handleDatabaseDisconnect" text="%PrimaryView.dbDisconnectMitm.text" />
             <SeparatorMenuItem />
             <MenuItem onAction="#handleExit" text="%PrimaryView.MenuItem.Exit.text" />
           </items>
         </Menu>
-        <Menu text="%PrimaryView.Menu.Administration.text">
+        <Menu text="%PrimaryView.adminMenu.text">
           <items>
-            <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.MenuItem.Events.text" />
-            <MenuItem fx:id="offersMitm" onAction="#handleOffers" text="%PrimaryView.MenuItem.Offers.text" />
-            <MenuItem fx:id="divisionsMitm" onAction="#handleSetRace" text="%PrimaryView.MenuItem.SetRace.text" />
+            <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.regattasMitm.text" />
+            <MenuItem fx:id="offersMitm" onAction="#handleOffers" text="%PrimaryView.racesMitm.text" />
+            <MenuItem fx:id="divisionsMitm" onAction="#handleSetRace" text="%PrimaryView.setRaceMitm.text" />
           </items>
         </Menu>
       </menus>

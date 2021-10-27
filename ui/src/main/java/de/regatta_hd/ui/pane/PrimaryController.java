@@ -11,6 +11,7 @@ import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
+import de.regatta_hd.ui.util.TaskUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -26,10 +27,10 @@ public class PrimaryController extends AbstractBaseController {
 	private DBConfigStore dbCfgStore;
 
 	@FXML
-	private MenuItem databaseConnect;
+	private MenuItem dbConnectMitm;
 
 	@FXML
-	private MenuItem databaseDisconnect;
+	private MenuItem dbDisconnectMitm;
 
 	@FXML
 	private MenuItem eventsMitm;
@@ -41,7 +42,7 @@ public class PrimaryController extends AbstractBaseController {
 	private MenuItem divisionsMitm;
 
 	@FXML
-	private MenuBar menuBar;
+	private MenuBar mainMbar;
 
 	private Stage setRaceStage;
 
@@ -63,7 +64,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (!this.aquariusDb.isOpen()) {
 			DBConnectionDialog dialog;
 			try {
-				dialog = new DBConnectionDialog((Stage) this.menuBar.getScene().getWindow(), true, super.resources,
+				dialog = new DBConnectionDialog((Stage) this.mainMbar.getScene().getWindow(), true, super.resources,
 						this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
@@ -91,7 +92,7 @@ public class PrimaryController extends AbstractBaseController {
 	private void handleSetRace() {
 		if (this.setRaceStage == null) {
 			try {
-				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.MenuItem.SetRace.text"),
+				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"),
 						event -> this.setRaceStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -105,7 +106,7 @@ public class PrimaryController extends AbstractBaseController {
 	private void handleEvents() {
 		if (this.eventViewStage == null) {
 			try {
-				this.eventViewStage = newWindow("RegattasView.fxml", getText("PrimaryView.MenuItem.Events.text"),
+				this.eventViewStage = newWindow("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"),
 						event -> this.eventViewStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -119,7 +120,7 @@ public class PrimaryController extends AbstractBaseController {
 	private void handleOffers() {
 		if (this.offersViewStage == null) {
 			try {
-				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.MenuItem.Offers.text"),
+				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.racesMitm.text"),
 						event -> this.offersViewStage = null);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -135,10 +136,12 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	private void updateControls() {
-		this.databaseConnect.setDisable(this.aquariusDb.isOpen());
-		this.databaseDisconnect.setDisable(!this.aquariusDb.isOpen());
-		this.eventsMitm.setDisable(!this.aquariusDb.isOpen());
-		this.offersMitm.setDisable(!this.aquariusDb.isOpen());
-		this.divisionsMitm.setDisable(!this.aquariusDb.isOpen());
+		boolean isOpen = this.aquariusDb.isOpen();
+
+		this.dbConnectMitm.setDisable(isOpen);
+		this.dbDisconnectMitm.setDisable(!isOpen);
+		this.eventsMitm.setDisable(!isOpen);
+		this.offersMitm.setDisable(!isOpen);
+		this.divisionsMitm.setDisable(!isOpen);
 	}
 }

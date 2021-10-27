@@ -40,7 +40,7 @@ abstract class AbstractBaseController implements Initializable {
 
 		Stage stage = new Stage();
 		stage.setTitle(title);
-		stage.setScene(new Scene(parent, 800, 600));
+		stage.setScene(new Scene(parent, 1024, 768));
 		stage.show();
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, closeHandler::accept);
 
