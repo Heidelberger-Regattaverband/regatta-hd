@@ -1,6 +1,5 @@
 package de.regatta_hd.ui.pane;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
+import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import de.regatta_hd.ui.util.TaskUtils;
 import jakarta.persistence.EntityManager;
@@ -65,7 +65,7 @@ public class OffersController extends AbstractBaseController {
 
 		TaskUtils.createAndRunTask(() -> {
 			this.racesProp.setAll(this.regatta.getRaces());
-
+			FxUtils.autoResizeColumns(this.racesTbl);
 			disableButtons(false);
 			return Void.TYPE;
 		});
