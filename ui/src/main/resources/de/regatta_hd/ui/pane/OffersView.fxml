@@ -23,50 +23,60 @@
         <Button fx:id="setDistancesBtn" onAction="#setDistances" text="%OffersView.setDistances" />
         <Button fx:id="setMastersAgeClassesBtn" onAction="#setMastersAgeClasses" text="%OffersView.setMastersAgeClasses" />
     </ToolBar>
-    <TableView fx:id="racesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <TableView fx:id="racesTbl" items="${controller.racesObservableList}" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
           <Label text="%SetRaceView.loadDataLbl.text" />
       </placeholder>
       <columns>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.raceNumber">
+        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.raceNumberCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%OffersView.labelShort">
+        <TableColumn text="%OffersView.labelShortCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>shortLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%OffersView.labelLong">
+        <TableColumn text="%OffersView.labelLongCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>longLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%OffersView.distance">
+        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%OffersView.distanceCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>distance</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="groupModeCol" style="-fx-alignment: CENTER;" text="%OffersView.groupMode">
+        <TableColumn fx:id="groupModeCol" style="-fx-alignment: CENTER;" text="%OffersView.groupModeCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>groupMode</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.lightweight">
+        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.lightweightCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>lightweight</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+          <cellFactory>
+            <CheckBoxTableCellFactory />
+          </cellFactory>
+        </TableColumn>
+        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.setCol.text">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>set</property>
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>

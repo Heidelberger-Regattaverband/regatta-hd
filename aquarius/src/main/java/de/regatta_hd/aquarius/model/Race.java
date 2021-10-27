@@ -19,7 +19,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import lombok.Getter;
@@ -138,19 +137,18 @@ public class Race {
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "race")
 	private Set<ReportInfo> reportInfos;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne
 	@PrimaryKeyJoinColumn
 	private RaceExt extension;
 
 	// JavaFX properties
-	@Transient
-	private SimpleBooleanProperty lightweightProp;
-
 	public ObservableBooleanValue lightweightProperty() {
-		if (this.lightweightProp == null) {
-			this.lightweightProp = new SimpleBooleanProperty(this.lightweight);
-		}
-		return this.lightweightProp;
+		return new SimpleBooleanProperty(isLightweight());
+	}
+
+	public ObservableBooleanValue setProperty() {
+		boolean isSet = getExtension() != null && getExtension().isSet();
+		return new SimpleBooleanProperty(isSet);
 	}
 
 	public List<Heat> getHeatsOrderedByNumber() {

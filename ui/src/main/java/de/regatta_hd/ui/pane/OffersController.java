@@ -18,8 +18,8 @@ import de.regatta_hd.ui.util.GroupModeStringConverter;
 import de.regatta_hd.ui.util.TaskUtils;
 import jakarta.persistence.EntityManager;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -31,7 +31,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class OffersController extends AbstractBaseController {
 
-	private final SimpleListProperty<Race> racesProp = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private final ObservableList<Race> racesObservableList = FXCollections.observableArrayList();
 	@FXML
 	private TableView<Race> racesTbl;
 	@FXML
@@ -49,11 +49,14 @@ public class OffersController extends AbstractBaseController {
 	@Inject
 	private AquariusDB db;
 
+	// needs to be a public getter, otherwise items are not bound
+	public ObservableList<Race> getRacesObservableList() {
+		return this.racesObservableList;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-
-		this.racesTbl.itemsProperty().bind(this.racesProp);
 
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
@@ -64,7 +67,7 @@ public class OffersController extends AbstractBaseController {
 		disableButtons(true);
 
 		TaskUtils.createAndRunTask(() -> {
-			this.racesProp.setAll(this.regatta.getRaces());
+			this.racesObservableList.setAll(this.regatta.getRaces());
 			FxUtils.autoResizeColumns(this.racesTbl);
 			disableButtons(false);
 			return Void.TYPE;
@@ -74,7 +77,7 @@ public class OffersController extends AbstractBaseController {
 	@FXML
 	private void refresh() {
 		this.db.getEntityManager().clear();
-		this.racesProp.clear();
+		this.racesObservableList.clear();
 
 		loadRaces();
 	}
