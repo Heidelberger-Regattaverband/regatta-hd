@@ -1,5 +1,6 @@
 package de.regatta_hd.ui.pane;
 
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import de.regatta_hd.ui.util.GroupModeStringConverter;
 import de.regatta_hd.ui.util.TaskUtils;
 import jakarta.persistence.EntityManager;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,8 +30,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 public class OffersController extends AbstractBaseController {
+
+	private final SimpleListProperty<Race> racesProp = new SimpleListProperty<>(FXCollections.observableArrayList());
 	@FXML
-	private TableView<Race> offersTbl;
+	private TableView<Race> racesTbl;
 	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
 	@FXML
@@ -49,16 +53,30 @@ public class OffersController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.racesTbl.itemsProperty().bind(this.racesProp);
+
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
-		// add your data to the table here.
-		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getRaces()));
+		loadRaces();
+	}
+
+	private void loadRaces() {
+		disableButtons(true);
+
+		TaskUtils.createAndRunTask(() -> {
+			this.racesProp.setAll(this.regatta.getRaces());
+
+			disableButtons(false);
+			return Void.TYPE;
+		});
 	}
 
 	@FXML
 	private void refresh() {
 		this.db.getEntityManager().clear();
-		this.offersTbl.setItems(FXCollections.observableArrayList(this.regatta.getRaces()));
+		this.racesProp.clear();
+
+		loadRaces();
 	}
 
 	@FXML
@@ -133,15 +151,16 @@ public class OffersController extends AbstractBaseController {
 		});
 	}
 
+	private void disableButtons(boolean disabled) {
+		this.refreshBtn.setDisable(disabled);
+		this.setDistancesBtn.setDisable(disabled);
+		this.setMastersAgeClassesBtn.setDisable(disabled);
+	}
+
 	private static void showDialog(String msg) {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
 		alert.setHeaderText(msg);
 		alert.showAndWait();
 	}
 
-	private void disableButtons(boolean disabled) {
-		this.refreshBtn.setDisable(disabled);
-		this.setDistancesBtn.setDisable(disabled);
-		this.setMastersAgeClassesBtn.setDisable(disabled);
-	}
 }

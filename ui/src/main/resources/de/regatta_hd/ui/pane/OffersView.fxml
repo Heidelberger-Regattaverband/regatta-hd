@@ -3,6 +3,7 @@
 <?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="de.regatta_hd.ui.pane.OffersController">
+<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.OffersController">
   <padding>
     <Insets bottom="10" left="10" right="10" top="10" />
   </padding>
@@ -22,7 +23,10 @@
         <Button fx:id="setDistancesBtn" onAction="#setDistances" text="%OffersView.setDistances" />
         <Button fx:id="setMastersAgeClassesBtn" onAction="#setMastersAgeClasses" text="%OffersView.setMastersAgeClasses" />
     </ToolBar>
-    <TableView fx:id="offersTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <TableView fx:id="racesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <placeholder>
+          <Label text="%SetRaceView.loadDataLbl.text" />
+      </placeholder>
       <columns>
         <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.raceNumber">
           <cellValueFactory>
