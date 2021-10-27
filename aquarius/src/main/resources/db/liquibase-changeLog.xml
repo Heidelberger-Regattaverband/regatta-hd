@@ -4,6 +4,7 @@
   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
   <changeSet author="markus@ofterdinger.de" id="1">
     <preConditions onFail="MARK_RAN">
       <not>
@@ -29,6 +30,24 @@
       <column header="distance" name="distance" type="NUMERIC" />
       <column header="comment" type="SKIP" />
     </loadUpdateData>
+  </changeSet>
+
+  <changeSet author="markus@ofterdinger.de" id="3">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="OfferExt" />
+      </not>
+    </preConditions>
+    <createTable tableName="OfferExt">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OfferExt"
+          referencedTableName="Offer" referencedColumnNames="Offer_ID"
+          foreignKeyName="FK_Offer" />
+      </column>
+      <column name="isSet" type="BOOLEAN">
+        <constraints nullable="true" />
+      </column>
+    </createTable>
   </changeSet>
 
 </databaseChangeLog>

@@ -4,23 +4,29 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * An extension to the {@link AgeClass}.
+ * An extension to the {@link Race}.
  */
 @Entity
-@Table(schema = "dbo", name = "AgeClassExt")
+@Table(schema = "dbo", name = "OfferExt")
 //lombok
 @Getter
 @Setter
-public class AgeClassExt {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RaceExt {
 
 	@Id
 	@Column(name = "id")
 	private int id;
 
-	@Column(name = "distance")
-	private short distance;
+	@Column(name = "isSet")
+	private boolean set;
 }

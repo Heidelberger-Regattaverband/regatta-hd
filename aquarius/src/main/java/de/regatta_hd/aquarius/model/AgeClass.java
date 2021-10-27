@@ -79,10 +79,10 @@ public class AgeClass {
 	private String suffix;
 
 	@OneToMany(targetEntity = Race.class, mappedBy = "ageClass")
-	@OrderBy("raceNumber")
+	@OrderBy("number")
 	private List<Race> races;
 
-	@OneToOne(mappedBy = "ageClass")
+	@OneToOne
 	@PrimaryKeyJoinColumn
 	private AgeClassExt extension;
 
@@ -93,9 +93,9 @@ public class AgeClass {
 	 */
 	public boolean isMasters() {
 		boolean isMasters = false;
-		String abbr = getAbbreviation();
-		if (abbr != null) {
-			isMasters = abbr.equals("MM") || abbr.equals("MW") || abbr.equals("MM/W");
+		String abbrevation = getAbbreviation();
+		if (abbrevation != null) {
+			isMasters = abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W");
 		}
 		return isMasters;
 	}
