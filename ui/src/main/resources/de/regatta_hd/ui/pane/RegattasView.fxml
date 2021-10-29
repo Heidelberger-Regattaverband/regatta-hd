@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.control.DateTableCellFactory?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.Object?>
-<?import de.regatta_hd.ui.control.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
-  fx:controller="de.regatta_hd.ui.pane.RegattasController">
+<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="de.regatta_hd.ui.pane.RegattasController">
   <padding>
-    <Insets top="10" right="10" bottom="10" left="10" />
+    <Insets bottom="10" left="10" right="10" top="10" />
   </padding>
 
   <children>
-    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
       <columns>
-        <TableColumn text="%RegattasView.title">
+        <TableColumn text="%RegattasView.titleCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>title</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.begin">
+        <TableColumn text="%RegattasView.beginCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>startDate</property>
@@ -36,7 +36,7 @@
             <DateTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.end">
+        <TableColumn text="%RegattasView.endCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>endDate</property>
@@ -53,13 +53,16 @@
       <contextMenu>
         <ContextMenu>
           <items>
-            <MenuItem text="Auswählen" onAction="#selectRegatta" />
+            <MenuItem onAction="#selectRegatta" text="Auswählen" />
           </items>
         </ContextMenu>
       </contextMenu>
     </TableView>
   </children>
   <columnConstraints>
-    <ColumnConstraints hgrow="ALWAYS" fillWidth="true" />
+    <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
 </GridPane>

@@ -185,15 +185,15 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void setRaceHeats(Race targetOffer, Race sourceOffer) {
+	public void setRaceHeats(Race race, Race sourceOffer) {
 
-		List<Registration> targetRegAll = getRegistrationsOrdered(targetOffer, sourceOffer);
+		List<Registration> targetRegAll = getRegistrationsOrdered(race, sourceOffer);
 
 		int numRegistrations = targetRegAll.size();
-		short laneCount = targetOffer.getRaceMode().getLaneCount();
+		short laneCount = race.getRaceMode().getLaneCount();
 
 		// get all planed heats ordered by the heat number
-		List<Heat> targetHeats = targetOffer.getHeatsOrderedByNumber();
+		List<Heat> targetHeats = race.getHeatsOrderedByNumber();
 
 		// get number of heats
 		int heatCount = targetHeats.size();
@@ -222,6 +222,12 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				entityManager.merge(heat);
 			}
 		}
+
+		// mark race as set
+		entityManager.persist(race.setRaceIsSet());
+		entityManager.flush();
+
+		entityManager.merge(race);
 
 		entityManager.getTransaction().commit();
 
@@ -302,6 +308,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			heat.getEntries().forEach(entityManager::remove);
 			heat.getEntries().clear();
 		});
+
+		// mark race as unset
+		race.setRaceUnset().ifPresent(entityManager::persist);
+
+		entityManager.merge(race);
 
 		entityManager.getTransaction().commit();
 	}
