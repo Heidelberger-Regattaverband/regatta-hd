@@ -46,6 +46,7 @@ public interface AquariusDB {
 	/**
 	 * Begins a new DB transaction or re-uses an existing one.
 	 * @return the transaction
+	 * @throws IllegalStateException if the entity manager has been closed
 	 */
 	EntityTransaction beginTransaction();
 

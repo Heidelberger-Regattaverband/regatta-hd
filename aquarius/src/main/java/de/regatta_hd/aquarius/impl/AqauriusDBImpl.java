@@ -63,6 +63,16 @@ public class AqauriusDBImpl implements AquariusDB {
 				connectionData.getPassword());
 	}
 
+
+	@Override
+	public synchronized EntityTransaction beginTransaction() {
+		EntityTransaction entityTransaction = getEntityManager().getTransaction();
+		if (!entityTransaction.isActive()) {
+			entityTransaction.begin();
+		}
+		return entityTransaction;
+	}
+
 	private void checkIsOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
@@ -101,14 +111,5 @@ public class AqauriusDBImpl implements AquariusDB {
 				}
 			});
 		}
-	}
-
-	@Override
-	public EntityTransaction beginTransaction() {
-		EntityTransaction entityTransaction = getEntityManager().getTransaction();
-		if (!entityTransaction.isActive()) {
-			entityTransaction.begin();
-		}
-		return entityTransaction;
 	}
 }
