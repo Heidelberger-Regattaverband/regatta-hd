@@ -107,19 +107,15 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			return races;
-		}, event -> {
-			List<Race> races = (List<Race>) event.getSource().getValue();
-			Platform.runLater(() -> {
-				if (races.isEmpty()) {
-					showDialog("Keine Rennen geändert.");
-				} else {
-					refresh();
-					showDialog(String.format("%d Rennen geändert.", races.size()));
-				}
-				disableButtons(false);
-			});
-
-		});
+		}, races -> Platform.runLater(() -> {
+			if (races.isEmpty()) {
+				showDialog("Keine Rennen geändert.");
+			} else {
+				refresh();
+				showDialog(String.format("%d Rennen geändert.", races.size()));
+			}
+			disableButtons(false);
+		}));
 	}
 
 	@FXML
@@ -142,18 +138,15 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			return races;
-		}, event -> {
-			List<Race> races = (List<Race>) event.getSource().getValue();
-			Platform.runLater(() -> {
-				if (races.isEmpty()) {
-					showDialog("Keine Masters Rennen geändert.");
-				} else {
-					refresh();
-					showDialog(String.format("%d Masters Rennen geändert.", races.size()));
-				}
-				disableButtons(false);
-			});
-		});
+		}, races -> Platform.runLater(() -> {
+			if (races.isEmpty()) {
+				showDialog("Keine Masters Rennen geändert.");
+			} else {
+				refresh();
+				showDialog(String.format("%d Masters Rennen geändert.", races.size()));
+			}
+			disableButtons(false);
+		}));
 	}
 
 	private void disableButtons(boolean disabled) {
