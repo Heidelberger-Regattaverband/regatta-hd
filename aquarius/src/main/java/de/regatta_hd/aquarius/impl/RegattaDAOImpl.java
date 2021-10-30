@@ -199,7 +199,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		int heatCount = targetHeats.size();
 
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
-		entityManager.getTransaction().begin();
 
 		for (short heatNumber = 0; heatNumber < heatCount; heatNumber++) {
 			Heat heat = targetHeats.get(heatNumber);

@@ -14,7 +14,7 @@ import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
 import de.regatta_hd.ui.util.RaceStringConverter;
-import de.regatta_hd.ui.util.TaskUtils;
+import de.regatta_hd.ui.util.DBTask;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -51,9 +51,10 @@ public class SetRaceController extends AbstractBaseController {
 
 	@Inject
 	private RegattaDAO regattaDAO;
-
 	@Inject
 	private AquariusDB db;
+	@Inject
+	private DBTask dbTask;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -64,7 +65,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.srcRaceCbo.itemsProperty().bind(this.srcRaceProp);
 
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.run(() -> {
 			this.raceCbo.setInitialItems(getRaces());
 			this.raceCbo.setDisable(false);
 			updateControls();
@@ -74,7 +75,7 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleTargetOfferOnAction() {
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.run(() -> {
 			ObservableList<Race> srcRaces = getSourceRaces();
 
 			Platform.runLater(() -> {
@@ -92,7 +93,7 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSourceOfferOnAction() {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			TaskUtils.createAndRunTask(() -> {
+			this.dbTask.run(() -> {
 				Race race = this.regattaDAO.getRace(srcRace.getNumber());
 				showRace(race, this.sourceVBox, true);
 				return Void.TYPE;
@@ -101,7 +102,7 @@ public class SetRaceController extends AbstractBaseController {
 
 		Race targetRace = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (targetRace != null) {
-			TaskUtils.createAndRunTask(() -> {
+			this.dbTask.run(() -> {
 				Race race = this.regattaDAO.getRace(targetRace.getNumber());
 				showRace(race, this.targetVBox, false);
 				return Void.TYPE;
@@ -134,7 +135,10 @@ public class SetRaceController extends AbstractBaseController {
 		Race sourceRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 
 		if (race != null && sourceRace != null) {
-			this.regattaDAO.setRaceHeats(race, sourceRace);
+			this.dbTask.runInTransaction(() -> {
+				this.regattaDAO.setRaceHeats(race, sourceRace);
+				return Void.TYPE;
+			});
 			handleRefreshOnAction();
 		}
 	}

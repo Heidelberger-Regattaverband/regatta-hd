@@ -15,7 +15,7 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
-import de.regatta_hd.ui.util.TaskUtils;
+import de.regatta_hd.ui.util.DBTask;
 import jakarta.persistence.EntityManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -49,6 +49,9 @@ public class OffersController extends AbstractBaseController {
 	@Inject
 	private AquariusDB db;
 
+	@Inject
+	private DBTask dbTask;
+
 	// needs to be a public getter, otherwise items are not bound
 	public ObservableList<Race> getRacesObservableList() {
 		return this.racesObservableList;
@@ -66,7 +69,7 @@ public class OffersController extends AbstractBaseController {
 	private void loadRaces() {
 		disableButtons(true);
 
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.run(() -> {
 			this.racesObservableList.setAll(this.regatta.getRaces());
 			FxUtils.autoResizeColumns(this.racesTbl);
 			disableButtons(false);
@@ -86,11 +89,10 @@ public class OffersController extends AbstractBaseController {
 	private void setDistances() {
 		disableButtons(true);
 
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.runInTransaction (() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
-			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClassExt ageClassExt = race.getAgeClass().getExtension();
@@ -103,7 +105,6 @@ public class OffersController extends AbstractBaseController {
 					}
 				}
 			});
-
 			entityManager.getTransaction().commit();
 
 			Platform.runLater(() -> {
@@ -124,11 +125,10 @@ public class OffersController extends AbstractBaseController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.runInTransaction(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
-			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClass ageClass = race.getAgeClass();
