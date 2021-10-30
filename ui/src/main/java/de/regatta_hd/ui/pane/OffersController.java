@@ -13,9 +13,9 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
-import de.regatta_hd.ui.util.DBTask;
 import jakarta.persistence.EntityManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -89,10 +89,11 @@ public class OffersController extends AbstractBaseController {
 	private void setDistances() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction (() -> {
+		this.dbTask.run(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
+			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClassExt ageClassExt = race.getAgeClass().getExtension();
@@ -125,10 +126,11 @@ public class OffersController extends AbstractBaseController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(() -> {
+		this.dbTask.run(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
+			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClass ageClass = race.getAgeClass();

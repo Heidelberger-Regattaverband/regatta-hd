@@ -20,7 +20,7 @@ public class DBTask {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
 	// executes database operations concurrent to JavaFX operations.
-	private ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
+	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
 
 	@Inject
 	private AquariusDB db;
@@ -41,12 +41,14 @@ public class DBTask {
 				EntityTransaction transaction = null;
 
 				if (inTransaction) {
-					transaction = DBTask.this.db.beginTransaction();
+					transaction = DBTask.this.db.getEntityManager().getTransaction();
+					transaction.begin();
 				}
 
 				V result = callable.call();
 
 				if (transaction != null && transaction.isActive()) {
+					DBTask.this.db.getEntityManager().flush();
 					transaction.commit();
 				}
 
@@ -62,7 +64,7 @@ public class DBTask {
 	}
 
 	public <V> Task<V> runTask(Task<V> task) {
-		this.databaseExecutor.submit(task);
+		databaseExecutor.submit(task);
 		return task;
 	}
 
