@@ -89,11 +89,10 @@ public class OffersController extends AbstractBaseController {
 	private void setDistances() {
 		disableButtons(true);
 
-		this.dbTask.run(() -> {
+		this.dbTask.runInTransaction(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
-			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClassExt ageClassExt = race.getAgeClass().getExtension();
@@ -126,11 +125,10 @@ public class OffersController extends AbstractBaseController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		this.dbTask.run(() -> {
+		this.dbTask.runInTransaction(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
-			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClass ageClass = race.getAgeClass();
