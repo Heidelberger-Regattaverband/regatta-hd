@@ -29,8 +29,8 @@ public class DBTask {
 		return runTask(createTask(callable, false, null));
 	}
 
-	public <V> Task<V> runInTransaction(Callable<V> callable) {
-		return runTask(createTask(callable, true, null));
+	public <V> Task<V> runInTransaction(Callable<V> callable, EventHandler<WorkerStateEvent> onSucceededHandler) {
+		return runTask(createTask(callable, true, onSucceededHandler));
 	}
 
 	private <V> Task<V> createTask(Callable<V> callable, boolean inTransaction,
@@ -38,17 +38,17 @@ public class DBTask {
 		Task<V> task = new Task<>() {
 			@Override
 			protected V call() throws Exception {
-				EntityTransaction transaction = null;
+				EntityTransaction transaction = inTransaction ? DBTask.this.db.getEntityManager().getTransaction()
+						: null;
 
-				if (inTransaction) {
-					transaction = DBTask.this.db.getEntityManager().getTransaction();
-					if (!transaction.isActive()) {
-						transaction.begin();
-					}
+				// begin transaction if required
+				if (transaction != null && !transaction.isActive()) {
+					transaction.begin();
 				}
 
 				V result = callable.call();
 
+				// if an active transaction exists it is commited
 				if (transaction != null && transaction.isActive()) {
 					transaction.commit();
 				}

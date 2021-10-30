@@ -105,8 +105,10 @@ public class OffersController extends AbstractBaseController {
 					}
 				}
 			});
-			entityManager.getTransaction().commit();
 
+			return races;
+		}, event -> {
+			List<Race> races = (List<Race>) event.getSource().getValue();
 			Platform.runLater(() -> {
 				if (races.isEmpty()) {
 					showDialog("Keine Rennen geändert.");
@@ -117,7 +119,6 @@ public class OffersController extends AbstractBaseController {
 				disableButtons(false);
 			});
 
-			return races;
 		});
 	}
 
@@ -139,8 +140,10 @@ public class OffersController extends AbstractBaseController {
 					races.add(race);
 				}
 			});
-			entityManager.getTransaction().commit();
 
+			return races;
+		}, event -> {
+			List<Race> races = (List<Race>) event.getSource().getValue();
 			Platform.runLater(() -> {
 				if (races.isEmpty()) {
 					showDialog("Keine Masters Rennen geändert.");
@@ -150,7 +153,6 @@ public class OffersController extends AbstractBaseController {
 				}
 				disableButtons(false);
 			});
-			return races;
 		});
 	}
 
@@ -165,5 +167,4 @@ public class OffersController extends AbstractBaseController {
 		alert.setHeaderText(msg);
 		alert.showAndWait();
 	}
-
 }

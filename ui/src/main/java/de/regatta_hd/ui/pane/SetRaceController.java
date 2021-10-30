@@ -138,7 +138,7 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				this.regattaDAO.setRaceHeats(race, sourceRace);
 				return Void.TYPE;
-			});
+			}, null);
 			handleRefreshOnAction();
 		}
 	}
