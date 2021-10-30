@@ -42,13 +42,14 @@ public class DBTask {
 
 				if (inTransaction) {
 					transaction = DBTask.this.db.getEntityManager().getTransaction();
-					transaction.begin();
+					if (!transaction.isActive()) {
+						transaction.begin();
+					}
 				}
 
 				V result = callable.call();
 
 				if (transaction != null && transaction.isActive()) {
-					DBTask.this.db.getEntityManager().flush();
 					transaction.commit();
 				}
 
