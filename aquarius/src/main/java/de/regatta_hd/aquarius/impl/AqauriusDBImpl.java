@@ -92,21 +92,11 @@ public class AqauriusDBImpl implements AquariusDB {
 	private void open(String hostName, String dbName, String userName, String password) {
 		close();
 
-		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;database=%s",
-				requireNonNull(hostName, "hostName must not be null"),
-				requireNonNull(dbName, "dbName must not be null"));
-		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
-		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
-
+		Map<String, String> props = getProperties(hostName, dbName, userName, password);
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
 
 		if (this.entityManager.isOpen()) {
-			// store current thread to ensure further DB access is done in same thread
-			this.sessionThread = Thread.currentThread();
-
 			Session session = this.entityManager.unwrap(Session.class);
 			session.doWork(connection -> {
 				try {
@@ -115,10 +105,25 @@ public class AqauriusDBImpl implements AquariusDB {
 					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
 							new ClassLoaderResourceAccessor(), database);
 					liquibase.update(new Contexts(), new LabelExpression());
+
+					// store current thread to ensure further DB access is done in same thread
+					this.sessionThread = Thread.currentThread();
 				} catch (LiquibaseException e) {
+					this.entityManager = null;
 					throw new SQLException(e);
 				}
 			});
 		}
+	}
+
+	private static Map<String, String> getProperties(String hostName, String dbName, String userName, String password) {
+		Map<String, String> props = new HashMap<>();
+		String url = String.format("jdbc:sqlserver://%s;database=%s",
+				requireNonNull(hostName, "hostName must not be null"),
+				requireNonNull(dbName, "dbName must not be null"));
+		props.put("javax.persistence.jdbc.url", url);
+		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
+		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
+		return props;
 	}
 }
