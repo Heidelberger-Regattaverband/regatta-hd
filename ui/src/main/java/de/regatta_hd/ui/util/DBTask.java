@@ -25,8 +25,24 @@ public class DBTask {
 	@Inject
 	private AquariusDB db;
 
+	/**
+	 * Runs the given {@link Callable} in a DB task.
+	 *
+	 * @param callable the {@link Callable} to run
+	 * @return the {@link Task} executing the given {@link Callable}
+	 */
 	public <V> Task<V> run(Callable<V> callable) {
 		return runTask(createTask(callable, false, null));
+	}
+
+	/**
+	 * Runs the given {@link Callable} in a DB task.
+	 *
+	 * @param callable the {@link Callable} to run
+	 * @return the {@link Task} executing the given {@link Callable}
+	 */
+	public <V> Task<V> run(Callable<V> callable, Consumer<V> onSucceededHandler) {
+		return runTask(createTask(callable, false, onSucceededHandler));
 	}
 
 	public <V> Task<V> runInTransaction(Callable<V> callable, Consumer<V> onSucceededHandler) {
@@ -47,7 +63,7 @@ public class DBTask {
 
 				V result = callable.call();
 
-				// if an active transaction exists it is commited
+				// if an active transaction exists it is committed
 				if (transaction != null && transaction.isActive()) {
 					transaction.commit();
 				}
@@ -58,6 +74,7 @@ public class DBTask {
 
 		if (onSucceededHandler != null) {
 			task.setOnSucceeded(event -> {
+				@SuppressWarnings("unchecked")
 				// get result from worker
 				V result = (V) event.getSource().getValue();
 
@@ -70,7 +87,7 @@ public class DBTask {
 		return task;
 	}
 
-	public <V> Task<V> runTask(Task<V> task) {
+	private static <V> Task<V> runTask(Task<V> task) {
 		databaseExecutor.submit(task);
 		return task;
 	}

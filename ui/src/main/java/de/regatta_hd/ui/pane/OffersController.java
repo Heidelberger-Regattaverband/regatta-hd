@@ -20,10 +20,7 @@ import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -68,11 +65,10 @@ public class OffersController extends AbstractBaseController {
 	private void loadRaces() {
 		disableButtons(true);
 
-		this.dbTask.run(() -> {
-			this.racesObservableList.setAll(this.regatta.getRaces());
+		this.dbTask.run(this.regatta::getRaces, races -> {
+			this.racesObservableList.setAll(races);
 			FxUtils.autoResizeColumns(this.racesTbl);
 			disableButtons(false);
-			return Void.TYPE;
 		});
 	}
 
@@ -108,10 +104,10 @@ public class OffersController extends AbstractBaseController {
 			return races;
 		}, races -> {
 			if (races.isEmpty()) {
-				showDialog("Keine Rennen geändert.");
+				FxUtils.showInfoDialog("Keine Rennen geändert.");
 			} else {
 				refresh();
-				showDialog(String.format("%d Rennen geändert.", races.size()));
+				FxUtils.showInfoDialog(String.format("%d Rennen geändert.", races.size()));
 			}
 			disableButtons(false);
 		});
@@ -139,10 +135,10 @@ public class OffersController extends AbstractBaseController {
 			return races;
 		}, races -> {
 			if (races.isEmpty()) {
-				showDialog("Keine Masters Rennen geändert.");
+				FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
 			} else {
 				refresh();
-				showDialog(String.format("%d Masters Rennen geändert.", races.size()));
+				FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", races.size()));
 			}
 			disableButtons(false);
 		});
@@ -154,9 +150,4 @@ public class OffersController extends AbstractBaseController {
 		this.setMastersAgeClassesBtn.setDisable(disabled);
 	}
 
-	private static void showDialog(String msg) {
-		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
-		alert.setHeaderText(msg);
-		alert.showAndWait();
-	}
 }
