@@ -15,14 +15,13 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
-import de.regatta_hd.ui.util.RaceStringConverter;
 import de.regatta_hd.ui.util.DBTask;
+import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -67,7 +66,12 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.srcRaceCbo.itemsProperty().bind(this.srcRaceProp);
 
-		this.dbTask.run(this::getRaces, races -> {
+		this.dbTask.run(()-> {
+			List<Race> races = this.regattaDAO.findRaces("2%");
+			// remove master races as they will not be set
+			List<Race> filteredRaces = races.stream().filter(race -> !race.getAgeClass().isMasters()).toList();
+			return FXCollections.observableArrayList(filteredRaces);
+		}, races -> {
 			this.raceCbo.setInitialItems(races);
 			this.raceCbo.setDisable(false);
 			updateControls();
@@ -185,15 +189,6 @@ public class SetRaceController extends AbstractBaseController {
 				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
 		});
-	}
-
-	private ObservableList<Race> getRaces() {
-		List<Race> races = this.regattaDAO.findRaces("2%");
-
-		// remove master races as they will not be set
-		List<Race> filteredRaces = races.stream().filter(race -> !race.getAgeClass().isMasters()).toList();
-
-		return FXCollections.observableArrayList(filteredRaces);
 	}
 
 	// JavaFX stuff
