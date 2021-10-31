@@ -74,7 +74,10 @@ public class OffersController extends AbstractBaseController {
 
 	@FXML
 	private void refresh() {
-		this.db.getEntityManager().clear();
+		this.dbTask.run(() ->{
+			this.db.getEntityManager().clear();
+			return Void.TYPE;
+		});
 		this.racesObservableList.clear();
 
 		loadRaces();

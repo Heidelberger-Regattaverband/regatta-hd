@@ -148,9 +148,11 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleDeleteOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
-			race = this.regattaDAO.getRace(race.getNumber());
-			this.regattaDAO.cleanRaceHeats(race);
-			showRace();
+			this.dbTask.runInTransaction(() -> {
+				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
+				this.regattaDAO.cleanRaceHeats(raceTmp);
+				return Void.TYPE;
+			}, result -> showRace());
 		}
 	}
 

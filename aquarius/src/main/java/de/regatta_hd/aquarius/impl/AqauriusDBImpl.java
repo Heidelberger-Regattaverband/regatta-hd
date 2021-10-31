@@ -31,11 +31,14 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private EntityManager entityManager;
 
+	private Thread sessionThread;
+
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
 			this.entityManager.close();
 			this.entityManager = null;
+			this.sessionThread = null;
 		}
 	}
 
@@ -77,6 +80,9 @@ public class AqauriusDBImpl implements AquariusDB {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
 		}
+		if (Thread.currentThread() != this.sessionThread) {
+			throw new IllegalThreadStateException("Not DB session thread.") ;
+		}
 	}
 
 	private boolean isOpenImpl() {
@@ -98,6 +104,9 @@ public class AqauriusDBImpl implements AquariusDB {
 		this.entityManager = factory.createEntityManager();
 
 		if (this.entityManager.isOpen()) {
+			// store current thread to ensure further DB access is done in same thread
+			this.sessionThread = Thread.currentThread();
+
 			Session session = this.entityManager.unwrap(Session.class);
 			session.doWork(connection -> {
 				try {

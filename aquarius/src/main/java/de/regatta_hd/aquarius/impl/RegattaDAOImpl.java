@@ -301,7 +301,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	public void cleanRaceHeats(Race race) {
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
-		entityManager.getTransaction().begin();
 
 		race.getHeats().forEach(heat -> {
 			heat.getEntries().forEach(entityManager::remove);
@@ -312,7 +311,5 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		race.setRaceUnset().ifPresent(entityManager::persist);
 
 		entityManager.merge(race);
-
-		entityManager.getTransaction().commit();
 	}
 }
