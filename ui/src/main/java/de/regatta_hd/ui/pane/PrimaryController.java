@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 
@@ -19,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 public class PrimaryController extends AbstractBaseController {
+	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
 	@Inject
 	private AquariusDB aquariusDb;
@@ -79,7 +82,7 @@ public class PrimaryController extends AbstractBaseController {
 					});
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
 		updateControls();
