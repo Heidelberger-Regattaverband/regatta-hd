@@ -13,18 +13,14 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
-import de.regatta_hd.ui.util.TaskUtils;
 import jakarta.persistence.EntityManager;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -49,6 +45,9 @@ public class OffersController extends AbstractBaseController {
 	@Inject
 	private AquariusDB db;
 
+	@Inject
+	private DBTask dbTask;
+
 	// needs to be a public getter, otherwise items are not bound
 	public ObservableList<Race> getRacesObservableList() {
 		return this.racesObservableList;
@@ -66,31 +65,32 @@ public class OffersController extends AbstractBaseController {
 	private void loadRaces() {
 		disableButtons(true);
 
-		TaskUtils.createAndRunTask(() -> {
-			this.racesObservableList.setAll(this.regatta.getRaces());
+		this.dbTask.run(this.regatta::getRaces, races -> {
+			this.racesObservableList.setAll(races);
 			FxUtils.autoResizeColumns(this.racesTbl);
 			disableButtons(false);
-			return Void.TYPE;
 		});
 	}
 
 	@FXML
 	private void refresh() {
-		this.db.getEntityManager().clear();
-		this.racesObservableList.clear();
-
-		loadRaces();
+		this.dbTask.run(() -> {
+			this.db.getEntityManager().clear();
+			return null;
+		}, result -> {
+			this.racesObservableList.clear();
+			loadRaces();
+		});
 	}
 
 	@FXML
 	private void setDistances() {
 		disableButtons(true);
 
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.runInTransaction(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
-			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClassExt ageClassExt = race.getAgeClass().getExtension();
@@ -104,19 +104,15 @@ public class OffersController extends AbstractBaseController {
 				}
 			});
 
-			entityManager.getTransaction().commit();
-
-			Platform.runLater(() -> {
-				if (races.isEmpty()) {
-					showDialog("Keine Rennen geändert.");
-				} else {
-					refresh();
-					showDialog(String.format("%d Rennen geändert.", races.size()));
-				}
-				disableButtons(false);
-			});
-
 			return races;
+		}, races -> {
+			if (races.isEmpty()) {
+				FxUtils.showInfoDialog("Keine Rennen geändert.");
+			} else {
+				refresh();
+				FxUtils.showInfoDialog(String.format("%d Rennen geändert.", races.size()));
+			}
+			disableButtons(false);
 		});
 	}
 
@@ -124,11 +120,10 @@ public class OffersController extends AbstractBaseController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		TaskUtils.createAndRunTask(() -> {
+		this.dbTask.runInTransaction(() -> {
 			List<Race> races = new ArrayList<>();
 
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
-			entityManager.getTransaction().begin();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
 				AgeClass ageClass = race.getAgeClass();
@@ -139,18 +134,16 @@ public class OffersController extends AbstractBaseController {
 					races.add(race);
 				}
 			});
-			entityManager.getTransaction().commit();
 
-			Platform.runLater(() -> {
-				if (races.isEmpty()) {
-					showDialog("Keine Masters Rennen geändert.");
-				} else {
-					refresh();
-					showDialog(String.format("%d Masters Rennen geändert.", races.size()));
-				}
-				disableButtons(false);
-			});
 			return races;
+		}, races -> {
+			if (races.isEmpty()) {
+				FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
+			} else {
+				refresh();
+				FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", races.size()));
+			}
+			disableButtons(false);
 		});
 	}
 
@@ -158,12 +151,6 @@ public class OffersController extends AbstractBaseController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
-	}
-
-	private static void showDialog(String msg) {
-		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
-		alert.setHeaderText(msg);
-		alert.showAndWait();
 	}
 
 }

@@ -14,6 +14,7 @@ import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import liquibase.Contexts;
@@ -30,11 +31,14 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private EntityManager entityManager;
 
+	private Thread sessionThread;
+
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
 			this.entityManager.close();
 			this.entityManager = null;
+			this.sessionThread = null;
 		}
 	}
 
@@ -62,9 +66,22 @@ public class AqauriusDBImpl implements AquariusDB {
 				connectionData.getPassword());
 	}
 
+
+	@Override
+	public synchronized EntityTransaction beginTransaction() {
+		EntityTransaction entityTransaction = getEntityManager().getTransaction();
+		if (!entityTransaction.isActive()) {
+			entityTransaction.begin();
+		}
+		return entityTransaction;
+	}
+
 	private void checkIsOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
+		}
+		if (Thread.currentThread() != this.sessionThread) {
+			throw new IllegalThreadStateException("Not DB session thread.") ;
 		}
 	}
 
@@ -75,14 +92,7 @@ public class AqauriusDBImpl implements AquariusDB {
 	private void open(String hostName, String dbName, String userName, String password) {
 		close();
 
-		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;database=%s",
-				requireNonNull(hostName, "hostName must not be null"),
-				requireNonNull(dbName, "dbName must not be null"));
-		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
-		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
-
+		Map<String, String> props = getProperties(hostName, dbName, userName, password);
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
 
@@ -95,10 +105,25 @@ public class AqauriusDBImpl implements AquariusDB {
 					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
 							new ClassLoaderResourceAccessor(), database);
 					liquibase.update(new Contexts(), new LabelExpression());
+
+					// store current thread to ensure further DB access is done in same thread
+					this.sessionThread = Thread.currentThread();
 				} catch (LiquibaseException e) {
+					this.entityManager = null;
 					throw new SQLException(e);
 				}
 			});
 		}
+	}
+
+	private static Map<String, String> getProperties(String hostName, String dbName, String userName, String password) {
+		Map<String, String> props = new HashMap<>();
+		String url = String.format("jdbc:sqlserver://%s;database=%s",
+				requireNonNull(hostName, "hostName must not be null"),
+				requireNonNull(dbName, "dbName must not be null"));
+		props.put("javax.persistence.jdbc.url", url);
+		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
+		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
+		return props;
 	}
 }

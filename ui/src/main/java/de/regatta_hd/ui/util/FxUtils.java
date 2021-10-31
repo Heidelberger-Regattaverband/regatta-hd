@@ -1,5 +1,8 @@
 package de.regatta_hd.ui.util;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
@@ -7,6 +10,12 @@ public class FxUtils {
 
 	private FxUtils() {
 		// avoid instances
+	}
+
+	public static void showInfoDialog(String msg) {
+		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
+		alert.setHeaderText(msg);
+		alert.showAndWait();
 	}
 
 	public static void autoResizeColumns(TableView<?> table) {

@@ -199,7 +199,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		int heatCount = targetHeats.size();
 
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
-		entityManager.getTransaction().begin();
 
 		for (short heatNumber = 0; heatNumber < heatCount; heatNumber++) {
 			Heat heat = targetHeats.get(heatNumber);
@@ -224,7 +223,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		// mark race as set
-		entityManager.persist(race.setRaceIsSet());
+		entityManager.merge(race.setRaceIsSet());
 		entityManager.flush();
 
 		entityManager.merge(race);
@@ -302,7 +301,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	public void cleanRaceHeats(Race race) {
 		EntityManager entityManager = super.aquariusDb.getEntityManager();
-		entityManager.getTransaction().begin();
 
 		race.getHeats().forEach(heat -> {
 			heat.getEntries().forEach(entityManager::remove);
@@ -313,7 +311,5 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		race.setRaceUnset().ifPresent(entityManager::persist);
 
 		entityManager.merge(race);
-
-		entityManager.getTransaction().commit();
 	}
 }
