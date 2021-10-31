@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.ui.util.DBTask;
+import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
@@ -27,6 +28,7 @@ public class RegattasController extends AbstractBaseController {
 
 		this.dbTask.run(() -> this.regattaDAO.getRegattas(), regattas -> {
 			this.regattasTable.setItems(FXCollections.observableArrayList(regattas));
+			FxUtils.autoResizeColumns(this.regattasTable);
 		});
 	}
 

@@ -115,7 +115,7 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.run(() -> {
 				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
 				this.db.getEntityManager().refresh(raceTmp);
-				return Void.TYPE;
+				return null;
 			});
 		}
 
@@ -124,7 +124,7 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.run(() -> {
 				Race raceTmp = this.regattaDAO.getRace(srcRace.getNumber());
 				this.db.getEntityManager().refresh(raceTmp);
-				return Void.TYPE;
+				return null;
 			});
 		}
 
@@ -139,7 +139,7 @@ public class SetRaceController extends AbstractBaseController {
 		if (race != null && sourceRace != null) {
 			this.dbTask.runInTransaction(() -> {
 				this.regattaDAO.setRaceHeats(race, sourceRace);
-				return Void.TYPE;
+				return null;
 			}, result -> showRace());
 		}
 	}
@@ -151,7 +151,7 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
 				this.regattaDAO.cleanRaceHeats(raceTmp);
-				return Void.TYPE;
+				return null;
 			}, result -> showRace());
 		}
 	}
@@ -183,7 +183,7 @@ public class SetRaceController extends AbstractBaseController {
 					vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 				});
 			});
-			return Void.TYPE;
+			return null;
 		});
 	}
 
