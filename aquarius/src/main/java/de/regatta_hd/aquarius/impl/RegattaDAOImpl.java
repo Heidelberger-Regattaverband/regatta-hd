@@ -223,7 +223,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		// mark race as set
-		entityManager.persist(race.setRaceIsSet());
+		entityManager.merge(race.setRaceIsSet());
 		entityManager.flush();
 
 		entityManager.merge(race);
