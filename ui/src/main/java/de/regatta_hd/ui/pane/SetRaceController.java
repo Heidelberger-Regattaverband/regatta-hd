@@ -112,14 +112,20 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleRefreshOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
-			race = this.regattaDAO.getRace(race.getNumber());
-			this.db.getEntityManager().refresh(race);
+			this.dbTask.run(() -> {
+				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
+				this.db.getEntityManager().refresh(raceTmp);
+				return Void.TYPE;
+			});
 		}
 
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
-			srcRace = this.regattaDAO.getRace(srcRace.getNumber());
-			this.db.getEntityManager().refresh(srcRace);
+			this.dbTask.run(() -> {
+				Race raceTmp = this.regattaDAO.getRace(srcRace.getNumber());
+				this.db.getEntityManager().refresh(raceTmp);
+				return Void.TYPE;
+			});
 		}
 
 		handleSourceOfferOnAction();
