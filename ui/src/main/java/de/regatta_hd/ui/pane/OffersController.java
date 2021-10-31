@@ -17,7 +17,6 @@ import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import jakarta.persistence.EntityManager;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -107,7 +106,7 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			return races;
-		}, races -> Platform.runLater(() -> {
+		}, races -> {
 			if (races.isEmpty()) {
 				showDialog("Keine Rennen geändert.");
 			} else {
@@ -115,7 +114,7 @@ public class OffersController extends AbstractBaseController {
 				showDialog(String.format("%d Rennen geändert.", races.size()));
 			}
 			disableButtons(false);
-		}));
+		});
 	}
 
 	@FXML
@@ -138,7 +137,7 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			return races;
-		}, races -> Platform.runLater(() -> {
+		}, races -> {
 			if (races.isEmpty()) {
 				showDialog("Keine Masters Rennen geändert.");
 			} else {
@@ -146,7 +145,7 @@ public class OffersController extends AbstractBaseController {
 				showDialog(String.format("%d Masters Rennen geändert.", races.size()));
 			}
 			disableButtons(false);
-		}));
+		});
 	}
 
 	private void disableButtons(boolean disabled) {

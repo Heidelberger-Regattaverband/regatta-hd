@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import jakarta.persistence.EntityTransaction;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 public class DBTask {
@@ -59,8 +60,9 @@ public class DBTask {
 			task.setOnSucceeded(event -> {
 				// get result from worker
 				V result = (V) event.getSource().getValue();
-				// call given consumer with result
-				onSucceededHandler.accept(result);
+
+				// call given consumer with result in UX thread
+				Platform.runLater(() -> onSucceededHandler.accept(result));
 			});
 		}
 
