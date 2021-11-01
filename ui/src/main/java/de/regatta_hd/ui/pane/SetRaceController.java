@@ -162,7 +162,6 @@ public class SetRaceController extends AbstractBaseController {
 	private void showRace(Race race, VBox vbox, boolean withResult) {
 		vbox.getChildren().clear();
 		Label title = new Label();
-		title.setText(new RaceStringConverter().toString(race));
 		vbox.getChildren().add(title);
 
 		this.dbTask.run(() -> {
@@ -184,15 +183,15 @@ public class SetRaceController extends AbstractBaseController {
 					vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 				});
 			});
-			return null;
-		});
+			return new RaceStringConverter().toString(race);
+		}, label -> title.setText(label));
 	}
 
 	private void showRace() {
-		Race targetRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (targetRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(targetRace.getNumber()),
-					race -> showRace(race, this.targetVBox, false));
+		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (race != null) {
+			this.dbTask.run(() -> this.regattaDAO.getRace(race.getNumber()),
+					raceTmp -> showRace(raceTmp, this.targetVBox, false));
 		}
 	}
 
