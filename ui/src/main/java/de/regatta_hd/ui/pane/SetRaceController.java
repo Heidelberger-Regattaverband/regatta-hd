@@ -3,7 +3,9 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
@@ -17,7 +19,6 @@ import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.RaceStringConverter;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,6 +32,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 
 public class SetRaceController extends AbstractBaseController {
 
@@ -165,10 +167,11 @@ public class SetRaceController extends AbstractBaseController {
 
 	private void showRace(Race race, VBox vbox, boolean withResult) {
 		vbox.getChildren().clear();
-		Label title = new Label();
-		vbox.getChildren().add(title);
 
 		this.dbTask.run(() -> {
+			Map<Short, SortedList<HeatRegistration>> result = new HashMap<>();
+
+			// loops over all heats of race and reads required data from DB
 			race.getHeats().forEach(heat -> {
 				List<HeatRegistration> entries = heat.getEntries();
 				entries.forEach(entry -> {
@@ -177,18 +180,24 @@ public class SetRaceController extends AbstractBaseController {
 					entry.getFinalResult();
 				});
 				SortedList<HeatRegistration> sortedList = new SortedList<>(FXCollections.observableArrayList(entries));
-
-				Platform.runLater(() -> {
-					Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
-					TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-					compEntriesTable.setItems(sortedList);
-					sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
-
-					vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
-				});
+				result.put(heat.getHeatNumber(), sortedList);
 			});
-			return new RaceStringConverter().toString(race);
-		}, label -> title.setText(label));
+
+			// build race label text with details from race
+			String labelText = new RaceStringConverter().toString(race);
+			return new Pair<>(labelText, result);
+		}, pair -> {
+			vbox.getChildren().add(new Label(pair.getKey()));
+
+			race.getHeats().forEach(heat -> {
+				SortedList<HeatRegistration> sortedList = pair.getValue().get(heat.getHeatNumber());
+				Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
+				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
+				compEntriesTable.setItems(sortedList);
+				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
+				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
+			});
+		});
 	}
 
 	private void showRace() {
