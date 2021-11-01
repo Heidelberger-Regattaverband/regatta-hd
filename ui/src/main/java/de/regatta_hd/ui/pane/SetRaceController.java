@@ -68,8 +68,9 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.dbTask.run(() -> {
 			List<Race> races = this.regattaDAO.findRaces("2%");
-			// remove master races as they will not be set
-			List<Race> filteredRaces = races.stream().filter(race -> !race.getAgeClass().isMasters()).toList();
+			// remove master races and races with one heat, as they will not be set
+			List<Race> filteredRaces = races.stream()
+					.filter(race -> !race.getAgeClass().isMasters() && race.getHeats().size() > 1).toList();
 			return FXCollections.observableArrayList(filteredRaces);
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
