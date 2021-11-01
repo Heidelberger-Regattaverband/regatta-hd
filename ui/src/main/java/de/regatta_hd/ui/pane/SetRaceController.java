@@ -40,9 +40,9 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private ComboBox<Race> srcRaceCbo;
 	@FXML
-	private VBox sourceVBox;
+	private VBox srcRaceVBox;
 	@FXML
-	private VBox targetVBox;
+	private VBox raceVBox;
 	@FXML
 	private Button setRaceBtn;
 	@FXML
@@ -82,6 +82,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleTargetOfferOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		this.raceVBox.getChildren().clear();
 
 		this.dbTask.run(() -> {
 			if (race != null) {
@@ -102,11 +103,14 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSourceOfferOnAction() {
-		showSrcRace();
+		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+		this.srcRaceVBox.getChildren().clear();
 
-		showRace();
-
-		updateControls();
+		if (srcRace != null) {
+			showSrcRace();
+			showRace();
+			updateControls();
+		}
 	}
 
 	@FXML
@@ -191,7 +195,7 @@ public class SetRaceController extends AbstractBaseController {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
 			this.dbTask.run(() -> this.regattaDAO.getRace(race.getNumber()),
-					raceTmp -> showRace(raceTmp, this.targetVBox, false));
+					raceTmp -> showRace(raceTmp, this.raceVBox, false));
 		}
 	}
 
@@ -199,7 +203,7 @@ public class SetRaceController extends AbstractBaseController {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
 			this.dbTask.run(() -> this.regattaDAO.getRace(srcRace.getNumber()),
-					race -> showRace(race, this.sourceVBox, true));
+					race -> showRace(race, this.srcRaceVBox, true));
 		}
 	}
 

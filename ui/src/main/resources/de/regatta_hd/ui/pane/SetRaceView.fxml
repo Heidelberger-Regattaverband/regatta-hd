@@ -41,9 +41,9 @@
 
     <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3">
       <items>
-        <VBox fx:id="sourceVBox" spacing="5">
+        <VBox fx:id="srcRaceVBox" spacing="5">
         </VBox>
-        <VBox fx:id="targetVBox" spacing="5">
+        <VBox fx:id="raceVBox" spacing="5">
         </VBox>
       </items>
     </SplitPane>
