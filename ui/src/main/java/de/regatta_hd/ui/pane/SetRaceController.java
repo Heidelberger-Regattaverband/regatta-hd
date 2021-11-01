@@ -3,7 +3,9 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
@@ -17,7 +19,6 @@ import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.RaceStringConverter;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,6 +32,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 
 public class SetRaceController extends AbstractBaseController {
 
@@ -40,9 +42,9 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private ComboBox<Race> srcRaceCbo;
 	@FXML
-	private VBox sourceVBox;
+	private VBox srcRaceVBox;
 	@FXML
-	private VBox targetVBox;
+	private VBox raceVBox;
 	@FXML
 	private Button setRaceBtn;
 	@FXML
@@ -68,8 +70,9 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.dbTask.run(() -> {
 			List<Race> races = this.regattaDAO.findRaces("2%");
-			// remove master races as they will not be set
-			List<Race> filteredRaces = races.stream().filter(race -> !race.getAgeClass().isMasters()).toList();
+			// remove master races and races with one heat, as they will not be set
+			List<Race> filteredRaces = races.stream()
+					.filter(race -> !race.getAgeClass().isMasters() && race.getHeats().size() > 1).toList();
 			return FXCollections.observableArrayList(filteredRaces);
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
@@ -81,6 +84,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private void handleTargetOfferOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		this.raceVBox.getChildren().clear();
 
 		this.dbTask.run(() -> {
 			if (race != null) {
@@ -101,11 +105,14 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSourceOfferOnAction() {
-		showSrcRace();
+		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+		this.srcRaceVBox.getChildren().clear();
 
-		showRace();
-
-		updateControls();
+		if (srcRace != null) {
+			showSrcRace();
+			showRace();
+			updateControls();
+		}
 	}
 
 	@FXML
@@ -160,11 +167,11 @@ public class SetRaceController extends AbstractBaseController {
 
 	private void showRace(Race race, VBox vbox, boolean withResult) {
 		vbox.getChildren().clear();
-		Label title = new Label();
-		title.setText(new RaceStringConverter().toString(race));
-		vbox.getChildren().add(title);
 
 		this.dbTask.run(() -> {
+			Map<Short, SortedList<HeatRegistration>> result = new HashMap<>();
+
+			// loops over all heats of race and reads required data from DB
 			race.getHeats().forEach(heat -> {
 				List<HeatRegistration> entries = heat.getEntries();
 				entries.forEach(entry -> {
@@ -173,25 +180,31 @@ public class SetRaceController extends AbstractBaseController {
 					entry.getFinalResult();
 				});
 				SortedList<HeatRegistration> sortedList = new SortedList<>(FXCollections.observableArrayList(entries));
-
-				Platform.runLater(() -> {
-					Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
-					TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-					compEntriesTable.setItems(sortedList);
-					sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
-
-					vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
-				});
+				result.put(heat.getHeatNumber(), sortedList);
 			});
-			return null;
+
+			// build race label text with details from race
+			String labelText = new RaceStringConverter().toString(race);
+			return new Pair<>(labelText, result);
+		}, pair -> {
+			vbox.getChildren().add(new Label(pair.getKey()));
+
+			race.getHeats().forEach(heat -> {
+				SortedList<HeatRegistration> sortedList = pair.getValue().get(heat.getHeatNumber());
+				Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
+				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
+				compEntriesTable.setItems(sortedList);
+				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
+				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
+			});
 		});
 	}
 
 	private void showRace() {
-		Race targetRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (targetRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(targetRace.getNumber()),
-					race -> showRace(race, this.targetVBox, false));
+		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (race != null) {
+			this.dbTask.run(() -> this.regattaDAO.getRace(race.getNumber()),
+					raceTmp -> showRace(raceTmp, this.raceVBox, false));
 		}
 	}
 
@@ -199,7 +212,7 @@ public class SetRaceController extends AbstractBaseController {
 		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
 		if (srcRace != null) {
 			this.dbTask.run(() -> this.regattaDAO.getRace(srcRace.getNumber()),
-					race -> showRace(race, this.sourceVBox, true));
+					race -> showRace(race, this.srcRaceVBox, true));
 		}
 	}
 
