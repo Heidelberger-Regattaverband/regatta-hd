@@ -70,13 +70,14 @@ public class SetRaceController extends AbstractBaseController {
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
 			this.raceCbo.setDisable(false);
-			disableButtons(false);
 		});
 	}
 
 	@FXML
 	private void handleTargetOfferOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		disableButtons(race == null);
+
 		this.raceVBox.getChildren().clear();
 		this.srcRaceVBox.getChildren().clear();
 
@@ -88,31 +89,28 @@ public class SetRaceController extends AbstractBaseController {
 			}
 			return null;
 		}, result -> {
+			showSrcRace();
 			showRace();
 		});
 	}
 
 	@FXML
 	private void handleRefreshOnAction() {
-		disableButtons(true);
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
+			disableButtons(true);
+
 			this.dbTask.run(() -> {
 				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
 				this.db.getEntityManager().refresh(raceTmp);
-				return null;
-			});
-		}
-
-		if (this.srcRace != null) {
-			this.dbTask.run(() -> {
-				Race raceTmp = this.regattaDAO.getRace(this.srcRace.getNumber());
+				raceTmp = this.regattaDAO.getRace(this.srcRace.getNumber());
 				this.db.getEntityManager().refresh(raceTmp);
 				return null;
+			}, result -> {
+				handleTargetOfferOnAction();
+				disableButtons(false);
 			});
 		}
-		handleTargetOfferOnAction();
-		disableButtons(false);
 	}
 
 	@FXML
@@ -124,10 +122,11 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				this.regattaDAO.setRaceHeats(race, this.srcRace);
 				return null;
-			}, result -> showRace());
+			}, result -> {
+				showRace();
+				disableButtons(false);
+			});
 		}
-
-		disableButtons(false);
 	}
 
 	@FXML
@@ -140,10 +139,11 @@ public class SetRaceController extends AbstractBaseController {
 				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
 				this.regattaDAO.cleanRaceHeats(raceTmp);
 				return null;
-			}, result -> showRace());
+			}, result -> {
+				showRace();
+				disableButtons(false);
+			});
 		}
-
-		disableButtons(false);
 	}
 
 	// JavaFX stuff
@@ -183,12 +183,14 @@ public class SetRaceController extends AbstractBaseController {
 		});
 	}
 
-	private void showRace() {
+	private void showSrcRace() {
 		if (this.srcRace != null) {
 			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()),
 					race -> showRace(race, this.srcRaceVBox, true));
 		}
+	}
 
+	private void showRace() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
 			this.dbTask.run(() -> this.regattaDAO.getRace(race.getNumber()),
