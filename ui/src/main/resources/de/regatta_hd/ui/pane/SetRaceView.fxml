@@ -26,13 +26,6 @@
       </converter>
     </FilterComboBox>
 
-    <Label text="%SetRaceView.srcRaceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <ComboBox fx:id="srcRaceCbo" maxWidth="Infinity" onAction="#handleSourceOfferOnAction" promptText="%SetRaceView.srcRaceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="1">
-      <converter>
-        <RaceStringConverter />
-      </converter>
-    </ComboBox>
-
     <ToolBar GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2">
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%SetRaceView.refreshBtn.text" />
         <Button fx:id="setRaceBtn" onAction="#handleSetRaceOnAction" text="%SetRaceView.setRaceBtn.text" />
