@@ -75,15 +75,14 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleTargetOfferOnAction() {
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		disableButtons(race == null);
-
 		this.raceVBox.getChildren().clear();
 		this.srcRaceVBox.getChildren().clear();
 
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+
 		this.dbTask.run(() -> {
-			if (race != null) {
-				String srcRaceNumber = replaceChar(race.getNumber(), '1', 0);
+			if (selectedRace != null) {
+				String srcRaceNumber = replaceChar(selectedRace.getNumber(), '1', 0);
 				this.srcRace = this.regattaDAO.getRace(srcRaceNumber);
 				return this.srcRace;
 			}
@@ -96,19 +95,18 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleRefreshOnAction() {
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (race != null) {
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (selectedRace != null) {
 			disableButtons(true);
 
 			this.dbTask.run(() -> {
-				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
-				this.db.getEntityManager().refresh(raceTmp);
-				raceTmp = this.regattaDAO.getRace(this.srcRace.getNumber());
-				this.db.getEntityManager().refresh(raceTmp);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				this.db.getEntityManager().refresh(race);
+				race = this.regattaDAO.getRace(this.srcRace.getNumber());
+				this.db.getEntityManager().refresh(race);
 				return null;
 			}, result -> {
 				handleTargetOfferOnAction();
-				disableButtons(false);
 			});
 		}
 	}
@@ -117,14 +115,14 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleSetRaceOnAction() {
 		disableButtons(true);
 
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (race != null && this.srcRace != null) {
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (selectedRace != null && this.srcRace != null) {
 			this.dbTask.runInTransaction(() -> {
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				this.regattaDAO.setRaceHeats(race, this.srcRace);
 				return null;
 			}, result -> {
 				showRace();
-				disableButtons(false);
 			});
 		}
 	}
@@ -133,20 +131,34 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleDeleteOnAction() {
 		disableButtons(true);
 
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (race != null) {
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (selectedRace != null) {
 			this.dbTask.runInTransaction(() -> {
-				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
-				this.regattaDAO.cleanRaceHeats(raceTmp);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				this.regattaDAO.cleanRaceHeats(race);
 				return null;
 			}, result -> {
 				showRace();
-				disableButtons(false);
 			});
 		}
 	}
 
 	// JavaFX stuff
+
+	private void showSrcRace() {
+		if (this.srcRace != null) {
+			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()),
+					race -> showRace(race, this.srcRaceVBox, true));
+		}
+	}
+
+	private void showRace() {
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (selectedRace != null) {
+			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber()),
+					race -> showRace(race, this.raceVBox, false));
+		}
+	}
 
 	private void showRace(Race race, VBox vbox, boolean withResult) {
 		vbox.getChildren().clear();
@@ -180,22 +192,10 @@ public class SetRaceController extends AbstractBaseController {
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
+
+			// false if showing race
+			disableButtons(withResult);
 		});
-	}
-
-	private void showSrcRace() {
-		if (this.srcRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()),
-					race -> showRace(race, this.srcRaceVBox, true));
-		}
-	}
-
-	private void showRace() {
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (race != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(race.getNumber()),
-					raceTmp -> showRace(raceTmp, this.raceVBox, false));
-		}
 	}
 
 	private void disableButtons(boolean disabled) {

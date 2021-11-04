@@ -228,8 +228,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		entityManager.merge(race);
 
-		entityManager.getTransaction().commit();
-
 		entityManager.clear();
 	}
 
