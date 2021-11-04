@@ -27,6 +27,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 class AquariusDBTests {
 
+	private static final int regattaId = 4;
+
 	private static AquariusDB aquariusDb;
 
 	private static RegattaDAO regattaDAO;
@@ -48,6 +50,11 @@ class AquariusDBTests {
 
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
+
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, regattaId);
+		Assertions.assertEquals(regattaId, regatta.getId());
+		Assertions.assertNotNull(regatta);
+		regattaDAO.setActiveRegatta(regatta);
 	}
 
 	@AfterAll
@@ -76,12 +83,10 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testFindOffers() throws IOException {
+	void testFindOffers() {
 		BoatClass boatClass = masterData.getBoatClass(1);
 		AgeClass ageClass = masterData.getAgeClass(11);
 
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
-		regattaDAO.setActiveRegatta(event);
 		List<Race> races = regattaDAO.findRaces("1%", boatClass, ageClass, true);
 		Assertions.assertFalse(races.isEmpty());
 
@@ -89,16 +94,12 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testGetEventOK() throws IOException {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
-		Assertions.assertEquals(2, regatta.getId());
-		Assertions.assertNotNull(regatta);
-
+	void testGetEventOK() {
+		Regatta regatta = regattaDAO.getActiveRegatta();
 		System.out.println(regatta.toString());
-		regattaDAO.setActiveRegatta(regatta);
+
 		Race offer = regattaDAO.getRace("104");
 		Assertions.assertEquals("104", offer.getNumber());
-
 		trace(offer, 1);
 	}
 

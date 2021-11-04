@@ -1,8 +1,6 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +18,11 @@ import de.regatta_hd.ui.control.FilterComboBox;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
@@ -36,11 +32,8 @@ import javafx.util.Pair;
 
 public class SetRaceController extends AbstractBaseController {
 
-	private final SimpleListProperty<Race> srcRaceProp = new SimpleListProperty<>(FXCollections.observableArrayList());
 	@FXML
 	private FilterComboBox<Race> raceCbo;
-	@FXML
-	private ComboBox<Race> srcRaceCbo;
 	@FXML
 	private VBox srcRaceVBox;
 	@FXML
@@ -59,14 +52,14 @@ public class SetRaceController extends AbstractBaseController {
 	@Inject
 	private DBTask dbTask;
 
+	private Race srcRace;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
 		this.raceCbo.setDisable(true);
-		updateControls();
-
-		this.srcRaceCbo.itemsProperty().bind(this.srcRaceProp);
+		disableButtons(true);
 
 		this.dbTask.run(() -> {
 			List<Race> races = this.regattaDAO.findRaces("2%");
@@ -77,89 +70,79 @@ public class SetRaceController extends AbstractBaseController {
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
 			this.raceCbo.setDisable(false);
-			updateControls();
 		});
 	}
 
 	@FXML
 	private void handleTargetOfferOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		disableButtons(race == null);
+
 		this.raceVBox.getChildren().clear();
+		this.srcRaceVBox.getChildren().clear();
 
 		this.dbTask.run(() -> {
 			if (race != null) {
-				// get all races with same attributes
-				return this.regattaDAO.findRaces("1%", race.getBoatClass(), race.getAgeClass(), race.isLightweight())
-						.stream().filter(srcRace -> race.getId() != srcRace.getId()).toList();
+				String srcRaceNumber = replaceChar(race.getNumber(), '1', 0);
+				this.srcRace = this.regattaDAO.getRace(srcRaceNumber);
+				return this.srcRace;
 			}
-			return Collections.emptyList();
+			return null;
 		}, result -> {
-			this.srcRaceProp.clear();
-			this.srcRaceProp.addAll((Collection<? extends Race>) result);
-			if (this.srcRaceProp.size() == 1) {
-				this.srcRaceCbo.getSelectionModel().selectFirst();
-			}
-			updateControls();
-		});
-	}
-
-	@FXML
-	private void handleSourceOfferOnAction() {
-		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
-		this.srcRaceVBox.getChildren().clear();
-
-		if (srcRace != null) {
 			showSrcRace();
 			showRace();
-			updateControls();
-		}
+		});
 	}
 
 	@FXML
 	private void handleRefreshOnAction() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
+			disableButtons(true);
+
 			this.dbTask.run(() -> {
 				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
 				this.db.getEntityManager().refresh(raceTmp);
-				return null;
-			});
-		}
-
-		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
-		if (srcRace != null) {
-			this.dbTask.run(() -> {
-				Race raceTmp = this.regattaDAO.getRace(srcRace.getNumber());
+				raceTmp = this.regattaDAO.getRace(this.srcRace.getNumber());
 				this.db.getEntityManager().refresh(raceTmp);
 				return null;
+			}, result -> {
+				handleTargetOfferOnAction();
+				disableButtons(false);
 			});
 		}
-
-		handleSourceOfferOnAction();
 	}
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		Race sourceRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
+		disableButtons(true);
 
-		if (race != null && sourceRace != null) {
+		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (race != null && this.srcRace != null) {
 			this.dbTask.runInTransaction(() -> {
-				this.regattaDAO.setRaceHeats(race, sourceRace);
+				this.regattaDAO.setRaceHeats(race, this.srcRace);
 				return null;
-			}, result -> showRace());
+			}, result -> {
+				showRace();
+				disableButtons(false);
+			});
 		}
 	}
 
 	@FXML
 	private void handleDeleteOnAction() {
+		disableButtons(true);
+
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
 			this.dbTask.runInTransaction(() -> {
 				Race raceTmp = this.regattaDAO.getRace(race.getNumber());
 				this.regattaDAO.cleanRaceHeats(raceTmp);
 				return null;
-			}, result -> showRace());
+			}, result -> {
+				showRace();
+				disableButtons(false);
+			});
 		}
 	}
 
@@ -200,6 +183,13 @@ public class SetRaceController extends AbstractBaseController {
 		});
 	}
 
+	private void showSrcRace() {
+		if (this.srcRace != null) {
+			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()),
+					race -> showRace(race, this.srcRaceVBox, true));
+		}
+	}
+
 	private void showRace() {
 		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (race != null) {
@@ -208,20 +198,7 @@ public class SetRaceController extends AbstractBaseController {
 		}
 	}
 
-	private void showSrcRace() {
-		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
-		if (srcRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(srcRace.getNumber()),
-					race -> showRace(race, this.srcRaceVBox, true));
-		}
-	}
-
-	private void updateControls() {
-		Race race = this.raceCbo.getSelectionModel().getSelectedItem();
-		Race srcRace = this.srcRaceCbo.getSelectionModel().getSelectedItem();
-
-		this.srcRaceCbo.setDisable(race == null);
-		boolean disabled = !(race != null && srcRace != null);
+	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.deleteBtn.setDisable(disabled);
 		this.setRaceBtn.setDisable(disabled);
@@ -299,4 +276,7 @@ public class SetRaceController extends AbstractBaseController {
 		return heatRegsTbl;
 	}
 
+	private static String replaceChar(String str, char ch, int index) {
+		return str.substring(0, index) + ch + str.substring(index + 1);
+	}
 }

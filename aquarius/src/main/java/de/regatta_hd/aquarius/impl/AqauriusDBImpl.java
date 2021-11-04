@@ -89,6 +89,7 @@ public class AqauriusDBImpl implements AquariusDB {
 		return this.entityManager != null && this.entityManager.isOpen();
 	}
 
+	@SuppressWarnings("resource")
 	private void open(String hostName, String dbName, String userName, String password) {
 		close();
 
