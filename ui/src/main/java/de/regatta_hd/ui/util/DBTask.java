@@ -26,26 +26,26 @@ public class DBTask {
 	private AquariusDB db;
 
 	/**
-	 * Runs the given {@link Callable} in a DB task.
+	 * Executes the given {@link Callable} in a DB task.
 	 *
-	 * @param callable the {@link Callable} to run
+	 * @param callable the {@link Callable} to execute
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
 	public <V> Task<V> run(Callable<V> callable) {
-		return runTask(createTask(callable, false, null));
+		return runTask(createTask(callable, null, false));
 	}
 
 	/**
-	 * Runs the given {@link DBRunnable} in a DB task.
+	 * Executes the given {@link DBRunnable} in a DB task.
 	 *
-	 * @param runnable the {@link DBRunnable} to run
+	 * @param runnable the {@link DBRunnable} to execute
 	 * @return the {@link Task} executing the given {@link DBRunnable}
 	 */
 	public Task<Void> run(DBRunnable runnable) {
 		return runTask(createTask(() -> {
 			runnable.run();
 			return null;
-		}, false, null));
+		}, null, false));
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class DBTask {
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
 	public <V> Task<V> run(Callable<V> callable, Consumer<V> onSucceededHandler) {
-		return runTask(createTask(callable, false, onSucceededHandler));
+		return runTask(createTask(callable, onSucceededHandler, false));
 	}
 
 	/**
@@ -68,14 +68,14 @@ public class DBTask {
 		return runTask(createTask(() -> {
 			runnable.run();
 			return null;
-		}, false, onSucceededHandler));
+		}, onSucceededHandler, true));
 	}
 
 	public <V> Task<V> runInTransaction(Callable<V> callable, Consumer<V> onSucceededHandler) {
-		return runTask(createTask(callable, true, onSucceededHandler));
+		return runTask(createTask(callable, onSucceededHandler, true));
 	}
 
-	private <V> Task<V> createTask(Callable<V> callable, boolean inTransaction, Consumer<V> onSucceededHandler) {
+	private <V> Task<V> createTask(Callable<V> callable, Consumer<V> onSucceededHandler, boolean inTransaction) {
 		Task<V> task = new Task<>() {
 			@Override
 			protected V call() throws Exception {
