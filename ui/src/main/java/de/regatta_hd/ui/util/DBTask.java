@@ -36,10 +36,10 @@ public class DBTask {
 	}
 
 	/**
-	 * Runs the given {@link Runnable} in a DB task.
+	 * Runs the given {@link DBRunnable} in a DB task.
 	 *
-	 * @param runnable the {@link Runnable} to run
-	 * @return the {@link Task} executing the given {@link Runnable}
+	 * @param runnable the {@link DBRunnable} to run
+	 * @return the {@link Task} executing the given {@link DBRunnable}
 	 */
 	public Task<Void> run(DBRunnable runnable) {
 		return runTask(createTask(() -> {
@@ -56,6 +56,19 @@ public class DBTask {
 	 */
 	public <V> Task<V> run(Callable<V> callable, Consumer<V> onSucceededHandler) {
 		return runTask(createTask(callable, false, onSucceededHandler));
+	}
+
+	/**
+	 * Runs the given {@link DBRunnable} in a DB task.
+	 *
+	 * @param runnable the {@link DBRunnable} to run
+	 * @return the {@link Task} executing the given {@link DBRunnable}
+	 */
+	public Task<Void> runInTransaction(DBRunnable runnable, Consumer<Void> onSucceededHandler) {
+		return runTask(createTask(() -> {
+			runnable.run();
+			return null;
+		}, false, onSucceededHandler));
 	}
 
 	public <V> Task<V> runInTransaction(Callable<V> callable, Consumer<V> onSucceededHandler) {
