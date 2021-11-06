@@ -36,6 +36,19 @@ public class DBTask {
 	}
 
 	/**
+	 * Runs the given {@link Runnable} in a DB task.
+	 *
+	 * @param runnable the {@link Runnable} to run
+	 * @return the {@link Task} executing the given {@link Runnable}
+	 */
+	public Task<Void> run(DBRunnable runnable) {
+		return runTask(createTask(() -> {
+			runnable.run();
+			return null;
+		}, false, null));
+	}
+
+	/**
 	 * Runs the given {@link Callable} in a DB task.
 	 *
 	 * @param callable the {@link Callable} to run
@@ -101,5 +114,10 @@ public class DBTask {
 			thread.setDaemon(true);
 			return thread;
 		}
+	}
+
+	@FunctionalInterface
+	public interface DBRunnable {
+		void run() throws Exception;
 	}
 }
