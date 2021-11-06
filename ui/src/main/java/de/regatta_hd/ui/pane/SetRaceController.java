@@ -120,7 +120,6 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				this.regattaDAO.setRaceHeats(race, this.srcRace);
-				return null;
 			}, result -> {
 				showRace();
 			});
@@ -136,7 +135,6 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				this.regattaDAO.cleanRaceHeats(race);
-				return null;
 			}, result -> {
 				showRace();
 			});

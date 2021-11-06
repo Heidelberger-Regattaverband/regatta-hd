@@ -78,7 +78,6 @@ public class PrimaryController extends AbstractBaseController {
 						PrimaryController.this.aquariusDb.open(connectionData.get());
 						PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
 						updateControls();
-						return connectionData.get();
 					});
 				}
 			} catch (IOException e) {

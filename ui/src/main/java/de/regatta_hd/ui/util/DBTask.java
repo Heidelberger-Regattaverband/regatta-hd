@@ -1,5 +1,7 @@
 package de.regatta_hd.ui.util;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,30 +28,70 @@ public class DBTask {
 	private AquariusDB db;
 
 	/**
-	 * Runs the given {@link Callable} in a DB task.
+	 * Executes the given {@link Callable} in a DB task.
 	 *
-	 * @param callable the {@link Callable} to run
+	 * @param callable the {@link Callable} to execute, must not be null
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
 	public <V> Task<V> run(Callable<V> callable) {
-		return runTask(createTask(callable, false, null));
+		return runTask(createTask(requireNonNull(callable, "callable must not be null"), null, false));
 	}
 
 	/**
-	 * Runs the given {@link Callable} in a DB task.
+	 * Executes the given {@link DBRunnable} in a DB task.
 	 *
-	 * @param callable the {@link Callable} to run
+	 * @param runnable the {@link DBRunnable} to execute
+	 * @return the {@link Task} executing the given {@link DBRunnable}
+	 */
+	public Task<Void> run(DBRunnable runnable) {
+		requireNonNull(runnable, "runnable must not be null");
+		return runTask(createTask(() -> {
+			runnable.run();
+			return null;
+		}, null, false));
+	}
+
+	/**
+	 * Executes the given {@link Callable} in a DB task.
+	 *
+	 * @param callable           the {@link Callable} to execute, must not be null
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever
+	 *                           the Task state transitions to the SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
 	public <V> Task<V> run(Callable<V> callable, Consumer<V> onSucceededHandler) {
-		return runTask(createTask(callable, false, onSucceededHandler));
+		return runTask(createTask(requireNonNull(callable, "callable must not be null"), onSucceededHandler, false));
 	}
 
+	/**
+	 * Executes the given {@link DBRunnable} in a DB task within a transaction.
+	 *
+	 * @param runnable           the {@link DBRunnable} to execute
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever
+	 *                           the Task state transitions to the SUCCEEDED state.
+	 * @return the {@link Task} executing the given {@link DBRunnable}
+	 */
+	public Task<Void> runInTransaction(DBRunnable runnable, Consumer<Void> onSucceededHandler) {
+		requireNonNull(runnable, "runnable must not be null");
+		return runTask(createTask(() -> {
+			runnable.run();
+			return null;
+		}, onSucceededHandler, true));
+	}
+
+	/**
+	 * Executes the given {@link Callable} in a DB task within a transaction.
+	 *
+	 * @param runnable           the {@link DBRunnable} to execute
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever
+	 *                           the Task state transitions to the SUCCEEDED state.
+	 * @return the {@link Task} executing the given {@link DBRunnable}
+	 */
 	public <V> Task<V> runInTransaction(Callable<V> callable, Consumer<V> onSucceededHandler) {
-		return runTask(createTask(callable, true, onSucceededHandler));
+		return runTask(createTask(requireNonNull(callable, "callable must not be null"), onSucceededHandler, true));
 	}
 
-	private <V> Task<V> createTask(Callable<V> callable, boolean inTransaction, Consumer<V> onSucceededHandler) {
+	private <V> Task<V> createTask(Callable<V> callable, Consumer<V> onSucceededHandler, boolean inTransaction) {
 		Task<V> task = new Task<>() {
 			@Override
 			protected V call() throws Exception {
@@ -101,5 +143,10 @@ public class DBTask {
 			thread.setDaemon(true);
 			return thread;
 		}
+	}
+
+	@FunctionalInterface
+	public interface DBRunnable {
+		void run() throws Exception;
 	}
 }
