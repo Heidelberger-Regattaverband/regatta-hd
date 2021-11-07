@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -86,17 +87,40 @@ public class AgeClass {
 	@PrimaryKeyJoinColumn
 	private AgeClassExt extension;
 
+	// transient fields
+	@Transient
+	private Boolean isMasters;
+
+	@Transient
+	private Boolean isOpen;
+
 	/**
 	 * Indicates whether this is a master age class or not.
 	 *
 	 * @return {@code true} if it's a masters age class, otherwise {@code false}
 	 */
 	public boolean isMasters() {
-		boolean isMasters = false;
-		String abbrevation = getAbbreviation();
-		if (abbrevation != null) {
-			isMasters = abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W");
+		if (this.isMasters == null) {
+			String abbrevation = getAbbreviation();
+			if (abbrevation != null) {
+				this.isMasters = abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W");
+			}
 		}
-		return isMasters;
+		return this.isMasters;
+	}
+
+	/**
+	 * Indicates whether this is a open age class or not.
+	 *
+	 * @return {@code true} if it's a open age class, otherwise {@code false}
+	 */
+	public boolean isOpen() {
+		if (this.isOpen == null) {
+			String abbrevation = getAbbreviation();
+			if (abbrevation != null) {
+				this.isOpen = abbrevation.equals("OFF");
+			}
+		}
+		return this.isOpen;
 	}
 }
