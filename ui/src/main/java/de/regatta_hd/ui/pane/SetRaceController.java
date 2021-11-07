@@ -198,9 +198,21 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private void disableButtons(boolean disabled) {
-		this.refreshBtn.setDisable(disabled);
-		this.deleteBtn.setDisable(disabled);
-		this.setRaceBtn.setDisable(disabled);
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		if (selectedRace != null) {
+			this.dbTask.run(() -> {
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				return race.getExtension() != null && race.getExtension().isSet();
+			}, raceIsSet -> {
+				this.deleteBtn.setDisable(disabled || !raceIsSet);
+				this.setRaceBtn.setDisable(disabled || raceIsSet);
+				this.refreshBtn.setDisable(disabled);
+			});
+		} else {
+			this.deleteBtn.setDisable(disabled);
+			this.setRaceBtn.setDisable(disabled);
+			this.refreshBtn.setDisable(disabled);
+		}
 	}
 
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
