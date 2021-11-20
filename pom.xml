@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>de.ofterdinger</groupId>
-    <artifactId>parent</artifactId>
-    <version>0.0.15-SNAPSHOT</version>
+    <groupId>de.ofterdinger.parent</groupId>
+    <artifactId>build</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
