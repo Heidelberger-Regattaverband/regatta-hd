@@ -157,7 +157,7 @@ public class Race {
 			Short result1 = entry1.getHeatNumber();
 			Short result2 = entry2.getHeatNumber();
 			if (result1 != null && result2 != null) {
-				return result1 > result2 ? 1 : -1;
+				return result1.shortValue() > result2.shortValue() ? 1 : -1;
 			}
 			return 0;
 		});

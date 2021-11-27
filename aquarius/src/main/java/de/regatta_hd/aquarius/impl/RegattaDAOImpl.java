@@ -73,8 +73,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		return createTypedQuery(query) //
 				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
-				.setParameter(regattaParam.getName(),
-						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
+				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
 				.getSingleResult();
 	}
 
@@ -92,21 +91,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		ParameterExpression<Boolean> lightweightParam = critBuilder.parameter(Boolean.class, "lightweight");
 
 		query.where(critBuilder.and( //
-				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam),
-				critBuilder.equal(o.get("lightweight"), lightweightParam), //
+				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam), critBuilder.equal(o.get("lightweight"), lightweightParam), //
 				critBuilder.equal(o.get("boatClass"), boatClassParam), //
 				critBuilder.equal(o.get("ageClass"), ageClassParam), //
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
-				.setParameter(raceNumberParam.getName(),
-						requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
-				.setParameter(lightweightParam.getName(), lightweight)
+				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
+				.setParameter(lightweightParam.getName(), Boolean.valueOf(lightweight))
 				.setParameter(boatClassParam.getName(), requireNonNull(boatClass, "boatClass must not be null"))
 				.setParameter(ageClassParam.getName(), requireNonNull(ageClass, "ageClass must not be null"))
-				.setParameter(regattaParam.getName(),
-						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
+				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
 				.getResultList();
 	}
 
@@ -170,7 +166,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
 					return 0;
 				}
-				return heatReg1.getFinalResult().getNetTime() > heatReg2.getFinalResult().getNetTime() ? 1 : -1;
+				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime().intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
 				Registration targetRegistration = sameCrews.get(srcHeatReg.getRegistration().getId());
 				if (targetRegistration != null) {
@@ -213,8 +209,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				for (int r = startIndex; r < endIndex && r < numRegistrations; r++) {
 					Registration targetRegistration = targetRegAll.get(r);
 
-					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration)
-							.lane(lane++).build();
+					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration).lane(lane++).build();
 					entityManager.merge(heatReg);
 				}
 
@@ -290,7 +285,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 					this.activeRegattaId = Integer.parseInt(property);
 				}
 			}
-			return find(Regatta.class, this.activeRegattaId);
+			return find(Regatta.class, Integer.valueOf(this.activeRegattaId));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e, null);
 		}

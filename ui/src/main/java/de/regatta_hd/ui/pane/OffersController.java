@@ -110,7 +110,7 @@ public class OffersController extends AbstractBaseController {
 				FxUtils.showInfoDialog("Keine Rennen geändert.");
 			} else {
 				refresh();
-				FxUtils.showInfoDialog(String.format("%d Rennen geändert.", races.size()));
+				FxUtils.showInfoDialog(String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
 			}
 			disableButtons(false);
 		});
@@ -141,7 +141,7 @@ public class OffersController extends AbstractBaseController {
 				FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
 			} else {
 				refresh();
-				FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", races.size()));
+				FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
 			}
 			disableButtons(false);
 		});

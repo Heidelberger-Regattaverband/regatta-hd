@@ -71,7 +71,7 @@ public class Result {
 	 */
 	@Column(name = "Result_Rank")
 	@ToString.Include
-	private Byte rank;
+	private byte rank;
 
 	@Column(name = "Result_ResultType", nullable = false, length = 1)
 	private String resultType;

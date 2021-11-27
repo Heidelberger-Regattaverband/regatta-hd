@@ -51,7 +51,7 @@ class AquariusDBTests {
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, regattaId);
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
 		Assertions.assertEquals(regattaId, regatta.getId());
 		Assertions.assertNotNull(regatta);
 		regattaDAO.setActiveRegatta(regatta);
@@ -105,7 +105,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventFailed() {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException

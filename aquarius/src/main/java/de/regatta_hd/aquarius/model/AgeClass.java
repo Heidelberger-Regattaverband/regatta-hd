@@ -103,10 +103,10 @@ public class AgeClass {
 		if (this.isMasters == null) {
 			String abbrevation = getAbbreviation();
 			if (abbrevation != null) {
-				this.isMasters = abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W");
+				this.isMasters = Boolean.valueOf(abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W"));
 			}
 		}
-		return this.isMasters;
+		return this.isMasters.booleanValue();
 	}
 
 	/**
@@ -118,9 +118,9 @@ public class AgeClass {
 		if (this.isOpen == null) {
 			String abbrevation = getAbbreviation();
 			if (abbrevation != null) {
-				this.isOpen = abbrevation.equals("OFF");
+				this.isOpen = Boolean.valueOf(abbrevation.equals("OFF"));
 			}
 		}
-		return this.isOpen;
+		return this.isOpen.booleanValue();
 	}
 }

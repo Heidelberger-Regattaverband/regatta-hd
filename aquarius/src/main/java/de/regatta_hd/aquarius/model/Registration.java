@@ -29,7 +29,7 @@ public class Registration {
 
 	@Id
 	@Column(name = "Entry_ID")
-	private int id;
+	private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_OwnerClub_ID_FK", nullable = false)

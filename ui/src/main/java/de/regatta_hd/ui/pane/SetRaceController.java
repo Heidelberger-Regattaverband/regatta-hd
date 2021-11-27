@@ -37,6 +37,8 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private VBox srcRaceVBox;
 	@FXML
+	private VBox setListVBox;
+	@FXML
 	private VBox raceVBox;
 	@FXML
 	private Button setRaceBtn;
@@ -193,10 +195,10 @@ public class SetRaceController extends AbstractBaseController {
 		if (selectedRace != null) {
 			this.dbTask.run(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				return race.getExtension() != null && race.getExtension().isSet();
+				return Boolean.valueOf(race.getExtension() != null && race.getExtension().isSet());
 			}, raceIsSet -> {
-				this.deleteBtn.setDisable(disabled || !raceIsSet);
-				this.setRaceBtn.setDisable(disabled || raceIsSet);
+				this.deleteBtn.setDisable(disabled || !raceIsSet.booleanValue());
+				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue());
 				this.refreshBtn.setDisable(disabled);
 			});
 		} else {
@@ -244,7 +246,7 @@ public class SetRaceController extends AbstractBaseController {
 			rankCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
 				if (result != null) {
-					return new SimpleIntegerProperty(result.getRank().byteValue());
+					return new SimpleIntegerProperty(result.getRank());
 				}
 				return null;
 			});

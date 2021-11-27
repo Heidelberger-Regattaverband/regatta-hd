@@ -41,7 +41,7 @@ public class HeatRegistration {
 
 	@Column(name = "CE_Lane")
 	@ToString.Include(rank = 10)
-	private Short lane;
+	private short lane;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CE_Comp_ID_FK")
