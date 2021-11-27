@@ -1,7 +1,10 @@
 package de.regatta_hd.ui.control;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
+
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.value.ChangeListener;
@@ -11,15 +14,14 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
 /**
- * A control which provides a filtered combo box. As the user enters values into
- * the combo editor the list is filtered automatically.
+ * A control which provides a filtered combo box. As the user enters values into the combo editor the list is filtered
+ * automatically.
  *
  * @param <T> the object type that is held by this FilteredComboBox
  */
-public class FilterComboBox<T> extends ComboBox<T> {
+public class FilterComboBox<T> extends ComboBox<T> { // NOSONAR
 	/**
-	 * The default / initial list that is in the combo when nothing is entered in
-	 * the editor.
+	 * The default / initial list that is in the combo when nothing is entered in the editor.
 	 */
 	private Collection<T> initialList = new ArrayList<>();
 
@@ -37,8 +39,8 @@ public class FilterComboBox<T> extends ComboBox<T> {
 	/**
 	 * Constructs a new FilterComboBox with the given parameters.
 	 *
-	 * @param startsWithCheck <code>true</code> if this is a 'startsWith' check
-	 *                        <code>false</code> if it is 'contains' check
+	 * @param startsWithCheck <code>true</code> if this is a 'startsWith' check <code>false</code> if it is 'contains'
+	 *                        check
 	 */
 	public FilterComboBox(@NamedArg("startsWithCheck") boolean startsWithCheck) {
 		this.startsWithCheck = startsWithCheck;
@@ -50,8 +52,7 @@ public class FilterComboBox<T> extends ComboBox<T> {
 	 * Constructs a new FilterComboBox with the given parameters.
 	 *
 	 * @param items           The initial items
-	 * @param startsWithCheck true if this is a 'startsWith' check false if it is
-	 *                        'contains' check
+	 * @param startsWithCheck true if this is a 'startsWith' check false if it is 'contains' check
 	 */
 	public FilterComboBox(@NamedArg("items") ObservableList<T> items,
 			@NamedArg("startsWithCheck") boolean startsWithCheck) {
@@ -67,52 +68,15 @@ public class FilterComboBox<T> extends ComboBox<T> {
 	 *
 	 * @param initial The initial list
 	 */
-	public void setInitialItems(Collection<T> initial) {
+	public void setInitialItems(Collection<T> initialItems) {
+		requireNonNull(initialItems, "initialItems must not be null");
+		this.initialList = new ArrayList<>(initialItems);
 		getItems().clear();
-		getItems().addAll(initial);
-		this.initialList = initial;
+		getItems().addAll(this.initialList);
 	}
 
 	private void addTextChangeListener() {
 		getEditor().textProperty().addListener(this.textChangeListener);
-	}
-
-	private void removeTextChangeListener() {
-		getEditor().textProperty().removeListener(this.textChangeListener);
-	}
-
-	/**
-	 * Method to filter the items and update the combo.
-	 *
-	 * @param filter The filter string to use.
-	 */
-	private void filterItems(String filter) {
-		ObservableList<T> filteredList = FXCollections.observableArrayList();
-		for (T item : this.initialList) {
-			String itemString = getConverter().toString(item).toLowerCase();
-			if (this.startsWithCheck && itemString.startsWith(filter.toLowerCase())
-					|| itemString.contains(filter.toLowerCase())) {
-				filteredList.add(item);
-			}
-		}
-
-		setItems(filteredList);
-	}
-
-	/**
-	 * If there is only one item left in the combo then we assume this is correct.
-	 * Put the item into the editor but select the end of the string that the user
-	 * hasn't actually entered.
-	 */
-	private void setUserInputToOnlyOption() {
-		String onlyOption = getConverter().toString(getItems().get(0));
-		String currentText = getEditor().getText();
-		if (onlyOption.length() > currentText.length()) {
-			Platform.runLater(() -> {
-				getEditor().setText(onlyOption);
-				getEditor().selectAll();
-			});
-		}
 	}
 
 	private class TextChangeListener implements ChangeListener<String> {
@@ -133,11 +97,10 @@ public class FilterComboBox<T> extends ComboBox<T> {
 					hide();
 				} else if (!getItems().isEmpty()) {
 					Platform.runLater(() -> {
-						removeTextChangeListener();
+						getEditor().textProperty().removeListener(FilterComboBox.this.textChangeListener);
 
-						// several items satisfy filter -> clear current selection and show drop down
-						// list
-						FilterComboBox.this.selectionModelProperty().getValue().clearSelection();
+						// several items satisfy filter -> clear current selection and show drop down list
+						selectionModelProperty().getValue().clearSelection();
 
 						addTextChangeListener();
 
@@ -145,6 +108,39 @@ public class FilterComboBox<T> extends ComboBox<T> {
 						show();
 					});
 				}
+			}
+		}
+
+		/**
+		 * Method to filter the items and update the combo.
+		 *
+		 * @param filter The filter string to use.
+		 */
+		private void filterItems(String filter) {
+			ObservableList<T> filteredList = FXCollections.observableArrayList();
+			for (T item : FilterComboBox.this.initialList) {
+				String itemString = getConverter().toString(item).toLowerCase();
+				if (FilterComboBox.this.startsWithCheck && itemString.startsWith(filter.toLowerCase())
+						|| itemString.contains(filter.toLowerCase())) {
+					filteredList.add(item);
+				}
+			}
+
+			setItems(filteredList);
+		}
+
+		/**
+		 * If there is only one item left in the combo, then we assume this is correct. Put the item into the editor but
+		 * select the end of the string that the user hasn't actually entered.
+		 */
+		private void setUserInputToOnlyOption() {
+			String onlyOption = getConverter().toString(getItems().get(0));
+			String currentText = getEditor().getText();
+			if (onlyOption.length() > currentText.length()) {
+				Platform.runLater(() -> {
+					getEditor().setText(onlyOption);
+					getEditor().selectAll();
+				});
 			}
 		}
 	}
