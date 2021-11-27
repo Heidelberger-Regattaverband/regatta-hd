@@ -85,10 +85,8 @@ public class SetRaceController extends AbstractBaseController {
 			if (selectedRace != null) {
 				String srcRaceNumber = replaceChar(selectedRace.getNumber(), '1', 0);
 				this.srcRace = this.regattaDAO.getRace(srcRaceNumber);
-				return this.srcRace;
 			}
-			return null;
-		}, result -> {
+		}, () -> {
 			showSrcRace();
 			showRace();
 		});
@@ -105,10 +103,7 @@ public class SetRaceController extends AbstractBaseController {
 				this.db.getEntityManager().refresh(race);
 				race = this.regattaDAO.getRace(this.srcRace.getNumber());
 				this.db.getEntityManager().refresh(race);
-				return null;
-			}, result -> {
-				handleTargetOfferOnAction();
-			});
+			}, this::handleTargetOfferOnAction);
 		}
 	}
 
@@ -121,9 +116,7 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				this.regattaDAO.setRaceHeats(race, this.srcRace);
-			}, result -> {
-				showRace();
-			});
+			}, this::showRace);
 		}
 	}
 
@@ -136,9 +129,7 @@ public class SetRaceController extends AbstractBaseController {
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				this.regattaDAO.cleanRaceHeats(race);
-			}, result -> {
-				showRace();
-			});
+			}, this::showRace);
 		}
 	}
 
