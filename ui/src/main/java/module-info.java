@@ -13,6 +13,7 @@ open module de.regatta_hd.ui {
 	requires transitive de.regatta_hd.aquarius;
 	requires org.apache.commons.lang3;
 	requires de.regatta_hd.common;
+	requires lombok;
 
 	exports de.regatta_hd.ui;
 }

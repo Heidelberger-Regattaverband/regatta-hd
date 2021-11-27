@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
@@ -20,6 +21,7 @@ import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -37,7 +39,7 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private VBox srcRaceVBox;
 	@FXML
-	private VBox setListVBox;
+	private TableView<SetListEntry> setListTbl;
 	@FXML
 	private VBox raceVBox;
 	@FXML
@@ -67,8 +69,8 @@ public class SetRaceController extends AbstractBaseController {
 			List<Race> races = this.regattaDAO.findRaces("2%");
 			// remove master races, open age class and races with one heat, as they will not
 			// be set
-			List<Race> filteredRaces = races.stream().filter(race -> !race.getAgeClass().isOpen()
-					&& !race.getAgeClass().isMasters() && race.getHeats().size() > 1).toList();
+			List<Race> filteredRaces = races.stream()
+					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters() && race.getHeats().size() > 1).toList();
 			return FXCollections.observableArrayList(filteredRaces);
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
@@ -117,8 +119,12 @@ public class SetRaceController extends AbstractBaseController {
 		if (selectedRace != null && this.srcRace != null) {
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				this.regattaDAO.setRaceHeats(race, this.srcRace);
-			}, this::showRace);
+				return this.regattaDAO.setRaceHeats(race, this.srcRace);
+			}, setList -> {
+				ObservableList<SetListEntry> setListObservable = FXCollections.observableArrayList(setList);
+				this.setListTbl.setItems(setListObservable);
+				showRace();
+			});
 		}
 	}
 
@@ -139,16 +145,14 @@ public class SetRaceController extends AbstractBaseController {
 
 	private void showSrcRace() {
 		if (this.srcRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()),
-					race -> showRace(race, this.srcRaceVBox, true));
+			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()), race -> showRace(race, this.srcRaceVBox, true));
 		}
 	}
 
 	private void showRace() {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (selectedRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber()),
-					race -> showRace(race, this.raceVBox, false));
+			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber()), race -> showRace(race, this.raceVBox, false));
 		}
 	}
 
@@ -211,8 +215,7 @@ public class SetRaceController extends AbstractBaseController {
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
 		TableView<HeatRegistration> heatRegsTbl = new TableView<>();
 
-		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(
-				getText("SetRaceView.heatRegsTbl.bibCol.text"));
+		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(getText("SetRaceView.heatRegsTbl.bibCol.text"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
@@ -222,8 +225,7 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(
-				getText("SetRaceView.heatRegsTbl.boatCol.text"));
+		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(getText("SetRaceView.heatRegsTbl.boatCol.text"));
 		boatCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
