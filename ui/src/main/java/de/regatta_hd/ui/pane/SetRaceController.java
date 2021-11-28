@@ -17,6 +17,7 @@ import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
 import de.regatta_hd.ui.util.DBTask;
+import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,12 +43,16 @@ public class SetRaceController extends AbstractBaseController {
 	private TableView<SetListEntry> setListTbl;
 	@FXML
 	private VBox raceVBox;
+
+	// toolbar buttons
+	@FXML
+	private Button refreshBtn;
+	@FXML
+	private Button createSetListBtn;
 	@FXML
 	private Button setRaceBtn;
 	@FXML
 	private Button deleteBtn;
-	@FXML
-	private Button refreshBtn;
 
 	@Inject
 	private RegattaDAO regattaDAO;
@@ -112,6 +117,24 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	@FXML
+	private void handleCreateSetListOnAction() {
+		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+
+		if (selectedRace != null && this.srcRace != null) {
+			disableButtons(true);
+
+			this.dbTask.run(() -> {
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				return this.regattaDAO.createSetList(race, this.srcRace);
+			}, setList -> {
+				this.setListTbl.setItems(FXCollections.observableArrayList(setList));
+				FxUtils.autoResizeColumns(this.setListTbl);
+				disableButtons(false);
+			});
+		}
+	}
+
+	@FXML
 	private void handleSetRaceOnAction() {
 		disableButtons(true);
 
@@ -123,6 +146,7 @@ public class SetRaceController extends AbstractBaseController {
 			}, setList -> {
 				ObservableList<SetListEntry> setListObservable = FXCollections.observableArrayList(setList);
 				this.setListTbl.setItems(setListObservable);
+				FxUtils.autoResizeColumns(this.setListTbl);
 				showRace();
 			});
 		}
@@ -201,14 +225,16 @@ public class SetRaceController extends AbstractBaseController {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				return Boolean.valueOf(race.getExtension() != null && race.getExtension().isSet());
 			}, raceIsSet -> {
-				this.deleteBtn.setDisable(disabled || !raceIsSet.booleanValue());
-				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue());
 				this.refreshBtn.setDisable(disabled);
+				this.createSetListBtn.setDisable(disabled);
+				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue());
+				this.deleteBtn.setDisable(disabled || !raceIsSet.booleanValue());
 			});
 		} else {
-			this.deleteBtn.setDisable(disabled);
-			this.setRaceBtn.setDisable(disabled);
 			this.refreshBtn.setDisable(disabled);
+			this.createSetListBtn.setDisable(disabled);
+			this.setRaceBtn.setDisable(disabled);
+			this.deleteBtn.setDisable(disabled);
 		}
 	}
 

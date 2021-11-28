@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
 <?import de.regatta_hd.ui.control.FilterComboBox?>
 <?import de.regatta_hd.ui.util.RaceStringConverter?>
 <?import javafx.geometry.Insets?>
@@ -30,16 +31,17 @@
 
     <ToolBar GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2">
       <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%SetRaceView.refreshBtn.text" />
+      <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
       <Button fx:id="setRaceBtn" onAction="#handleSetRaceOnAction" text="%SetRaceView.setRaceBtn.text" />
       <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%SetRaceView.deleteBtn.text" />
     </ToolBar>
 
-    <SplitPane dividerPositions="0.33, 0.66" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
       <items>
         <VBox fx:id="srcRaceVBox" spacing="5" />
         <VBox spacing="5">
           <children>
-            <TableView fx:id="setListTbl" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn style="-fx-alignment: CENTER;" text="Rang">
                   <cellValueFactory>
@@ -48,10 +50,32 @@
                     </PropertyValueFactory>
                   </cellValueFactory>
                 </TableColumn>
-                <TableColumn text="Boat">
+                <TableColumn text="Boot">
                   <cellValueFactory>
                     <PropertyValueFactory>
                       <property>boat</property>
+                    </PropertyValueFactory>
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="identisch">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="equalCrew" />
+                  </cellValueFactory>
+                  <cellFactory>
+                    <CheckBoxTableCellFactory />
+                  </cellFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="Abteilung">
+                  <cellValueFactory>
+                    <PropertyValueFactory>
+                      <property>heatNumber</property>
+                    </PropertyValueFactory>
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="Rang">
+                  <cellValueFactory>
+                    <PropertyValueFactory>
+                      <property>heatRank</property>
                     </PropertyValueFactory>
                   </cellValueFactory>
                 </TableColumn>
@@ -72,6 +96,6 @@
     <RowConstraints />
     <RowConstraints />
     <RowConstraints />
-    <RowConstraints />
+    <RowConstraints vgrow="ALWAYS" />
   </rowConstraints>
 </GridPane>

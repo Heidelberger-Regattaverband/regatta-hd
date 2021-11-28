@@ -233,9 +233,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		entityManager.merge(race);
 	}
 
-	// static helpers
-
-	private static List<SetListEntry> createSetList(Race race, Race srcRace) {
+	@Override
+	public List<SetListEntry> createSetList(Race race, Race srcRace) {
 		Map<Integer, Registration> equalCrews = new HashMap<>();
 		Map<Integer, Registration> diffCrews = new HashMap<>();
 
@@ -273,7 +272,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}).forEach(srcHeatReg -> {
 				Registration targetRegistration = equalCrews.get(srcHeatReg.getRegistration().getId());
 				if (targetRegistration != null) {
-					setList.add(SetListEntry.builder().rank(setList.size() + 1).registration(targetRegistration).equalCrew(true).build());
+					setList.add(SetListEntry.builder().rank(setList.size() + 1).heatRregistration(srcHeatReg)
+							.registration(targetRegistration).equalCrew(true).build());
 				}
 			});
 		}
@@ -283,6 +283,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		return setList;
 	}
+
+	// static helpers
 
 	private static boolean isEqualCrews(Registration reg1, Registration reg2) {
 		// remove cox from comparison
