@@ -43,7 +43,7 @@
           <children>
             <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn style="-fx-alignment: CENTER;" text="Rang">
+                <TableColumn style="-fx-alignment: CENTER;" text="Pos.">
                   <cellValueFactory>
                     <PropertyValueFactory>
                       <property>rank</property>
@@ -65,7 +65,7 @@
                     <CheckBoxTableCellFactory />
                   </cellFactory>
                 </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="Abteilung">
+                <TableColumn style="-fx-alignment: CENTER;" text="Abt.">
                   <cellValueFactory>
                     <PropertyValueFactory>
                       <property>heatNumber</property>
