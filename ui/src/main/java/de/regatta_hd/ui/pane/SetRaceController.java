@@ -68,6 +68,7 @@ public class SetRaceController extends AbstractBaseController {
 		super.initialize(location, resources);
 
 		this.raceCbo.setDisable(true);
+		this.setListTbl.setDisable(true);
 		disableButtons(true);
 
 		this.dbTask.run(() -> {
@@ -80,6 +81,7 @@ public class SetRaceController extends AbstractBaseController {
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
 			this.raceCbo.setDisable(false);
+			this.setListTbl.setDisable(false);
 		});
 	}
 
