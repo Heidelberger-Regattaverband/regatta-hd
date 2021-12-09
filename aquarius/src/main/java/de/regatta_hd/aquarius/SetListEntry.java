@@ -18,15 +18,17 @@ import lombok.ToString;
 public class SetListEntry {
 
 	private int rank;
-
 	private boolean equalCrew;
-
 	private Registration registration;
 	private HeatRegistration heatRregistration;
 
 	// JavaFX properties
 	public ObservableBooleanValue equalCrewProperty() {
 		return new SimpleBooleanProperty(isEqualCrew());
+	}
+
+	public Short getBib() {
+		return this.registration.getBib();
 	}
 
 	public String getBoat() {
