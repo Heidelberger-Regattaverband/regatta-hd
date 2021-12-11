@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.ui.util.DBTask;
@@ -93,14 +92,11 @@ public class OffersController extends AbstractBaseController {
 			EntityManager entityManager = OffersController.this.db.getEntityManager();
 
 			OffersController.this.regatta.getRaces().forEach(race -> {
-				AgeClassExt ageClassExt = race.getAgeClass().getExtension();
-				if (ageClassExt != null) {
-					short distance = ageClassExt.getDistance();
-					if (distance > 0 && distance != race.getDistance()) {
-						race.setDistance(distance);
-						entityManager.merge(race);
-						races.add(race);
-					}
+				short distance = race.getAgeClass().getDistance();
+				if (distance != race.getDistance()) {
+					race.setDistance(distance);
+					entityManager.merge(race);
+					races.add(race);
 				}
 			});
 

@@ -13,7 +13,6 @@ import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
 import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
@@ -119,8 +118,7 @@ class AquariusDBTests {
 		Assertions.assertFalse(ageClasses.isEmpty());
 
 		AgeClass ageClass = ageClasses.get(0);
-		AgeClassExt ageClassExt = ageClass.getExtension();
-		Assertions.assertEquals(1500, ageClassExt.getDistance());
+		Assertions.assertEquals(1500, ageClass.getDistance());
 	}
 
 	private static void trace(Race offer, int indent) {

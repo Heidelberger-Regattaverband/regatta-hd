@@ -7,11 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -23,8 +22,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "AgeClass")
-@NamedQuery(name = "AgeClass.findAll", query = "SELECT a FROM AgeClass a")
-@NamedQuery(name = "AgeClass.findByAbbrevation", query = "SELECT a FROM AgeClass a WHERE a.abbreviation = :abbreviation")
+@SecondaryTable(name = "AgeClassExt", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
@@ -83,9 +81,8 @@ public class AgeClass {
 	@OrderBy("number")
 	private List<Race> races;
 
-	@OneToOne
-	@PrimaryKeyJoinColumn
-	private AgeClassExt extension;
+	@Column(name = "distance", table="AgeClassExt")
+	private short distance;
 
 	// transient fields
 	@Transient
