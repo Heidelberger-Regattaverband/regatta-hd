@@ -143,7 +143,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		// mark race as set
-		entityManager.persist(race.setRaceIsSet());
+		race.setSet(Boolean.TRUE);
 		entityManager.flush();
 
 		entityManager.merge(race);
@@ -228,8 +228,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		});
 
 		// mark race as unset
-		race.setRaceUnset().ifPresent(entityManager::persist);
-
+		race.setSet(Boolean.FALSE);
 		entityManager.merge(race);
 	}
 

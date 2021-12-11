@@ -1,7 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -15,9 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -30,6 +29,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Offer")
+@SecondaryTable(name = "OfferExt", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
@@ -137,9 +137,10 @@ public class Race {
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "race")
 	private Set<ReportInfo> reportInfos;
 
-	@OneToOne
-	@PrimaryKeyJoinColumn
-	private RaceExt extension;
+	// Second table columns
+
+	@Column(name = "isSet", table = "OfferExt")
+	private Boolean set;
 
 	// JavaFX properties
 	public ObservableBooleanValue lightweightProperty() {
@@ -147,7 +148,7 @@ public class Race {
 	}
 
 	public ObservableBooleanValue setProperty() {
-		boolean isSet = getExtension() != null && getExtension().isSet();
+		boolean isSet = this.set != null ? this.set.booleanValue() : false;
 		return new SimpleBooleanProperty(isSet);
 	}
 
@@ -162,24 +163,6 @@ public class Race {
 			return 0;
 		});
 		return sorted;
-	}
-
-	public RaceExt setRaceIsSet() {
-		RaceExt ext = getExtension();
-		if (ext == null) {
-			setExtension(RaceExt.builder().id(this.getId()).set(true).build());
-		} else {
-			ext.setSet(true);
-		}
-		return getExtension();
-	}
-
-	public Optional<RaceExt> setRaceUnset() {
-		RaceExt ext = getExtension();
-		if (ext != null) {
-			ext.setSet(false);
-		}
-		return Optional.ofNullable(ext);
 	}
 
 	public enum GroupMode {

@@ -239,7 +239,7 @@ public class SetRaceController extends AbstractBaseController {
 		if (selectedRace != null) {
 			this.dbTask.run(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				return Boolean.valueOf(race.getExtension() != null && race.getExtension().isSet());
+				return race.getSet();
 			}, raceIsSet -> {
 				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue());
 				this.deleteBtn.setDisable(disabled || !raceIsSet.booleanValue());
