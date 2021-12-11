@@ -47,26 +47,22 @@
             </ToolBar>
             <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn style="-fx-alignment: CENTER;" text="Pos.">
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
                   <cellValueFactory>
-                    <PropertyValueFactory>
-                      <property>rank</property>
-                    </PropertyValueFactory>
+                    <PropertyValueFactory property="rank" />
                   </cellValueFactory>
                 </TableColumn>
-                        <TableColumn style="-fx-alignment: CENTER;" text="Startnr.">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="bib" />
-                           </cellValueFactory>
-                        </TableColumn>
-                <TableColumn text="Boot">
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.bibCol.text">
                   <cellValueFactory>
-                    <PropertyValueFactory>
-                      <property>boat</property>
-                    </PropertyValueFactory>
+                    <PropertyValueFactory property="bib" />
                   </cellValueFactory>
                 </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="identisch">
+                <TableColumn text="%SetRaceView.heatRegsTbl.boatCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="boat" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text">
                   <cellValueFactory>
                     <PropertyValueFactory property="equalCrew" />
                   </cellValueFactory>
@@ -74,18 +70,19 @@
                     <CheckBoxTableCellFactory />
                   </cellFactory>
                 </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="Abt.">
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.heatNumberCol.text">
                   <cellValueFactory>
-                    <PropertyValueFactory>
-                      <property>heatNumber</property>
-                    </PropertyValueFactory>
+                    <PropertyValueFactory property="heatNumber" />
                   </cellValueFactory>
                 </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="Rang">
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.rankCol.text">
                   <cellValueFactory>
-                    <PropertyValueFactory>
-                      <property>heatRank</property>
-                    </PropertyValueFactory>
+                    <PropertyValueFactory property="heatRank" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%SetRaceView.heatRegsTbl.resultCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="result" />
                   </cellValueFactory>
                 </TableColumn>
               </columns>

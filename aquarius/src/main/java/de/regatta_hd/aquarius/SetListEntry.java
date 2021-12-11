@@ -49,4 +49,9 @@ public class SetListEntry {
 		Result result = this.heatRregistration != null ? this.heatRregistration.getFinalResult() : null;
 		return result != null ? Byte.valueOf(result.getRank()) : null;
 	}
+
+	public String getResult() {
+		Result result = this.heatRregistration != null ? this.heatRregistration.getFinalResult() : null;
+		return result != null ? result.getDisplayValue() : null;
+	}
 }

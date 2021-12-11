@@ -223,6 +223,8 @@ public class SetRaceController extends AbstractBaseController {
 				Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
 				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 				compEntriesTable.setItems(sortedList);
+				FxUtils.autoResizeColumns(compEntriesTable);
+
 				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 			});
