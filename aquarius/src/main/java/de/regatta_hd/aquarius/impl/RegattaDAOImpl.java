@@ -107,9 +107,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<SetListEntry> setRaceHeats(Race race, Race srcRace) {
-		List<SetListEntry> setList = createSetList(race, srcRace);
-
+	public void setRaceHeats(Race race, List<SetListEntry> setList) {
 		int numRegistrations = setList.size();
 		short laneCount = race.getRaceMode().getLaneCount();
 
@@ -149,8 +147,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		entityManager.merge(race);
 
 		entityManager.clear();
-
-		return setList;
 	}
 
 	@Override

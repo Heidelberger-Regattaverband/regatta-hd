@@ -22,7 +22,6 @@ import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -144,14 +143,11 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (selectedRace != null && this.srcRace != null) {
+		if (selectedRace != null && this.srcRace != null && !this.setListTbl.getItems().isEmpty()) {
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				return this.regattaDAO.setRaceHeats(race, this.srcRace);
-			}, setList -> {
-				ObservableList<SetListEntry> setListObservable = FXCollections.observableArrayList(setList);
-				this.setListTbl.setItems(setListObservable);
-				FxUtils.autoResizeColumns(this.setListTbl);
+				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
+			}, () -> {
 				showRace();
 			});
 		}
@@ -239,7 +235,8 @@ public class SetRaceController extends AbstractBaseController {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				return race.getSet();
 			}, raceIsSet -> {
-				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue());
+				// disable setRace button if race is already set or set list is empty
+				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue() || this.setListTbl.getItems().isEmpty());
 				this.deleteBtn.setDisable(disabled || !raceIsSet.booleanValue());
 			});
 		} else {
