@@ -148,7 +148,7 @@ public class Race {
 	}
 
 	public ObservableBooleanValue setProperty() {
-		boolean isSet = this.set != null ? this.set.booleanValue() : false;
+		boolean isSet = this.set != null && this.set.booleanValue();
 		return new SimpleBooleanProperty(isSet);
 	}
 

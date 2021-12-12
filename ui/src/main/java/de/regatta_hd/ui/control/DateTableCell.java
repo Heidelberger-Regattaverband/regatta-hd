@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 
-public class DateTableCell<B> extends TableCell<B, Instant> {
+public class DateTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 	private static final Logger logger = Logger.getLogger(DateTableCell.class.getName());
 
 	private DatePicker datePicker;
