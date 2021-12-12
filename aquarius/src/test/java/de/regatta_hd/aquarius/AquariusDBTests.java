@@ -13,7 +13,6 @@ import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
 import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.AgeClassExt;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
@@ -51,7 +50,7 @@ class AquariusDBTests {
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, regattaId);
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
 		Assertions.assertEquals(regattaId, regatta.getId());
 		Assertions.assertNotNull(regatta);
 		regattaDAO.setActiveRegatta(regatta);
@@ -105,7 +104,7 @@ class AquariusDBTests {
 
 	@Test
 	void testGetEventFailed() {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
+		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
 		Assertions.assertThrows(EntityNotFoundException.class, () -> {
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
@@ -119,8 +118,7 @@ class AquariusDBTests {
 		Assertions.assertFalse(ageClasses.isEmpty());
 
 		AgeClass ageClass = ageClasses.get(0);
-		AgeClassExt ageClassExt = ageClass.getExtension();
-		Assertions.assertEquals(1500, ageClassExt.getDistance());
+		Assertions.assertEquals(1500, ageClass.getDistance());
 	}
 
 	private static void trace(Race offer, int indent) {

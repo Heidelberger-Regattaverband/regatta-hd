@@ -43,7 +43,9 @@ public interface RegattaDAO {
 
 	// race assignment
 
-	void setRaceHeats(Race targetRace, Race sourceRace);
+	List<SetListEntry> createSetList(Race race, Race srcRace);
+
+	void setRaceHeats(Race targetRace, List<SetListEntry> setList);
 
 	void cleanRaceHeats(Race race);
 

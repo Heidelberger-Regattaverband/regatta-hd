@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
 <?import de.regatta_hd.ui.control.FilterComboBox?>
 <?import de.regatta_hd.ui.util.RaceStringConverter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -26,17 +29,77 @@
       </converter>
     </FilterComboBox>
 
-    <ToolBar GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2">
-        <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%SetRaceView.refreshBtn.text" />
-        <Button fx:id="setRaceBtn" onAction="#handleSetRaceOnAction" text="%SetRaceView.setRaceBtn.text" />
-        <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%SetRaceView.deleteBtn.text" />
-    </ToolBar>
-
-    <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
       <items>
-        <VBox fx:id="srcRaceVBox" spacing="5">
+        <VBox>
+          <children>
+            <ToolBar>
+              <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%SetRaceView.refreshBtn.text" />
+            </ToolBar>
+            <VBox fx:id="srcRaceVBox" spacing="5" />
+          </children>
         </VBox>
-        <VBox fx:id="raceVBox" spacing="5">
+        <VBox spacing="5">
+          <children>
+            <ToolBar>
+              <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
+              <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction" text="%SetRaceView.deleteSetListBtn.text" />
+            </ToolBar>
+            <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="rank" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.bibCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="bib" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="%SetRaceView.heatRegsTbl.boatCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="boat" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="equalCrew" />
+                  </cellValueFactory>
+                  <cellFactory>
+                    <CheckBoxTableCellFactory />
+                  </cellFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.heatNumberCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="heatNumber" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.rankCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="heatRank" />
+                  </cellValueFactory>
+                </TableColumn>
+                <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%SetRaceView.heatRegsTbl.resultCol.text">
+                  <cellValueFactory>
+                    <PropertyValueFactory property="result" />
+                  </cellValueFactory>
+                </TableColumn>
+              </columns>
+            </TableView>
+          </children>
+        </VBox>
+        <VBox>
+          <children>
+            <ToolBar>
+              <Button fx:id="setRaceBtn" onAction="#handleSetRaceOnAction" text="%SetRaceView.setRaceBtn.text" />
+              <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%SetRaceView.deleteBtn.text" />
+            </ToolBar>
+            <VBox fx:id="raceVBox" spacing="5">
+              <children>
+              </children>
+            </VBox>
+          </children>
         </VBox>
       </items>
     </SplitPane>
@@ -46,10 +109,10 @@
     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints />
+    <RowConstraints />
+    <RowConstraints vgrow="ALWAYS" />
+  </rowConstraints>
 </GridPane>
