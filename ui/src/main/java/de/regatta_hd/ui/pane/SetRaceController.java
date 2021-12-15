@@ -233,9 +233,10 @@ public class SetRaceController extends AbstractBaseController {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				return race.getSet();
 			}, raceIsSet -> {
+				boolean isSet = raceIsSet != null && raceIsSet.booleanValue();
 				// disable setRace button if race is already set or set list is empty
-				this.setRaceBtn.setDisable(disabled || raceIsSet.booleanValue() || this.setListTbl.getItems().isEmpty());
-				this.deleteBtn.setDisable(disabled || !raceIsSet.booleanValue());
+				this.setRaceBtn.setDisable(disabled || isSet || this.setListTbl.getItems().isEmpty());
+				this.deleteBtn.setDisable(disabled || !isSet);
 			});
 		} else {
 			this.setRaceBtn.setDisable(disabled);
