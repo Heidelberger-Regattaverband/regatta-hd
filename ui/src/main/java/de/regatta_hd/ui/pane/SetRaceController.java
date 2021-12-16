@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,18 +75,31 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		this.dbTask.run(() -> {
-			List<Race> races = this.regattaDAO.findRaces("2%");
-			List<Race> srcRaces = this.regattaDAO.findRaces("1%");
-			Map<String, Race> srcRacesMap = new HashMap<>();
-			srcRaces.forEach(race -> srcRacesMap.put(race.getNumber(), race));
+			List<Race> allRaces = this.regattaDAO.getRaces();
+			List<Race> races = new ArrayList<>();
+			Map<String, Race> srcRaces = new HashMap<>();
+			allRaces.forEach(race -> {
+				switch (race.getNumber().charAt(0)) {
+				case '1':
+					srcRaces.put(race.getNumber(), race);
+					break;
+				case '2':
+					races.add(race);
+					break;
+				default:
+					// ignored
+					break;
+				}
+			});
 
-			// remove master races, open age class and races with one heat, as they will not
-			// be set
 			List<Race> filteredRaces = races.stream()
-					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters() && race.getHeats().size() > 1).filter(race -> {
+					// remove master races, open age class and races with one heat, as they will not be set
+					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters() && race.getHeats().size() > 1)
+					// remove races whose source race result isn't official yet
+					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
 						String srcRaceNumber = replaceChar(race.getNumber(), '1', 0);
-						Race race2 = srcRacesMap.get(srcRaceNumber);
+						Race race2 = srcRaces.get(srcRaceNumber);
 						return race2 != null && race2.isOfficial();
 					}).toList();
 			return FXCollections.observableArrayList(filteredRaces);
