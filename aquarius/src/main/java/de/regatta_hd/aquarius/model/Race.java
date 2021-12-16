@@ -165,6 +165,13 @@ public class Race {
 		return sorted;
 	}
 
+	/**
+	 * @return {@code true} if the result of all {@link Heat heats} is official, otherwise {@false}.
+	 */
+	public boolean isOfficial() {
+		return getHeats().stream().allMatch(heat -> heat.isOfficial());
+	}
+
 	public enum GroupMode {
 		NONE, PERFORMANCE, AGE, PERFORMANCE_AGE
 	}

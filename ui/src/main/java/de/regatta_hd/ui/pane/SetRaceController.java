@@ -75,10 +75,19 @@ public class SetRaceController extends AbstractBaseController {
 
 		this.dbTask.run(() -> {
 			List<Race> races = this.regattaDAO.findRaces("2%");
+			List<Race> srcRaces = this.regattaDAO.findRaces("1%");
+			Map<String, Race> srcRacesMap = new HashMap<>();
+			srcRaces.forEach(race -> srcRacesMap.put(race.getNumber(), race));
+
 			// remove master races, open age class and races with one heat, as they will not
 			// be set
 			List<Race> filteredRaces = races.stream()
-					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters() && race.getHeats().size() > 1).toList();
+					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters() && race.getHeats().size() > 1).filter(race -> {
+						// create race number of source race -> replace 2 with 1
+						String srcRaceNumber = replaceChar(race.getNumber(), '1', 0);
+						Race race2 = srcRacesMap.get(srcRaceNumber);
+						return race2 != null && race2.isOfficial();
+					}).toList();
 			return FXCollections.observableArrayList(filteredRaces);
 		}, races -> {
 			this.raceCbo.setInitialItems(races);
@@ -91,6 +100,7 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleTargetOfferOnAction() {
 		this.raceVBox.getChildren().clear();
 		this.srcRaceVBox.getChildren().clear();
+		this.setListTbl.getItems().clear();
 
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 
