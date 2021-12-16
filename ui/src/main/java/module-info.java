@@ -14,6 +14,7 @@ open module de.regatta_hd.ui {
 	requires org.apache.commons.lang3;
 	requires de.regatta_hd.common;
 	requires lombok;
+	requires java.prefs;
 
 	exports de.regatta_hd.ui;
 }

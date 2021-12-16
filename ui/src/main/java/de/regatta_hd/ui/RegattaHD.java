@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDBModule;
+import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,9 +31,17 @@ public class RegattaHD extends Application {
 
 		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
-		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/PrimaryView.fxml", bundle), 800, 600);
+		FxUtils.loadSizeAndPos("Primary.fxml", primaryStage);
+
+		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/PrimaryView.fxml", bundle));
 		primaryStage.setScene(scene);
 		primaryStage.setTitle(bundle.getString("MainWindow.title"));
+
+		// When the stage closes store the current size and window location.
+		primaryStage.setOnCloseRequest(event -> {
+			FxUtils.storeSizeAndPos("Primary.fxml", primaryStage);
+		});
+
 		primaryStage.show();
 	}
 

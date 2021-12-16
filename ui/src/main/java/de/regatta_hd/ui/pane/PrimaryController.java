@@ -100,7 +100,7 @@ public class PrimaryController extends AbstractBaseController {
 				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"),
 						event -> this.setRaceStage = null);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		} else {
 			this.setRaceStage.requestFocus();
@@ -114,7 +114,7 @@ public class PrimaryController extends AbstractBaseController {
 				this.eventViewStage = newWindow("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"),
 						event -> this.eventViewStage = null);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		} else {
 			this.eventViewStage.requestFocus();
@@ -128,7 +128,7 @@ public class PrimaryController extends AbstractBaseController {
 				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.racesMitm.text"),
 						event -> this.offersViewStage = null);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		} else {
 			this.offersViewStage.requestFocus();

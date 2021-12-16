@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import com.google.inject.Inject;
 
 import de.regatta_hd.ui.FXMLLoaderFactory;
+import de.regatta_hd.ui.util.FxUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -40,9 +41,16 @@ abstract class AbstractBaseController implements Initializable {
 
 		Stage stage = new Stage();
 		stage.setTitle(title);
-		stage.setScene(new Scene(parent, 1024, 768));
+		stage.setScene(new Scene(parent));
+
+		FxUtils.loadSizeAndPos(resource, stage);
 		stage.show();
-		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, closeHandler::accept);
+
+		// When the stage closes store the current size and window location.
+		stage.setOnCloseRequest(event -> {
+			FxUtils.storeSizeAndPos(resource, stage);
+			closeHandler.accept(event);
+		});
 
 		return stage;
 	}
