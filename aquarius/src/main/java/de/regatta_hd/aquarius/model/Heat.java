@@ -101,6 +101,27 @@ public class Heat {
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "heat")
 	private Set<ReportInfo> reportInfos;
 
+	/**
+	 * @return {@code true} if the heat is set, but not started yet.
+	 */
+	public boolean isSet() {
+		return getState() == 1;
+	}
+
+	/**
+	 * @return {@code true} if the heat is finished, but the result isn't official yet.
+	 */
+	public boolean isFinished() {
+		return getState() == 5;
+	}
+
+	/**
+	 * @return {@code true} if the heat is finished and the result is official.
+	 */
+	public boolean isOfficial() {
+		return getState() == 4;
+	}
+
 	public List<HeatRegistration> getHeatRegistrationsOrderedByRank() {
 		List<HeatRegistration> sorted = getEntries();
 		sorted.sort((entry1, entry2) -> {
