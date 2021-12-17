@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -203,10 +201,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	public Regatta getActiveRegatta() {
 		try {
 			if (this.activeRegattaId == -1) {
-				String property = this.cfgService.getProperty(ACTIVE_REGATTA);
-				if (StringUtils.isNotBlank(property)) {
-					this.activeRegattaId = Integer.parseInt(property);
-				}
+				this.activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
 			}
 			return find(Regatta.class, Integer.valueOf(this.activeRegattaId));
 		} catch (IOException e) {

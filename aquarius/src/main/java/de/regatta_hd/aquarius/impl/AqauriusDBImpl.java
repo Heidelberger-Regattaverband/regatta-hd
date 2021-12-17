@@ -58,14 +58,34 @@ public class AqauriusDBImpl implements AquariusDB {
 		return isOpenImpl();
 	}
 
+	@SuppressWarnings("resource")
 	@Override
-	public synchronized void open(DBConfig connectionData) {
-		requireNonNull(connectionData, "connectionData must not be null");
+	public synchronized void open(DBConfig dbCfg) {
+		requireNonNull(dbCfg, "dbCfg must not be null");
 
-		open(connectionData.getDbHost(), connectionData.getDbName(), connectionData.getUserName(),
-				connectionData.getPassword());
+		close();
+
+		Map<String, String> props = getProperties(dbCfg);
+		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
+		this.entityManager = factory.createEntityManager();
+
+		if (this.entityManager.isOpen()) {
+			Session session = this.entityManager.unwrap(Session.class);
+			session.doWork(connection -> {
+				try {
+					Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(), database);
+					liquibase.update(new Contexts(), new LabelExpression());
+
+					// store current thread to ensure further DB access is done in same thread
+					this.sessionThread = Thread.currentThread();
+				} catch (LiquibaseException e) {
+					this.entityManager = null;
+					throw new SQLException(e);
+				}
+			});
+		}
 	}
-
 
 	@Override
 	public synchronized EntityTransaction beginTransaction() {
@@ -81,7 +101,7 @@ public class AqauriusDBImpl implements AquariusDB {
 			throw new IllegalStateException("Not connected.");
 		}
 		if (Thread.currentThread() != this.sessionThread) {
-			throw new IllegalThreadStateException("Not DB session thread.") ;
+			throw new IllegalThreadStateException("Not DB session thread.");
 		}
 	}
 
@@ -89,42 +109,20 @@ public class AqauriusDBImpl implements AquariusDB {
 		return this.entityManager != null && this.entityManager.isOpen();
 	}
 
-	@SuppressWarnings("resource")
-	private void open(String hostName, String dbName, String userName, String password) {
-		close();
-
-		Map<String, String> props = getProperties(hostName, dbName, userName, password);
-		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
-		this.entityManager = factory.createEntityManager();
-
-		if (this.entityManager.isOpen()) {
-			Session session = this.entityManager.unwrap(Session.class);
-			session.doWork(connection -> {
-				try {
-					Database database = DatabaseFactory.getInstance()
-							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
-					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
-							new ClassLoaderResourceAccessor(), database);
-					liquibase.update(new Contexts(), new LabelExpression());
-
-					// store current thread to ensure further DB access is done in same thread
-					this.sessionThread = Thread.currentThread();
-				} catch (LiquibaseException e) {
-					this.entityManager = null;
-					throw new SQLException(e);
-				}
-			});
-		}
-	}
-
-	private static Map<String, String> getProperties(String hostName, String dbName, String userName, String password) {
+	private static Map<String, String> getProperties(DBConfig dbCfg) {
 		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;database=%s",
-				requireNonNull(hostName, "hostName must not be null"),
-				requireNonNull(dbName, "dbName must not be null"));
+		String url = String.format("jdbc:sqlserver://%s;database=%s", dbCfg.getDbHost(), dbCfg.getDbName());
+
+		if (dbCfg.isEncrypt()) {
+			url += ";encrypt=true";
+			if (dbCfg.isTrustServerCertificate()) {
+				url += ";trustServerCertificate=true";
+			}
+		}
+
 		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", requireNonNull(userName, "userName must not be null"));
-		props.put("javax.persistence.jdbc.password", requireNonNull(password, "password must not be null"));
+		props.put("javax.persistence.jdbc.user", dbCfg.getUserName());
+		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
 	}
 }

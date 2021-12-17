@@ -4,9 +4,11 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import de.regatta_hd.aquarius.DBConfig;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -19,10 +21,9 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 
 	private DBConfig connectionData;
 
-	public DBConnectionDialog(Stage primaryStage, boolean decorated, ResourceBundle resources,
-			DBConfig connectionData) {
+	public DBConnectionDialog(Stage primaryStage, boolean decorated, ResourceBundle resources, DBConfig dbCfg) {
 		initOwner(Objects.requireNonNull(primaryStage, "primaryStage"));
-		this.connectionData = Objects.requireNonNullElse(connectionData, DBConfig.builder().build());
+		this.connectionData = Objects.requireNonNullElse(dbCfg, DBConfig.builder().build());
 
 		if (!decorated) {
 			initStyle(StageStyle.UNDECORATED);
@@ -43,6 +44,17 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 		Label passwordLbl = new Label(resources.getString("DatabaseConnectionDialog.password"));
 		gridpane.add(passwordLbl, 0, 4);
 
+		CheckBox encryptCbox = new CheckBox(resources.getString("DatabaseConnectionDialog.encrypt"));
+		encryptCbox.setSelected(dbCfg.isEncrypt());
+		gridpane.add(encryptCbox, 0, 5);
+
+		CheckBox trustServerCertificateCbox = new CheckBox(resources.getString("DatabaseConnectionDialog.trustServerCertificate"));
+		trustServerCertificateCbox.setSelected(dbCfg.isTrustServerCertificate());
+		trustServerCertificateCbox.setDisable(!encryptCbox.isSelected());
+		gridpane.add(trustServerCertificateCbox, 0, 6);
+
+		encryptCbox.addEventHandler(ActionEvent.ACTION, event -> trustServerCertificateCbox.setDisable(!encryptCbox.isSelected()));
+
 		TextField hostNameFld = new TextField(this.connectionData.getDbHost());
 		gridpane.add(hostNameFld, 1, 1);
 		TextField dbNameFld = new TextField(this.connectionData.getDbName());
@@ -62,6 +74,8 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 				this.connectionData.setDbName(dbNameFld.getText());
 				this.connectionData.setUserName(userNameFld.getText());
 				this.connectionData.setPassword(passwordFld.getText());
+				this.connectionData.setEncrypt(encryptCbox.isSelected());
+				this.connectionData.setTrustServerCertificate(trustServerCertificateCbox.isSelected());
 				return this.connectionData;
 			}
 			return null;

@@ -29,4 +29,14 @@ public class DBConfig {
 	 * The user's password.
 	 */
 	private String password;
+
+	/**
+	 * Enables encryption of connection to database.
+	 */
+	private boolean encrypt;
+
+	/**
+	 * Trust server certificate without validation if encrypted connection is enabled.
+	 */
+	private boolean trustServerCertificate;
 }

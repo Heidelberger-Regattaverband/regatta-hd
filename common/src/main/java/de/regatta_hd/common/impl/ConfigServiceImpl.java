@@ -19,10 +19,24 @@ public class ConfigServiceImpl implements ConfigService {
 
 	private Properties properties;
 
+	// getter
+
 	@Override
 	public synchronized String getProperty(String key) throws IOException {
 		return getProperties().getProperty(requireNonNull(key, KEY_MUST_NOT_BE_NULL));
 	}
+
+	@Override
+	public boolean getBooleanProperty(String key) throws IOException {
+		return Boolean.parseBoolean(getProperty(key));
+	}
+
+	@Override
+	public int getIntegerProperty(String key) throws IOException {
+		return Integer.parseInt(getProperty(key));
+	}
+
+	// setter
 
 	@Override
 	public synchronized void setProperty(String key, String value) throws IOException {
@@ -36,14 +50,23 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
 	@Override
-	public synchronized void setProperty(String key, int value) throws IOException {
+	public void setProperty(String key, boolean value) throws IOException {
+		setPropertyImpl(requireNonNull(key, KEY_MUST_NOT_BE_NULL), Boolean.toString(value));
+	}
+
+	@Override
+	public void setProperty(String key, int value) throws IOException {
 		setPropertyImpl(requireNonNull(key, KEY_MUST_NOT_BE_NULL), Integer.toString(value));
 	}
+
+	// cleanup
 
 	@Override
 	public synchronized void removeProperty(String key) throws IOException {
 		removePropertyImpl(requireNonNull(key, KEY_MUST_NOT_BE_NULL));
 	}
+
+	// private
 
 	private void setPropertyImpl(String key, String value) throws IOException {
 		getProperties().setProperty(key, value);
