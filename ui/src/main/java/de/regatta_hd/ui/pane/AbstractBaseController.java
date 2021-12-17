@@ -47,7 +47,7 @@ abstract class AbstractBaseController implements Initializable {
 		stage.show();
 
 		// When the stage closes store the current size and window location.
-		stage.setOnCloseRequest(event -> {
+		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 			FxUtils.storeSizeAndPos(resource, stage);
 			closeHandler.accept(event);
 		});

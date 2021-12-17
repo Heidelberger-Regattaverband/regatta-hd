@@ -32,17 +32,32 @@ class TestConfigService implements ConfigService {
 	}
 
 	@Override
-	public void setProperty(String key, String value) throws IOException {
+	public void setProperty(String key, String value) {
 		// not implemented
 	}
 
 	@Override
-	public void setProperty(String key, int value) throws IOException {
+	public void setProperty(String key, int value) {
 		// not implemented
 	}
 
 	@Override
-	public void removeProperty(String key) throws IOException {
+	public void removeProperty(String key) {
 		// not implemented
+	}
+
+	@Override
+	public void setProperty(String key, boolean value) {
+		// not implemented
+	}
+
+	@Override
+	public boolean getBooleanProperty(String key) throws IOException {
+		return Boolean.parseBoolean(getProperty(key));
+	}
+
+	@Override
+	public int getIntegerProperty(String key) throws IOException {
+		return Integer.parseInt(getProperty(key));
 	}
 }

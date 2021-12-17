@@ -16,6 +16,8 @@ public class DBConfigStoreImpl implements DBConfigStore {
 	private static final String DB_NAME = "dbName";
 	private static final String USERNAME = "userName";
 	private static final String PASSWORD = "password"; // TODO: don't store password
+	private static final String ENCRYPT = "encrypt";
+	private static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
 
 	@Inject
 	private ConfigService cfgService;
@@ -23,10 +25,10 @@ public class DBConfigStoreImpl implements DBConfigStore {
 	@Override
 	public DBConfig getLastSuccessful() throws IOException {
 		return DBConfig.builder() //
-				.dbHost(this.cfgService.getProperty(DB_HOST)) //
-				.dbName(this.cfgService.getProperty(DB_NAME)) //
-				.userName(this.cfgService.getProperty(USERNAME)) //
-				.password(this.cfgService.getProperty(PASSWORD)).build();
+				.dbHost(this.cfgService.getProperty(DB_HOST)).dbName(this.cfgService.getProperty(DB_NAME))
+				.userName(this.cfgService.getProperty(USERNAME)).password(this.cfgService.getProperty(PASSWORD))
+				.encrypt(this.cfgService.getBooleanProperty(ENCRYPT))
+				.trustServerCertificate(this.cfgService.getBooleanProperty(TRUST_SERVER_CERTIFICATE)).build();
 	}
 
 	@Override
@@ -37,5 +39,7 @@ public class DBConfigStoreImpl implements DBConfigStore {
 		this.cfgService.setProperty(DB_NAME, connectionData.getDbName());
 		this.cfgService.setProperty(USERNAME, connectionData.getUserName());
 		this.cfgService.setProperty(PASSWORD, connectionData.getPassword());
+		this.cfgService.setProperty(ENCRYPT, connectionData.isEncrypt());
+		this.cfgService.setProperty(TRUST_SERVER_CERTIFICATE, connectionData.isTrustServerCertificate());
 	}
 }

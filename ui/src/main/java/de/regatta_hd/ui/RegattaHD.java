@@ -38,9 +38,7 @@ public class RegattaHD extends Application {
 		primaryStage.setTitle(bundle.getString("MainWindow.title"));
 
 		// When the stage closes store the current size and window location.
-		primaryStage.setOnCloseRequest(event -> {
-			FxUtils.storeSizeAndPos("Primary.fxml", primaryStage);
-		});
+		primaryStage.setOnCloseRequest(event -> FxUtils.storeSizeAndPos("Primary.fxml", primaryStage));
 
 		primaryStage.show();
 	}
