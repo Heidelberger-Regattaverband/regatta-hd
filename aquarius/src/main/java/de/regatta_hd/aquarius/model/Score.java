@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius.model;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,8 +19,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-public class Score implements Serializable {
-	private static final long serialVersionUID = -4631180489551383220L;
+public class Score {
 
 	@Id
 	@Column(name = "club_id")
