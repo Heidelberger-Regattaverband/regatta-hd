@@ -2,7 +2,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
   <changeSet author="markus@ofterdinger.de" id="1">
-    <preConditions onFail="WARN">
+    <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="AgeClassExt" />
       </not>
@@ -26,7 +26,7 @@
   </changeSet>
 
   <changeSet author="markus@ofterdinger.de" id="3">
-    <preConditions onFail="WARN">
+    <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="OfferExt" />
       </not>
@@ -42,17 +42,17 @@
   </changeSet>
 
   <changeSet id="4" author="markus@ofterdinger.de">
-    <preConditions onFail="WARN">
+    <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="Score" />
       </not>
     </preConditions>
     <createTable tableName="Score">
       <column name="club_id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Club" referencedColumnNames="Club_ID" foreignKeyName="FK_Club" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Club" referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
       </column>
       <column name="event_id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Event" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
       </column>
       <column name="points" type="INT" />
     </createTable>
