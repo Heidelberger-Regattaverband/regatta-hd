@@ -54,7 +54,7 @@
       <column name="event_id" type="INT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
       </column>
-      <column name="points" type="INT" />
+      <column name="points" type="FLOAT" />
     </createTable>
   </changeSet>
 </databaseChangeLog>

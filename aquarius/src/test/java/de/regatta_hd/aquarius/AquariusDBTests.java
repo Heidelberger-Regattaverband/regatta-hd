@@ -7,10 +7,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.util.Modules;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
@@ -24,29 +21,17 @@ import de.regatta_hd.aquarius.model.RegistrationLabel;
 import de.regatta_hd.aquarius.model.Result;
 import jakarta.persistence.EntityNotFoundException;
 
-class AquariusDBTests {
+@ExtendWith(BaseDBTest.class)
+class AquariusDBTests extends BaseDBTest {
 
 	private static final int regattaId = 4;
-
-	private static AquariusDB aquariusDb;
 
 	private static RegattaDAO regattaDAO;
 
 	private static MasterDataDAO masterData;
 
-	private static DBConfig connectionData;
-
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
-		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
-		Injector injector = Guice.createInjector(testModules);
-
-		DBConfigStore connStore = injector.getInstance(DBConfigStore.class);
-		connectionData = connStore.getLastSuccessful();
-
-		aquariusDb = injector.getInstance(AquariusDB.class);
-		aquariusDb.open(connectionData);
-
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
@@ -62,12 +47,6 @@ class AquariusDBTests {
 			aquariusDb.close();
 			aquariusDb = null;
 		}
-	}
-
-	@Test
-	void testOpen() {
-		aquariusDb.open(connectionData);
-		Assertions.assertTrue(aquariusDb.isOpen());
 	}
 
 	@Test
@@ -120,6 +99,13 @@ class AquariusDBTests {
 		AgeClass ageClass = ageClasses.get(0);
 		Assertions.assertEquals(1500, ageClass.getDistance());
 	}
+
+	@Test
+	void testCalcScores() {
+		regattaDAO.calculateScores();
+	}
+
+	// static helpers
 
 	private static void trace(Race offer, int indent) {
 		indent(indent);

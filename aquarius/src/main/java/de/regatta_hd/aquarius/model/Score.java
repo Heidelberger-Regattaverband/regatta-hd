@@ -8,7 +8,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -22,6 +25,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Score {
 
 	@Id
@@ -33,7 +39,7 @@ public class Score {
 	private int regattaId;
 
 	@Column(name = "points")
-	private int points;
+	private float points;
 
 	@MapsId(value = "clubId")
 	@OneToOne
@@ -44,4 +50,8 @@ public class Score {
 	@OneToOne
 	@JoinColumn(name = "event_id")
 	private Regatta regatta;
+
+	public void addPoints(float addPoints) {
+		this.points += addPoints;
+	}
 }

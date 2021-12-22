@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,14 +18,19 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
+import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
@@ -71,7 +77,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		return createTypedQuery(query) //
 				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
-				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
+				.setParameter(regattaParam.getName(),
+						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
 				.getSingleResult();
 	}
 
@@ -89,18 +96,21 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		ParameterExpression<Boolean> lightweightParam = critBuilder.parameter(Boolean.class, "lightweight");
 
 		query.where(critBuilder.and( //
-				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam), critBuilder.equal(o.get("lightweight"), lightweightParam), //
+				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam),
+				critBuilder.equal(o.get("lightweight"), lightweightParam), //
 				critBuilder.equal(o.get("boatClass"), boatClassParam), //
 				critBuilder.equal(o.get("ageClass"), ageClassParam), //
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
 		return createTypedQuery(query) //
-				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
+				.setParameter(raceNumberParam.getName(),
+						requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
 				.setParameter(lightweightParam.getName(), Boolean.valueOf(lightweight))
 				.setParameter(boatClassParam.getName(), requireNonNull(boatClass, "boatClass must not be null"))
 				.setParameter(ageClassParam.getName(), requireNonNull(ageClass, "ageClass must not be null"))
-				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
+				.setParameter(regattaParam.getName(),
+						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
 				.getResultList();
 	}
 
@@ -130,7 +140,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				for (int r = startIndex; r < endIndex && r < numRegistrations; r++) {
 					Registration targetRegistration = setList.get(r).getRegistration();
 
-					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration).lane(lane++).build();
+					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration)
+							.lane(lane++).build();
 					entityManager.merge(heatReg);
 				}
 
@@ -258,7 +269,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
 					return 0;
 				}
-				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime().intValue() ? 1 : -1;
+				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime()
+						.intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
 				Registration targetRegistration = equalCrews.get(srcHeatReg.getRegistration().getId());
 				if (targetRegistration != null) {
@@ -268,18 +280,61 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			});
 		}
 
-		diffCrews.values().forEach(registration -> setList
-				.add(SetListEntry.builder().rank(setList.size() + 1).registration(registration).equalCrew(false).build()));
+		diffCrews.values().forEach(registration -> setList.add(
+				SetListEntry.builder().rank(setList.size() + 1).registration(registration).equalCrew(false).build()));
 
 		return setList;
+	}
+
+	@Override
+	public void calculateScores() {
+		Map<Club, Score> scores = new HashMap<>();
+
+		List<HeatRegistration> heatRegs = getRaces().stream() //
+				.flatMap(race -> (Stream<Heat>) race.getHeats().stream()) //
+				.flatMap(heat -> heat.getEntries().stream()).toList();
+
+		heatRegs.forEach(heatReg -> {
+			Race race = heatReg.getHeat().getRace();
+			short laneCount = race.getRaceMode().getLaneCount();
+			byte numRowers = race.getBoatClass().getNumRowers();
+			byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
+			float points = (numRowers * (laneCount + 1 - rank));
+
+			Club club = heatReg.getRegistration().getClub();
+
+			Score score = scores.computeIfAbsent(club,
+					key -> Score.builder().clubId(key.getId()).regattaId(this.activeRegattaId).points(0).build());
+			score.addPoints(points);
+		});
+
+		updateScores(scores);
+	}
+
+	private void updateScores(Map<Club, Score> scores) {
+		EntityTransaction transaction = this.aquariusDb.beginTransaction();
+
+		CriteriaDelete<Score> delete = this.aquariusDb.getCriteriaBuilder().createCriteriaDelete(Score.class);
+		delete.from(Score.class);
+		Query query = this.aquariusDb.getEntityManager().createQuery(delete);
+		query.executeUpdate();
+
+		scores.values().forEach(score -> {
+			this.aquariusDb.getEntityManager().persist(score);
+		});
+
+		this.aquariusDb.getEntityManager().flush();
+		transaction.commit();
 	}
 
 	// static helpers
 
 	private static boolean isEqualCrews(Registration reg1, Registration reg2) {
 		// remove cox from comparison
-		List<Crew> crews1 = reg1.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare).toList();
-		List<Crew> crews2 = reg2.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare).toList();
+		List<Crew> crews1 = reg1.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
+				.toList();
+		List<Crew> crews2 = reg2.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
+				.toList();
 
 		if (crews1.size() != crews2.size()) {
 			return false;

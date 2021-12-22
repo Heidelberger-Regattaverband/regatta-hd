@@ -49,6 +49,10 @@ public interface RegattaDAO {
 
 	void cleanRaceHeats(Race race);
 
+	// score
+
+	void calculateScores();
+
 	// db
 
 	void clear();
