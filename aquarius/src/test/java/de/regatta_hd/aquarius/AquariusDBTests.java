@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -58,17 +57,6 @@ class AquariusDBTests extends BaseDBTest {
 	void testGetEvents() {
 		List<Regatta> events = regattaDAO.getRegattas();
 		Assertions.assertFalse(events.isEmpty());
-	}
-
-	@Test
-	void testFindOffers() {
-		BoatClass boatClass = masterData.getBoatClass(1);
-		AgeClass ageClass = masterData.getAgeClass(11);
-
-		List<Race> races = regattaDAO.findRaces("1%", boatClass, ageClass, true);
-		Assertions.assertFalse(races.isEmpty());
-
-		races.forEach(offer -> trace(offer, 0));
 	}
 
 	@Test

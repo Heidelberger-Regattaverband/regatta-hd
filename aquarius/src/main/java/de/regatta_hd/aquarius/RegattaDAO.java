@@ -3,8 +3,6 @@ package de.regatta_hd.aquarius;
 import java.io.IOException;
 import java.util.List;
 
-import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 
@@ -21,10 +19,6 @@ public interface RegattaDAO {
 	List<Race> getRaces();
 
 	Race getRace(String raceNumber);
-
-	List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
-
-	List<Race> findRaces(String raceNumberFilter);
 
 	/**
 	 * Sets the active regatta that is used for all DB accesses.

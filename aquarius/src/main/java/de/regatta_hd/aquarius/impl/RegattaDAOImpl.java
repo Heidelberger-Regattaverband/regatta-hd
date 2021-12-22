@@ -16,8 +16,6 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
-import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
@@ -83,38 +81,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Race> findRaces(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight) {
-		var critBuilder = getCriteriaBuilder();
-
-		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
-		Root<Race> o = query.from(Race.class);
-
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
-		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, PARAM_RACE_NUMBER);
-		ParameterExpression<BoatClass> boatClassParam = critBuilder.parameter(BoatClass.class, "boatClass");
-		ParameterExpression<AgeClass> ageClassParam = critBuilder.parameter(AgeClass.class, "ageClass");
-		ParameterExpression<Boolean> lightweightParam = critBuilder.parameter(Boolean.class, "lightweight");
-
-		query.where(critBuilder.and( //
-				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam),
-				critBuilder.equal(o.get("lightweight"), lightweightParam), //
-				critBuilder.equal(o.get("boatClass"), boatClassParam), //
-				critBuilder.equal(o.get("ageClass"), ageClassParam), //
-				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
-		));
-
-		return createQuery(query) //
-				.setParameter(raceNumberParam.getName(),
-						requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
-				.setParameter(lightweightParam.getName(), Boolean.valueOf(lightweight))
-				.setParameter(boatClassParam.getName(), requireNonNull(boatClass, "boatClass must not be null"))
-				.setParameter(ageClassParam.getName(), requireNonNull(ageClass, "ageClass must not be null"))
-				.setParameter(regattaParam.getName(),
-						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
-				.getResultList();
-	}
-
-	@Override
 	public void setRaceHeats(Race race, List<SetListEntry> setList) {
 		int numRegistrations = setList.size();
 		short laneCount = race.getRaceMode().getLaneCount();
@@ -156,27 +122,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		entityManager.merge(race);
 
 		entityManager.clear();
-	}
-
-	@Override
-	public List<Race> findRaces(String raceNumber) {
-		var critBuilder = getCriteriaBuilder();
-
-		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
-		Root<Race> o = query.from(Race.class);
-
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
-		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, PARAM_RACE_NUMBER);
-
-		query.where(critBuilder.and( //
-				critBuilder.like(o.get(PARAM_RACE_NUMBER), raceNumberParam), //
-				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
-		));
-
-		return createQuery(query) //
-				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber is null"))
-				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
-				.getResultList();
 	}
 
 	@Override
