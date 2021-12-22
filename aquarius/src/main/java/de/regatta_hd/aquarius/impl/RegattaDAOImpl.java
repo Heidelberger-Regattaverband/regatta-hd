@@ -75,7 +75,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
-		return createTypedQuery(query) //
+		return createQuery(query) //
 				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
 				.setParameter(regattaParam.getName(),
 						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
@@ -103,7 +103,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
-		return createTypedQuery(query) //
+		return createQuery(query) //
 				.setParameter(raceNumberParam.getName(),
 						requireNonNull(raceNumberFilter, "raceNumberFilter must not be null"))
 				.setParameter(lightweightParam.getName(), Boolean.valueOf(lightweight))
@@ -173,7 +173,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
-		return createTypedQuery(query) //
+		return createQuery(query) //
 				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber is null"))
 				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
 				.getResultList();
@@ -192,7 +192,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
 		));
 
-		return createTypedQuery(query) //
+		return createQuery(query) //
 				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
 				.getResultList();
 	}

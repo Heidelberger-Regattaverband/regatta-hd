@@ -19,18 +19,14 @@ abstract class AbstractDAOImpl {
 		return this.aquariusDb.getCriteriaBuilder();
 	}
 
-	protected <T> CriteriaQuery<T> createCriteriaQuery(Class<T> entityClass) {
-		return getCriteriaBuilder().createQuery(entityClass);
-	}
-
 	protected <T> List<T> getEntities(Class<T> entityClass) {
-		CriteriaQuery<T> query = createCriteriaQuery(entityClass);
+		CriteriaQuery<T> query = getCriteriaBuilder().createQuery(entityClass);
 		Root<T> from = query.from(entityClass);
 		query.select(from);
-		return createTypedQuery(query).getResultList();
+		return createQuery(query).getResultList();
 	}
 
-	protected <T> TypedQuery<T> createTypedQuery(CriteriaQuery<T> criteriaQuery) {
+	protected <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
 		return this.aquariusDb.getEntityManager().createQuery(criteriaQuery);
 	}
 
