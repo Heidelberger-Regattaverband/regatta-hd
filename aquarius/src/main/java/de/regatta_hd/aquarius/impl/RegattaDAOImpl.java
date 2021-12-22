@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,7 +27,6 @@ import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
@@ -235,23 +233,22 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	public void calculateScores() {
 		Map<Club, Score> scores = new HashMap<>();
 
-		List<HeatRegistration> heatRegs = getRaces().stream() //
-				.flatMap(race -> (Stream<Heat>) race.getHeats().stream()) //
-				.flatMap(heat -> heat.getEntries().stream()).toList();
+		getRaces().stream() //
+				.flatMap(race -> race.getHeats().stream()) //
+				.flatMap(heat -> heat.getEntries().stream()) //
+				.forEach(heatReg -> {
+					Race race = heatReg.getHeat().getRace();
+					short laneCount = race.getRaceMode().getLaneCount();
+					byte numRowers = race.getBoatClass().getNumRowers();
+					byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
+					float points = (numRowers * (laneCount + 1 - rank));
 
-		heatRegs.forEach(heatReg -> {
-			Race race = heatReg.getHeat().getRace();
-			short laneCount = race.getRaceMode().getLaneCount();
-			byte numRowers = race.getBoatClass().getNumRowers();
-			byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
-			float points = (numRowers * (laneCount + 1 - rank));
+					Club club = heatReg.getRegistration().getClub();
 
-			Club club = heatReg.getRegistration().getClub();
-
-			Score score = scores.computeIfAbsent(club,
-					key -> Score.builder().clubId(key.getId()).regattaId(this.activeRegattaId).points(0).build());
-			score.addPoints(points);
-		});
+					Score score = scores.computeIfAbsent(club, key -> Score.builder().clubId(key.getId())
+							.regattaId(this.activeRegattaId).points(0).build());
+					score.addPoints(points);
+				});
 
 		updateScores(scores);
 	}
@@ -259,10 +256,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private void updateScores(Map<Club, Score> scores) {
 		EntityTransaction transaction = this.aquariusDb.beginTransaction();
 
-		CriteriaDelete<Score> delete = this.aquariusDb.getCriteriaBuilder().createCriteriaDelete(Score.class);
-		delete.from(Score.class);
-		Query query = this.aquariusDb.getEntityManager().createQuery(delete);
-		query.executeUpdate();
+		Query query = this.aquariusDb.getEntityManager()
+				.createQuery("DELETE FROM Score s WHERE s.regattaId = :regattaId");
+		query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).executeUpdate();
 
 		scores.values().forEach(score -> {
 			this.aquariusDb.getEntityManager().persist(score);
