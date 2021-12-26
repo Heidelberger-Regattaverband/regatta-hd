@@ -28,12 +28,14 @@ public class ConfigServiceImpl implements ConfigService {
 
 	@Override
 	public boolean getBooleanProperty(String key) throws IOException {
-		return Boolean.parseBoolean(getProperty(key));
+		String property = getProperty(key);
+		return property != null ? Boolean.parseBoolean(property) : false;
 	}
 
 	@Override
-	public int getIntegerProperty(String key) throws IOException {
-		return Integer.parseInt(getProperty(key));
+	public int getIntegerProperty(String key) throws IOException, NumberFormatException {
+		String property = getProperty(key);
+		return property != null ? Integer.parseInt(property) : 0;
 	}
 
 	// setter
