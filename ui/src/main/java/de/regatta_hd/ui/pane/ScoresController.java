@@ -25,12 +25,12 @@ public class ScoresController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.dbTask.run(() -> this.regattaDAO.getScores(), this::setScores);
+		handleRefresh();
 	}
 
 	@FXML
 	void handleRefresh() {
-
+		this.dbTask.run(() -> this.regattaDAO.getScores(), this::setScores);
 	}
 
 	@FXML

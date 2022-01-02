@@ -24,7 +24,7 @@
         </TableColumn>
         <TableColumn text="%ScoreView.clubCol.text">
           <cellValueFactory>
-            <PropertyValueFactory property="club" />
+            <PropertyValueFactory property="clubName" />
           </cellValueFactory>
         </TableColumn>
       </columns>

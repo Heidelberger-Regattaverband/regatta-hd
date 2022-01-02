@@ -137,7 +137,7 @@ public class PrimaryController extends AbstractBaseController {
 		if (this.scoresViewStage == null) {
 			try {
 				this.scoresViewStage = newWindow("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"),
-						event -> this.offersViewStage = null);
+						event -> this.scoresViewStage = null);
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}

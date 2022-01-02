@@ -1,5 +1,7 @@
 package de.regatta_hd.aquarius.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -50,6 +52,10 @@ public class Score {
 	@OneToOne
 	@JoinColumn(name = "event_id")
 	private Regatta regatta;
+
+	public String getClubName() {
+		return getClub() != null ? getClub().getName() : StringUtils.EMPTY;
+	}
 
 	public void addPoints(float addPoints) {
 		this.points += addPoints;
