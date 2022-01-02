@@ -51,7 +51,7 @@ public class PrimaryController extends AbstractBaseController {
 
 	private Stage offersViewStage;
 
-	private Stage scoreViewStage;
+	private Stage scoresViewStage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -134,15 +134,15 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleScore() {
-		if (this.scoreViewStage == null) {
+		if (this.scoresViewStage == null) {
 			try {
-				this.scoreViewStage = newWindow("ScoreView.fxml", getText("PrimaryView.scoreMitm.text"),
+				this.scoresViewStage = newWindow("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"),
 						event -> this.offersViewStage = null);
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		} else {
-			this.scoreViewStage.requestFocus();
+			this.scoresViewStage.requestFocus();
 		}
 	}
 

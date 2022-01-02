@@ -12,7 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-public class ScoreController extends AbstractBaseController {
+public class ScoresController extends AbstractBaseController {
 
 	@Inject
 	private RegattaDAO regattaDAO;
