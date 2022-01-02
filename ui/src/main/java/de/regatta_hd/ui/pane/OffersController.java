@@ -12,7 +12,6 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
-import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import jakarta.persistence.EntityManager;
@@ -43,9 +42,6 @@ public class OffersController extends AbstractBaseController {
 
 	@Inject
 	private AquariusDB db;
-
-	@Inject
-	private DBTask dbTask;
 
 	// needs to be a public getter, otherwise items are not bound
 	public ObservableList<Race> getRacesObservableList() {

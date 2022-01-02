@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Score;
 
 /**
  * Provides access to regatta related data like offers, heats and further.
@@ -46,6 +47,8 @@ public interface RegattaDAO {
 	// score
 
 	void calculateScores();
+
+	List<Score> getScores();
 
 	// db
 

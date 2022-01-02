@@ -17,7 +17,6 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
-import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -58,8 +57,6 @@ public class SetRaceController extends AbstractBaseController {
 	private RegattaDAO regattaDAO;
 	@Inject
 	private AquariusDB db;
-	@Inject
-	private DBTask dbTask;
 
 	private Race srcRace;
 

@@ -27,6 +27,7 @@ import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
@@ -251,6 +252,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				});
 
 		updateScores(scores);
+	}
+
+	@Override
+	public List<Score> getScores() {
+		TypedQuery<Score> query = this.aquariusDb.getEntityManager()
+				.createQuery("SELECT s FROM Score s WHERE s.regattaId = :regattaId", Score.class);
+		return query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).getResultList();
 	}
 
 	private void updateScores(Map<Club, Score> scores) {

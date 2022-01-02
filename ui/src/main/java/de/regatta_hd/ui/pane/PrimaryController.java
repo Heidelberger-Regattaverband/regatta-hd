@@ -13,7 +13,6 @@ import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
-import de.regatta_hd.ui.util.DBTask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -29,23 +28,19 @@ public class PrimaryController extends AbstractBaseController {
 	@Inject
 	private DBConfigStore dbCfgStore;
 
-	@Inject
-	private DBTask dbTask;
-
 	@FXML
 	private MenuItem dbConnectMitm;
 
 	@FXML
 	private MenuItem dbDisconnectMitm;
-
 	@FXML
 	private MenuItem eventsMitm;
-
 	@FXML
 	private MenuItem offersMitm;
-
 	@FXML
 	private MenuItem divisionsMitm;
+	@FXML
+	private MenuItem scoreMitm;
 
 	@FXML
 	private MenuBar mainMbar;
@@ -55,6 +50,8 @@ public class PrimaryController extends AbstractBaseController {
 	private Stage eventViewStage;
 
 	private Stage offersViewStage;
+
+	private Stage scoreViewStage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -136,6 +133,20 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
+	private void handleScore() {
+		if (this.scoreViewStage == null) {
+			try {
+				this.scoreViewStage = newWindow("ScoreView.fxml", getText("PrimaryView.scoreMitm.text"),
+						event -> this.offersViewStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.scoreViewStage.requestFocus();
+		}
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
@@ -148,5 +159,6 @@ public class PrimaryController extends AbstractBaseController {
 		this.eventsMitm.setDisable(!isOpen);
 		this.offersMitm.setDisable(!isOpen);
 		this.divisionsMitm.setDisable(!isOpen);
+		this.scoreMitm.setDisable(!isOpen);
 	}
 }

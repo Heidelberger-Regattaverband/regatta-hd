@@ -23,6 +23,7 @@
             <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.regattasMitm.text" />
             <MenuItem fx:id="offersMitm" onAction="#handleOffers" text="%PrimaryView.racesMitm.text" />
             <MenuItem fx:id="divisionsMitm" onAction="#handleSetRace" text="%PrimaryView.setRaceMitm.text" />
+            <MenuItem fx:id="scoreMitm" onAction="#handleScore" text="%PrimaryView.scoreMitm.text" />
           </items>
         </Menu>
       </menus>
