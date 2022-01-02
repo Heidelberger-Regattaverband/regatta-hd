@@ -4,16 +4,15 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="de.regatta_hd.ui.pane.ScoresController">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.ScoresController">
   <children>
     <ToolBar>
       <items>
-        <Button mnemonicParsing="false" text="%ScoreView.refreshBtn.text" />
-        <Button mnemonicParsing="false" text="%ScoreView.calculateBtn.text" />
+        <Button mnemonicParsing="false" onAction="#handleRefresh" text="%ScoreView.refreshBtn.text" />
+        <Button mnemonicParsing="false" onAction="#handleCalculate" text="%ScoreView.calculateBtn.text" />
       </items>
     </ToolBar>
     <TableView fx:id="scoreTbl" VBox.vgrow="ALWAYS">

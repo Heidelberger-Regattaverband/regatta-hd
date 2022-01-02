@@ -231,7 +231,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void calculateScores() {
+	public List<Score> calculateScores() {
 		Map<Club, Score> scores = new HashMap<>();
 
 		getRaces().stream() //
@@ -251,7 +251,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 					score.addPoints(points);
 				});
 
-		updateScores(scores);
+		return updateScores(scores);
 	}
 
 	@Override
@@ -261,19 +261,24 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).getResultList();
 	}
 
-	private void updateScores(Map<Club, Score> scores) {
+	private List<Score> updateScores(Map<Club, Score> scores) {
+		List<Score> scoreResult = new ArrayList<>();
 		EntityTransaction transaction = this.aquariusDb.beginTransaction();
 
 		Query query = this.aquariusDb.getEntityManager()
 				.createQuery("DELETE FROM Score s WHERE s.regattaId = :regattaId");
 		query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).executeUpdate();
+		this.aquariusDb.getEntityManager().clear();
 
 		scores.values().forEach(score -> {
 			this.aquariusDb.getEntityManager().persist(score);
+			scoreResult.add(score);
 		});
 
 		this.aquariusDb.getEntityManager().flush();
 		transaction.commit();
+
+		return scoreResult;
 	}
 
 	// static helpers

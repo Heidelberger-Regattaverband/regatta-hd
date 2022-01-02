@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
@@ -24,10 +25,21 @@ public class ScoresController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.dbTask.run(() -> this.regattaDAO.getScores(), scores -> {
-			this.scoreTbl.setItems(FXCollections.observableArrayList(scores));
-			FxUtils.autoResizeColumns(this.scoreTbl);
-		});
+		this.dbTask.run(() -> this.regattaDAO.getScores(), this::setScores);
 	}
 
+	@FXML
+	void handleRefresh() {
+
+	}
+
+	@FXML
+	void handleCalculate() {
+		this.dbTask.runInTransaction(() -> this.regattaDAO.calculateScores(), this::setScores);
+	}
+
+	private void setScores(List<Score> scores) {
+		this.scoreTbl.setItems(FXCollections.observableArrayList(scores));
+		FxUtils.autoResizeColumns(this.scoreTbl);
+	}
 }

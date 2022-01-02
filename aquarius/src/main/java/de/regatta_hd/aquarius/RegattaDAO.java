@@ -46,7 +46,7 @@ public interface RegattaDAO {
 
 	// score
 
-	void calculateScores();
+	List<Score> calculateScores();
 
 	List<Score> getScores();
 
