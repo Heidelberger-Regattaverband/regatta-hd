@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -11,8 +12,8 @@
   <children>
     <ToolBar>
       <items>
-        <Button mnemonicParsing="false" onAction="#handleRefresh" text="%ScoreView.refreshBtn.text" />
-        <Button mnemonicParsing="false" onAction="#handleCalculate" text="%ScoreView.calculateBtn.text" />
+        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%ScoreView.refreshBtn.text" />
+        <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%ScoreView.calculateBtn.text" />
       </items>
     </ToolBar>
     <TableView fx:id="scoreTbl" VBox.vgrow="ALWAYS">
@@ -30,4 +31,7 @@
       </columns>
     </TableView>
   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </VBox>

@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
@@ -21,9 +20,6 @@ import javafx.stage.Stage;
 
 public class PrimaryController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
-
-	@Inject
-	private AquariusDB aquariusDb;
 
 	@Inject
 	private DBConfigStore dbCfgStore;
@@ -64,7 +60,7 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleDatabaseConnect() {
-		if (!this.aquariusDb.isOpen()) {
+		if (!super.db.isOpen()) {
 			DBConnectionDialog dialog;
 			try {
 				dialog = new DBConnectionDialog((Stage) this.mainMbar.getScene().getWindow(), true, super.resources,
@@ -72,8 +68,8 @@ public class PrimaryController extends AbstractBaseController {
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					this.dbTask.run(() -> {
-						PrimaryController.this.aquariusDb.open(connectionData.get());
-						PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
+						this.db.open(connectionData.get());
+						this.dbCfgStore.setLastSuccessful(connectionData.get());
 						updateControls();
 					});
 				}
@@ -86,7 +82,7 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleDatabaseDisconnect() {
-		this.aquariusDb.close();
+		super.db.close();
 		updateControls();
 	}
 
@@ -152,7 +148,7 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	private void updateControls() {
-		boolean isOpen = this.aquariusDb.isOpen();
+		boolean isOpen = super.db.isOpen();
 
 		this.dbConnectMitm.setDisable(isOpen);
 		this.dbDisconnectMitm.setDisable(!isOpen);

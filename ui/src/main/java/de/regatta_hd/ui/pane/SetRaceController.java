@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -55,8 +54,6 @@ public class SetRaceController extends AbstractBaseController {
 
 	@Inject
 	private RegattaDAO regattaDAO;
-	@Inject
-	private AquariusDB db;
 
 	private Race srcRace;
 

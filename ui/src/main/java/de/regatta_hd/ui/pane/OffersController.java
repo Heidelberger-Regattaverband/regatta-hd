@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Race;
@@ -39,9 +38,6 @@ public class OffersController extends AbstractBaseController {
 
 	@Inject
 	private RegattaDAO regatta;
-
-	@Inject
-	private AquariusDB db;
 
 	// needs to be a public getter, otherwise items are not bound
 	public ObservableList<Race> getRacesObservableList() {
@@ -144,5 +140,4 @@ public class OffersController extends AbstractBaseController {
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
 	}
-
 }

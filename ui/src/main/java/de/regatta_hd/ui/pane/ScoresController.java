@@ -11,6 +11,7 @@ import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
 public class ScoresController extends AbstractBaseController {
@@ -18,6 +19,10 @@ public class ScoresController extends AbstractBaseController {
 	@Inject
 	private RegattaDAO regattaDAO;
 
+	@FXML
+	private Button refreshBtn;
+	@FXML
+	private Button calculateBtn;
 	@FXML
 	private TableView<Score> scoreTbl;
 
@@ -30,16 +35,29 @@ public class ScoresController extends AbstractBaseController {
 
 	@FXML
 	void handleRefresh() {
-		this.dbTask.run(() -> this.regattaDAO.getScores(), this::setScores);
+		disableButtons(true);
+		this.dbTask.run(() -> this.regattaDAO.getScores(), scores -> {
+			setScores(scores);
+			disableButtons(false);
+		});
 	}
 
 	@FXML
 	void handleCalculate() {
-		this.dbTask.runInTransaction(() -> this.regattaDAO.calculateScores(), this::setScores);
+		disableButtons(true);
+		this.dbTask.runInTransaction(() -> this.regattaDAO.calculateScores(), scores -> {
+			setScores(scores);
+			disableButtons(false);
+		});
 	}
 
 	private void setScores(List<Score> scores) {
 		this.scoreTbl.setItems(FXCollections.observableArrayList(scores));
 		FxUtils.autoResizeColumns(this.scoreTbl);
+	}
+
+	private void disableButtons(boolean disabled) {
+		this.refreshBtn.setDisable(disabled);
+		this.calculateBtn.setDisable(disabled);
 	}
 }
