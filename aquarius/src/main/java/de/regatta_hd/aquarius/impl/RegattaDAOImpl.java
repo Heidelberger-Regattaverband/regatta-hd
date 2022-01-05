@@ -233,7 +233,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Override
 	public List<Score> calculateScores() {
 		Map<Club, Score> scores = new HashMap<>();
-
+		Regatta regatta = getActiveRegatta();
 		getRaces().stream() //
 				.flatMap(race -> race.getHeats().stream()) //
 				.flatMap(heat -> heat.getEntries().stream()) //
@@ -246,8 +246,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 					Club club = heatReg.getRegistration().getClub();
 
-					Score score = scores.computeIfAbsent(club, key -> Score.builder().clubId(key.getId())
-							.regattaId(this.activeRegattaId).points(0).build());
+					Score score = scores.computeIfAbsent(club,
+							key -> Score.builder().club(key).regatta(regatta).points(0).build());
 					score.addPoints(points);
 				});
 
@@ -257,17 +257,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Override
 	public List<Score> getScores() {
 		TypedQuery<Score> query = this.aquariusDb.getEntityManager()
-				.createQuery("SELECT s FROM Score s WHERE s.regattaId = :regattaId", Score.class);
-		return query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).getResultList();
+				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta", Score.class);
+		return query.setParameter("regatta", getActiveRegatta()).getResultList();
 	}
 
 	private List<Score> updateScores(Map<Club, Score> scores) {
 		List<Score> scoreResult = new ArrayList<>();
 		EntityTransaction transaction = this.aquariusDb.beginTransaction();
 
-		Query query = this.aquariusDb.getEntityManager()
-				.createQuery("DELETE FROM Score s WHERE s.regattaId = :regattaId");
-		query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).executeUpdate();
+		Query query = this.aquariusDb.getEntityManager().createQuery("DELETE FROM Score s WHERE s.regatta = :regatta");
+		query.setParameter("regatta", getActiveRegatta()).executeUpdate();
 		this.aquariusDb.getEntityManager().flush();
 
 		this.aquariusDb.getEntityManager().clear();

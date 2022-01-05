@@ -1,11 +1,12 @@
 package de.regatta_hd.aquarius.model;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
@@ -22,7 +23,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Score")
-@IdClass(ScoreId.class)
 // lombok
 @Getter
 @Setter
@@ -30,24 +30,20 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Score {
+public class Score implements Serializable {
 
-	@Id
-	@Column(name = "club_id")
-	private int clubId;
-
-	@Id
-	@Column(name = "event_id")
-	private int regattaId;
+	private static final long serialVersionUID = 1670725569568728048L;
 
 	@Column(name = "points")
 	private float points;
 
+	@Id
 	@MapsId(value = "clubId")
 	@OneToOne
 	@JoinColumn(name = "club_id")
 	private Club club;
 
+	@Id
 	@MapsId(value = "regattaId")
 	@OneToOne
 	@JoinColumn(name = "event_id")
