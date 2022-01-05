@@ -268,6 +268,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Query query = this.aquariusDb.getEntityManager()
 				.createQuery("DELETE FROM Score s WHERE s.regattaId = :regattaId");
 		query.setParameter("regattaId", Integer.valueOf(this.activeRegattaId)).executeUpdate();
+		this.aquariusDb.getEntityManager().flush();
+
 		this.aquariusDb.getEntityManager().clear();
 
 		scores.values().forEach(score -> {
