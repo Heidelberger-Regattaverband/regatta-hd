@@ -18,6 +18,11 @@
     </ToolBar>
     <TableView fx:id="scoreTbl" VBox.vgrow="ALWAYS">
       <columns>
+            <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%ScoreView.rankCol.text">
+               <cellValueFactory>
+                  <PropertyValueFactory property="rank" />
+               </cellValueFactory>
+            </TableColumn>
         <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%ScoreView.scoreCol.text">
           <cellValueFactory>
             <PropertyValueFactory property="points" />

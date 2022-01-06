@@ -2,13 +2,10 @@ package de.regatta_hd.aquarius.model;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.StringUtils;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -34,23 +31,24 @@ public class Score implements Serializable {
 
 	private static final long serialVersionUID = 1670725569568728048L;
 
+	@Column(name = "rank")
+	private short rank;
+
 	@Column(name = "points")
 	private float points;
 
 	@Id
-	@MapsId(value = "clubId")
 	@OneToOne
 	@JoinColumn(name = "club_id")
 	private Club club;
 
 	@Id
-	@MapsId(value = "regattaId")
 	@OneToOne
 	@JoinColumn(name = "event_id")
 	private Regatta regatta;
 
 	public String getClubName() {
-		return getClub() != null ? getClub().getName() : StringUtils.EMPTY;
+		return getClub().getName();
 	}
 
 	public void addPoints(float addPoints) {

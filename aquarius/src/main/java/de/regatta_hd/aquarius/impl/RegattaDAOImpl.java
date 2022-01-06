@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +27,6 @@ import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
@@ -248,36 +247,46 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 					Score score = scores.computeIfAbsent(club,
 							key -> Score.builder().club(key).regatta(regatta).points(0).build());
+					score.getClubName();
 					score.addPoints(points);
 				});
 
-		return updateScores(scores);
+		return updateScores(scores.values());
 	}
 
 	@Override
 	public List<Score> getScores() {
-		TypedQuery<Score> query = this.db.getEntityManager()
-				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.points DESC", Score.class);
-		return query.setParameter("regatta", getActiveRegatta()).getResultList();
+		EntityManager entityManager = this.db.getEntityManager();
+
+		// first clear persistence context
+		entityManager.clear();
+
+		return entityManager
+				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.points DESC", Score.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
-	private List<Score> updateScores(Map<Club, Score> scores) {
+	private List<Score> updateScores(Collection<Score> scores) {
 		EntityTransaction transaction = this.db.beginTransaction();
 		EntityManager entityManager = this.db.getEntityManager();
 
-		Query query = this.db.getEntityManager().createQuery("DELETE FROM Score s WHERE s.regatta = :regatta");
-		query.setParameter("regatta", getActiveRegatta()).executeUpdate();
-		this.db.getEntityManager().flush();
+		entityManager.createQuery("DELETE FROM Score s WHERE s.regatta = :regatta")
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).executeUpdate();
 
-		this.db.getEntityManager().clear();
+		entityManager.clear();
 
 		List<Score> scoresResult = new ArrayList<>();
-		scores.values().forEach(score -> {
+		scores.stream().sorted((score1, score2) -> {
+			if (score1.getPoints() == score2.getPoints()) {
+				return 0;
+			}
+			return score1.getPoints() > score2.getPoints() ? -1 : 1;
+		}).forEach(score -> {
 			entityManager.persist(score);
 			scoresResult.add(score);
 		});
 
-		this.db.getEntityManager().flush();
+		entityManager.flush();
 		transaction.commit();
 
 		return scoresResult;

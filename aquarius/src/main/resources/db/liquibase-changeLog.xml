@@ -11,7 +11,7 @@
       <column name="id" type="INT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AgeClassExt" referencedTableName="AgeClass" referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
       </column>
-      <column name="distance" type="INT">
+      <column name="distance" type="SMALLINT">
         <constraints nullable="false" />
       </column>
     </createTable>
@@ -54,6 +54,7 @@
       <column name="event_id" type="INT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
       </column>
+      <column name="rank" type="SMALLINT" />
       <column name="points" type="FLOAT" />
     </createTable>
   </changeSet>

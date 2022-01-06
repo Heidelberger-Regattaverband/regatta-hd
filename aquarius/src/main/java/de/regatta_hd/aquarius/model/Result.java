@@ -67,7 +67,7 @@ public class Result {
 	private String params;
 
 	/**
-	 * The rank within a heat, starts counting with 1 instead of 0.
+	 * The rank within a heat, starts at 1 instead of 0.
 	 */
 	@Column(name = "Result_Rank")
 	@ToString.Include
