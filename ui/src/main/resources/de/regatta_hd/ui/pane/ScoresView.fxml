@@ -18,7 +18,7 @@
     </ToolBar>
     <TableView fx:id="scoreTbl" VBox.vgrow="ALWAYS">
       <columns>
-        <TableColumn text="%ScoreView.scoreCol.text">
+        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%ScoreView.scoreCol.text">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>

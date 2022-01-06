@@ -13,10 +13,10 @@ import jakarta.persistence.criteria.Root;
 abstract class AbstractDAOImpl {
 
 	@Inject
-	protected AquariusDB aquariusDb;
+	protected AquariusDB db;
 
 	protected CriteriaBuilder getCriteriaBuilder() {
-		return this.aquariusDb.getCriteriaBuilder();
+		return this.db.getCriteriaBuilder();
 	}
 
 	protected <T> List<T> getEntities(Class<T> entityClass) {
@@ -27,18 +27,6 @@ abstract class AbstractDAOImpl {
 	}
 
 	protected <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
-		return this.aquariusDb.getEntityManager().createQuery(criteriaQuery);
-	}
-
-	protected <T> T find(Class<T> entityClass, Object id) {
-		return this.aquariusDb.getEntityManager().find(entityClass, id);
-	}
-
-	protected void merge(Object entity) {
-		this.aquariusDb.getEntityManager().merge(entity);
-	}
-
-	protected void persist(Object entity) {
-		this.aquariusDb.getEntityManager().persist(entity);
+		return this.db.getEntityManager().createQuery(criteriaQuery);
 	}
 }

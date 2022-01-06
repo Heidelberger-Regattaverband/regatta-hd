@@ -48,7 +48,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private int activeRegattaId = -1;
 
 	public void clear() {
-		super.aquariusDb.getEntityManager().clear();
+		super.db.getEntityManager().clear();
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		// get number of heats
 		int heatCount = heats.size();
 
-		EntityManager entityManager = super.aquariusDb.getEntityManager();
+		EntityManager entityManager = super.db.getEntityManager();
 
 		for (short heatNumber = 0; heatNumber < heatCount; heatNumber++) {
 			Heat heat = heats.get(heatNumber);
@@ -158,7 +158,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			if (this.activeRegattaId == -1) {
 				this.activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
 			}
-			return find(Regatta.class, Integer.valueOf(this.activeRegattaId));
+			return super.db.getEntityManager().find(Regatta.class, Integer.valueOf(this.activeRegattaId));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e, null);
 		}
@@ -166,7 +166,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	public void cleanRaceHeats(Race race) {
-		EntityManager entityManager = super.aquariusDb.getEntityManager();
+		EntityManager entityManager = super.db.getEntityManager();
 
 		race.getHeats().forEach(heat -> {
 			heat.getEntries().forEach(entityManager::remove);
@@ -256,30 +256,31 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public List<Score> getScores() {
-		TypedQuery<Score> query = this.aquariusDb.getEntityManager()
-				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta", Score.class);
+		TypedQuery<Score> query = this.db.getEntityManager()
+				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.points DESC", Score.class);
 		return query.setParameter("regatta", getActiveRegatta()).getResultList();
 	}
 
 	private List<Score> updateScores(Map<Club, Score> scores) {
-		List<Score> scoreResult = new ArrayList<>();
-		EntityTransaction transaction = this.aquariusDb.beginTransaction();
+		EntityTransaction transaction = this.db.beginTransaction();
+		EntityManager entityManager = this.db.getEntityManager();
 
-		Query query = this.aquariusDb.getEntityManager().createQuery("DELETE FROM Score s WHERE s.regatta = :regatta");
+		Query query = this.db.getEntityManager().createQuery("DELETE FROM Score s WHERE s.regatta = :regatta");
 		query.setParameter("regatta", getActiveRegatta()).executeUpdate();
-		this.aquariusDb.getEntityManager().flush();
+		this.db.getEntityManager().flush();
 
-		this.aquariusDb.getEntityManager().clear();
+		this.db.getEntityManager().clear();
 
+		List<Score> scoresResult = new ArrayList<>();
 		scores.values().forEach(score -> {
-			this.aquariusDb.getEntityManager().persist(score);
-			scoreResult.add(score);
+			entityManager.persist(score);
+			scoresResult.add(score);
 		});
 
-		this.aquariusDb.getEntityManager().flush();
+		this.db.getEntityManager().flush();
 		transaction.commit();
 
-		return scoreResult;
+		return scoresResult;
 	}
 
 	// static helpers

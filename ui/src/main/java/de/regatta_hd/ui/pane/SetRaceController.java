@@ -58,7 +58,7 @@ public class SetRaceController extends AbstractBaseController {
 	private Race srcRace;
 
 	@FXML
-	Button deleteSetListBtn;
+	private Button deleteSetListBtn;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
