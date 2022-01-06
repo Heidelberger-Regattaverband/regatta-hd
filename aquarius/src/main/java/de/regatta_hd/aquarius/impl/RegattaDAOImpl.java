@@ -275,16 +275,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		entityManager.clear();
 
-		List<Score> scoresResult = new ArrayList<>();
-		scores.stream().sorted((score1, score2) -> {
+		List<Score> scoresResult = scores.stream().sorted((score1, score2) -> {
 			if (score1.getPoints() == score2.getPoints()) {
 				return 0;
 			}
 			return score1.getPoints() > score2.getPoints() ? -1 : 1;
-		}).forEach(score -> {
+		}).toList();
+
+		for (int i = 0; i < scoresResult.size(); i++) {
+			Score score = scoresResult.get(i);
+			score.setRank((short) (i + 1));
 			entityManager.persist(score);
-			scoresResult.add(score);
-		});
+		}
 
 		entityManager.flush();
 		transaction.commit();

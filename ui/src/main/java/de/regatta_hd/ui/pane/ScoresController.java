@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -36,6 +37,7 @@ public class ScoresController extends AbstractBaseController {
 	@FXML
 	void handleRefresh() {
 		disableButtons(true);
+		setScores(Collections.emptyList());
 		this.dbTask.run(() -> this.regattaDAO.getScores(), scores -> {
 			setScores(scores);
 			disableButtons(false);
@@ -45,6 +47,7 @@ public class ScoresController extends AbstractBaseController {
 	@FXML
 	void handleCalculate() {
 		disableButtons(true);
+		setScores(Collections.emptyList());
 		this.dbTask.runInTransaction(() -> this.regattaDAO.calculateScores(), scores -> {
 			setScores(scores);
 			disableButtons(false);
@@ -53,7 +56,9 @@ public class ScoresController extends AbstractBaseController {
 
 	private void setScores(List<Score> scores) {
 		this.scoreTbl.setItems(FXCollections.observableArrayList(scores));
-		FxUtils.autoResizeColumns(this.scoreTbl);
+		if (!scores.isEmpty()) {
+			FxUtils.autoResizeColumns(this.scoreTbl);
+		}
 	}
 
 	private void disableButtons(boolean disabled) {
