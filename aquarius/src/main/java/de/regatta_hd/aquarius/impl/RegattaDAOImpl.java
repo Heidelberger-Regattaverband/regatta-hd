@@ -25,7 +25,9 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.common.ConfigService;
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
@@ -220,7 +222,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Map<Club, Score> scores = new HashMap<>();
 		Regatta regatta = getActiveRegatta();
 
-		for (Race race : getRaces()) {
+		for (Race race : getRaces("race-to-results")) {
 			if (race.isOfficial()) {
 				short laneCount = race.getRaceMode().getLaneCount();
 				byte numRowers = race.getBoatClass().getNumRowers();
@@ -249,9 +251,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	public List<Race> getRaces() {
-		return this.db.getEntityManager().createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
+		return getRaces(null);
+	}
 
+	private List<Race> getRaces(String graphName) {
+		TypedQuery<Race> query = this.db.getEntityManager()
+				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta());
+		if (graphName != null) {
+			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
+			query.setHint("javax.persistence.fetchgraph", entityGraph);
+		}
+		return query.getResultList();
 	}
 
 	@Override

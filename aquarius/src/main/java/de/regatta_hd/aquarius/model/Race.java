@@ -13,6 +13,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -30,6 +33,18 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Offer")
 @SecondaryTable(name = "OfferExt", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
+@NamedEntityGraph(name = "race-to-results", //
+		subgraphs = { //
+				@NamedSubgraph(name = "heat.heatregs", //
+						attributeNodes = { @NamedAttributeNode("entries") }) //
+		}, //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "heats"), //
+//				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
+				@NamedAttributeNode("boatClass"), //
+				@NamedAttributeNode("raceMode") //
+		} //
+)
 // lombok
 @Getter
 @Setter
