@@ -26,7 +26,6 @@ import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.ParameterExpression;
 import jakarta.persistence.criteria.Root;
@@ -123,24 +122,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Race> getRaces() {
-		var critBuilder = getCriteriaBuilder();
-
-		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
-		Root<Race> o = query.from(Race.class);
-
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
-
-		query.where(critBuilder.and( //
-				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
-		));
-
-		return createQuery(query) //
-				.setParameter(regattaParam.getName(), requireNonNull(getActiveRegatta(), "activeRegatta is null")) //
-				.getResultList();
-	}
-
-	@Override
 	public void setActiveRegatta(Regatta regatta) throws IOException {
 		if (regatta != null) {
 			this.activeRegattaId = regatta.getId();
@@ -231,27 +212,46 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public List<Score> calculateScores() {
+		EntityManager entityManager = this.db.getEntityManager();
+
+		// first clear persistence context
+		entityManager.clear();
+
 		Map<Club, Score> scores = new HashMap<>();
 		Regatta regatta = getActiveRegatta();
-		getRaces().stream() //
-				.flatMap(race -> race.getHeats().stream()) //
-				.flatMap(heat -> heat.getEntries().stream()) //
-				.forEach(heatReg -> {
-					Race race = heatReg.getHeat().getRace();
-					short laneCount = race.getRaceMode().getLaneCount();
-					byte numRowers = race.getBoatClass().getNumRowers();
-					byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
-					float points = (numRowers * (laneCount + 1 - rank));
 
-					Club club = heatReg.getRegistration().getClub();
+		for (Race race : getRaces()) {
+			if (race.isOfficial()) {
+				short laneCount = race.getRaceMode().getLaneCount();
+				byte numRowers = race.getBoatClass().getNumRowers();
 
-					Score score = scores.computeIfAbsent(club,
-							key -> Score.builder().club(key).regatta(regatta).points(0).build());
-					score.getClubName();
-					score.addPoints(points);
-				});
+				for (Heat heat : race.getHeats()) {
+					for (HeatRegistration heatReg : heat.getEntries()) {
+						byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
 
-		return updateScores(scores.values());
+						if (rank > 0) {
+							float pointsBoat = (numRowers * (laneCount + 1 - rank));
+							float pointsPerCrew = pointsBoat / numRowers;
+
+							heatReg.getRegistration().getCrews().forEach(crew -> {
+								Score score = scores.computeIfAbsent(crew.getClub(),
+										key -> Score.builder().club(key).regatta(regatta).points(0).build());
+								score.getClubName();
+								score.addPoints(pointsPerCrew);
+							});
+						}
+					}
+				}
+			}
+		}
+
+		return updateScores(scores.values(), entityManager);
+	}
+
+	public List<Race> getRaces() {
+		return this.db.getEntityManager().createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
+
 	}
 
 	@Override
@@ -262,18 +262,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		entityManager.clear();
 
 		return entityManager
-				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.points DESC", Score.class)
+				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.rank ASC", Score.class)
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
-	private List<Score> updateScores(Collection<Score> scores) {
-		EntityTransaction transaction = this.db.beginTransaction();
-		EntityManager entityManager = this.db.getEntityManager();
-
+	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {
 		entityManager.createQuery("DELETE FROM Score s WHERE s.regatta = :regatta")
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).executeUpdate();
-
-		entityManager.clear();
 
 		List<Score> scoresResult = scores.stream().sorted((score1, score2) -> {
 			if (score1.getPoints() == score2.getPoints()) {
@@ -289,7 +284,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		entityManager.flush();
-		transaction.commit();
 
 		return scoresResult;
 	}
