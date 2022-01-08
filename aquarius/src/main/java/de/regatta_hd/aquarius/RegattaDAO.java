@@ -19,6 +19,8 @@ public interface RegattaDAO {
 
 	List<Race> getRaces();
 
+	List<Race> getRaces(String graphName);
+
 	Race getRace(String raceNumber);
 
 	/**
@@ -49,8 +51,4 @@ public interface RegattaDAO {
 	List<Score> calculateScores();
 
 	List<Score> getScores();
-
-	// db
-
-	void clear();
 }

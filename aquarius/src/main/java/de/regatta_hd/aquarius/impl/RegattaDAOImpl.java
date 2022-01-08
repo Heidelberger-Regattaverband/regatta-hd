@@ -47,10 +47,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	private int activeRegattaId = -1;
 
-	public void clear() {
-		super.db.getEntityManager().clear();
-	}
-
 	@Override
 	public List<Regatta> getRegattas() {
 		return getEntities(Regatta.class);
@@ -254,7 +250,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return getRaces(null);
 	}
 
-	private List<Race> getRaces(String graphName) {
+	public List<Race> getRaces(String graphName) {
 		TypedQuery<Race> query = this.db.getEntityManager()
 				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
 				.setParameter(PARAM_REGATTA, getActiveRegatta());

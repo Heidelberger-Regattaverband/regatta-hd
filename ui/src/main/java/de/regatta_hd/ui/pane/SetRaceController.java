@@ -70,7 +70,7 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		this.dbTask.run(() -> {
-			List<Race> allRaces = this.regattaDAO.getRaces();
+			List<Race> allRaces = this.regattaDAO.getRaces("race-to-results");
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
 			allRaces.forEach(race -> {

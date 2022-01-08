@@ -60,6 +60,7 @@ import lombok.ToString;
 		}, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
+				@NamedAttributeNode("ageClass"), //
 				@NamedAttributeNode("boatClass"), //
 				@NamedAttributeNode("raceMode") //
 		} //
