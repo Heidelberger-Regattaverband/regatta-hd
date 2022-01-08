@@ -44,17 +44,21 @@ import lombok.ToString;
 				@NamedSubgraph(name = "heatreg.results", //
 						attributeNodes = { //
 								@NamedAttributeNode("results"), //
-								@NamedAttributeNode(value = "registration") //
+								@NamedAttributeNode(value = "registration", subgraph = "registration.crews") //
 						} //
 				), //
 				@NamedSubgraph(name = "registration.crews", //
 						attributeNodes = { //
-								@NamedAttributeNode("crews") //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club") //
+						} //
+				), //
+				@NamedSubgraph(name = "crew.club", //
+						attributeNodes = { //
+								@NamedAttributeNode("club") //
 						} //
 				) //
 		}, //
 		attributeNodes = { //
-//				@NamedAttributeNode(value = "heats"), //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
 				@NamedAttributeNode("boatClass"), //
 				@NamedAttributeNode("raceMode") //
