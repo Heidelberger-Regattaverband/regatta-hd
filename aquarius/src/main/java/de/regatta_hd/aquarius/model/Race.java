@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,11 +37,25 @@ import lombok.ToString;
 @NamedEntityGraph(name = "race-to-results", //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
-						attributeNodes = { @NamedAttributeNode("entries") }) //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "entries", subgraph = "heatreg.results") //
+						} //
+				), //
+				@NamedSubgraph(name = "heatreg.results", //
+						attributeNodes = { //
+								@NamedAttributeNode("results"), //
+								@NamedAttributeNode(value = "registration") //
+						} //
+				), //
+				@NamedSubgraph(name = "registration.crews", //
+						attributeNodes = { //
+								@NamedAttributeNode("crews") //
+						} //
+				) //
 		}, //
 		attributeNodes = { //
-				@NamedAttributeNode(value = "heats"), //
-//				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
+//				@NamedAttributeNode(value = "heats"), //
+				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
 				@NamedAttributeNode("boatClass"), //
 				@NamedAttributeNode("raceMode") //
 		} //
@@ -85,7 +100,7 @@ public class Race {
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
 	@OrderBy("heatNumber")
-	private List<Heat> heats;
+	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
 	private Set<Cup> cups;
@@ -168,7 +183,7 @@ public class Race {
 	}
 
 	public List<Heat> getHeatsOrderedByNumber() {
-		List<Heat> sorted = getHeats();
+		List<Heat> sorted = new ArrayList<>(getHeats());
 		sorted.sort((entry1, entry2) -> {
 			Short result1 = entry1.getHeatNumber();
 			Short result2 = entry2.getHeatNumber();

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import com.google.inject.Inject;
 
@@ -212,7 +213,7 @@ public class SetRaceController extends AbstractBaseController {
 
 			// loops over all heats of race and reads required data from DB
 			race.getHeats().forEach(heat -> {
-				List<HeatRegistration> entries = heat.getEntries();
+				Set<HeatRegistration> entries = heat.getEntries();
 				entries.forEach(entry -> {
 					entry.getResults();
 					entry.getRegistration().getClub().getAbbreviation();
