@@ -34,6 +34,11 @@ import javafx.util.Pair;
 
 public class SetRaceController extends AbstractBaseController {
 
+	private static final String FULL_GRAPH = "race-to-results";
+
+	@Inject
+	private RegattaDAO regattaDAO;
+
 	@FXML
 	private FilterComboBox<Race> raceCbo;
 	@FXML
@@ -53,11 +58,6 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private Button deleteBtn;
 
-	@Inject
-	private RegattaDAO regattaDAO;
-
-	private Race srcRace;
-
 	@FXML
 	private Button deleteSetListBtn;
 
@@ -70,7 +70,7 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		this.dbTask.run(() -> {
-			List<Race> allRaces = this.regattaDAO.getRaces("race-to-results");
+			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
 			allRaces.forEach(race -> {
@@ -94,7 +94,7 @@ public class SetRaceController extends AbstractBaseController {
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
-						String srcRaceNumber = replaceChar(race.getNumber(), '1', 0);
+						String srcRaceNumber = getSrcRaceNumber(race);
 						Race race2 = srcRaces.get(srcRaceNumber);
 						return race2 != null && race2.isOfficial();
 					}).toList();
@@ -119,13 +119,14 @@ public class SetRaceController extends AbstractBaseController {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (selectedRace != null) {
 			this.dbTask.run(() -> {
-				String srcRaceNumber = replaceChar(selectedRace.getNumber(), '1', 0);
-				return this.regattaDAO.getRace(srcRaceNumber);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
+				return new Race[] { srcRace, race };
 			}, dbResult -> {
 				try {
-					this.srcRace = dbResult.getResult();
-					showSrcRace(this.srcRace);
-					showRace();
+					Race[] races = dbResult.getResult();
+					showSrcRace(races[0]);
+					showRace(races[1]);
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
 				}
@@ -140,10 +141,9 @@ public class SetRaceController extends AbstractBaseController {
 			disableButtons(true);
 
 			this.dbTask.run(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				this.db.getEntityManager().refresh(race);
-				race = this.regattaDAO.getRace(this.srcRace.getNumber());
-				this.db.getEntityManager().refresh(race);
+				this.db.getEntityManager().clear();
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				race = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
 				return race;
 			}, dbResult -> {
 				try {
@@ -160,12 +160,13 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleCreateSetListOnAction() {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null && this.srcRace != null) {
+		if (selectedRace != null) {
 			disableButtons(true);
 
 			this.dbTask.run(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				return this.regattaDAO.createSetList(race, this.srcRace);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				return this.regattaDAO.createSetList(race, srcRace);
 			}, dbResult -> {
 				try {
 					this.setListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
@@ -184,15 +185,17 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (selectedRace != null && this.srcRace != null && !this.setListTbl.getItems().isEmpty()) {
+		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
 			this.dbTask.runInTransaction(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
+
+				this.db.getEntityManager().clear();
+				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				return race;
 			}, dbResult -> {
 				try {
-					dbResult.getResult();
-					showRace();
+					showRace(dbResult.getResult());
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
 				}
@@ -214,13 +217,12 @@ public class SetRaceController extends AbstractBaseController {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (selectedRace != null) {
 			this.dbTask.runInTransaction(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.cleanRaceHeats(race);
 				return race;
 			}, dbResult -> {
 				try {
-					dbResult.getResult();
-					showRace();
+					showRace(dbResult.getResult());
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
 				}
@@ -234,17 +236,8 @@ public class SetRaceController extends AbstractBaseController {
 		showRace(srcRace, this.srcRaceVBox, true);
 	}
 
-	private void showRace() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (selectedRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber()), dbResult -> {
-				try {
-					showRace(dbResult.getResult(), this.raceVBox, false);
-				} catch (Exception e) {
-					FxUtils.showErrorMessage(e);
-				}
-			});
-		}
+	private void showRace(Race race) {
+		showRace(race, this.raceVBox, false);
 	}
 
 	private void showRace(Race race, VBox vbox, boolean withResult) {
@@ -386,6 +379,10 @@ public class SetRaceController extends AbstractBaseController {
 		}
 
 		return heatRegsTbl;
+	}
+
+	private static String getSrcRaceNumber(Race race) {
+		return replaceChar(race.getNumber(), '1', 0);
 	}
 
 	private static String replaceChar(String str, char ch, int index) {

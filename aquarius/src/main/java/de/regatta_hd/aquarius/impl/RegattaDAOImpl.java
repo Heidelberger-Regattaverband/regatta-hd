@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius.impl;
 
-import static java.util.Objects.requireNonNull;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +26,6 @@ import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.ParameterExpression;
-import jakarta.persistence.criteria.Root;
 
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
@@ -52,27 +47,55 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return getEntities(Regatta.class);
 	}
 
-	@Override
+	public List<Race> getRaces() {
+		return getRaces(null);
+	}
+
+	public List<Race> getRaces(String graphName) {
+		TypedQuery<Race> query = this.db.getEntityManager()
+				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta());
+		if (graphName != null) {
+			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
+			query.setHint("javax.persistence.fetchgraph", entityGraph);
+		}
+		return query.getResultList();
+	}
+
 	public Race getRace(String raceNumber) {
-		var critBuilder = getCriteriaBuilder();
+		return getRace(raceNumber, null);
+	}
 
-		// SELECT o FROM Offer o WHERE o.raceNumber == :nr
-		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
-		Root<Race> o = query.from(Race.class);
+	@Override
+	public Race getRace(String raceNumber, String graphName) {
+		TypedQuery<Race> query = this.db.getEntityManager()
+				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta AND r.number = :number", Race.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).setParameter(PARAM_RACE_NUMBER, raceNumber);
+		if (graphName != null) {
+			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
+			query.setHint("javax.persistence.fetchgraph", entityGraph);
+		}
+		return query.getSingleResult();
 
-		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
-		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
-
-		query.where(critBuilder.and( //
-				critBuilder.equal(o.get(PARAM_RACE_NUMBER), raceNumberParam), //
-				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
-		));
-
-		return createQuery(query) //
-				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
-				.setParameter(regattaParam.getName(),
-						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
-				.getSingleResult();
+//		var critBuilder = getCriteriaBuilder();
+//
+//		// SELECT o FROM Offer o WHERE o.raceNumber == :nr
+//		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
+//		Root<Race> o = query.from(Race.class);
+//
+//		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
+//		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
+//
+//		query.where(critBuilder.and( //
+//				critBuilder.equal(o.get(PARAM_RACE_NUMBER), raceNumberParam), //
+//				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
+//		));
+//
+//		return createQuery(query) //
+//				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
+//				.setParameter(regattaParam.getName(),
+//						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
+//				.getSingleResult();
 	}
 
 	@Override
@@ -244,21 +267,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		return updateScores(scores.values(), entityManager);
-	}
-
-	public List<Race> getRaces() {
-		return getRaces(null);
-	}
-
-	public List<Race> getRaces(String graphName) {
-		TypedQuery<Race> query = this.db.getEntityManager()
-				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
-				.setParameter(PARAM_REGATTA, getActiveRegatta());
-		if (graphName != null) {
-			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
-			query.setHint("javax.persistence.fetchgraph", entityGraph);
-		}
-		return query.getResultList();
 	}
 
 	@Override
