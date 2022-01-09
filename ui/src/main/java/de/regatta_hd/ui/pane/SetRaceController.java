@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -17,7 +17,6 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.control.FilterComboBox;
-import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -56,15 +55,11 @@ public class SetRaceController extends AbstractBaseController {
 
 	@Inject
 	private RegattaDAO regattaDAO;
-	@Inject
-	private AquariusDB db;
-	@Inject
-	private DBTask dbTask;
 
 	private Race srcRace;
 
 	@FXML
-	Button deleteSetListBtn;
+	private Button deleteSetListBtn;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -75,7 +70,7 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		this.dbTask.run(() -> {
-			List<Race> allRaces = this.regattaDAO.getRaces();
+			List<Race> allRaces = this.regattaDAO.getRaces("race-to-results");
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
 			allRaces.forEach(race -> {
@@ -218,7 +213,7 @@ public class SetRaceController extends AbstractBaseController {
 
 			// loops over all heats of race and reads required data from DB
 			race.getHeats().forEach(heat -> {
-				List<HeatRegistration> entries = heat.getEntries();
+				Set<HeatRegistration> entries = heat.getEntries();
 				entries.forEach(entry -> {
 					entry.getResults();
 					entry.getRegistration().getClub().getAbbreviation();

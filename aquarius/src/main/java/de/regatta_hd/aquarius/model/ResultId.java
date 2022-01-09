@@ -9,7 +9,6 @@ import lombok.Data;
  */
 @Data
 public class ResultId implements Serializable {
-
 	private static final long serialVersionUID = 1140277898086880875L;
 
 	static {

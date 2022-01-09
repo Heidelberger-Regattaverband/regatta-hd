@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class Heat {
 
 	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "heat")
 	@OrderBy("lane")
-	private List<HeatRegistration> entries;
+	private Set<HeatRegistration> entries;
 
 	@Column(name = "Comp_GroupValue")
 	private short groupValue;
@@ -123,7 +124,7 @@ public class Heat {
 	}
 
 	public List<HeatRegistration> getHeatRegistrationsOrderedByRank() {
-		List<HeatRegistration> sorted = getEntries();
+		List<HeatRegistration> sorted = new ArrayList<>(getEntries());
 		sorted.sort((entry1, entry2) -> {
 			Result result1 = entry1.getFinalResult();
 			Result result2 = entry2.getFinalResult();

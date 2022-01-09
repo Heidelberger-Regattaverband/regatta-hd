@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -30,6 +34,37 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Offer")
 @SecondaryTable(name = "OfferExt", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
+@NamedEntityGraph(name = "race-to-results", //
+		subgraphs = { //
+				@NamedSubgraph(name = "heat.heatregs", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "entries", subgraph = "heatreg.results") //
+						} //
+				), //
+				@NamedSubgraph(name = "heatreg.results", //
+						attributeNodes = { //
+								@NamedAttributeNode("results"), //
+								@NamedAttributeNode(value = "registration", subgraph = "registration.crews") //
+						} //
+				), //
+				@NamedSubgraph(name = "registration.crews", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club") //
+						} //
+				), //
+				@NamedSubgraph(name = "crew.club", //
+						attributeNodes = { //
+								@NamedAttributeNode("club") //
+						} //
+				) //
+		}, //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
+				@NamedAttributeNode("ageClass"), //
+				@NamedAttributeNode("boatClass"), //
+				@NamedAttributeNode("raceMode") //
+		} //
+)
 // lombok
 @Getter
 @Setter
@@ -70,7 +105,7 @@ public class Race {
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
 	@OrderBy("heatNumber")
-	private List<Heat> heats;
+	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
 	private Set<Cup> cups;
@@ -153,7 +188,7 @@ public class Race {
 	}
 
 	public List<Heat> getHeatsOrderedByNumber() {
-		List<Heat> sorted = getHeats();
+		List<Heat> sorted = new ArrayList<>(getHeats());
 		sorted.sort((entry1, entry2) -> {
 			Short result1 = entry1.getHeatNumber();
 			Short result2 = entry2.getHeatNumber();

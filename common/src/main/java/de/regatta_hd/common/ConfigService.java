@@ -10,7 +10,7 @@ public interface ConfigService {
 
 	boolean getBooleanProperty(String key) throws IOException;
 
-	int getIntegerProperty(String key) throws IOException;
+	int getIntegerProperty(String key) throws IOException, NumberFormatException;
 
 	// setter
 

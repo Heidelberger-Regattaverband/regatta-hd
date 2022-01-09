@@ -32,6 +32,16 @@ class TestConfigService implements ConfigService {
 	}
 
 	@Override
+	public boolean getBooleanProperty(String key) throws IOException {
+		return Boolean.parseBoolean(getProperty(key));
+	}
+
+	@Override
+	public int getIntegerProperty(String key) throws IOException {
+		return Integer.parseInt(getProperty(key));
+	}
+
+	@Override
 	public void setProperty(String key, String value) {
 		// not implemented
 	}
@@ -49,15 +59,5 @@ class TestConfigService implements ConfigService {
 	@Override
 	public void setProperty(String key, boolean value) {
 		// not implemented
-	}
-
-	@Override
-	public boolean getBooleanProperty(String key) throws IOException {
-		return Boolean.parseBoolean(getProperty(key));
-	}
-
-	@Override
-	public int getIntegerProperty(String key) throws IOException {
-		return Integer.parseInt(getProperty(key));
 	}
 }

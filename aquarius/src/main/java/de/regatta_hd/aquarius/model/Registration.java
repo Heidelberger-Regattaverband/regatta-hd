@@ -41,7 +41,7 @@ public class Registration {
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "registration")
 	@OrderBy("pos")
-	private List<Crew> crews;
+	private Set<Crew> crews;
 
 	@Column(name = "Entry_Bib")
 	@ToString.Include(rank = 10)

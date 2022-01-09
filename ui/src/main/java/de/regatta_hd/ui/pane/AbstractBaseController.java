@@ -9,7 +9,9 @@ import java.util.function.Consumer;
 
 import com.google.inject.Inject;
 
+import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.ui.FXMLLoaderFactory;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,6 +28,11 @@ abstract class AbstractBaseController implements Initializable {
 
 	@Inject
 	protected FXMLLoaderFactory fxmlLoaderFactory;
+
+	@Inject
+	protected DBTask dbTask;
+	@Inject
+	protected AquariusDB db;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

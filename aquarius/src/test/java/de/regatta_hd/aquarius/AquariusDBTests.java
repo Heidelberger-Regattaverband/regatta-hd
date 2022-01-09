@@ -7,13 +7,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.util.Modules;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -23,30 +19,19 @@ import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
 import de.regatta_hd.aquarius.model.Result;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityTransaction;
 
-class AquariusDBTests {
+@ExtendWith(BaseDBTest.class)
+class AquariusDBTests extends BaseDBTest {
 
 	private static final int regattaId = 4;
-
-	private static AquariusDB aquariusDb;
 
 	private static RegattaDAO regattaDAO;
 
 	private static MasterDataDAO masterData;
 
-	private static DBConfig connectionData;
-
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
-		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
-		Injector injector = Guice.createInjector(testModules);
-
-		DBConfigStore connStore = injector.getInstance(DBConfigStore.class);
-		connectionData = connStore.getLastSuccessful();
-
-		aquariusDb = injector.getInstance(AquariusDB.class);
-		aquariusDb.open(connectionData);
-
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
@@ -65,12 +50,6 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testOpen() {
-		aquariusDb.open(connectionData);
-		Assertions.assertTrue(aquariusDb.isOpen());
-	}
-
-	@Test
 	void testIsOpen() {
 		Assertions.assertTrue(aquariusDb.isOpen());
 	}
@@ -79,17 +58,6 @@ class AquariusDBTests {
 	void testGetEvents() {
 		List<Regatta> events = regattaDAO.getRegattas();
 		Assertions.assertFalse(events.isEmpty());
-	}
-
-	@Test
-	void testFindOffers() {
-		BoatClass boatClass = masterData.getBoatClass(1);
-		AgeClass ageClass = masterData.getAgeClass(11);
-
-		List<Race> races = regattaDAO.findRaces("1%", boatClass, ageClass, true);
-		Assertions.assertFalse(races.isEmpty());
-
-		races.forEach(offer -> trace(offer, 0));
 	}
 
 	@Test
@@ -120,6 +88,15 @@ class AquariusDBTests {
 		AgeClass ageClass = ageClasses.get(0);
 		Assertions.assertEquals(1500, ageClass.getDistance());
 	}
+
+	@Test
+	void testCalcScores() {
+		EntityTransaction transaction = aquariusDb.beginTransaction();
+		regattaDAO.calculateScores();
+		transaction.commit();
+	}
+
+	// static helpers
 
 	private static void trace(Race offer, int indent) {
 		indent(indent);

@@ -13,36 +13,20 @@ import jakarta.persistence.criteria.Root;
 abstract class AbstractDAOImpl {
 
 	@Inject
-	protected AquariusDB aquariusDb;
+	protected AquariusDB db;
 
 	protected CriteriaBuilder getCriteriaBuilder() {
-		return this.aquariusDb.getCriteriaBuilder();
-	}
-
-	protected <T> CriteriaQuery<T> createCriteriaQuery(Class<T> entityClass) {
-		return getCriteriaBuilder().createQuery(entityClass);
+		return this.db.getCriteriaBuilder();
 	}
 
 	protected <T> List<T> getEntities(Class<T> entityClass) {
-		CriteriaQuery<T> query = createCriteriaQuery(entityClass);
+		CriteriaQuery<T> query = getCriteriaBuilder().createQuery(entityClass);
 		Root<T> from = query.from(entityClass);
 		query.select(from);
-		return createTypedQuery(query).getResultList();
+		return createQuery(query).getResultList();
 	}
 
-	protected <T> TypedQuery<T> createTypedQuery(CriteriaQuery<T> criteriaQuery) {
-		return this.aquariusDb.getEntityManager().createQuery(criteriaQuery);
-	}
-
-	protected <T> T find(Class<T> entityClass, Object id) {
-		return this.aquariusDb.getEntityManager().find(entityClass, id);
-	}
-
-	protected void merge(Object entity) {
-		this.aquariusDb.getEntityManager().merge(entity);
-	}
-
-	protected void persist(Object entity) {
-		this.aquariusDb.getEntityManager().persist(entity);
+	protected <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
+		return this.db.getEntityManager().createQuery(criteriaQuery);
 	}
 }

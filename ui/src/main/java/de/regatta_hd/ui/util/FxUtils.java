@@ -23,6 +23,14 @@ public class FxUtils {
 		// avoid instances
 	}
 
+	public static void showErrorMessage(Throwable exception) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Ein Programmfehler ist aufgetreten");
+		alert.setHeaderText(exception.getClass().getCanonicalName());
+		alert.setContentText(exception.getMessage());
+		alert.showAndWait();
+	}
+
 	public static void showInfoDialog(String msg) {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
 		alert.setHeaderText(msg);

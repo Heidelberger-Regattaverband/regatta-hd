@@ -1,6 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +53,7 @@ public class HeatRegistration {
 
 	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration")
 	@OrderBy("rank")
-	private List<Result> results;
+	private Set<Result> results;
 
 	/**
 	 * Returns result of final race.

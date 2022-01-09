@@ -9,11 +9,9 @@ import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
-import de.regatta_hd.ui.util.DBTask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -24,28 +22,21 @@ public class PrimaryController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
 	@Inject
-	private AquariusDB aquariusDb;
-
-	@Inject
 	private DBConfigStore dbCfgStore;
-
-	@Inject
-	private DBTask dbTask;
 
 	@FXML
 	private MenuItem dbConnectMitm;
 
 	@FXML
 	private MenuItem dbDisconnectMitm;
-
 	@FXML
 	private MenuItem eventsMitm;
-
 	@FXML
 	private MenuItem offersMitm;
-
 	@FXML
 	private MenuItem divisionsMitm;
+	@FXML
+	private MenuItem scoreMitm;
 
 	@FXML
 	private MenuBar mainMbar;
@@ -55,6 +46,8 @@ public class PrimaryController extends AbstractBaseController {
 	private Stage eventViewStage;
 
 	private Stage offersViewStage;
+
+	private Stage scoresViewStage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -67,7 +60,7 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleDatabaseConnect() {
-		if (!this.aquariusDb.isOpen()) {
+		if (!super.db.isOpen()) {
 			DBConnectionDialog dialog;
 			try {
 				dialog = new DBConnectionDialog((Stage) this.mainMbar.getScene().getWindow(), true, super.resources,
@@ -75,8 +68,8 @@ public class PrimaryController extends AbstractBaseController {
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					this.dbTask.run(() -> {
-						PrimaryController.this.aquariusDb.open(connectionData.get());
-						PrimaryController.this.dbCfgStore.setLastSuccessful(connectionData.get());
+						this.db.open(connectionData.get());
+						this.dbCfgStore.setLastSuccessful(connectionData.get());
 						updateControls();
 					});
 				}
@@ -89,7 +82,7 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleDatabaseDisconnect() {
-		this.aquariusDb.close();
+		super.db.close();
 		updateControls();
 	}
 
@@ -136,17 +129,32 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
+	private void handleScore() {
+		if (this.scoresViewStage == null) {
+			try {
+				this.scoresViewStage = newWindow("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"),
+						event -> this.scoresViewStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.scoresViewStage.requestFocus();
+		}
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
 
 	private void updateControls() {
-		boolean isOpen = this.aquariusDb.isOpen();
+		boolean isOpen = super.db.isOpen();
 
 		this.dbConnectMitm.setDisable(isOpen);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
 		this.offersMitm.setDisable(!isOpen);
 		this.divisionsMitm.setDisable(!isOpen);
+		this.scoreMitm.setDisable(!isOpen);
 	}
 }
