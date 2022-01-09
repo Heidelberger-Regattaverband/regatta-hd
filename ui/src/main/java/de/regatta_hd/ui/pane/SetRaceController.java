@@ -124,7 +124,7 @@ public class SetRaceController extends AbstractBaseController {
 			}, dbResult -> {
 				try {
 					this.srcRace = dbResult.getResult();
-					showSrcRace();
+					showSrcRace(this.srcRace);
 					showRace();
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
@@ -230,16 +230,8 @@ public class SetRaceController extends AbstractBaseController {
 
 	// JavaFX stuff
 
-	private void showSrcRace() {
-		if (this.srcRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()), dbResult -> {
-				try {
-					showRace(dbResult.getResult(), this.srcRaceVBox, true);
-				} catch (Exception e) {
-					FxUtils.showErrorMessage(e);
-				}
-			});
-		}
+	private void showSrcRace(Race srcRace) {
+		showRace(srcRace, this.srcRaceVBox, true);
 	}
 
 	private void showRace() {
