@@ -34,6 +34,11 @@ import javafx.util.Pair;
 
 public class SetRaceController extends AbstractBaseController {
 
+	private static final String FULL_GRAPH = "race-to-results";
+
+	@Inject
+	private RegattaDAO regattaDAO;
+
 	@FXML
 	private FilterComboBox<Race> raceCbo;
 	@FXML
@@ -53,11 +58,6 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private Button deleteBtn;
 
-	@Inject
-	private RegattaDAO regattaDAO;
-
-	private Race srcRace;
-
 	@FXML
 	private Button deleteSetListBtn;
 
@@ -70,7 +70,7 @@ public class SetRaceController extends AbstractBaseController {
 		disableButtons(true);
 
 		this.dbTask.run(() -> {
-			List<Race> allRaces = this.regattaDAO.getRaces("race-to-results");
+			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
 			allRaces.forEach(race -> {
@@ -89,19 +89,24 @@ public class SetRaceController extends AbstractBaseController {
 
 			List<Race> filteredRaces = races.stream()
 					// remove master races, open age class and races with one heat, as they will not be set
-					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters() && race.getHeats().size() > 1)
+					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters()
+							&& race.getHeats().size() > 1)
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
-						String srcRaceNumber = replaceChar(race.getNumber(), '1', 0);
+						String srcRaceNumber = getSrcRaceNumber(race);
 						Race race2 = srcRaces.get(srcRaceNumber);
 						return race2 != null && race2.isOfficial();
 					}).toList();
 			return FXCollections.observableArrayList(filteredRaces);
-		}, races -> {
-			this.raceCbo.setInitialItems(races);
-			this.raceCbo.setDisable(false);
-			this.setListTbl.setDisable(false);
+		}, dbResult -> {
+			try {
+				this.raceCbo.setInitialItems(dbResult.getResult());
+				this.raceCbo.setDisable(false);
+				this.setListTbl.setDisable(false);
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			}
 		});
 	}
 
@@ -112,16 +117,22 @@ public class SetRaceController extends AbstractBaseController {
 		this.setListTbl.getItems().clear();
 
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-
-		this.dbTask.run(() -> {
-			if (selectedRace != null) {
-				String srcRaceNumber = replaceChar(selectedRace.getNumber(), '1', 0);
-				this.srcRace = this.regattaDAO.getRace(srcRaceNumber);
-			}
-		}, () -> {
-			showSrcRace();
-			showRace();
-		});
+		if (selectedRace != null) {
+			this.dbTask.run(() -> {
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
+				return new Race[] { srcRace, race };
+			}, dbResult -> {
+				try {
+					Race[] races = dbResult.getResult();
+					showSrcRace(races[0]);
+					showRace(races[1]);
+				} catch (Exception e) {
+					FxUtils.showErrorMessage(e);
+					disableButtons(false);
+				}
+			});
+		}
 	}
 
 	@FXML
@@ -131,11 +142,19 @@ public class SetRaceController extends AbstractBaseController {
 			disableButtons(true);
 
 			this.dbTask.run(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				this.db.getEntityManager().refresh(race);
-				race = this.regattaDAO.getRace(this.srcRace.getNumber());
-				this.db.getEntityManager().refresh(race);
-			}, this::handleTargetOfferOnAction);
+				this.db.getEntityManager().clear();
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				race = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				return race;
+			}, dbResult -> {
+				try {
+					dbResult.getResult();
+					handleTargetOfferOnAction();
+				} catch (Exception e) {
+					FxUtils.showErrorMessage(e);
+					disableButtons(false);
+				}
+			});
 		}
 	}
 
@@ -143,30 +162,48 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleCreateSetListOnAction() {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null && this.srcRace != null) {
+		if (selectedRace != null) {
 			disableButtons(true);
 
 			this.dbTask.run(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
-				return this.regattaDAO.createSetList(race, this.srcRace);
-			}, setList -> {
-				this.setListTbl.setItems(FXCollections.observableArrayList(setList));
-				FxUtils.autoResizeColumns(this.setListTbl);
-				disableButtons(false);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				return this.regattaDAO.createSetList(race, srcRace);
+			}, dbResult -> {
+				try {
+					this.setListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
+					FxUtils.autoResizeColumns(this.setListTbl);
+				} catch (Exception e) {
+					FxUtils.showErrorMessage(e);
+				} finally {
+					disableButtons(false);
+				}
 			});
 		}
 	}
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		disableButtons(true);
-
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (selectedRace != null && this.srcRace != null && !this.setListTbl.getItems().isEmpty()) {
+
+		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
+			disableButtons(true);
+
 			this.dbTask.runInTransaction(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
-			}, this::showRace);
+
+				this.db.getEntityManager().clear();
+				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				return race;
+			}, dbResult -> {
+				try {
+					showRace(dbResult.getResult());
+				} catch (Exception e) {
+					FxUtils.showErrorMessage(e);
+					disableButtons(false);
+				}
+			});
 		}
 	}
 
@@ -184,25 +221,28 @@ public class SetRaceController extends AbstractBaseController {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 		if (selectedRace != null) {
 			this.dbTask.runInTransaction(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.cleanRaceHeats(race);
-			}, this::showRace);
+				return race;
+			}, dbResult -> {
+				try {
+					showRace(dbResult.getResult());
+				} catch (Exception e) {
+					FxUtils.showErrorMessage(e);
+					disableButtons(false);
+				}
+			});
 		}
 	}
 
 	// JavaFX stuff
 
-	private void showSrcRace() {
-		if (this.srcRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(this.srcRace.getNumber()), race -> showRace(race, this.srcRaceVBox, true));
-		}
+	private void showSrcRace(Race srcRace) {
+		showRace(srcRace, this.srcRaceVBox, true);
 	}
 
-	private void showRace() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (selectedRace != null) {
-			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber()), race -> showRace(race, this.raceVBox, false));
-		}
+	private void showRace(Race race) {
+		showRace(race, this.raceVBox, false);
 	}
 
 	private void showRace(Race race, VBox vbox, boolean withResult) {
@@ -227,21 +267,26 @@ public class SetRaceController extends AbstractBaseController {
 			String labelText = new RaceStringConverter().toString(race);
 			return new Pair<>(labelText, result);
 		}, pair -> {
-			vbox.getChildren().add(new Label(pair.getKey()));
+			try {
+				Pair<String, Map<Short, SortedList<HeatRegistration>>> result = pair.getResult();
+				vbox.getChildren().add(new Label(result.getKey()));
 
-			race.getHeats().forEach(heat -> {
-				SortedList<HeatRegistration> sortedList = pair.getValue().get(heat.getHeatNumber());
-				Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
-				TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-				compEntriesTable.setItems(sortedList);
-				FxUtils.autoResizeColumns(compEntriesTable);
+				race.getHeats().forEach(heat -> {
+					SortedList<HeatRegistration> sortedList = result.getValue().get(heat.getHeatNumber());
+					Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
+					TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
+					compEntriesTable.setItems(sortedList);
+					FxUtils.autoResizeColumns(compEntriesTable);
 
-				sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
-				vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
-			});
-
-			// false if showing race
-			disableButtons(withResult);
+					sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
+					vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
+				});
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				// false if showing race
+				disableButtons(withResult);
+			}
 		});
 	}
 
@@ -252,10 +297,14 @@ public class SetRaceController extends AbstractBaseController {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber());
 				return race.getSet();
 			}, raceIsSet -> {
-				boolean isSet = raceIsSet != null && raceIsSet.booleanValue();
-				// disable setRace button if race is already set or set list is empty
-				this.setRaceBtn.setDisable(disabled || isSet || this.setListTbl.getItems().isEmpty());
-				this.deleteBtn.setDisable(disabled || !isSet);
+				try {
+					boolean isSet = raceIsSet != null && raceIsSet.getResult().booleanValue();
+					// disable setRace button if race is already set or set list is empty
+					this.setRaceBtn.setDisable(disabled || isSet || this.setListTbl.getItems().isEmpty());
+					this.deleteBtn.setDisable(disabled || !isSet);
+				} catch (Exception e) {
+					FxUtils.showErrorMessage(e);
+				}
 			});
 		} else {
 			this.setRaceBtn.setDisable(disabled);
@@ -270,7 +319,8 @@ public class SetRaceController extends AbstractBaseController {
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
 		TableView<HeatRegistration> heatRegsTbl = new TableView<>();
 
-		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(getText("SetRaceView.heatRegsTbl.bibCol.text"));
+		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(
+				getText("SetRaceView.heatRegsTbl.bibCol.text"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
@@ -280,7 +330,8 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(getText("SetRaceView.heatRegsTbl.boatCol.text"));
+		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(
+				getText("SetRaceView.heatRegsTbl.boatCol.text"));
 		boatCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
@@ -333,6 +384,10 @@ public class SetRaceController extends AbstractBaseController {
 		}
 
 		return heatRegsTbl;
+	}
+
+	private static String getSrcRaceNumber(Race race) {
+		return replaceChar(race.getNumber(), '1', 0);
 	}
 
 	private static String replaceChar(String str, char ch, int index) {

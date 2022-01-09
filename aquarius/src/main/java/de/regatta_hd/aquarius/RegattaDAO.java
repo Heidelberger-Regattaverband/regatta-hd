@@ -23,6 +23,8 @@ public interface RegattaDAO {
 
 	Race getRace(String raceNumber);
 
+	Race getRace(String raceNumber, String graphName);
+
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
 	 *

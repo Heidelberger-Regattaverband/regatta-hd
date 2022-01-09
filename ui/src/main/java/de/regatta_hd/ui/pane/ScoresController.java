@@ -39,8 +39,13 @@ public class ScoresController extends AbstractBaseController {
 		disableButtons(true);
 		setScores(Collections.emptyList());
 		this.dbTask.run(() -> this.regattaDAO.getScores(), scores -> {
-			setScores(scores);
-			disableButtons(false);
+			try {
+				setScores(scores.getResult());
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
+			}
 		});
 	}
 
@@ -49,8 +54,13 @@ public class ScoresController extends AbstractBaseController {
 		disableButtons(true);
 		setScores(Collections.emptyList());
 		this.dbTask.runInTransaction(() -> this.regattaDAO.calculateScores(), scores -> {
-			setScores(scores);
-			disableButtons(false);
+			try {
+				setScores(scores.getResult());
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
+			}
 		});
 	}
 

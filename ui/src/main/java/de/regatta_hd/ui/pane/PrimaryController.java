@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
+import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -69,8 +70,15 @@ public class PrimaryController extends AbstractBaseController {
 				if (connectionData.isPresent()) {
 					this.dbTask.run(() -> {
 						this.db.open(connectionData.get());
-						this.dbCfgStore.setLastSuccessful(connectionData.get());
 						updateControls();
+						return connectionData.get();
+					}, dbResult -> {
+						try {
+							DBConfig dbCfg = dbResult.getResult();
+							this.dbCfgStore.setLastSuccessful(dbCfg);
+						} catch (Exception e) {
+							FxUtils.showErrorMessage(e);
+						}
 					});
 				}
 			} catch (IOException e) {
