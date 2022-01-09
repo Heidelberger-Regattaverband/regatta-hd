@@ -55,27 +55,23 @@ public class DBTask {
 
 		Task<DBResult<V>> task = new Task<>() {
 			@Override
-			protected DBResult<V> call() {
-				try {
-					EntityTransaction transaction = inTransaction ? DBTask.this.db.getEntityManager().getTransaction()
-							: null;
+			protected DBResult<V> call() throws Exception {
+				EntityTransaction transaction = inTransaction ? DBTask.this.db.getEntityManager().getTransaction()
+						: null;
 
-					// begin transaction if required
-					if (transaction != null && !transaction.isActive()) {
-						transaction.begin();
-					}
-
-					V result = callable.call();
-
-					// if an active transaction exists it is committed
-					if (transaction != null && transaction.isActive()) {
-						transaction.commit();
-					}
-
-					return new DBResultImpl<>(result);
-				} catch (Exception ex) {
-					return new DBResultImpl<>(ex);
+				// begin transaction if required
+				if (transaction != null && !transaction.isActive()) {
+					transaction.begin();
 				}
+
+				V result = callable.call();
+
+				// if an active transaction exists it is committed
+				if (transaction != null && transaction.isActive()) {
+					transaction.commit();
+				}
+
+				return new DBResultImpl<>(result);
 			}
 		};
 
@@ -85,20 +81,13 @@ public class DBTask {
 			DBResult<V> result = (DBResult<V>) event.getSource().getValue();
 
 			// call given consumer with result in UX thread
-			Platform.runLater(() -> {
-				try {
-					resultConsumer.accept(result);
-				} catch (Exception ex) {
-					logger.log(Level.SEVERE, ex.getMessage(), ex);
-					FxUtils.showErrorMessage(ex);
-				}
-			});
+			Platform.runLater(() -> resultConsumer.accept(result));
 		});
 
-		task.setOnFailed(t -> {
-			Throwable exception = task.getException();
+		task.setOnFailed(event -> {
+			Exception exception = (Exception) task.getException();
 			logger.log(Level.SEVERE, exception.getMessage(), exception);
-			FxUtils.showErrorMessage(exception);
+			Platform.runLater(() -> resultConsumer.accept(new DBResultImpl<>(exception)));
 		});
 		return task;
 	}

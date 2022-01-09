@@ -68,34 +68,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public Race getRace(String raceNumber, String graphName) {
-		TypedQuery<Race> query = this.db.getEntityManager()
+		EntityManager entityManager = super.db.getEntityManager();
+
+		TypedQuery<Race> query = entityManager
 				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta AND r.number = :number", Race.class)
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).setParameter(PARAM_RACE_NUMBER, raceNumber);
 		if (graphName != null) {
-			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
+			EntityGraph<?> entityGraph = entityManager.getEntityGraph(graphName);
 			query.setHint("javax.persistence.fetchgraph", entityGraph);
 		}
 		return query.getSingleResult();
-
-//		var critBuilder = getCriteriaBuilder();
-//
-//		// SELECT o FROM Offer o WHERE o.raceNumber == :nr
-//		CriteriaQuery<Race> query = critBuilder.createQuery(Race.class);
-//		Root<Race> o = query.from(Race.class);
-//
-//		ParameterExpression<Regatta> regattaParam = critBuilder.parameter(Regatta.class, PARAM_REGATTA);
-//		ParameterExpression<String> raceNumberParam = critBuilder.parameter(String.class, "nr");
-//
-//		query.where(critBuilder.and( //
-//				critBuilder.equal(o.get(PARAM_RACE_NUMBER), raceNumberParam), //
-//				critBuilder.equal(o.get(PARAM_REGATTA), regattaParam) //
-//		));
-//
-//		return createQuery(query) //
-//				.setParameter(raceNumberParam.getName(), requireNonNull(raceNumber, "raceNumber must not be null"))
-//				.setParameter(regattaParam.getName(),
-//						requireNonNull(getActiveRegatta(), "activeRegatta must not be null")) //
-//				.getSingleResult();
 	}
 
 	@Override
