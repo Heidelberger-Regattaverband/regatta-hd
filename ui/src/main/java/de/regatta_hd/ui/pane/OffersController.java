@@ -56,10 +56,15 @@ public class OffersController extends AbstractBaseController {
 	private void loadRaces() {
 		disableButtons(true);
 
-		this.dbTask.run(this.regatta::getRaces, races -> {
-			this.racesObservableList.setAll(races);
-			FxUtils.autoResizeColumns(this.racesTbl);
-			disableButtons(false);
+		this.dbTask.run(this.regatta::getRaces, dbResult -> {
+			try {
+				this.racesObservableList.setAll(dbResult.getResult());
+				FxUtils.autoResizeColumns(this.racesTbl);
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
+			}
 		});
 	}
 
@@ -93,14 +98,20 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			return races;
-		}, races -> {
-			if (races.isEmpty()) {
-				FxUtils.showInfoDialog("Keine Rennen geändert.");
-			} else {
-				refresh();
-				FxUtils.showInfoDialog(String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
+		}, dbResult -> {
+			try {
+				List<Race> races = dbResult.getResult();
+				if (races.isEmpty()) {
+					FxUtils.showInfoDialog("Keine Rennen geändert.");
+				} else {
+					refresh();
+					FxUtils.showInfoDialog(String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
+				}
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
 			}
-			disableButtons(false);
 		});
 	}
 
@@ -124,14 +135,20 @@ public class OffersController extends AbstractBaseController {
 			});
 
 			return races;
-		}, races -> {
-			if (races.isEmpty()) {
-				FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
-			} else {
-				refresh();
-				FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+		}, dbResult -> {
+			try {
+				List<Race> races = dbResult.getResult();
+				if (races.isEmpty()) {
+					FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
+				} else {
+					refresh();
+					FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+				}
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
 			}
-			disableButtons(false);
 		});
 	}
 

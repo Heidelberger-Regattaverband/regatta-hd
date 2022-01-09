@@ -1,7 +1,6 @@
 package de.regatta_hd.ui.util;
 
-import static java.util.Objects.requireNonNull;
-
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,106 +27,73 @@ public class DBTask {
 	private AquariusDB db;
 
 	/**
-	 * Executes the given {@link DBRunnable} in a DB task.
-	 *
-	 * @param runnable the {@link DBRunnable} to execute
-	 * @return the {@link Task} executing the given {@link DBRunnable}
-	 */
-	public Task<Void> run(DBRunnable runnable) {
-		requireNonNull(runnable, "runnable must not be null");
-		return runTask(createTask(() -> {
-			runnable.run();
-			return null;
-		}, null, false));
-	}
-
-	/**
 	 * Executes the given {@link Callable} in a DB task.
 	 *
-	 * @param callable           the {@link Callable} to execute, must not be null
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
+	 * @param callable      the {@link Callable} to execute, must not be null
+	 * @param resultHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
-	public <V> Task<V> run(Callable<V> callable, Consumer<V> onSucceededHandler) {
-		return runTask(createTask(requireNonNull(callable, "callable must not be null"), onSucceededHandler, false));
-	}
-
-	/**
-	 * Executes the given {@link DBRunnable} in a DB task.
-	 *
-	 * @param runnable           the {@link DBRunnable} to execute
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
-	 * @return the {@link Task} executing the given {@link DBRunnable}
-	 */
-	public Task<Void> run(DBRunnable runnable, DBSucceededHandler onSucceededHandler) {
-		requireNonNull(runnable, "runnable must not be null");
-		requireNonNull(onSucceededHandler, "onSucceededHandler must not be null");
-		return runTask(createTask(() -> {
-			runnable.run();
-			return null;
-		}, result -> onSucceededHandler.handle(), false));
-	}
-
-	/**
-	 * Executes the given {@link DBRunnable} in a DB task within a transaction.
-	 *
-	 * @param runnable           the {@link DBRunnable} to execute
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
-	 * @return the {@link Task} executing the given {@link DBRunnable}
-	 */
-	public Task<Void> runInTransaction(DBRunnable runnable, DBSucceededHandler onSucceededHandler) {
-		requireNonNull(runnable, "runnable must not be null");
-		requireNonNull(onSucceededHandler, "onSucceededHandler must not be null");
-		return runTask(createTask(() -> {
-			runnable.run();
-			return null;
-		}, result -> onSucceededHandler.handle(), true));
+	public <V> Task<DBResult<V>> run(Callable<V> callable, Consumer<DBResult<V>> resultHandler) {
+		return runTask(createTask(callable, resultHandler, false));
 	}
 
 	/**
 	 * Executes the given {@link Callable} in a DB task within a transaction.
 	 *
-	 * @param runnable           the {@link DBRunnable} to execute
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
-	 * @return the {@link Task} executing the given {@link DBRunnable}
+	 * @param callable       the {@link Callable} to execute
+	 * @param resultConsumer the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
+	 * @return the {@link Task} executing the given {@link Callable}
 	 */
-	public <V> Task<V> runInTransaction(Callable<V> callable, Consumer<V> onSucceededHandler) {
-		return runTask(createTask(requireNonNull(callable, "callable must not be null"), onSucceededHandler, true));
+	public <V> Task<DBResult<V>> runInTransaction(Callable<V> callable, Consumer<DBResult<V>> resultConsumer) {
+		return runTask(createTask(callable, resultConsumer, true));
 	}
 
-	private <V> Task<V> createTask(Callable<V> callable, Consumer<V> onSucceededHandler, boolean inTransaction) {
-		Task<V> task = new Task<>() {
+	private <V> Task<DBResult<V>> createTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer,
+			boolean inTransaction) {
+		Objects.requireNonNull(callable, "callable must not be null");
+		Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
+
+		Task<DBResult<V>> task = new Task<>() {
 			@Override
-			protected V call() throws Exception {
-				EntityTransaction transaction = inTransaction ? DBTask.this.db.getEntityManager().getTransaction()
-						: null;
+			protected DBResult<V> call() {
+				try {
+					EntityTransaction transaction = inTransaction ? DBTask.this.db.getEntityManager().getTransaction()
+							: null;
 
-				// begin transaction if required
-				if (transaction != null && !transaction.isActive()) {
-					transaction.begin();
+					// begin transaction if required
+					if (transaction != null && !transaction.isActive()) {
+						transaction.begin();
+					}
+
+					V result = callable.call();
+
+					// if an active transaction exists it is committed
+					if (transaction != null && transaction.isActive()) {
+						transaction.commit();
+					}
+
+					return new DBResultImpl<>(result);
+				} catch (Exception ex) {
+					return new DBResultImpl<>(ex);
 				}
-
-				V result = callable.call();
-
-				// if an active transaction exists it is committed
-				if (transaction != null && transaction.isActive()) {
-					transaction.commit();
-				}
-
-				return result;
 			}
 		};
 
-		if (onSucceededHandler != null) {
-			task.setOnSucceeded(event -> {
-				@SuppressWarnings("unchecked")
-				// get result from worker
-				V result = (V) event.getSource().getValue();
+		task.setOnSucceeded(event -> {
+			@SuppressWarnings("unchecked")
+			// get result from worker
+			DBResult<V> result = (DBResult<V>) event.getSource().getValue();
 
-				// call given consumer with result in UX thread
-				Platform.runLater(() -> onSucceededHandler.accept(result));
+			// call given consumer with result in UX thread
+			Platform.runLater(() -> {
+				try {
+					resultConsumer.accept(result);
+				} catch (Exception ex) {
+					logger.log(Level.SEVERE, ex.getMessage(), ex);
+					FxUtils.showErrorMessage(ex);
+				}
 			});
-		}
+		});
 
 		task.setOnFailed(t -> {
 			Throwable exception = task.getException();
@@ -154,12 +120,32 @@ public class DBTask {
 	}
 
 	@FunctionalInterface
-	public interface DBRunnable {
-		void run() throws Exception; // NOSONAR
+	public interface DBResult<R> {
+		R getResult() throws Exception; // NOSONAR
 	}
 
-	@FunctionalInterface
-	public interface DBSucceededHandler {
-		void handle();
+	static class DBResultImpl<R> implements DBResult<R> {
+
+		private final R result;
+
+		private final Exception exception;
+
+		DBResultImpl(R result) {
+			this.result = result;
+			this.exception = null;
+		}
+
+		DBResultImpl(Exception exception) {
+			this.exception = Objects.requireNonNull(exception, "exception must not be null");
+			this.result = null;
+		}
+
+		@Override
+		public R getResult() throws Exception {
+			if (this.exception != null) {
+				throw this.exception;
+			}
+			return this.result;
+		}
 	}
 }

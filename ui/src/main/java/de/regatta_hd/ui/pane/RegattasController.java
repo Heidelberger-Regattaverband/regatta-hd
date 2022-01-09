@@ -14,18 +14,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
 public class RegattasController extends AbstractBaseController {
-	@FXML
-	private TableView<Regatta> regattasTable;
 	@Inject
 	private RegattaDAO regattaDAO;
+
+	@FXML
+	private TableView<Regatta> regattasTable;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.dbTask.run(() -> this.regattaDAO.getRegattas(), regattas -> {
-			this.regattasTable.setItems(FXCollections.observableArrayList(regattas));
-			FxUtils.autoResizeColumns(this.regattasTable);
+		this.dbTask.run(() -> this.regattaDAO.getRegattas(), dbResult -> {
+			try {
+				this.regattasTable.setItems(FXCollections.observableArrayList(dbResult.getResult()));
+				FxUtils.autoResizeColumns(this.regattasTable);
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			}
 		});
 	}
 
