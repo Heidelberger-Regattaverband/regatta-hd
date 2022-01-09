@@ -129,6 +129,7 @@ public class SetRaceController extends AbstractBaseController {
 					showRace(races[1]);
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
+					disableButtons(false);
 				}
 			});
 		}
@@ -151,6 +152,7 @@ public class SetRaceController extends AbstractBaseController {
 					handleTargetOfferOnAction();
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
+					disableButtons(false);
 				}
 			});
 		}
@@ -182,10 +184,11 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		disableButtons(true);
-
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+
 		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
+			disableButtons(true);
+
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
@@ -198,6 +201,7 @@ public class SetRaceController extends AbstractBaseController {
 					showRace(dbResult.getResult());
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
+					disableButtons(false);
 				}
 			});
 		}
@@ -225,6 +229,7 @@ public class SetRaceController extends AbstractBaseController {
 					showRace(dbResult.getResult());
 				} catch (Exception e) {
 					FxUtils.showErrorMessage(e);
+					disableButtons(false);
 				}
 			});
 		}
