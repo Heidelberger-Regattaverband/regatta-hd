@@ -45,8 +45,7 @@ public class DBTask {
 	 * Executes the given {@link Callable} in a DB task.
 	 *
 	 * @param callable           the {@link Callable} to execute, must not be null
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the
-	 *                           SUCCEEDED state.
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
 	public <V> Task<V> run(Callable<V> callable, Consumer<V> onSucceededHandler) {
@@ -57,8 +56,7 @@ public class DBTask {
 	 * Executes the given {@link DBRunnable} in a DB task.
 	 *
 	 * @param runnable           the {@link DBRunnable} to execute
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the
-	 *                           SUCCEEDED state.
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link DBRunnable}
 	 */
 	public Task<Void> run(DBRunnable runnable, DBSucceededHandler onSucceededHandler) {
@@ -74,8 +72,7 @@ public class DBTask {
 	 * Executes the given {@link DBRunnable} in a DB task within a transaction.
 	 *
 	 * @param runnable           the {@link DBRunnable} to execute
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the
-	 *                           SUCCEEDED state.
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link DBRunnable}
 	 */
 	public Task<Void> runInTransaction(DBRunnable runnable, DBSucceededHandler onSucceededHandler) {
@@ -91,8 +88,7 @@ public class DBTask {
 	 * Executes the given {@link Callable} in a DB task within a transaction.
 	 *
 	 * @param runnable           the {@link DBRunnable} to execute
-	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the
-	 *                           SUCCEEDED state.
+	 * @param onSucceededHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link DBRunnable}
 	 */
 	public <V> Task<V> runInTransaction(Callable<V> callable, Consumer<V> onSucceededHandler) {
@@ -133,7 +129,11 @@ public class DBTask {
 			});
 		}
 
-		task.setOnFailed(t -> logger.log(Level.SEVERE, null, task.getException()));
+		task.setOnFailed(t -> {
+			Throwable exception = task.getException();
+			logger.log(Level.SEVERE, exception.getMessage(), exception);
+			FxUtils.showErrorMessage(exception);
+		});
 		return task;
 	}
 
