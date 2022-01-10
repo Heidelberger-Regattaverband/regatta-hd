@@ -14,11 +14,13 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
+import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
@@ -314,5 +316,43 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			return 0;
 		}
 		return crew1.getAthlet().getId() > crew2.getAthlet().getId() ? 1 : -1;
+	}
+
+	@Override
+	public List<Race> enableMastersAgeClasses() {
+		List<Race> races = new ArrayList<>();
+
+		EntityManager entityManager = this.db.getEntityManager();
+
+		getRaces().forEach(race -> {
+			AgeClass ageClass = race.getAgeClass();
+			GroupMode mode = race.getGroupMode();
+			if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
+				race.setGroupMode(GroupMode.AGE);
+				entityManager.merge(race);
+				races.add(race);
+			}
+		});
+
+		return races;
+
+	}
+
+	@Override
+	public List<Race> setDistances() {
+		List<Race> races = new ArrayList<>();
+
+		EntityManager entityManager = this.db.getEntityManager();
+
+		getRaces().forEach(race -> {
+			short distance = race.getAgeClass().getDistance();
+			if (distance != race.getDistance()) {
+				race.setDistance(distance);
+				entityManager.merge(race);
+				races.add(race);
+			}
+		});
+
+		return races;
 	}
 }

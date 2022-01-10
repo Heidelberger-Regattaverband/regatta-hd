@@ -40,6 +40,10 @@ public interface RegattaDAO {
 	 */
 	Regatta getActiveRegatta();
 
+	List<Race> enableMastersAgeClasses();
+
+	List<Race> setDistances();
+
 	// race assignment
 
 	List<SetListEntry> createSetList(Race race, Race srcRace);
