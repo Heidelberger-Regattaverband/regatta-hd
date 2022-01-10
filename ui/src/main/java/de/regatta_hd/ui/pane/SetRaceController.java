@@ -189,14 +189,13 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleDeleteSetListOnAction() {
-		disableButtons();
-		this.setListTbl.getItems().clear();
-
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+
 		if (selectedRace != null) {
-			this.dbTask.run(() -> {
-				return this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-			}, dbResult -> {
+			disableButtons();
+			this.setListTbl.getItems().clear();
+
+			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH), dbResult -> {
 				Race race = null;
 				try {
 					race = dbResult.getResult();
@@ -239,10 +238,11 @@ public class SetRaceController extends AbstractBaseController {
 
 	@FXML
 	private void handleDeleteOnAction() {
-		disableButtons();
-
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+
 		if (selectedRace != null) {
+			disableButtons();
+
 			this.dbTask.runInTransaction(() -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.cleanRaceHeats(race);
@@ -257,7 +257,6 @@ public class SetRaceController extends AbstractBaseController {
 				} finally {
 					enableButtons(race);
 				}
-
 			});
 		}
 	}
@@ -296,29 +295,27 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	private void enableButtons(Race race) {
-		boolean disabled = false;
 		if (race != null) {
 			boolean isSet = race.getSet() != null && race.getSet().booleanValue();
 			// disable setRace button if race is already set or set list is empty
 			this.setRaceBtn.setDisable(isSet || this.setListTbl.getItems().isEmpty());
 			this.deleteBtn.setDisable(!isSet);
 		} else {
-			this.setRaceBtn.setDisable(disabled);
-			this.deleteBtn.setDisable(disabled);
+			this.setRaceBtn.setDisable(false);
+			this.deleteBtn.setDisable(false);
 		}
 
 		this.createSetListBtn.setDisable(!this.setListTbl.getItems().isEmpty());
 		this.deleteSetListBtn.setDisable(this.setListTbl.getItems().isEmpty());
-		this.refreshBtn.setDisable(disabled);
+		this.refreshBtn.setDisable(false);
 	}
 
 	private void disableButtons() {
-		boolean disabled = true;
-		this.setRaceBtn.setDisable(disabled);
-		this.deleteBtn.setDisable(disabled);
-		this.createSetListBtn.setDisable(disabled);
-		this.deleteSetListBtn.setDisable(disabled);
-		this.refreshBtn.setDisable(disabled);
+		this.setRaceBtn.setDisable(true);
+		this.deleteBtn.setDisable(true);
+		this.createSetListBtn.setDisable(true);
+		this.deleteSetListBtn.setDisable(true);
+		this.refreshBtn.setDisable(true);
 	}
 
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
