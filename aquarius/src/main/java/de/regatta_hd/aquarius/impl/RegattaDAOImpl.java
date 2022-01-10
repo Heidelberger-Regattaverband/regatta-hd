@@ -227,6 +227,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			if (race.isOfficial()) {
 				short laneCount = race.getRaceMode().getLaneCount();
 				byte numRowers = race.getBoatClass().getNumRowers();
+				if (race.getBoatClass().isCoxed()) {
+					numRowers++;
+				}
 
 				for (Heat heat : race.getHeats()) {
 					for (HeatRegistration heatReg : heat.getEntries()) {

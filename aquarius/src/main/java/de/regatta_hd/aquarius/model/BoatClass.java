@@ -1,6 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,12 +40,12 @@ public class BoatClass {
 	private String caption;
 
 	@Column(name = "BoatClass_Coxed")
-	private byte coxed;
+	private boolean coxed;
 
 	@Column(name = "BoatClass_NumRowers")
 	private byte numRowers;
 
 	@OneToMany(targetEntity = Race.class, mappedBy = "boatClass")
 	@OrderBy("raceNumber")
-	private List<Race> races;
+	private Set<Race> races;
 }
