@@ -29,7 +29,7 @@ public class ConfigServiceImpl implements ConfigService {
 	@Override
 	public boolean getBooleanProperty(String key) throws IOException {
 		String property = getProperty(key);
-		return property != null || Boolean.parseBoolean(property);
+		return property != null && Boolean.parseBoolean(property);
 	}
 
 	@Override
