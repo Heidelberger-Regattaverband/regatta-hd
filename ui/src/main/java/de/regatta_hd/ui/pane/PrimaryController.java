@@ -54,7 +54,7 @@ public class PrimaryController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		updateControls();
+		updateControls(false);
 
 		Platform.runLater(this::handleDatabaseConnect);
 	}
@@ -69,8 +69,8 @@ public class PrimaryController extends AbstractBaseController {
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					this.dbTask.run(() -> {
+						updateControls(true);
 						this.db.open(connectionData.get());
-						updateControls();
 						return connectionData.get();
 					}, dbResult -> {
 						try {
@@ -78,6 +78,8 @@ public class PrimaryController extends AbstractBaseController {
 							this.dbCfgStore.setLastSuccessful(dbCfg);
 						} catch (Exception e) {
 							FxUtils.showErrorMessage(e);
+						}finally {
+							updateControls(false);
 						}
 					});
 				}
@@ -85,13 +87,13 @@ public class PrimaryController extends AbstractBaseController {
 				logger.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
-		updateControls();
+		updateControls(false);
 	}
 
 	@FXML
 	private void handleDatabaseDisconnect() {
 		super.db.close();
-		updateControls();
+		updateControls(false);
 	}
 
 	@FXML
@@ -155,10 +157,10 @@ public class PrimaryController extends AbstractBaseController {
 		Platform.exit();
 	}
 
-	private void updateControls() {
+	private void updateControls(boolean isConnecting) {
 		boolean isOpen = super.db.isOpen();
 
-		this.dbConnectMitm.setDisable(isOpen);
+		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
 		this.offersMitm.setDisable(!isOpen);
