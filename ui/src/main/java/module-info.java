@@ -15,6 +15,7 @@ open module de.regatta_hd.ui {
 	requires de.regatta_hd.common;
 	requires lombok;
 	requires java.prefs;
+	requires org.controlsfx.controls;
 
 	exports de.regatta_hd.ui;
 }

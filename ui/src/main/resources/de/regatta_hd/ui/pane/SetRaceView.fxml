@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
-<?import de.regatta_hd.ui.control.FilterComboBox?>
+<?import org.controlsfx.control.SearchableComboBox?>
 <?import de.regatta_hd.ui.util.RaceStringConverter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -23,11 +23,11 @@
 
   <children>
     <Label text="%SetRaceView.raceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <FilterComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction" promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction" promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
         <RaceStringConverter />
       </converter>
-    </FilterComboBox>
+    </SearchableComboBox>
 
     <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>

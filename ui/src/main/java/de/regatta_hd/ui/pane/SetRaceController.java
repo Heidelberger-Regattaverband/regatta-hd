@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.controlsfx.control.SearchableComboBox;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.RegattaDAO;
@@ -16,7 +18,6 @@ import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
-import de.regatta_hd.ui.control.FilterComboBox;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -39,7 +40,7 @@ public class SetRaceController extends AbstractBaseController {
 	private RegattaDAO regattaDAO;
 
 	@FXML
-	private FilterComboBox<Race> raceCbo;
+	private SearchableComboBox<Race> raceCbo;
 	@FXML
 	private VBox srcRaceVBox;
 	@FXML
@@ -99,7 +100,7 @@ public class SetRaceController extends AbstractBaseController {
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
 			try {
-				this.raceCbo.setInitialItems(dbResult.getResult());
+				this.raceCbo.setItems(dbResult.getResult());
 				this.raceCbo.setDisable(false);
 				this.setListTbl.setDisable(false);
 			} catch (Exception e) {
