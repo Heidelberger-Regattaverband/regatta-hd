@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<jnlp spec="1.0+"
+  codebase="https://github.com/Heidelberger-Regattaverband/download/raw/gh-pages/"
+  href="regatta-hd.jnlp">
+
+  <information>
+    <title>Regatta Heidelberg</title>
+    <vendor>Heidelberger Regattaverband</vendor>
+    <homepage href="https://docs.oracle.com/javase/tutorial/uiswing/examples/misc/index.html#Wallpaper"/>
+    <description>WallpaperProject</description>
+    <description kind="short">A simple JLayer demonstration</description>
+    <offline-allowed/>
+  </information>
+
+  <resources>
+    <j2se version="17+"/>
+    <jar href="ui-1.0.0-SNAPSHOT-full.jar"/>
+  </resources>
+
+  <application-desc main-class="de.regatta_hd.ui.Main"/>
+
+</jnlp>
