@@ -144,7 +144,10 @@
           <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
           <repositoryName>download</repositoryName>
           <outputDirectory>${project.build.directory}</outputDirectory>
-          <includes>ui-${project.version}-full.jar,regatta-hd.jnlp</includes>
+          <includes>
+            <include>ui-${project.version}-full.jar</include>
+            <include>regatta-hd.jnlp</include>
+          </includes>
         </configuration>
         <executions>
           <execution>
