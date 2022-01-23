@@ -19,7 +19,7 @@
 
   <resources>
     <java version="17*"/>
-    <jar href="ui-1.0.0-SNAPSHOT-full.jar"/>
+    <jar href="regatta-hd-1.0.0-SNAPSHOT.jar"/>
   </resources>
 
   <application-desc main-class="de.regatta_hd.ui.Main"/>
