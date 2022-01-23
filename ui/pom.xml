@@ -46,13 +46,22 @@
       <artifactId>controlsfx</artifactId>
     </dependency>
 
-    <!-- Uncomment for cross-platform fat jar -->
-    <!-- <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version> <classifier>win</classifier> </dependency>
-      <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version> <classifier>linux</classifier> </dependency>
-      <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version> <classifier>mac</classifier> </dependency> -->
+    <!-- cross-platform fat jar -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
+    </dependency>
   </dependencies>
 
   <build>

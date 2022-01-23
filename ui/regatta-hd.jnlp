@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<jnlp spec="1.0+"
+<jnlp spec="7.0"
   codebase="https://github.com/Heidelberger-Regattaverband/download/raw/gh-pages/"
   href="regatta-hd.jnlp">
 
@@ -11,7 +11,13 @@
     <description>Software für die Heidelberger Regatta</description>
     <description kind="short">Software für die Heidelberger Regatta</description>
     <offline-allowed/>
+    <shortcut online="true">
+      <desktop />
+      <menu submenu="Heidelberger Regattaverband"/>
+    </shortcut>
   </information>
+
+  <update check="always" policy="always" />
 
   <security>
     <all-permissions/>
@@ -19,7 +25,7 @@
 
   <resources>
     <java version="17*"/>
-    <jar href="regatta-hd-1.0.0-SNAPSHOT.jar"/>
+    <jar href="regatta-hd-1.0.0-SNAPSHOT.jar" version="1.0.0" main="true"/>
   </resources>
 
   <application-desc main-class="de.regatta_hd.ui.Main"/>
