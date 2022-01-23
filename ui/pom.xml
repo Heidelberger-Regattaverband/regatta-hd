@@ -144,16 +144,11 @@
         </executions>
       </plugin>
 
+      <!-- ======================= -->
+      <!-- additional deploy steps -->
+      <!-- ======================= -->
       <plugin>
         <artifactId>maven-jarsigner-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>sign</id>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <archive>${archive.file}</archive>
           <keystore>keystore.jks</keystore>
@@ -161,6 +156,15 @@
           <storepass>password</storepass>
           <keypass>password</keypass>
         </configuration>
+        <executions>
+          <execution>
+            <id>sign</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
