@@ -7,14 +7,18 @@
   <information>
     <title>Regatta Heidelberg</title>
     <vendor>Heidelberger Regattaverband</vendor>
-    <homepage href="https://docs.oracle.com/javase/tutorial/uiswing/examples/misc/index.html#Wallpaper"/>
-    <description>WallpaperProject</description>
-    <description kind="short">A simple JLayer demonstration</description>
+    <homepage href="https://www.heidelberger-regattaverband.com/"/>
+    <description>Software für die Heidelberger Regatta</description>
+    <description kind="short">Software für die Heidelberger Regatta</description>
     <offline-allowed/>
   </information>
 
+  <security>
+    <all-permissions/>
+  </security>
+
   <resources>
-    <j2se version="17+"/>
+    <java version="17*"/>
     <jar href="ui-1.0.0-SNAPSHOT-full.jar"/>
   </resources>
 
