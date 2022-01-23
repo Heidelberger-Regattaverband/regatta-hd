@@ -12,8 +12,9 @@
 
   <properties>
     <mainClass>de.regatta_hd.ui.Main</mainClass>
-    <archiveName>regatta-hd-${project.version}.jar</archiveName>
-    <archiveLocation>${project.build.directory}/${archiveName}</archiveLocation>
+    <download.build.directory>${project.build.directory}/download</download.build.directory>
+    <archive.name>regatta-hd-${project.version}.jar</archive.name>
+    <archive.file>${download.build.directory}/${archive.name}</archive.file>
   </properties>
 
   <dependencies>
@@ -100,13 +101,10 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}</outputDirectory>
+              <outputDirectory>${download.build.directory}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${project.basedir}</directory>
-                  <includes>
-                    <include>regatta-hd.jnlp</include>
-                  </includes>
+                  <directory>${project.basedir}/download</directory>
                 </resource>
               </resources>
             </configuration>
@@ -123,7 +121,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <outputFile>${archiveLocation}</outputFile>
+              <outputFile>${archive.file}</outputFile>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>full</shadedClassifierName>
               <filters>
@@ -157,7 +155,7 @@
           </execution>
         </executions>
         <configuration>
-          <archive>${archiveLocation}</archive>
+          <archive>${archive.file}</archive>
           <keystore>keystore.jks</keystore>
           <alias>selfsigned</alias>
           <storepass>password</storepass>
@@ -174,11 +172,7 @@
           <message>Creating site for ${project.version}</message>
           <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
           <repositoryName>download</repositoryName>
-          <outputDirectory>${project.build.directory}</outputDirectory>
-          <includes>
-            <include>${archiveName}</include>
-            <include>regatta-hd.jnlp</include>
-          </includes>
+          <outputDirectory>${download.build.directory}</outputDirectory>
         </configuration>
         <executions>
           <execution>
