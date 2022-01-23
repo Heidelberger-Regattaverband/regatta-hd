@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<jnlp spec="7.0"
-  codebase="https://heidelberger-regattaverband.github.io/download/"
-  href="regatta-hd.jnlp">
+<jnlp spec="7.0" codebase="https://heidelberger-regattaverband.github.io/download/"
+  href="regatta-hd.jnlp" version="1.0.0">
 
   <information>
     <title>Regatta Heidelberg</title>
@@ -12,7 +11,7 @@
     <description kind="short">Software für die Heidelberger Regatta</description>
     <icon href="hrv_logo.png"/>
     <offline-allowed/>
-    <shortcut online="true">
+    <shortcut online="true" install="true">
       <desktop />
       <menu submenu="Heidelberger Regattaverband"/>
     </shortcut>
