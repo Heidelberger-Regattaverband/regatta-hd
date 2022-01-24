@@ -59,7 +59,7 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 		gridpane.add(hostNameFld, 1, 1);
 		TextField dbNameFld = new TextField(this.connectionData.getDbName());
 		gridpane.add(dbNameFld, 1, 2);
-		TextField userNameFld = new TextField(this.connectionData.getUserName());
+		TextField userNameFld = new TextField(this.connectionData.getUsername());
 		gridpane.add(userNameFld, 1, 3);
 		PasswordField passwordFld = new PasswordField();
 		passwordFld.setText(this.connectionData.getPassword());
@@ -72,7 +72,7 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 			if (dialogButton.getButtonData() == ButtonData.OK_DONE) {
 				this.connectionData.setDbHost(hostNameFld.getText());
 				this.connectionData.setDbName(dbNameFld.getText());
-				this.connectionData.setUserName(userNameFld.getText());
+				this.connectionData.setUsername(userNameFld.getText());
 				this.connectionData.setPassword(passwordFld.getText());
 				this.connectionData.setEncrypt(encryptCbox.isSelected());
 				this.connectionData.setTrustServerCertificate(trustServerCertificateCbox.isSelected());
