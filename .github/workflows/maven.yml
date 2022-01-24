@@ -35,6 +35,6 @@ jobs:
       env:
         dbHost: ${{ secrets.DB_HOST }}
         dbName: ${{ secrets.DB_NAME }}
-        userName: ${{ secrets.DB_USER_NAME }}
+        username: ${{ secrets.DB_USER_NAME }}
         password: ${{ secrets.DB_PASSWORD }}
       run: mvn clean install -B
