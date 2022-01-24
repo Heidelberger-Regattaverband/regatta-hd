@@ -12,6 +12,9 @@
 
   <properties>
     <mainClass>de.regatta_hd.ui.Main</mainClass>
+    <download.build.directory>${project.build.directory}/download</download.build.directory>
+    <archive.name>regatta-hd-${project.version}.jar</archive.name>
+    <archive.file>${download.build.directory}/${archive.name}</archive.file>
   </properties>
 
   <dependencies>
@@ -44,17 +47,38 @@
       <artifactId>controlsfx</artifactId>
     </dependency>
 
-    <!-- Uncomment for cross-platform fat jar -->
-    <!-- <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version> <classifier>win</classifier> </dependency>
-      <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version> <classifier>linux</classifier> </dependency>
-      <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId>
-      <version>${javafx.version}</version> <classifier>mac</classifier> </dependency> -->
+    <!-- cross-platform fat jar -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Permissions>all-permissions</Permissions>
+              <Codebase>*</Codebase>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
@@ -68,6 +92,27 @@
       </plugin>
 
       <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resource-one</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${download.build.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/download</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
@@ -76,6 +121,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <outputFile>${archive.file}</outputFile>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>full</shadedClassifierName>
               <filters>
@@ -94,6 +140,50 @@
                 </transformer>
               </transformers>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- ======================= -->
+      <!-- additional deploy steps -->
+      <!-- ======================= -->
+      <plugin>
+        <artifactId>maven-jarsigner-plugin</artifactId>
+        <configuration>
+          <archive>${archive.file}</archive>
+          <keystore>keystore.jks</keystore>
+          <alias>selfsigned</alias>
+          <storepass>password</storepass>
+          <keypass>password</keypass>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sign</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>de.ofterdinger.maven.plugins</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <configuration>
+          <server>github-upload</server>
+          <message>Creating site for ${project.version}</message>
+          <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
+          <repositoryName>download</repositoryName>
+          <outputDirectory>${download.build.directory}</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>deploy</phase>
           </execution>
         </executions>
       </plugin>

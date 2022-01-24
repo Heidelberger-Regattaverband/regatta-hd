@@ -121,7 +121,7 @@ public class AqauriusDBImpl implements AquariusDB {
 		}
 
 		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", dbCfg.getUserName());
+		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
 	}

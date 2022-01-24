@@ -40,10 +40,13 @@
   </repositories>
 
   <properties>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>11</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <openjfx.version>17.0.2</openjfx.version>
+
+    <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
+    <controlsfx.version>11.1.1</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.22</lombok.version>
@@ -55,7 +58,7 @@
     <hibernate.version>5.6.4.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>9.4.1.jre16</mssql.version>
+    <mssql.version>9.4.1.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -137,9 +140,27 @@
         <version>${openjfx.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${openjfx.version}</version>
+        <classifier>win</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${openjfx.version}</version>
+        <classifier>linux</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${openjfx.version}</version>
+        <classifier>mac</classifier>
+      </dependency>
+      <dependency>
         <groupId>org.controlsfx</groupId>
         <artifactId>controlsfx</artifactId>
-        <version>11.1.1</version>
+        <version>${controlsfx.version}</version>
       </dependency>
 
       <!-- ============ -->
@@ -248,6 +269,15 @@
           <includes>
             <include>**/*Tests</include>
           </includes>
+        </configuration>
+      </plugin>
+
+      <!-- Deploy configuration-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>

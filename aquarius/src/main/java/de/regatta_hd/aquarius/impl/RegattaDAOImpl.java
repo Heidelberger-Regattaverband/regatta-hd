@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -277,7 +278,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return 0;
 			}
 			return score1.getPoints() > score2.getPoints() ? -1 : 1;
-		}).toList();
+		}).collect(Collectors.toList());
 
 		for (int i = 0; i < scoresResult.size(); i++) {
 			Score score = scoresResult.get(i);
@@ -295,9 +296,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private static boolean isEqualCrews(Registration reg1, Registration reg2) {
 		// remove cox from comparison
 		List<Crew> crews1 = reg1.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
-				.toList();
+				.collect(Collectors.toList());
 		List<Crew> crews2 = reg2.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
-				.toList();
+				.collect(Collectors.toList());
 
 		if (crews1.size() != crews2.size()) {
 			return false;

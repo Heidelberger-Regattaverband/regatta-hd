@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN" "http://java.sun.com/dtd/JNLP-6.0.dtd">
+
+<jnlp spec="6.0" codebase="https://heidelberger-regattaverband.github.io/download/"
+  href="regatta-hd.jnlp" version="1.0.0">
+
+  <information>
+    <title>Regatta Heidelberg</title>
+    <vendor>Heidelberger Regattaverband</vendor>
+    <homepage href="https://www.heidelberger-regattaverband.com/" />
+    <description>Software für die Heidelberger Regatta</description>
+    <description kind="short">Software für die Heidelberger Regatta</description>
+    <icon href="hrv_logo.png" />
+    <offline-allowed />
+    <shortcut online="true" install="true">
+      <desktop />
+      <menu submenu="Heidelberger Regattaverband" />
+    </shortcut>
+  </information>
+
+  <update check="always" policy="always" />
+
+  <security>
+    <all-permissions />
+  </security>
+
+  <resources>
+    <java version="11*" href="jvms.json" />
+    <jar href="regatta-hd-1.0.0-SNAPSHOT.jar" version="1.0.0-SNAPSHOT" main="true" />
+  </resources>
+
+  <application-desc main-class="de.regatta_hd.ui.Main" />
+
+</jnlp>

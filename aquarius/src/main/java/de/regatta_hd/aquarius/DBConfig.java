@@ -23,7 +23,7 @@ public class DBConfig {
 	/**
 	 * The user name credential.
 	 */
-	private String userName;
+	private String username;
 
 	/**
 	 * The user's password.
