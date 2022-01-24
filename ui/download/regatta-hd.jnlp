@@ -25,8 +25,8 @@
   </security>
 
   <resources>
-    <java version="17*" />
-    <jar href="regatta-hd-1.0.0-SNAPSHOT.jar" version="1.0.0" main="true" />
+    <java version="11*" href="jvms.json" />
+    <jar href="regatta-hd-1.0.0-SNAPSHOT.jar" version="1.0.0-SNAPSHOT" main="true" />
   </resources>
 
   <application-desc main-class="de.regatta_hd.ui.Main" />

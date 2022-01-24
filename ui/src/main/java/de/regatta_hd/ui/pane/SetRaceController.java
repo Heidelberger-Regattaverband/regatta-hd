@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import org.controlsfx.control.SearchableComboBox;
 
@@ -96,7 +97,7 @@ public class SetRaceController extends AbstractBaseController {
 						// create race number of source race -> replace 2 with 1
 						Race race2 = srcRaces.get(getSrcRaceNumber(race));
 						return race2 != null && race2.isOfficial();
-					}).toList();
+					}).collect(Collectors.toList());
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
 			try {
