@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.google.inject.Inject;
-
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
@@ -14,8 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
 public class RegattasController extends AbstractBaseController {
-	@Inject
-	private RegattaDAO regattaDAO;
 
 	@FXML
 	private TableView<Regatta> regattasTable;

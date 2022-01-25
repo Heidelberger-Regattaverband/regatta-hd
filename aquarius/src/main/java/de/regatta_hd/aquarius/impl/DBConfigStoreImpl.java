@@ -5,11 +5,13 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.common.ConfigService;
 
+@Singleton
 public class DBConfigStoreImpl implements DBConfigStore {
 
 	private static final String DB_HOST = "dbHost";

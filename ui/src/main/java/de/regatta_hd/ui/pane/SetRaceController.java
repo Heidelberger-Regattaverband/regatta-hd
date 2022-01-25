@@ -11,9 +11,6 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.SearchableComboBox;
 
-import com.google.inject.Inject;
-
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
@@ -36,9 +33,6 @@ import javafx.scene.layout.VBox;
 public class SetRaceController extends AbstractBaseController {
 
 	private static final String FULL_GRAPH = "race-to-results";
-
-	@Inject
-	private RegattaDAO regattaDAO;
 
 	@FXML
 	private SearchableComboBox<Race> raceCbo;

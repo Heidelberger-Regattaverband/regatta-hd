@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +14,7 @@ import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.FxUtils;
+import de.regatta_hd.ui.util.DBTask.DBResult;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -78,7 +80,7 @@ public class PrimaryController extends AbstractBaseController {
 							this.dbCfgStore.setLastSuccessful(dbCfg);
 						} catch (Exception e) {
 							FxUtils.showErrorMessage(e);
-						}finally {
+						} finally {
 							updateControls(false);
 						}
 					});
@@ -87,7 +89,6 @@ public class PrimaryController extends AbstractBaseController {
 				logger.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
-		updateControls(false);
 	}
 
 	@FXML
@@ -160,11 +161,26 @@ public class PrimaryController extends AbstractBaseController {
 	private void updateControls(boolean isConnecting) {
 		boolean isOpen = super.db.isOpen();
 
+		if (isOpen) {
+			this.dbTask.run(super.regattaDAO::getActiveRegatta, dbResult -> {
+				try {
+					boolean hasActiveRegatta = dbResult.getResult() != null;
+
+					this.offersMitm.setDisable(!hasActiveRegatta);
+					this.divisionsMitm.setDisable(!hasActiveRegatta);
+					this.scoreMitm.setDisable(!hasActiveRegatta);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
+			});
+		} else {
+			this.offersMitm.setDisable(!isOpen);
+			this.divisionsMitm.setDisable(!isOpen);
+			this.scoreMitm.setDisable(!isOpen);
+		}
+
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
-		this.offersMitm.setDisable(!isOpen);
-		this.divisionsMitm.setDisable(!isOpen);
-		this.scoreMitm.setDisable(!isOpen);
 	}
 }

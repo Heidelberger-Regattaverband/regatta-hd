@@ -4,9 +4,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.google.inject.Inject;
-
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
@@ -19,10 +16,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 public class OffersController extends AbstractBaseController {
-
-	// DB components
-	@Inject
-	private RegattaDAO regattaDao;
 
 	// UI Controls
 	@FXML
@@ -62,7 +55,7 @@ public class OffersController extends AbstractBaseController {
 	private void setDistances() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(this.regattaDao::setDistances, dbResult -> {
+		this.dbTask.runInTransaction(this.regattaDAO::setDistances, dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -83,7 +76,7 @@ public class OffersController extends AbstractBaseController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(this.regattaDao::enableMastersAgeClasses, dbResult -> {
+		this.dbTask.runInTransaction(this.regattaDAO::enableMastersAgeClasses, dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -106,7 +99,7 @@ public class OffersController extends AbstractBaseController {
 
 		this.dbTask.run(() -> {
 			this.db.getEntityManager().clear();
-			return this.regattaDao.getRaces();
+			return this.regattaDAO.getRaces();
 		}, dbResult -> {
 			try {
 				this.racesObservableList.setAll(dbResult.getResult());

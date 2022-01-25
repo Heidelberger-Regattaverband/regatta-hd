@@ -5,9 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.google.inject.Inject;
-
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
@@ -16,9 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
 public class ScoresController extends AbstractBaseController {
-
-	@Inject
-	private RegattaDAO regattaDAO;
 
 	@FXML
 	private Button refreshBtn;
