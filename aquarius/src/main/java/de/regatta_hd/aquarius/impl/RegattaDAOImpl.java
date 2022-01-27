@@ -210,7 +210,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			});
 		}
 
-		diffCrews.values().forEach(registration -> setList.add(
+		diffCrews.values().stream().sorted((reg1, reg2) -> {
+			return reg1.getBib() > reg2.getBib() ? 1 : -1;
+		}).forEach(registration -> setList.add(
 				SetListEntry.builder().rank(setList.size() + 1).registration(registration).equalCrew(false).build()));
 
 		return setList;
