@@ -322,8 +322,8 @@ public class SetRaceController extends AbstractBaseController {
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
-			if (entry != null && entry.getBib() != null) {
-				return new SimpleIntegerProperty(entry.getBib().shortValue());
+			if (entry != null && entry.getBib() != 0) {
+				return new SimpleIntegerProperty(entry.getBib());
 			}
 			return null;
 		});

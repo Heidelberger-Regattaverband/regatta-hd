@@ -27,7 +27,7 @@ public class SetListEntry {
 		return new SimpleBooleanProperty(isEqualCrew());
 	}
 
-	public Short getBib() {
+	public short getBib() {
 		return this.registration.getBib();
 	}
 
