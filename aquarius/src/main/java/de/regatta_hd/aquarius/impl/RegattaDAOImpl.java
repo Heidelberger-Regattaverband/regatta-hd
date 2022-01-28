@@ -192,26 +192,41 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 					// source registration assigned, remove it from further processing
 					srcRegistrations.remove(srcRegistration);
+					// break current loop and continue with next registration
+					break;
 				}
 			}
 		}
 
-		List<SetListEntry> setList = new ArrayList<>();
-
-		List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
-
-		fillSetListWithEqualCrews(setList, equalCrews, srcHeatRegsAll);
+		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
 
 		// sort the different crews according their number
 		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1)
-				.forEach(setListEntry -> setList.add(SetListEntry.builder().rank(setList.size() + 1)
-						.registration(setListEntry.getRegistration()).equalCrew(false).build()));
+				.forEach(setListEntry -> {
+					SetListEntry entry = SetListEntry.builder().rank(setList.size() + 1)
+							.registration(setListEntry.getRegistration()).equalCrew(false).build();
+					findBestMatch(entry, srcRegistrations);
+					setList.add(entry);
+				});
 
 		return setList;
 	}
 
-	private static void fillSetListWithEqualCrews(List<SetListEntry> setList, Map<Integer, SetListEntry> equalCrews,
-			List<List<HeatRegistration>> srcHeatRegsAll) {
+	private static void findBestMatch(SetListEntry entry, Set<Registration> srcRegistrations) {
+		Registration registration = entry.getRegistration();
+
+		for (Registration srcRegistration : srcRegistrations) {
+			if (registration.getClub().equals(srcRegistration.getClub())) {
+				entry.setHeatRregistration(null);
+			}
+		}
+	}
+
+	private static List<SetListEntry> createSetListWithEqualCrews(Map<Integer, SetListEntry> equalCrews, Race srcRace) {
+		List<SetListEntry> setList = new ArrayList<>();
+
+		List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
+
 		for (List<HeatRegistration> srcHeatRegs : srcHeatRegsAll) {
 			srcHeatRegs.stream().sorted((heatReg1, heatReg2) -> {
 				if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
@@ -228,6 +243,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				}
 			});
 		}
+
+		return setList;
 	}
 
 	private static List<List<HeatRegistration>> getSrcHeatsByRank(Race srcRace) {
