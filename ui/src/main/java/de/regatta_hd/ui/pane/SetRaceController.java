@@ -77,21 +77,13 @@ public class SetRaceController extends AbstractBaseController {
 				.addListener((observable, oldSelection, newSelection) -> {
 					if (newSelection != null) {
 						SetListEntry entry = this.setListTbl.getSelectionModel().getSelectedItem();
-						if (entry.getSrcHeatRregistration() != null) {
-							this.srcCrewTbl.getItems()
-									.setAll(entry.getSrcHeatRregistration().getRegistration().getCrews());
-							this.srcCrewLbl.setText(
-									createCrewsLableText(entry, entry.getSrcHeatRregistration().getRegistration()));
+						if (entry.getSrcRegistration() != null) {
+							this.srcCrewTbl.getItems().setAll(entry.getSrcRegistration().getCrews());
+							this.srcCrewLbl.setText(createCrewsLableText(entry, entry.getSrcRegistration()));
 							FxUtils.autoResizeColumns(this.srcCrewTbl);
 						} else {
-							if (entry.getSrcRegistration() != null) {
-								this.srcCrewTbl.getItems().setAll(entry.getSrcRegistration().getCrews());
-								this.srcCrewLbl.setText(createCrewsLableText(entry, entry.getSrcRegistration()));
-								FxUtils.autoResizeColumns(this.srcCrewTbl);
-							} else {
-								this.srcCrewLbl.setText("Kein Boot gefunden.");
-								this.srcCrewTbl.getItems().clear();
-							}
+							this.srcCrewLbl.setText("Kein Boot gefunden.");
+							this.srcCrewTbl.getItems().clear();
 						}
 
 						if (entry.getRegistration() != null) {
@@ -148,7 +140,7 @@ public class SetRaceController extends AbstractBaseController {
 		});
 	}
 
-	public String createCrewsLableText(SetListEntry entry, Registration registration) {
+	private static String createCrewsLableText(SetListEntry entry, Registration registration) {
 		String labelText = registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
 		if (registration.getBoatNumber() != null) {
 			labelText += " Boot " + registration.getBoatNumber().toString();

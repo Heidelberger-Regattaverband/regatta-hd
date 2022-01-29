@@ -66,14 +66,8 @@
                       <PropertyValueFactory property="boat" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text">
-                    <cellValueFactory>
-                      <PropertyValueFactory property="equalCrew" />
-                    </cellValueFactory>
-                    <cellFactory>
-                      <CheckBoxTableCellFactory />
-                    </cellFactory>
-                  </TableColumn>
+                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory> <PropertyValueFactory
+                    property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory> </TableColumn -->
                   <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.heatNumberCol.text">
                     <cellValueFactory>
                       <PropertyValueFactory property="heatNumber" />
@@ -100,12 +94,12 @@
                   <Label fx:id="srcCrewLbl" />
                   <TableView fx:id="srcCrewTbl">
                     <columns>
-                      <TableColumn style="-fx-alignment: CENTER;" text="Pos.">
+                      <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
                         <cellValueFactory>
                           <PropertyValueFactory property="pos" />
                         </cellValueFactory>
                       </TableColumn>
-                      <TableColumn text="Ruderer">
+                      <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
                         <cellValueFactory>
                           <PropertyValueFactory property="name" />
                         </cellValueFactory>
@@ -119,12 +113,12 @@
                   <Label fx:id="crewLbl" />
                   <TableView fx:id="crewTbl">
                     <columns>
-                      <TableColumn style="-fx-alignment: CENTER;" text="Pos.">
+                      <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
                         <cellValueFactory>
                           <PropertyValueFactory property="pos" />
                         </cellValueFactory>
                       </TableColumn>
-                      <TableColumn text="Ruderer">
+                      <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
                         <cellValueFactory>
                           <PropertyValueFactory property="name" />
                         </cellValueFactory>

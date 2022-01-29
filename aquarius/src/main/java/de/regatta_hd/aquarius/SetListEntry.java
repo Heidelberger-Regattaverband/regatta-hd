@@ -55,4 +55,11 @@ public class SetListEntry {
 		Result result = this.srcHeatRregistration != null ? this.srcHeatRregistration.getFinalResult() : null;
 		return result != null ? result.getDisplayValue() : null;
 	}
+
+	public Registration getSrcRegistration() {
+		if (this.srcHeatRregistration != null) {
+			return this.srcHeatRregistration.getRegistration();
+		}
+		return this.srcRegistration;
+	}
 }
