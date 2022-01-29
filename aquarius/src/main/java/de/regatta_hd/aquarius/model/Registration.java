@@ -45,7 +45,7 @@ public class Registration {
 
 	@Column(name = "Entry_Bib")
 	@ToString.Include(rank = 10)
-	private Short bib;
+	private short bib;
 
 	@Column(name = "Entry_BoatNumber")
 	@ToString.Include(rank = 7)

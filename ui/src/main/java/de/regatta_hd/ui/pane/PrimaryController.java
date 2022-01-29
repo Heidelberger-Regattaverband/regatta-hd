@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,14 +11,15 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
+import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.FxUtils;
-import de.regatta_hd.ui.util.DBTask.DBResult;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class PrimaryController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
@@ -65,25 +65,12 @@ public class PrimaryController extends AbstractBaseController {
 	private void handleDatabaseConnect() {
 		if (!super.db.isOpen()) {
 			DBConnectionDialog dialog;
+			final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
 			try {
-				dialog = new DBConnectionDialog((Stage) this.mainMbar.getScene().getWindow(), true, super.resources,
-						this.dbCfgStore.getLastSuccessful());
+				dialog = new DBConnectionDialog(stage, true, super.resources, this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
-					this.dbTask.run(() -> {
-						updateControls(true);
-						this.db.open(connectionData.get());
-						return connectionData.get();
-					}, dbResult -> {
-						try {
-							DBConfig dbCfg = dbResult.getResult();
-							this.dbCfgStore.setLastSuccessful(dbCfg);
-						} catch (Exception e) {
-							FxUtils.showErrorMessage(e);
-						} finally {
-							updateControls(false);
-						}
-					});
+					openDbConnection(stage, connectionData);
 				}
 			} catch (IOException e) {
 				logger.log(Level.WARNING, e.getMessage(), e);
@@ -91,9 +78,32 @@ public class PrimaryController extends AbstractBaseController {
 		}
 	}
 
+	private void openDbConnection(final Stage stage, Optional<DBConfig> connectionData) {
+		super.dbTask.run(() -> {
+			updateControls(true);
+			super.db.open(connectionData.get());
+			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+			return new Pair<>(connectionData.get(), activeRegatta);
+		}, dbResult -> {
+			try {
+				Pair<DBConfig, Regatta> pair = dbResult.getResult();
+				this.dbCfgStore.setLastSuccessful(pair.getKey());
+				if (pair.getValue() != null) {
+					stage.setTitle(pair.getValue().getTitle());
+				}
+			} catch (Exception e) {
+				FxUtils.showErrorMessage(e);
+			} finally {
+				updateControls(false);
+			}
+		});
+	}
+
 	@FXML
 	private void handleDatabaseDisconnect() {
 		super.db.close();
+		final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
+		stage.setTitle(getText("MainWindow.title"));
 		updateControls(false);
 	}
 

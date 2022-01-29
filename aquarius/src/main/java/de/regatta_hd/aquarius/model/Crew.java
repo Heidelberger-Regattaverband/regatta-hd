@@ -57,4 +57,8 @@ public class Crew {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Crew_Entry_ID_FK", nullable = false)
 	private Registration registration;
+
+	public String getName() {
+		return this.athlet.getLastName() + ", " + this.athlet.getFirstName();
+	}
 }

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.SearchableComboBox;
 
 import de.regatta_hd.aquarius.SetListEntry;
+import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Registration;
@@ -41,6 +42,14 @@ public class SetRaceController extends AbstractBaseController {
 	@FXML
 	private TableView<SetListEntry> setListTbl;
 	@FXML
+	private Label srcCrewLbl;
+	@FXML
+	private TableView<Crew> srcCrewTbl;
+	@FXML
+	private Label crewLbl;
+	@FXML
+	private TableView<Crew> crewTbl;
+	@FXML
 	private VBox raceVBox;
 
 	// toolbar buttons
@@ -63,6 +72,33 @@ public class SetRaceController extends AbstractBaseController {
 		this.raceCbo.setDisable(true);
 		this.setListTbl.setDisable(true);
 		disableButtons();
+
+		this.setListTbl.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldSelection, newSelection) -> {
+					if (newSelection != null) {
+						SetListEntry entry = this.setListTbl.getSelectionModel().getSelectedItem();
+						if (entry.getSrcRegistration() != null) {
+							this.srcCrewTbl.getItems().setAll(entry.getSrcRegistration().getCrews());
+							this.srcCrewLbl.setText(createCrewsLableText(entry, entry.getSrcRegistration()));
+							FxUtils.autoResizeColumns(this.srcCrewTbl);
+						} else {
+							this.srcCrewLbl.setText("Kein Boot gefunden.");
+							this.srcCrewTbl.getItems().clear();
+						}
+
+						if (entry.getRegistration() != null) {
+							this.crewTbl.getItems().setAll(entry.getRegistration().getCrews());
+							this.crewLbl.setText(createCrewsLableText(entry, entry.getRegistration()));
+							FxUtils.autoResizeColumns(this.crewTbl);
+						} else {
+							this.crewLbl.setText("Kein Boot gefunden.");
+							this.crewTbl.getItems().clear();
+						}
+					} else {
+						this.srcCrewTbl.getItems().clear();
+						this.crewTbl.getItems().clear();
+					}
+				});
 
 		this.dbTask.run(() -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
@@ -102,6 +138,14 @@ public class SetRaceController extends AbstractBaseController {
 				FxUtils.showErrorMessage(e);
 			}
 		});
+	}
+
+	private static String createCrewsLableText(SetListEntry entry, Registration registration) {
+		String labelText = registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
+		if (registration.getBoatNumber() != null) {
+			labelText += " Boot " + registration.getBoatNumber().toString();
+		}
+		return labelText;
 	}
 
 	@FXML
@@ -322,8 +366,8 @@ public class SetRaceController extends AbstractBaseController {
 		bibCol.setStyle("-fx-alignment: CENTER;");
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
-			if (entry != null && entry.getBib() != null) {
-				return new SimpleIntegerProperty(entry.getBib().shortValue());
+			if (entry != null && entry.getBib() != 0) {
+				return new SimpleIntegerProperty(entry.getBib());
 			}
 			return null;
 		});

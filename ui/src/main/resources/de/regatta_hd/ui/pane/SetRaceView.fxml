@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
-<?import org.controlsfx.control.SearchableComboBox?>
 <?import de.regatta_hd.ui.util.RaceStringConverter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -15,21 +14,25 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
-<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.SetRaceController">
+<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.SetRaceController">
   <padding>
     <Insets bottom="10" left="10" right="10" top="10" />
   </padding>
 
   <children>
     <Label text="%SetRaceView.raceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction" promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction"
+      promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
         <RaceStringConverter />
       </converter>
     </SearchableComboBox>
 
-    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
+      GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <VBox>
           <children>
@@ -39,56 +42,94 @@
             <VBox fx:id="srcRaceVBox" spacing="5" />
           </children>
         </VBox>
-        <VBox spacing="5">
-          <children>
-            <ToolBar>
-              <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
-              <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction" text="%SetRaceView.deleteSetListBtn.text" />
-            </ToolBar>
-            <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="rank" />
-                  </cellValueFactory>
-                </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.bibCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="bib" />
-                  </cellValueFactory>
-                </TableColumn>
-                <TableColumn text="%SetRaceView.heatRegsTbl.boatCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="boat" />
-                  </cellValueFactory>
-                </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="equalCrew" />
-                  </cellValueFactory>
-                  <cellFactory>
-                    <CheckBoxTableCellFactory />
-                  </cellFactory>
-                </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.heatNumberCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="heatNumber" />
-                  </cellValueFactory>
-                </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.rankCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="heatRank" />
-                  </cellValueFactory>
-                </TableColumn>
-                <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%SetRaceView.heatRegsTbl.resultCol.text">
-                  <cellValueFactory>
-                    <PropertyValueFactory property="result" />
-                  </cellValueFactory>
-                </TableColumn>
-              </columns>
-            </TableView>
-          </children>
-        </VBox>
+        <SplitPane dividerPositions="0.8" orientation="VERTICAL">
+          <VBox spacing="5.0">
+            <children>
+              <ToolBar>
+                <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
+                <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction" text="%SetRaceView.deleteSetListBtn.text" />
+              </ToolBar>
+              <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
+                <columns>
+                  <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="rank" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.bibCol.text">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="bib" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn text="%SetRaceView.heatRegsTbl.boatCol.text">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="boat" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory> <PropertyValueFactory
+                    property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory> </TableColumn -->
+                  <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.heatNumberCol.text">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="heatNumber" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.heatRegsTbl.rankCol.text">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="heatRank" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%SetRaceView.heatRegsTbl.resultCol.text">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="result" />
+                    </cellValueFactory>
+                  </TableColumn>
+                </columns>
+              </TableView>
+            </children>
+          </VBox>
+          <SplitPane dividerPositions="0.5">
+            <items>
+              <VBox>
+                <children>
+                  <Label fx:id="srcCrewLbl" />
+                  <TableView fx:id="srcCrewTbl">
+                    <columns>
+                      <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="pos" />
+                        </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="name" />
+                        </cellValueFactory>
+                      </TableColumn>
+                    </columns>
+                  </TableView>
+                </children>
+              </VBox>
+              <VBox>
+                <children>
+                  <Label fx:id="crewLbl" />
+                  <TableView fx:id="crewTbl">
+                    <columns>
+                      <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.posCol.text">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="pos" />
+                        </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="name" />
+                        </cellValueFactory>
+                      </TableColumn>
+                    </columns>
+                  </TableView>
+                </children>
+              </VBox>
+            </items>
+          </SplitPane>
+        </SplitPane>
         <VBox>
           <children>
             <ToolBar>

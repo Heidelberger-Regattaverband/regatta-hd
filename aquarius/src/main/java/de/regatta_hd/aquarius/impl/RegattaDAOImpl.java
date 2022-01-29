@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -166,34 +168,66 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public List<SetListEntry> createSetList(Race race, Race srcRace) {
-		Map<Integer, Registration> equalCrews = new HashMap<>();
-		Map<Integer, Registration> diffCrews = new HashMap<>();
+		Map<Integer, SetListEntry> diffCrews = new HashMap<>();
 
-		for (Registration registration : race.getRegistrations()) {
-			diffCrews.put(registration.getId(), registration);
+		Set<Registration> srcRegistrations = ConcurrentHashMap.newKeySet();
+		srcRegistrations.addAll(srcRace.getRegistrations());
+		Set<Registration> registrations = race.getRegistrations();
 
-			for (Registration srcRegistration : srcRace.getRegistrations()) {
+		Map<Integer, SetListEntry> equalCrews = new HashMap<>();
+
+		// loop over all registrations of race to be set
+		for (Registration registration : registrations) {
+			SetListEntry entry = SetListEntry.builder().registration(registration).equalCrew(false).build();
+			diffCrews.put(registration.getId(), entry);
+
+			for (Registration srcRegistration : srcRegistrations) {
+				// look for equal crew in the source registration
 				if (isEqualCrews(srcRegistration, registration)) {
-					equalCrews.put(srcRegistration.getId(), registration);
-					diffCrews.remove(registration.getId());
+					SetListEntry equalCrewEntry = diffCrews.remove(registration.getId());
+					// mark crews as equal
+					equalCrewEntry.setEqualCrew(true);
+					// put entry into map of equal crews
+					equalCrews.put(srcRegistration.getId(), equalCrewEntry);
+
+					// source registration assigned, remove it from further processing
+					srcRegistrations.remove(srcRegistration);
+					// break current loop and continue with next registration
+					break;
 				}
 			}
 		}
 
-		List<List<HeatRegistration>> srcHeatRegsAll = new ArrayList<>();
-		for (int i = 0; i < srcRace.getRaceMode().getLaneCount(); i++) {
-			srcHeatRegsAll.add(new ArrayList<>());
-		}
+		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
 
-		// loop over source offer heats and get all heat registrations sorted by time
-		srcRace.getHeats().forEach(heat -> {
-			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
-			for (int j = 0; j < byRank.size(); j++) {
-				srcHeatRegsAll.get(j).add(byRank.get(j));
+		// sort the different crews according their number
+		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1)
+				.forEach(setListEntry -> {
+					SetListEntry entry = SetListEntry.builder().rank(setList.size() + 1)
+							.registration(setListEntry.getRegistration()).equalCrew(false).build();
+					findBestMatch(entry, srcRegistrations);
+					setList.add(entry);
+				});
+
+		return setList;
+	}
+
+	private static void findBestMatch(SetListEntry entry, Set<Registration> srcRegistrations) {
+		Registration registration = entry.getRegistration();
+
+		for (Registration srcRegistration : srcRegistrations) {
+			if (registration.getClub().equals(srcRegistration.getClub())) {
+				entry.setSrcRegistration(srcRegistration);
+				srcRegistrations.remove(srcRegistration);
 			}
-		});
+		}
+	}
 
+	private static List<SetListEntry> createSetListWithEqualCrews(Map<Integer, SetListEntry> equalCrews, Race srcRace) {
 		List<SetListEntry> setList = new ArrayList<>();
+
+		List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
+
 		for (List<HeatRegistration> srcHeatRegs : srcHeatRegsAll) {
 			srcHeatRegs.stream().sorted((heatReg1, heatReg2) -> {
 				if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
@@ -202,18 +236,33 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime()
 						.intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
-				Registration targetRegistration = equalCrews.get(srcHeatReg.getRegistration().getId());
+				SetListEntry targetRegistration = equalCrews.get(srcHeatReg.getRegistration().getId());
 				if (targetRegistration != null) {
-					setList.add(SetListEntry.builder().rank(setList.size() + 1).heatRregistration(srcHeatReg)
-							.registration(targetRegistration).equalCrew(true).build());
+					targetRegistration.setRank(setList.size() + 1);
+					targetRegistration.setSrcHeatRregistration(srcHeatReg);
+					setList.add(targetRegistration);
 				}
 			});
 		}
 
-		diffCrews.values().forEach(registration -> setList.add(
-				SetListEntry.builder().rank(setList.size() + 1).registration(registration).equalCrew(false).build()));
-
 		return setList;
+	}
+
+	private static List<List<HeatRegistration>> getSrcHeatsByRank(Race srcRace) {
+		List<List<HeatRegistration>> srcHeatRegs = new ArrayList<>();
+
+		for (int i = 0; i < srcRace.getRaceMode().getLaneCount(); i++) {
+			srcHeatRegs.add(new ArrayList<>());
+		}
+
+		// loop over source offer heats and get all heat registrations sorted by time
+		srcRace.getHeats().forEach(heat -> {
+			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
+			for (int j = 0; j < byRank.size(); j++) {
+				srcHeatRegs.get(j).add(byRank.get(j));
+			}
+		});
+		return srcHeatRegs;
 	}
 
 	@Override
