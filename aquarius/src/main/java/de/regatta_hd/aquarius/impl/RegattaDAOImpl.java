@@ -217,7 +217,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		for (Registration srcRegistration : srcRegistrations) {
 			if (registration.getClub().equals(srcRegistration.getClub())) {
-				entry.setHeatRregistration(null);
+				entry.setSrcRegistration(srcRegistration);
+				srcRegistrations.remove(srcRegistration);
 			}
 		}
 	}
@@ -238,7 +239,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				SetListEntry targetRegistration = equalCrews.get(srcHeatReg.getRegistration().getId());
 				if (targetRegistration != null) {
 					targetRegistration.setRank(setList.size() + 1);
-					targetRegistration.setHeatRregistration(srcHeatReg);
+					targetRegistration.setSrcHeatRregistration(srcHeatReg);
 					setList.add(targetRegistration);
 				}
 			});

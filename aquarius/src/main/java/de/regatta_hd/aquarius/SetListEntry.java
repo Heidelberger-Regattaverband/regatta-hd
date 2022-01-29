@@ -20,7 +20,8 @@ public class SetListEntry {
 	private int rank;
 	private boolean equalCrew;
 	private Registration registration;
-	private HeatRegistration heatRregistration;
+	private HeatRegistration srcHeatRregistration;
+	private Registration srcRegistration;
 
 	// JavaFX properties
 	public ObservableBooleanValue equalCrewProperty() {
@@ -41,17 +42,17 @@ public class SetListEntry {
 	}
 
 	public Short getHeatNumber() {
-		Heat heat = this.heatRregistration != null ? this.heatRregistration.getHeat() : null;
+		Heat heat = this.srcHeatRregistration != null ? this.srcHeatRregistration.getHeat() : null;
 		return heat != null ? heat.getHeatNumber() : null;
 	}
 
 	public Byte getHeatRank() {
-		Result result = this.heatRregistration != null ? this.heatRregistration.getFinalResult() : null;
+		Result result = this.srcHeatRregistration != null ? this.srcHeatRregistration.getFinalResult() : null;
 		return result != null ? Byte.valueOf(result.getRank()) : null;
 	}
 
 	public String getResult() {
-		Result result = this.heatRregistration != null ? this.heatRregistration.getFinalResult() : null;
+		Result result = this.srcHeatRregistration != null ? this.srcHeatRregistration.getFinalResult() : null;
 		return result != null ? result.getDisplayValue() : null;
 	}
 }
