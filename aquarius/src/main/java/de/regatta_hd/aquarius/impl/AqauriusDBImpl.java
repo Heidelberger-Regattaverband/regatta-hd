@@ -111,7 +111,7 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
 		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;database=%s", dbCfg.getDbHost(), dbCfg.getDbName());
+		String url = String.format("jdbc:sqlserver://%s;databaseName=%s", dbCfg.getDbHost(), dbCfg.getDbName());
 
 		if (dbCfg.isEncrypt()) {
 			url += ";encrypt=true";
