@@ -73,8 +73,10 @@ public class AqauriusDBImpl implements AquariusDB {
 			Session session = this.entityManager.unwrap(Session.class);
 			session.doWork(connection -> {
 				try {
-					Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(), database);
+					Database database = DatabaseFactory.getInstance()
+							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
+					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
+							new ClassLoaderResourceAccessor(), database);
 					liquibase.update(new Contexts(), new LabelExpression());
 
 					// store current thread to ensure further DB access is done in same thread
@@ -111,13 +113,11 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
 		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;databaseName=%s", dbCfg.getDbHost(), dbCfg.getDbName());
+		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbCfg.getDbHost(),
+				dbCfg.getDbName(), Boolean.toString(dbCfg.isEncrypt()));
 
-		if (dbCfg.isEncrypt()) {
-			url += ";encrypt=true";
-			if (dbCfg.isTrustServerCertificate()) {
-				url += ";trustServerCertificate=true";
-			}
+		if (dbCfg.isEncrypt() && dbCfg.isTrustServerCertificate()) {
+			url += ";trustServerCertificate=true";
 		}
 
 		props.put("javax.persistence.jdbc.url", url);
