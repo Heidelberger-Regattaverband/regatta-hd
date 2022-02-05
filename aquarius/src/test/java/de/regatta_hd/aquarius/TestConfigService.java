@@ -37,9 +37,9 @@ class TestConfigService implements ConfigService {
 	}
 
 	@Override
-	public int getIntegerProperty(String key) throws IOException {
+	public Integer getIntegerProperty(String key) throws IOException {
 		String property = getProperty(key);
-		return property != null ? Integer.parseInt(property) : 0;
+		return property != null ? Integer.valueOf(property) : null;
 	}
 
 	@Override
