@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.AgeClass;
@@ -27,6 +28,7 @@ import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
+import de.regatta_hd.common.ActionListenerManager;
 import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
@@ -46,6 +48,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private ConfigService cfgService;
 
 	private int activeRegattaId = -1;
+
+	@Inject
+	RegattaDAOImpl(ActionListenerManager listenerManager){
+		listenerManager.addListener(AquariusDB.StateListener.class, event -> {
+			getActiveRegatta();
+		});
+	}
 
 	@Override
 	public List<Regatta> getRegattas() {

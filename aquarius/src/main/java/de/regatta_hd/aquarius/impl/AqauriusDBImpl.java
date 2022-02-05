@@ -4,14 +4,18 @@ import static java.util.Objects.requireNonNull;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.aquarius.AquariusDBStateChanged;
 import de.regatta_hd.aquarius.DBConfig;
+import de.regatta_hd.common.ActionListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -29,6 +33,9 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {
 
+	@Inject
+	private ActionListenerManager listenerManager;
+
 	private EntityManager entityManager;
 
 	private Thread sessionThread;
@@ -39,6 +46,8 @@ public class AqauriusDBImpl implements AquariusDB {
 			this.entityManager.close();
 			this.entityManager = null;
 			this.sessionThread = null;
+			// notify listeners about changed AquariusDB state
+			notifyListeners(new AquariusDBStateChanged(this));
 		}
 	}
 
@@ -81,7 +90,11 @@ public class AqauriusDBImpl implements AquariusDB {
 
 					// store current thread to ensure further DB access is done in same thread
 					this.sessionThread = Thread.currentThread();
+
+					// notify listeners about changed AquariusDB state
+					notifyListeners(new AquariusDBStateChanged(this));
 				} catch (LiquibaseException e) {
+					this.entityManager.close();
 					this.entityManager = null;
 					throw new SQLException(e);
 				}
@@ -109,6 +122,13 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private boolean isOpenImpl() {
 		return this.entityManager != null && this.entityManager.isOpen();
+	}
+
+	private void notifyListeners(AquariusDBStateChanged event) {
+		List<StateListener> listeners = this.listenerManager.getListener(AquariusDB.StateListener.class);
+		for (StateListener listener : listeners) {
+			listener.stateChanged(event);
+		}
 	}
 
 	private static Map<String, String> getProperties(DBConfig dbCfg) {

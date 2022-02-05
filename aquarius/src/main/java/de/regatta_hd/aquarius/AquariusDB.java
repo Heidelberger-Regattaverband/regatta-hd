@@ -1,5 +1,7 @@
 package de.regatta_hd.aquarius;
 
+import java.util.EventListener;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -50,4 +52,8 @@ public interface AquariusDB {
 	 */
 	EntityTransaction beginTransaction();
 
+	interface StateListener extends EventListener {
+
+		void stateChanged(AquariusDBStateChanged event);
+	}
 }
