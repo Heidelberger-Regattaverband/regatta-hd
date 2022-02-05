@@ -11,8 +11,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import com.google.inject.Singleton;
+
 import de.regatta_hd.common.ConfigService;
 
+@Singleton
 public class ConfigServiceImpl implements ConfigService {
 
 	private static final String KEY_MUST_NOT_BE_NULL = "key must not be null";

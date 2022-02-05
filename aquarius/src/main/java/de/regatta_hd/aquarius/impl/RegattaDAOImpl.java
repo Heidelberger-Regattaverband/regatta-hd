@@ -47,12 +47,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Inject
 	private ConfigService cfgService;
 
-	private int activeRegattaId = -1;
+	private Regatta activeRegatta = null;
 
 	@Inject
-	RegattaDAOImpl(ActionListenerManager listenerManager){
+	RegattaDAOImpl(ActionListenerManager listenerManager) {
 		listenerManager.addListener(AquariusDB.StateListener.class, event -> {
-			getActiveRegatta();
+			if (event.getAquariusDB().isOpen()) {
+				getActiveRegatta();
+			} else {
+				this.activeRegatta = null;
+			}
 		});
 	}
 
@@ -141,10 +145,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Override
 	public void setActiveRegatta(Regatta regatta) throws IOException {
 		if (regatta != null) {
-			this.activeRegattaId = regatta.getId();
+			this.activeRegatta = regatta;
 			this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
 		} else {
-			this.activeRegattaId = -1;
+			this.activeRegatta = null;
 			this.cfgService.removeProperty(ACTIVE_REGATTA);
 		}
 	}
@@ -152,10 +156,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Override
 	public Regatta getActiveRegatta() {
 		try {
-			if (this.activeRegattaId == -1) {
-				this.activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
+			if (this.activeRegatta == null) {
+				int activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
+				this.activeRegatta = super.db.getEntityManager().find(Regatta.class, Integer.valueOf(activeRegattaId));
 			}
-			return super.db.getEntityManager().find(Regatta.class, Integer.valueOf(this.activeRegattaId));
+			return this.activeRegatta;
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e, null);
 		}
