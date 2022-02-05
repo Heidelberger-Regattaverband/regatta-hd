@@ -28,8 +28,8 @@ import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
-import de.regatta_hd.common.ListenerManager;
 import de.regatta_hd.common.ConfigService;
+import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -160,7 +160,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				Integer activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
 				if (activeRegattaId != null) {
 					this.activeRegatta = super.db.getEntityManager().find(Regatta.class, activeRegattaId);
-				} else {
+				}
+
+				if (this.activeRegatta == null) {
 					this.activeRegatta = getRegattas().stream().findFirst().orElse(null);
 				}
 			}
