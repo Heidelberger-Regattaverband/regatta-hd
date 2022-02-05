@@ -9,10 +9,10 @@ import javax.swing.event.EventListenerList;
 
 import com.google.inject.Singleton;
 
-import de.regatta_hd.common.ActionListenerManager;
+import de.regatta_hd.common.ListenerManager;
 
 @Singleton
-public class ActionListenerManagerImpl implements ActionListenerManager {
+public class ListenerManagerImpl implements ListenerManager {
 
 	private final EventListenerList listeners = new EventListenerList();
 

@@ -47,13 +47,23 @@ public interface AquariusDB {
 
 	/**
 	 * Begins a new DB transaction or re-uses an existing one.
+	 *
 	 * @return the transaction
 	 * @throws IllegalStateException if the entity manager has been closed
 	 */
 	EntityTransaction beginTransaction();
 
-	interface StateListener extends EventListener {
+	interface StateChangedEvent {
 
-		void stateChanged(AquariusDBStateChanged event);
+		AquariusDB getAquariusDB();
+	}
+
+	/**
+	 * An event listener interface for Aqurius DB state changed events.
+	 */
+	@FunctionalInterface
+	interface StateChangedEventListener extends EventListener {
+
+		void stateChanged(StateChangedEvent event);
 	}
 }

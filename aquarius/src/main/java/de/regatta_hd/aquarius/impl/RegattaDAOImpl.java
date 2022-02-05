@@ -28,7 +28,7 @@ import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
-import de.regatta_hd.common.ActionListenerManager;
+import de.regatta_hd.common.ListenerManager;
 import de.regatta_hd.common.ConfigService;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
@@ -50,8 +50,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private Regatta activeRegatta = null;
 
 	@Inject
-	RegattaDAOImpl(ActionListenerManager listenerManager) {
-		listenerManager.addListener(AquariusDB.StateListener.class, event -> {
+	RegattaDAOImpl(ListenerManager listenerManager) {
+		listenerManager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
 			if (event.getAquariusDB().isOpen()) {
 				getActiveRegatta();
 			} else {

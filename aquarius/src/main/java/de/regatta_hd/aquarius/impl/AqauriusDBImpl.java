@@ -13,9 +13,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.aquarius.AquariusDBStateChanged;
 import de.regatta_hd.aquarius.DBConfig;
-import de.regatta_hd.common.ActionListenerManager;
+import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -34,7 +33,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 public class AqauriusDBImpl implements AquariusDB {
 
 	@Inject
-	private ActionListenerManager listenerManager;
+	private ListenerManager listenerManager;
 
 	private EntityManager entityManager;
 
@@ -46,6 +45,7 @@ public class AqauriusDBImpl implements AquariusDB {
 			this.entityManager.close();
 			this.entityManager = null;
 			this.sessionThread = null;
+
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChanged(this));
 		}
@@ -125,8 +125,8 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	private void notifyListeners(AquariusDBStateChanged event) {
-		List<StateListener> listeners = this.listenerManager.getListener(AquariusDB.StateListener.class);
-		for (StateListener listener : listeners) {
+		List<StateChangedEventListener> listeners = this.listenerManager.getListener(AquariusDB.StateChangedEventListener.class);
+		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}
 	}
