@@ -13,7 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.ToString;
@@ -91,7 +90,7 @@ public class Regatta {
 	private Nation nation;
 
 	@OneToMany(targetEntity = Race.class, mappedBy = "regatta")
-	@OrderBy("raceNumber")
+//	@OrderBy("raceNumber")
 	private Set<Race> races;
 
 	@ManyToOne(fetch = FetchType.LAZY)
