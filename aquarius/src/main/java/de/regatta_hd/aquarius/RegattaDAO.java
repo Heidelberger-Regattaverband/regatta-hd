@@ -1,6 +1,7 @@
 package de.regatta_hd.aquarius;
 
 import java.io.IOException;
+import java.util.EventListener;
 import java.util.List;
 
 import de.regatta_hd.aquarius.model.Race;
@@ -57,4 +58,18 @@ public interface RegattaDAO {
 	List<Score> calculateScores();
 
 	List<Score> getScores();
+
+	interface RegattaChangedEvent {
+
+		Regatta getActiveRegatta();
+	}
+
+	/**
+	 * An event listener interface for regatta changed events.
+	 */
+	@FunctionalInterface
+	interface RegattaChangedEventListener extends EventListener {
+
+		void stateChanged(RegattaChangedEvent event);
+	}
 }
