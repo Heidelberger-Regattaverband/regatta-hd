@@ -70,6 +70,6 @@ public interface RegattaDAO {
 	@FunctionalInterface
 	interface RegattaChangedEventListener extends EventListener {
 
-		void stateChanged(RegattaChangedEvent event);
+		void regattaChanged(RegattaChangedEvent event);
 	}
 }
