@@ -47,7 +47,7 @@ public class AqauriusDBImpl implements AquariusDB {
 			this.sessionThread = null;
 
 			// notify listeners about changed AquariusDB state
-			notifyListeners(new AquariusDBStateChanged(this));
+			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		}
 	}
 
@@ -92,7 +92,7 @@ public class AqauriusDBImpl implements AquariusDB {
 					this.sessionThread = Thread.currentThread();
 
 					// notify listeners about changed AquariusDB state
-					notifyListeners(new AquariusDBStateChanged(this));
+					notifyListeners(new AquariusDBStateChangedEventImpl(this));
 				} catch (LiquibaseException e) {
 					this.entityManager.close();
 					this.entityManager = null;
@@ -124,7 +124,7 @@ public class AqauriusDBImpl implements AquariusDB {
 		return this.entityManager != null && this.entityManager.isOpen();
 	}
 
-	private void notifyListeners(AquariusDBStateChanged event) {
+	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
 		List<StateChangedEventListener> listeners = this.listenerManager.getListener(AquariusDB.StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);

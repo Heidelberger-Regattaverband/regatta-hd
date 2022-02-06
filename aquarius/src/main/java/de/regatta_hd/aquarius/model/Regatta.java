@@ -91,7 +91,7 @@ public class Regatta {
 	private Nation nation;
 
 	@OneToMany(targetEntity = Race.class, mappedBy = "regatta")
-	@OrderBy("raceNumber")
+	@OrderBy("number")
 	private Set<Race> races;
 
 	@ManyToOne(fetch = FetchType.LAZY)
