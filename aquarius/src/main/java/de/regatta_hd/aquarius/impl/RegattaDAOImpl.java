@@ -71,7 +71,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	public List<Race> getRaces(String graphName) {
 		TypedQuery<Race> query = this.db.getEntityManager()
-				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta", Race.class)
+				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta ORDER BY r.number ASC", Race.class)
 				.setParameter(PARAM_REGATTA, getActiveRegatta());
 		if (graphName != null) {
 			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
