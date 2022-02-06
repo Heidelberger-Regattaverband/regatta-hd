@@ -152,7 +152,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			this.cfgService.removeProperty(ACTIVE_REGATTA);
 		}
 
-		notifyListeners(null);
+		notifyListeners(new RegattaChangedEventImpl(this, this.activeRegatta));
 	}
 
 	@Override
