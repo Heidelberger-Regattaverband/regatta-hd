@@ -44,7 +44,7 @@ public class Heat {
 
 	@Column(name = "Comp_HeatNumber")
 	@ToString.Include(rank = 10)
-	private Short heatNumber;
+	private short heatNumber;
 
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;

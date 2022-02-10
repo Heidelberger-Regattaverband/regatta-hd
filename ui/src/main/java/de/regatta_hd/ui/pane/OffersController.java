@@ -3,6 +3,8 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.ui.util.FxUtils;
@@ -16,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 public class OffersController extends AbstractBaseController {
+	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
 
 	// UI Controls
 	@FXML
@@ -65,6 +68,7 @@ public class OffersController extends AbstractBaseController {
 					FxUtils.showInfoDialog(String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				disableButtons(false);
@@ -86,6 +90,7 @@ public class OffersController extends AbstractBaseController {
 					FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				disableButtons(false);
@@ -105,6 +110,7 @@ public class OffersController extends AbstractBaseController {
 				this.racesObservableList.setAll(dbResult.getResult());
 				FxUtils.autoResizeColumns(this.racesTbl);
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				disableButtons(false);

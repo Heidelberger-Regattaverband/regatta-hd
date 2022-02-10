@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -100,38 +101,32 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public void setRaceHeats(Race race, List<SetListEntry> setList) {
-		int numRegistrations = setList.size();
 		short laneCount = race.getRaceMode().getLaneCount();
 
+		LinkedList<SetListEntry> stack = new LinkedList<>(setList);
+		final EntityManager entityManager = super.db.getEntityManager();
+
 		// get all planed heats ordered by the heat number
-		List<Heat> heats = race.getHeatsOrderedByNumber();
+		race.getHeatsOrderedByNumber().stream().forEach(heat -> {
+			// first clean existing heat assignments
+			heat.getEntries().forEach(entityManager::remove);
 
-		// get number of heats
-		int heatCount = heats.size();
-
-		EntityManager entityManager = super.db.getEntityManager();
-
-		for (short heatNumber = 0; heatNumber < heatCount; heatNumber++) {
-			Heat heat = heats.get(heatNumber);
-
-			if (heat != null) {
-				// first clean existing heat assignments
-				heat.getEntries().forEach(entityManager::remove);
-
-				int startIndex = heatNumber * laneCount;
-				int endIndex = startIndex + laneCount;
-				short lane = 1;
-				for (int r = startIndex; r < endIndex && r < numRegistrations; r++) {
-					Registration targetRegistration = setList.get(r).getRegistration();
+			for (int r = 0; r < laneCount; r++) {
+				if (!stack.isEmpty()) {
+					Registration targetRegistration = stack.pop().getRegistration();
 
 					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration)
-							.lane(lane++).build();
+							.lane((short) (r + 1)).build();
 					entityManager.merge(heatReg);
+				} else {
+					break;
 				}
-
-				entityManager.merge(heat);
 			}
-		}
+
+			// mark heat as set
+			heat.setState((byte) 1);
+			entityManager.merge(heat);
+		});
 
 		// mark race as set
 		race.setSet(Boolean.TRUE);
@@ -194,12 +189,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		Set<Registration> srcRegistrations = ConcurrentHashMap.newKeySet();
 		srcRegistrations.addAll(srcRace.getRegistrations());
-		Set<Registration> registrations = race.getRegistrations();
 
 		Map<Integer, SetListEntry> equalCrews = new HashMap<>();
 
-		// loop over all registrations of race to be set
-		for (Registration registration : registrations) {
+		// remove cancelled registrations
+		race.getRegistrations().stream().filter(Registration::isCancelled).forEach(registration -> {
 			SetListEntry entry = SetListEntry.builder().registration(registration).equalCrew(false).build();
 			diffCrews.put(registration.getId(), entry);
 
@@ -218,7 +212,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 					break;
 				}
 			}
-		}
+		});
 
 		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
 

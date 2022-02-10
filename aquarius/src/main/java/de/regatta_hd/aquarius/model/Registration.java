@@ -88,8 +88,17 @@ public class Registration {
 
 	public List<Crew> getFinalCrews() {
 		return getCrews().stream().filter(crew -> {
-			boolean finalCrew = crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo() ;
+			boolean finalCrew = crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo();
 			return finalCrew;
 		}).collect(Collectors.toList());
+	}
+
+	/**
+	 * Indicates whether this registration is cancelled or not.
+	 *
+	 * @return <code>true</code> if registration is cancelled, otherwise <code>false</code>.
+	 */
+	public boolean isCancelled() {
+		return getCancelValue() == 0;
 	}
 }

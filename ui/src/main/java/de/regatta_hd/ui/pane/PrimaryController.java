@@ -105,6 +105,7 @@ public class PrimaryController extends AbstractBaseController {
 				this.dbCfgStore.setLastSuccessful(pair.getKey());
 				setTitle(pair.getValue());
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				updateControls(false);

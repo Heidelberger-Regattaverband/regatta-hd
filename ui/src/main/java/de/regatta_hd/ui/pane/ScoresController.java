@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.ui.util.FxUtils;
@@ -13,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
 public class ScoresController extends AbstractBaseController {
+	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
 
 	@FXML
 	private Button refreshBtn;
@@ -36,6 +39,7 @@ public class ScoresController extends AbstractBaseController {
 			try {
 				setScores(scores.getResult());
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				disableButtons(false);
@@ -51,6 +55,7 @@ public class ScoresController extends AbstractBaseController {
 			try {
 				setScores(scores.getResult());
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				disableButtons(false);

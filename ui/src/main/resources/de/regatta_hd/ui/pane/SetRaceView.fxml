@@ -57,7 +57,7 @@
                       <PropertyValueFactory property="bib" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn text="%SetRaceView.heatRegsTbl.boatCol.text">
+                  <TableColumn text="%common.boat">
                     <cellValueFactory>
                       <PropertyValueFactory property="boat" />
                     </cellValueFactory>

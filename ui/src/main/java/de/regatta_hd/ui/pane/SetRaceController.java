@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.SearchableComboBox;
@@ -34,6 +36,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 public class SetRaceController extends AbstractBaseController {
+	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
 	private static final String FULL_GRAPH = "race-to-results";
 
 	@FXML
@@ -74,8 +77,8 @@ public class SetRaceController extends AbstractBaseController {
 		this.setListTbl.setDisable(true);
 		disableButtons();
 
-		this.setListTbl.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldSelection, newSelection) -> handleSetListEntrySelectionChanged(newSelection));
+		this.setListTbl.getSelectionModel().selectedItemProperty().addListener(
+				(observable, oldSelection, newSelection) -> handleSetListSelectedItemChanged(newSelection));
 
 		this.dbTask.run(() -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
@@ -112,12 +115,13 @@ public class SetRaceController extends AbstractBaseController {
 				this.raceCbo.setDisable(false);
 				this.setListTbl.setDisable(false);
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			}
 		});
 	}
 
-	private void handleSetListEntrySelectionChanged(SetListEntry newSelection) {
+	private void handleSetListSelectedItemChanged(SetListEntry newSelection) {
 		if (newSelection != null) {
 			final SetListEntry entry = this.setListTbl.getSelectionModel().getSelectedItem();
 			// clear tables
@@ -137,7 +141,7 @@ public class SetRaceController extends AbstractBaseController {
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
-						this.srcCrewLbl.setText(createCrewsLableText(entry, entry.getSrcRegistration()));
+						this.srcCrewLbl.setText(createCrewsLabel(entry, entry.getSrcRegistration()));
 						FxUtils.autoResizeColumns(this.srcCrewTbl);
 					} else {
 						this.srcCrewLbl.setText("Kein Boot gefunden.");
@@ -145,12 +149,13 @@ public class SetRaceController extends AbstractBaseController {
 
 					if (result.getValue() != null) {
 						this.crewTbl.getItems().setAll(result.getValue());
-						this.crewLbl.setText(createCrewsLableText(entry, entry.getRegistration()));
+						this.crewLbl.setText(createCrewsLabel(entry, entry.getRegistration()));
 						FxUtils.autoResizeColumns(this.crewTbl);
 					} else {
 						this.crewLbl.setText("Kein Boot gefunden.");
 					}
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				}
 			}));
@@ -158,14 +163,6 @@ public class SetRaceController extends AbstractBaseController {
 			this.srcCrewTbl.getItems().clear();
 			this.crewTbl.getItems().clear();
 		}
-	}
-
-	private static String createCrewsLableText(SetListEntry entry, Registration registration) {
-		String labelText = registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
-		if (registration.getBoatNumber() != null) {
-			labelText += " Boot " + registration.getBoatNumber().toString();
-		}
-		return labelText;
 	}
 
 	@FXML
@@ -187,6 +184,7 @@ public class SetRaceController extends AbstractBaseController {
 					showSrcRace(dbResult.getResult()[0]);
 					showRace(race);
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				} finally {
 					enableButtons(race);
@@ -213,6 +211,7 @@ public class SetRaceController extends AbstractBaseController {
 					showSrcRace(dbResult.getResult()[0]);
 					showRace(race);
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				} finally {
 					enableButtons(race);
@@ -239,6 +238,7 @@ public class SetRaceController extends AbstractBaseController {
 					this.setListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
 					FxUtils.autoResizeColumns(this.setListTbl);
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				} finally {
 					enableButtons(raceRef.get());
@@ -260,6 +260,7 @@ public class SetRaceController extends AbstractBaseController {
 				try {
 					race = dbResult.getResult();
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				} finally {
 					enableButtons(race);
@@ -288,6 +289,7 @@ public class SetRaceController extends AbstractBaseController {
 					race = dbResult.getResult();
 					showRace(race);
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				} finally {
 					enableButtons(race);
@@ -313,6 +315,7 @@ public class SetRaceController extends AbstractBaseController {
 					race = dbResult.getResult();
 					showRace(race);
 				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(e);
 				} finally {
 					enableButtons(race);
@@ -343,7 +346,7 @@ public class SetRaceController extends AbstractBaseController {
 			SortedList<HeatRegistration> sortedList = new SortedList<>(
 					FXCollections.observableArrayList(heat.getEntries()));
 
-			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", heat.getHeatNumber()));
+			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getHeatNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 			compEntriesTable.setItems(sortedList);
 			FxUtils.autoResizeColumns(compEntriesTable);
@@ -391,8 +394,7 @@ public class SetRaceController extends AbstractBaseController {
 			return null;
 		});
 
-		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(
-				getText("SetRaceView.heatRegsTbl.boatCol.text"));
+		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(getText("common.boat"));
 		boatCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
@@ -448,6 +450,10 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	// static helpers
+
+	private static String createCrewsLabel(SetListEntry entry, Registration registration) {
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
+	}
 
 	private static String getSrcRaceNumber(Race race) {
 		return replaceChar(race.getNumber(), '1', 0);
