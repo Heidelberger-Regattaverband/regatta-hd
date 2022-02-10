@@ -2,6 +2,7 @@ package de.regatta_hd.aquarius.model;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -84,4 +85,11 @@ public class Registration {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_Race_ID_FK", nullable = false)
 	private Race race;
+
+	public List<Crew> getFinalCrews() {
+		return getCrews().stream().filter(crew -> {
+			boolean finalCrew = crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo() ;
+			return finalCrew;
+		}).collect(Collectors.toList());
+	}
 }

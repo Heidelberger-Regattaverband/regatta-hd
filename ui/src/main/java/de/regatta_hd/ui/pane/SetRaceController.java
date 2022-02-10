@@ -87,7 +87,7 @@ public class SetRaceController extends AbstractBaseController {
 						}
 
 						if (entry.getRegistration() != null) {
-							this.crewTbl.getItems().setAll(entry.getRegistration().getCrews());
+							this.crewTbl.getItems().setAll(entry.getRegistration().getFinalCrews());
 							this.crewLbl.setText(createCrewsLableText(entry, entry.getRegistration()));
 							FxUtils.autoResizeColumns(this.crewTbl);
 						} else {

@@ -359,9 +359,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	private static boolean isEqualCrews(Registration reg1, Registration reg2) {
 		// remove cox from comparison
-		List<Crew> crews1 = reg1.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
+		List<Crew> crews1 = reg1.getFinalCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
 				.collect(Collectors.toList());
-		List<Crew> crews2 = reg2.getCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
+		List<Crew> crews2 = reg2.getFinalCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
 				.collect(Collectors.toList());
 
 		if (crews1.size() != crews2.size()) {
@@ -426,7 +426,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			srcHeatRegs.add(new ArrayList<>());
 		}
 
-		// loop over source offer heats and get all heat registrations sorted by time
+		// loop over source race heats and get all heat registrations sorted by time
 		srcRace.getHeats().forEach(heat -> {
 			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
 			for (int j = 0; j < byRank.size(); j++) {
