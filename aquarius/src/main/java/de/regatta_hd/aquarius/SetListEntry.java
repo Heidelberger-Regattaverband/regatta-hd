@@ -27,6 +27,10 @@ public class SetListEntry {
 		return new SimpleBooleanProperty(isEqualCrew());
 	}
 
+	public Integer getId() {
+		return this.registration.getId();
+	}
+
 	public short getBib() {
 		return this.registration.getBib();
 	}
@@ -40,8 +44,9 @@ public class SetListEntry {
 		return boatBuilder.toString();
 	}
 
-	public short getHeatNumber() {
-		return this.srcHeatRregistration != null ? this.srcHeatRregistration.getHeat().getHeatNumber() : 0;
+	public Short getHeatNumber() {
+		return this.srcHeatRregistration != null ? Short.valueOf(this.srcHeatRregistration.getHeat().getHeatNumber())
+				: null;
 	}
 
 	public Byte getHeatRank() {

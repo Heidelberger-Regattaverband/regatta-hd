@@ -113,9 +113,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 			for (int r = 0; r < laneCount; r++) {
 				if (!stack.isEmpty()) {
-					Registration targetRegistration = stack.pop().getRegistration();
+					Registration registration = stack.pop().getRegistration();
 
-					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(targetRegistration)
+					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(registration)
 							.lane((short) (r + 1)).build();
 					entityManager.merge(heatReg);
 				} else {
@@ -195,9 +195,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		// remove cancelled registrations
 		race.getRegistrations().stream().filter(Registration::isCancelled).forEach(registration -> {
 			SetListEntry entry = SetListEntry.builder().registration(registration).equalCrew(false).build();
-			diffCrews.put(registration.getId(), entry);
+			diffCrews.put(entry.getId(), entry);
 
 			for (Registration srcRegistration : srcRegistrations) {
+
 				// look for equal crew in the source registration
 				if (isEqualCrews(srcRegistration, registration)) {
 					SetListEntry equalCrewEntry = diffCrews.remove(registration.getId());
@@ -215,6 +216,11 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		});
 
 		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
+
+		equalCrews.values().forEach(entry -> {
+			entry.setEqualCrew(false);
+			diffCrews.put(entry.getId(), entry);
+		});
 
 		// sort the different crews according their number
 		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1)
@@ -401,11 +407,14 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime()
 						.intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
-				SetListEntry targetRegistration = equalCrews.get(srcHeatReg.getRegistration().getId());
-				if (targetRegistration != null) {
-					targetRegistration.setRank(setList.size() + 1);
-					targetRegistration.setSrcHeatRregistration(srcHeatReg);
-					setList.add(targetRegistration);
+				// ensure the result contains a valid rank, if rank == 0 the boat did not finish
+				if (srcHeatReg.getFinalResult().getRank() > 0) {
+					SetListEntry entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
+					if (entry != null) {
+						entry.setRank(setList.size() + 1);
+						entry.setSrcHeatRregistration(srcHeatReg);
+						setList.add(entry);
+					}
 				}
 			});
 		}
