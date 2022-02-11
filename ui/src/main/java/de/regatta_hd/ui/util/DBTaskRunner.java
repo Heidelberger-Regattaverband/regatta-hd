@@ -17,8 +17,8 @@ import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class DBTask {
-	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
+public class DBTaskRunner {
+	private static final Logger logger = Logger.getLogger(DBTaskRunner.class.getName());
 
 	// executes database operations concurrent to JavaFX operations.
 	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
@@ -56,7 +56,7 @@ public class DBTask {
 		Task<DBResult<V>> task = new Task<>() {
 			@Override
 			protected DBResult<V> call() throws Exception {
-				EntityTransaction transaction = inTransaction ? DBTask.this.db.getEntityManager().getTransaction()
+				EntityTransaction transaction = inTransaction ? DBTaskRunner.this.db.getEntityManager().getTransaction()
 						: null;
 
 				// begin transaction if required

@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.ui.FXMLLoaderFactory;
-import de.regatta_hd.ui.util.DBTask;
+import de.regatta_hd.ui.util.DBTaskRunner;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,7 +31,7 @@ abstract class AbstractBaseController implements Initializable {
 	protected FXMLLoaderFactory fxmlLoaderFactory;
 
 	@Inject
-	protected DBTask dbTask;
+	protected DBTaskRunner dbTask;
 	@Inject
 	protected AquariusDB db;
 	@Inject
