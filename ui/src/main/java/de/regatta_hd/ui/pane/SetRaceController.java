@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -166,30 +167,40 @@ public class SetRaceController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void handleRaceSelectedOnAction() {
-		this.raceVBox.getChildren().clear();
-		this.srcRaceVBox.getChildren().clear();
-		this.setListTbl.getItems().clear();
+	private void handleRaceSelectedOnAction(ActionEvent event) {
+		if (!event.isConsumed() && event.getSource() == this.raceCbo) {
+			event.consume();
 
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
-		if (selectedRace != null) {
-			this.dbTask.run(() -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
-				return new Race[] { srcRace, race };
-			}, dbResult -> {
-				Race race = null;
-				try {
-					race = dbResult.getResult()[1];
-					showSrcRace(dbResult.getResult()[0]);
-					showRace(race);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
-				} finally {
-					enableButtons(race);
-				}
-			});
+			this.raceVBox.getChildren().clear();
+			this.srcRaceVBox.getChildren().clear();
+			this.setListTbl.getItems().clear();
+
+			Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+			if (selectedRace != null) {
+				// remove onAction eventhandler to avoid multiple calls -> workaround
+				this.raceCbo.setOnAction(null);
+
+				this.dbTask.run(() -> {
+					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
+					return new Race[] { srcRace, race };
+				}, dbResult -> {
+					Race race = null;
+					try {
+						race = dbResult.getResult()[1];
+						showSrcRace(dbResult.getResult()[0]);
+						showRace(race);
+					} catch (Exception e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						FxUtils.showErrorMessage(e);
+					} finally {
+						enableButtons(race);
+
+						// attach onAction eventhandler to get further events
+						this.raceCbo.setOnAction(this::handleRaceSelectedOnAction);
+					}
+				});
+			}
 		}
 	}
 
