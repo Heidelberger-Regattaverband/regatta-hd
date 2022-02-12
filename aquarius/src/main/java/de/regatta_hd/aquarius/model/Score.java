@@ -1,5 +1,7 @@
 package de.regatta_hd.aquarius.model;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,7 +27,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Score {
+public class Score implements Serializable {
+
+	private static final long serialVersionUID = 1670725569568728048L;
 
 	@Column(name = "rank")
 	private short rank;
@@ -36,12 +40,12 @@ public class Score {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "club_id")
-	private Club club;
+	private transient Club club;
 
 	@Id
 	@OneToOne
 	@JoinColumn(name = "event_id")
-	private Regatta regatta;
+	private transient Regatta regatta;
 
 	public String getClubName() {
 		return getClub().getName();
