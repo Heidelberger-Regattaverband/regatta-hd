@@ -361,6 +361,7 @@ public class SetRaceController extends AbstractBaseController {
 			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getHeatNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 			compEntriesTable.setItems(sortedList);
+			compEntriesTable.sort();
 			FxUtils.autoResizeColumns(compEntriesTable);
 
 			sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
@@ -423,8 +424,6 @@ public class SetRaceController extends AbstractBaseController {
 		TableColumn<HeatRegistration, String> resultCol = null;
 		if (withResult) {
 			rankCol = new TableColumn<>(getText("common.rank"));
-			rankCol.setSortType(SortType.ASCENDING);
-			rankCol.setSortable(true);
 			rankCol.setStyle("-fx-alignment: CENTER;");
 			rankCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
@@ -445,10 +444,7 @@ public class SetRaceController extends AbstractBaseController {
 			});
 
 			heatRegsTbl.getColumns().add(rankCol);
-		}
-
-		if (rankCol != null) {
-			heatRegsTbl.getSortOrder().add(rankCol);
+			heatRegsTbl.getSortOrder().add(resultCol);
 		}
 
 		heatRegsTbl.getColumns().add(bibCol);
