@@ -19,16 +19,16 @@
 
   <children>
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <Button fx:id="refreshBtn" onAction="#refresh" text="%OffersView.refresh" />
+        <Button fx:id="refreshBtn" onAction="#refresh" text="%common.refresh" />
         <Button fx:id="setDistancesBtn" onAction="#setDistances" text="%OffersView.setDistances" />
         <Button fx:id="setMastersAgeClassesBtn" onAction="#setMastersAgeClasses" text="%OffersView.setMastersAgeClasses" />
     </ToolBar>
     <TableView fx:id="racesTbl" items="${controller.racesObservableList}" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
-          <Label text="%SetRaceView.loadDataLbl.text" />
+          <Label text="%common.loadData" />
       </placeholder>
       <columns>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.raceNumberCol.text">
+        <TableColumn style="-fx-alignment: CENTER;" text="%common.numberAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>number</property>

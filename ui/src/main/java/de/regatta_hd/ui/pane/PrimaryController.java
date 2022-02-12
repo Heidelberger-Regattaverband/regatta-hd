@@ -65,9 +65,8 @@ public class PrimaryController extends AbstractBaseController {
 
 		Platform.runLater(this::handleDatabaseConnect);
 
-		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(event.getActiveRegatta());
-		});
+		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
+				event -> setTitle(event.getActiveRegatta()));
 	}
 
 	private void setTitle(Regatta regatta) {
@@ -105,6 +104,7 @@ public class PrimaryController extends AbstractBaseController {
 				this.dbCfgStore.setLastSuccessful(pair.getKey());
 				setTitle(pair.getValue());
 			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
 			} finally {
 				updateControls(false);

@@ -44,7 +44,7 @@ public class Heat {
 
 	@Column(name = "Comp_HeatNumber")
 	@ToString.Include(rank = 10)
-	private Short heatNumber;
+	private short heatNumber;
 
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
@@ -126,12 +126,18 @@ public class Heat {
 	public List<HeatRegistration> getHeatRegistrationsOrderedByRank() {
 		List<HeatRegistration> sorted = new ArrayList<>(getEntries());
 		sorted.sort((entry1, entry2) -> {
-			Result result1 = entry1.getFinalResult();
-			Result result2 = entry2.getFinalResult();
-			if (result1 != null && result2 != null) {
-				return result1.getRank() > result2.getRank() ? 1 : -1;
+			byte rank1 = entry1.getFinalResult() != null ? entry1.getFinalResult().getRank() : Byte.MAX_VALUE;
+			byte rank2 = entry2.getFinalResult() != null ? entry2.getFinalResult().getRank() : Byte.MAX_VALUE;
+			if (rank1 == rank2) {
+				return 0;
 			}
-			return 0;
+			if (rank1 == 0) {
+				rank1 = Byte.MAX_VALUE;
+			}
+			if (rank2 == 0) {
+				rank2 = Byte.MAX_VALUE;
+			}
+			return rank1 > rank2 ? 1 : -1;
 		});
 		return sorted;
 	}

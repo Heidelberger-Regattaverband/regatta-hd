@@ -2,6 +2,7 @@
 
 <?import de.regatta_hd.ui.control.DateTableCellFactory?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
@@ -18,6 +19,9 @@
 
   <children>
     <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+      <placeholder>
+          <Label text="%common.loadData" />
+      </placeholder>
       <columns>
         <TableColumn text="%RegattasView.titleCol.text">
           <cellValueFactory>

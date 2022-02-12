@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
@@ -12,18 +13,21 @@
   <children>
     <ToolBar>
       <items>
-        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%ScoreView.refreshBtn.text" />
+        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%common.refresh" />
         <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%ScoreView.calculateBtn.text" />
       </items>
     </ToolBar>
     <TableView fx:id="scoreTbl" VBox.vgrow="ALWAYS">
+      <placeholder>
+          <Label text="%common.loadData" />
+      </placeholder>
       <columns>
-            <TableColumn style="-fx-alignment: CENTER;" text="%ScoreView.rankCol.text">
+            <TableColumn style="-fx-alignment: CENTER;" text="%common.rank">
                <cellValueFactory>
                   <PropertyValueFactory property="rank" />
                </cellValueFactory>
             </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%ScoreView.scoreCol.text">
+        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>

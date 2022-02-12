@@ -49,14 +49,20 @@ import lombok.ToString;
 				), //
 				@NamedSubgraph(name = "registration.crews", //
 						attributeNodes = { //
-								@NamedAttributeNode(value = "crews", subgraph = "crew.club") //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club"), //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.athlet") //
 						} //
 				), //
 				@NamedSubgraph(name = "crew.club", //
 						attributeNodes = { //
 								@NamedAttributeNode("club") //
 						} //
-				) //
+				), //
+				@NamedSubgraph(name = "crew.athlet", //
+				attributeNodes = { //
+						@NamedAttributeNode("athlet") //
+				} //
+		) //
 		}, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
@@ -189,14 +195,7 @@ public class Race {
 
 	public List<Heat> getHeatsOrderedByNumber() {
 		List<Heat> sorted = new ArrayList<>(getHeats());
-		sorted.sort((entry1, entry2) -> {
-			Short result1 = entry1.getHeatNumber();
-			Short result2 = entry2.getHeatNumber();
-			if (result1 != null && result2 != null) {
-				return result1.shortValue() > result2.shortValue() ? 1 : -1;
-			}
-			return 0;
-		});
+		sorted.sort((entry1, entry2) -> entry1.getHeatNumber() > entry2.getHeatNumber() ? 1 : -1);
 		return sorted;
 	}
 

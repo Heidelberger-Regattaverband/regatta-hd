@@ -11,7 +11,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 
-import de.regatta_hd.ui.util.DBTask;
+import de.regatta_hd.ui.util.DBTaskRunner;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
@@ -57,7 +57,7 @@ public class GuiceContext implements FXMLLoaderFactory {
 		@Override
 		protected void configure() {
 			bind(FXMLLoaderFactory.class).toInstance(GuiceContext.this);
-			bind(DBTask.class);
+			bind(DBTaskRunner.class);
 		}
 
 		@Provides

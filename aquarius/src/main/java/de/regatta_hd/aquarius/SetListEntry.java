@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius;
 
-import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
@@ -28,6 +27,10 @@ public class SetListEntry {
 		return new SimpleBooleanProperty(isEqualCrew());
 	}
 
+	public Integer getId() {
+		return this.registration.getId();
+	}
+
 	public short getBib() {
 		return this.registration.getBib();
 	}
@@ -42,8 +45,8 @@ public class SetListEntry {
 	}
 
 	public Short getHeatNumber() {
-		Heat heat = this.srcHeatRregistration != null ? this.srcHeatRregistration.getHeat() : null;
-		return heat != null ? heat.getHeatNumber() : null;
+		return this.srcHeatRregistration != null ? Short.valueOf(this.srcHeatRregistration.getHeat().getHeatNumber())
+				: null;
 	}
 
 	public Byte getHeatRank() {

@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Result {
 
-	private static final byte FINAL = 64;
+	static final byte FINAL = 64;
 
 	@Id
 	@Column(name = "Result_CE_ID_FK", insertable = false, updatable = false)

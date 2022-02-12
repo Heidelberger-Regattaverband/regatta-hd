@@ -2,6 +2,7 @@ package de.regatta_hd.aquarius.model;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -84,4 +85,19 @@ public class Registration {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_Race_ID_FK", nullable = false)
 	private Race race;
+
+	public List<Crew> getFinalCrews() {
+		return getCrews().stream()
+				.filter(crew -> crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo())
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Indicates whether this registration is cancelled or not.
+	 *
+	 * @return <code>true</code> if registration is cancelled, otherwise <code>false</code>.
+	 */
+	public boolean isCancelled() {
+		return getCancelValue() == 0;
+	}
 }
