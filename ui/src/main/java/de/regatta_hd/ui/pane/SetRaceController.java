@@ -313,7 +313,8 @@ public class SetRaceController extends AbstractBaseController {
 	private void handleDeleteOnAction() {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null) {
+		if (selectedRace != null && FxUtils.showConfirmDialog(getText("SetRaceView.confirmDelete.title"),
+				getText("SetRaceView.confirmDelete.question"))) {
 			disableButtons();
 
 			this.dbTask.runInTransaction(() -> {

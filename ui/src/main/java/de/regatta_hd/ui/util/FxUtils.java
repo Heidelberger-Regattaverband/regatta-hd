@@ -1,9 +1,12 @@
 package de.regatta_hd.ui.util;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
@@ -18,6 +21,8 @@ public class FxUtils {
 	private static final double DEFAULT_Y = 10;
 	private static final double DEFAULT_WIDTH = 1024;
 	private static final double DEFAULT_HEIGHT = 768;
+
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
 	private FxUtils() {
 		// avoid instances
@@ -35,6 +40,27 @@ public class FxUtils {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
 		alert.setHeaderText(msg);
 		alert.showAndWait();
+	}
+
+	public static boolean showConfirmDialog(String title, String msg) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setHeaderText(msg);
+		alert.setTitle(title);
+		alert.getButtonTypes().clear();
+		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+		// Deactivate Defaultbehavior for yes-Button:
+		Button yesButton = (Button) alert.getDialogPane().lookupButton(ButtonType.YES);
+		yesButton.setText(bundle.getString("common.yes"));
+		yesButton.setDefaultButton(false);
+
+		// Activate Defaultbehavior for no-Button:
+		Button noButton = (Button) alert.getDialogPane().lookupButton(ButtonType.NO);
+		noButton.setText(bundle.getString("common.no"));
+		noButton.setDefaultButton(true);
+
+		alert.showAndWait();
+		return alert.getResult() == ButtonType.YES;
 	}
 
 	public static void loadSizeAndPos(String resource, Stage stage) {
