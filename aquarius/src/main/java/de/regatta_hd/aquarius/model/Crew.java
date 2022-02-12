@@ -29,7 +29,7 @@ public class Crew {
 	@Column(name = "Crew_ID")
 	private int id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Crew_Athlete_ID_FK", nullable = false)
 	@ToString.Include(rank = 8)
 	private Athlet athlet;
