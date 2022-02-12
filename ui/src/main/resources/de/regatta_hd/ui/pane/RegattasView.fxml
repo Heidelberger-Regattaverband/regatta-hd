@@ -23,7 +23,7 @@
   <children>
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
-        <Button fx:id="refreshBtn" onAction="#refresh" text="%common.refresh" />
+        <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
       </items>
     </ToolBar>
     <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
@@ -73,7 +73,7 @@
       <contextMenu>
         <ContextMenu>
           <items>
-            <MenuItem onAction="#selectRegatta" text="Auswählen" />
+            <MenuItem onAction="#handleSelectRegattaOnAction" text="Auswählen" />
           </items>
         </ContextMenu>
       </contextMenu>

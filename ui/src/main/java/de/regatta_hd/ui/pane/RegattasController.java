@@ -31,14 +31,14 @@ public class RegattasController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void selectRegatta() throws IOException {
-		Regatta regatta = this.regattasTable.getSelectionModel().getSelectedItem();
-		this.regattaDAO.setActiveRegatta(regatta);
+	public void handleRefreshOnAction() {
+		loadRegattas(true);
 	}
 
 	@FXML
-	public void refresh() {
-		loadRegattas(true);
+	private void handleSelectRegattaOnAction() throws IOException {
+		Regatta regatta = this.regattasTable.getSelectionModel().getSelectedItem();
+		this.regattaDAO.setActiveRegatta(regatta);
 	}
 
 	private void loadRegattas(boolean refresh) {

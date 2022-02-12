@@ -22,6 +22,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javafx.event.ActionEvent;
 
 public class PrimaryController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
@@ -40,9 +41,9 @@ public class PrimaryController extends AbstractBaseController {
 	@FXML
 	private MenuItem eventsMitm;
 	@FXML
-	private MenuItem offersMitm;
+	private MenuItem racesMitm;
 	@FXML
-	private MenuItem divisionsMitm;
+	private MenuItem setRaceMitm;
 	@FXML
 	private MenuItem scoreMitm;
 
@@ -56,6 +57,10 @@ public class PrimaryController extends AbstractBaseController {
 	private Stage offersViewStage;
 
 	private Stage scoresViewStage;
+	private Stage resultsStage;
+
+	@FXML
+	private MenuItem resultsMitm;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -121,7 +126,7 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void handleSetRace() {
+	private void handleSetRaceOnAction() {
 		if (this.setRaceStage == null) {
 			try {
 				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"),
@@ -149,7 +154,7 @@ public class PrimaryController extends AbstractBaseController {
 	}
 
 	@FXML
-	private void handleOffers() {
+	private void handleRacesOnAction() {
 		if (this.offersViewStage == null) {
 			try {
 				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.racesMitm.text"),
@@ -189,21 +194,37 @@ public class PrimaryController extends AbstractBaseController {
 				try {
 					boolean hasActiveRegatta = dbResult.getResult() != null;
 
-					this.offersMitm.setDisable(!hasActiveRegatta);
-					this.divisionsMitm.setDisable(!hasActiveRegatta);
+					this.racesMitm.setDisable(!hasActiveRegatta);
+					this.setRaceMitm.setDisable(!hasActiveRegatta);
 					this.scoreMitm.setDisable(!hasActiveRegatta);
+					this.resultsMitm.setDisable(!hasActiveRegatta);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			});
 		} else {
-			this.offersMitm.setDisable(!isOpen);
-			this.divisionsMitm.setDisable(!isOpen);
+			this.racesMitm.setDisable(!isOpen);
+			this.setRaceMitm.setDisable(!isOpen);
 			this.scoreMitm.setDisable(!isOpen);
+			this.resultsMitm.setDisable(!isOpen);
 		}
 
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
+	}
+
+	@FXML
+	public void handleResultsOnAction() {
+		if (this.resultsStage == null) {
+			try {
+				this.resultsStage = newWindow("ResultsView.fxml", getText("common.results"),
+						event -> this.resultsStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.resultsStage.requestFocus();
+		}
 	}
 }
