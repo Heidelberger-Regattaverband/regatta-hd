@@ -40,12 +40,12 @@ public class Score implements Serializable {
 	@Id
 	@OneToOne
 	@JoinColumn(name = "club_id")
-	private transient Club club;
+	private Club club;
 
 	@Id
 	@OneToOne
 	@JoinColumn(name = "event_id")
-	private transient Regatta regatta;
+	private Regatta regatta;
 
 	public String getClubName() {
 		return getClub().getName();
