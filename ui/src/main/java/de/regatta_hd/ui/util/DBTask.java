@@ -20,10 +20,13 @@ class DBTask<V> extends Task<DBResult<V>> {
 
 	private final AquariusDB db;
 
-	DBTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer, AquariusDB db) {
-		this.db = db;
+	private final boolean inTransaction;
+
+	DBTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
+		this.inTransaction = inTransaction;
+		this.db = Objects.requireNonNull(db, "db must not be null");
 
 		setOnSucceeded(event -> {
 			@SuppressWarnings("unchecked")
@@ -43,7 +46,7 @@ class DBTask<V> extends Task<DBResult<V>> {
 
 	@Override
 	protected DBResult<V> call() throws Exception {
-		EntityTransaction transaction = this.db != null ? this.db.getEntityManager().getTransaction() : null;
+		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
 
 		// begin transaction if required
 		if (transaction != null && !transaction.isActive()) {

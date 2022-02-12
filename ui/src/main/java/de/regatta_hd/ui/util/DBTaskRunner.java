@@ -48,7 +48,7 @@ public class DBTaskRunner {
 
 	private <V> Task<DBResult<V>> createTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer,
 			boolean inTransaction) {
-		return new DBTask<>(callable, resultConsumer, inTransaction ? this.db : null);
+		return new DBTask<>(callable, resultConsumer, inTransaction, this.db);
 	}
 
 	private static <V> Task<V> runTask(Task<V> task) {
@@ -56,7 +56,7 @@ public class DBTaskRunner {
 		return task;
 	}
 
-	static class DatabaseThreadFactory implements ThreadFactory {
+	private static class DatabaseThreadFactory implements ThreadFactory {
 		private static final AtomicInteger poolNumber = new AtomicInteger(1);
 
 		@Override
@@ -66,4 +66,5 @@ public class DBTaskRunner {
 			return thread;
 		}
 	}
+
 }
