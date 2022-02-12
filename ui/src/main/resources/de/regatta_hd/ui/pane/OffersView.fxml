@@ -89,11 +89,8 @@
       </columnResizePolicy>
     </TableView>
   </children>
+
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
 </GridPane>

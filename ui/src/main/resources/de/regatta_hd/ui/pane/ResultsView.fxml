@@ -28,6 +28,17 @@
       </items>
     </ToolBar>
 
+    <TableView fx:id="resultsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+      GridPane.vgrow="ALWAYS">
+      <placeholder>
+        <Label text="%common.loadData" />
+      </placeholder>
+    </TableView>
   </children>
+
+  <columnConstraints>
+    <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+  </columnConstraints>
+
 </GridPane>
 

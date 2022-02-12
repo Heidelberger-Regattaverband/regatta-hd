@@ -26,7 +26,7 @@
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
       </items>
     </ToolBar>
-    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
       GridPane.vgrow="ALWAYS">
       <placeholder>
         <Label text="%common.loadData" />
@@ -79,10 +79,8 @@
       </contextMenu>
     </TableView>
   </children>
+
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-  <rowConstraints>
-    <RowConstraints />
-  </rowConstraints>
 </GridPane>

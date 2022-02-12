@@ -21,7 +21,7 @@ public class RegattasController extends AbstractBaseController {
 	private Button refreshBtn;
 
 	@FXML
-	private TableView<Regatta> regattasTable;
+	private TableView<Regatta> regattasTbl;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -37,13 +37,13 @@ public class RegattasController extends AbstractBaseController {
 
 	@FXML
 	private void handleSelectRegattaOnAction() throws IOException {
-		Regatta regatta = this.regattasTable.getSelectionModel().getSelectedItem();
+		Regatta regatta = this.regattasTbl.getSelectionModel().getSelectedItem();
 		this.regattaDAO.setActiveRegatta(regatta);
 	}
 
 	private void loadRegattas(boolean refresh) {
 		disableButtons(true);
-		this.regattasTable.getItems().clear();
+		this.regattasTbl.getItems().clear();
 
 		this.dbTask.run(() -> {
 			if (refresh) {
@@ -53,8 +53,8 @@ public class RegattasController extends AbstractBaseController {
 		}, dbResult -> {
 			try {
 				ObservableList<Regatta> regattas = FXCollections.observableArrayList(dbResult.getResult());
-				this.regattasTable.setItems(regattas);
-				FxUtils.autoResizeColumns(this.regattasTable);
+				this.regattasTbl.setItems(regattas);
+				FxUtils.autoResizeColumns(this.regattasTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
