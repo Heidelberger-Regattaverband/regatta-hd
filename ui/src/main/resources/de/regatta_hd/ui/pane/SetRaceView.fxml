@@ -74,7 +74,7 @@
                       <PropertyValueFactory property="heatRank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%SetRaceView.heatRegsTbl.resultCol.text">
+                  <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%common.result">
                     <cellValueFactory>
                       <PropertyValueFactory property="result" />
                     </cellValueFactory>

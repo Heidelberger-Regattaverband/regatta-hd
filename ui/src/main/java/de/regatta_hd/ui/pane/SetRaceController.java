@@ -434,7 +434,7 @@ public class SetRaceController extends AbstractBaseController {
 				return null;
 			});
 
-			resultCol = new TableColumn<>(getText("SetRaceView.heatRegsTbl.resultCol.text"));
+			resultCol = new TableColumn<>(getText("common.result"));
 			resultCol.setStyle("-fx-alignment: CENTER_RIGHT;");
 			resultCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
