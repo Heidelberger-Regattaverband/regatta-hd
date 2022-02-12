@@ -195,9 +195,7 @@ public class Race {
 
 	public List<Heat> getHeatsOrderedByNumber() {
 		List<Heat> sorted = new ArrayList<>(getHeats());
-		sorted.sort((entry1, entry2) -> {
-			return entry1.getHeatNumber() > entry2.getHeatNumber() ? 1 : -1;
-		});
+		sorted.sort((entry1, entry2) -> entry1.getHeatNumber() > entry2.getHeatNumber() ? 1 : -1);
 		return sorted;
 	}
 

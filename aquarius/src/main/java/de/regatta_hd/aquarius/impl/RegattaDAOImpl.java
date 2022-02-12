@@ -217,19 +217,15 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
 
-		equalCrews.values().forEach(entry -> {
-			entry.setEqualCrew(false);
-			diffCrews.put(entry.getId(), entry);
-		});
+		// add not added registrations with equal crews, e.g. boat did not finish
+		equalCrews.values().forEach(entry -> diffCrews.put(entry.getId(), entry));
 
-		// sort the different crews according their number
-		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1)
-				.forEach(setListEntry -> {
-					SetListEntry entry = SetListEntry.builder().rank(setList.size() + 1)
-							.registration(setListEntry.getRegistration()).equalCrew(false).build();
-					findBestMatch(entry, srcRegistrations);
-					setList.add(entry);
-				});
+		// sort the remaining registrations according their number
+		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1).forEach(entry -> {
+			entry.setRank(setList.size() + 1);
+			findBestMatch(entry, srcRegistrations);
+			setList.add(entry);
+		});
 
 		return setList;
 	}
@@ -407,13 +403,19 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime()
 						.intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
+				SetListEntry entry;
 				// ensure the result contains a valid rank, if rank == 0 the boat did not finish
 				if (srcHeatReg.getFinalResult().getRank() > 0) {
-					SetListEntry entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
+					entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
 					if (entry != null) {
 						entry.setRank(setList.size() + 1);
 						entry.setSrcHeatRregistration(srcHeatReg);
 						setList.add(entry);
+					}
+				} else {
+					entry = equalCrews.get(srcHeatReg.getRegistration().getId());
+					if (entry != null) {
+						entry.setSrcHeatRregistration(srcHeatReg);
 					}
 				}
 			});

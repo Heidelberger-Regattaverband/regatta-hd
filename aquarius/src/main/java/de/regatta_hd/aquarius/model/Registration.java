@@ -87,10 +87,9 @@ public class Registration {
 	private Race race;
 
 	public List<Crew> getFinalCrews() {
-		return getCrews().stream().filter(crew -> {
-			boolean finalCrew = crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo();
-			return finalCrew;
-		}).collect(Collectors.toList());
+		return getCrews().stream()
+				.filter(crew -> crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo())
+				.collect(Collectors.toList());
 	}
 
 	/**

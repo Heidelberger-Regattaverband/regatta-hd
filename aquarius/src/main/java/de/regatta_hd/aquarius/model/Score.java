@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius.model;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -27,9 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Score implements Serializable {
-
-	private static final long serialVersionUID = 1670725569568728048L;
+public class Score {
 
 	@Column(name = "rank")
 	private short rank;
