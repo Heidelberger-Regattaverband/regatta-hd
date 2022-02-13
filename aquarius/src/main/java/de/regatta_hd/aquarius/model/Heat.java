@@ -105,21 +105,21 @@ public class Heat {
 	/**
 	 * @return {@code true} if the heat is set, but not started yet.
 	 */
-	public boolean isSet() {
+	public boolean isStateSet() {
 		return getState() == 1;
 	}
 
 	/**
 	 * @return {@code true} if the heat is finished, but the result isn't official yet.
 	 */
-	public boolean isFinished() {
+	public boolean isStateFinished() {
 		return getState() == 5;
 	}
 
 	/**
 	 * @return {@code true} if the heat is finished and the result is official.
 	 */
-	public boolean isOfficial() {
+	public boolean isStateOfficial() {
 		return getState() == 4;
 	}
 
@@ -140,5 +140,9 @@ public class Heat {
 			return rank1 > rank2 ? 1 : -1;
 		});
 		return sorted;
+	}
+
+	public void setStateSet() {
+		setState((byte) 1);
 	}
 }

@@ -124,7 +124,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 
 			// mark heat as set
-			heat.setState((byte) 1);
+			heat.setStateSet();
 			entityManager.merge(heat);
 		});
 
