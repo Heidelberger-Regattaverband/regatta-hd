@@ -31,7 +31,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
@@ -132,20 +131,24 @@ public class SetRaceController extends AbstractBaseController {
 			// then load new crew lists from DB
 			this.dbTask.run(() -> {
 				Set<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getCrews() : null;
-				List<Crew> finalCrews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews()
-						: null;
-				return new Pair<>(srcCrew, finalCrews);
+				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
+				if (srcCrew != null) {
+					srcCrew.forEach(Crew::getAthlet);
+				}
+				if (crews != null) {
+					crews.forEach(Crew::getAthlet);
+				}
+				return new Pair<>(srcCrew, crews);
 			}, (dbResult -> {
-				Pair<Set<Crew>, List<Crew>> result;
 				try {
-					result = dbResult.getResult();
+					Pair<Set<Crew>, List<Crew>> result = dbResult.getResult();
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
 						this.srcCrewLbl.setText(createCrewsLabel(entry, entry.getSrcRegistration()));
 						FxUtils.autoResizeColumns(this.srcCrewTbl);
 					} else {
-						this.srcCrewLbl.setText("Kein Boot gefunden.");
+						this.srcCrewLbl.setText(getText("SetRaceView.noBoat"));
 					}
 
 					if (result.getValue() != null) {
@@ -153,7 +156,7 @@ public class SetRaceController extends AbstractBaseController {
 						this.crewLbl.setText(createCrewsLabel(entry, entry.getRegistration()));
 						FxUtils.autoResizeColumns(this.crewTbl);
 					} else {
-						this.crewLbl.setText("Kein Boot gefunden.");
+						this.crewLbl.setText(getText("SetRaceView.noBoat"));
 					}
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
@@ -361,6 +364,7 @@ public class SetRaceController extends AbstractBaseController {
 			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getHeatNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 			compEntriesTable.setItems(sortedList);
+			compEntriesTable.sort();
 			FxUtils.autoResizeColumns(compEntriesTable);
 
 			sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
@@ -423,8 +427,6 @@ public class SetRaceController extends AbstractBaseController {
 		TableColumn<HeatRegistration, String> resultCol = null;
 		if (withResult) {
 			rankCol = new TableColumn<>(getText("common.rank"));
-			rankCol.setSortType(SortType.ASCENDING);
-			rankCol.setSortable(true);
 			rankCol.setStyle("-fx-alignment: CENTER;");
 			rankCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
@@ -445,10 +447,7 @@ public class SetRaceController extends AbstractBaseController {
 			});
 
 			heatRegsTbl.getColumns().add(rankCol);
-		}
-
-		if (rankCol != null) {
-			heatRegsTbl.getSortOrder().add(rankCol);
+			heatRegsTbl.getSortOrder().add(resultCol);
 		}
 
 		heatRegsTbl.getColumns().add(bibCol);

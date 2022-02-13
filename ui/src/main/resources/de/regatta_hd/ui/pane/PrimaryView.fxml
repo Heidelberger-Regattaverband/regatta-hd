@@ -21,9 +21,18 @@
         <Menu text="%PrimaryView.adminMenu.text">
           <items>
             <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.regattasMitm.text" />
-            <MenuItem fx:id="offersMitm" onAction="#handleOffers" text="%PrimaryView.racesMitm.text" />
-            <MenuItem fx:id="divisionsMitm" onAction="#handleSetRace" text="%PrimaryView.setRaceMitm.text" />
+          </items>
+        </Menu>
+        <Menu text="%common.regatta">
+          <items>
+            <MenuItem fx:id="racesMitm" onAction="#handleRacesOnAction" text="%PrimaryView.racesMitm.text" />
+            <MenuItem fx:id="setRaceMitm" onAction="#handleSetRaceOnAction" text="%PrimaryView.setRaceMitm.text" />
+            <MenuItem fx:id="resultsMitm" onAction="#handleResultsOnAction" text="%common.results" />
             <MenuItem fx:id="scoreMitm" onAction="#handleScore" text="%PrimaryView.scoresMitm.text" />
+          </items>
+        </Menu>
+        <Menu text="%common.help">
+          <items>
           </items>
         </Menu>
       </menus>

@@ -9,33 +9,63 @@ import java.util.logging.Logger;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
 public class RegattasController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(RegattasController.class.getName());
 
 	@FXML
-	private TableView<Regatta> regattasTable;
+	private Button refreshBtn;
+
+	@FXML
+	private TableView<Regatta> regattasTbl;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.dbTask.run(() -> this.regattaDAO.getRegattas(), dbResult -> {
+		loadRegattas(false);
+	}
+
+	@FXML
+	public void handleRefreshOnAction() {
+		loadRegattas(true);
+	}
+
+	@FXML
+	private void handleSelectRegattaOnAction() throws IOException {
+		Regatta regatta = this.regattasTbl.getSelectionModel().getSelectedItem();
+		this.regattaDAO.setActiveRegatta(regatta);
+	}
+
+	private void loadRegattas(boolean refresh) {
+		disableButtons(true);
+		this.regattasTbl.getItems().clear();
+
+		this.dbTask.run(() -> {
+			if (refresh) {
+				super.db.getEntityManager().clear();
+			}
+			return this.regattaDAO.getRegattas();
+		}, dbResult -> {
 			try {
-				this.regattasTable.setItems(FXCollections.observableArrayList(dbResult.getResult()));
-				FxUtils.autoResizeColumns(this.regattasTable);
+				ObservableList<Regatta> regattas = FXCollections.observableArrayList(dbResult.getResult());
+				this.regattasTbl.setItems(regattas);
+				FxUtils.autoResizeColumns(this.regattasTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
 			}
 		});
 	}
 
-	@FXML
-	private void selectRegatta() throws IOException {
-		Regatta regatta = this.regattasTable.getSelectionModel().getSelectedItem();
-		this.regattaDAO.setActiveRegatta(regatta);
+	private void disableButtons(boolean disabled) {
+		this.refreshBtn.setDisable(disabled);
 	}
+
 }

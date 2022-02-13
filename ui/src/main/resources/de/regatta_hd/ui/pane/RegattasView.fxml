@@ -2,27 +2,43 @@
 
 <?import de.regatta_hd.ui.control.DateTableCellFactory?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="de.regatta_hd.ui.pane.RegattasController">
+<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.RegattasController">
   <padding>
     <Insets bottom="10" left="10" right="10" top="10" />
   </padding>
 
   <children>
-    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+    <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <items>
+        <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+      </items>
+    </ToolBar>
+    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+      GridPane.vgrow="ALWAYS">
       <placeholder>
-          <Label text="%common.loadData" />
+        <Label text="%common.loadData" />
       </placeholder>
       <columns>
+        <TableColumn style="-fx-alignment: CENTER;" text="%common.id">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>id</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
         <TableColumn text="%RegattasView.titleCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
@@ -57,16 +73,14 @@
       <contextMenu>
         <ContextMenu>
           <items>
-            <MenuItem onAction="#selectRegatta" text="Auswählen" />
+            <MenuItem onAction="#handleSelectRegattaOnAction" text="Auswählen" />
           </items>
         </ContextMenu>
       </contextMenu>
     </TableView>
   </children>
+
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
 </GridPane>

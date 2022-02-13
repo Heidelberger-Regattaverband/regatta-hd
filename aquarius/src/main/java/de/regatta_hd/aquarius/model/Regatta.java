@@ -48,7 +48,7 @@ public class Regatta {
 	private Club club;
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "regatta")
-	private Set<Heat> comps;
+	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Registration.class, mappedBy = "regatta")
 	private List<Registration> registrations;

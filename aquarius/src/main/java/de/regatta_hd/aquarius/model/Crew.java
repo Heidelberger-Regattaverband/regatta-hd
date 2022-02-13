@@ -8,7 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +22,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Crew")
+@NamedEntityGraph(name = "crew-all", attributeNodes = { @NamedAttributeNode("athlet"), @NamedAttributeNode("club") })
 //lombok
 @Getter
 @Setter
@@ -39,7 +44,7 @@ public class Crew {
 	private Club club;
 
 	@Column(name = "Crew_IsCox")
-	private boolean isCox;
+	private boolean cox;
 
 	@Column(name = "Crew_Pos")
 	@ToString.Include(rank = 10)
@@ -61,4 +66,10 @@ public class Crew {
 	public String getName() {
 		return this.athlet.getLastName() + ", " + this.athlet.getFirstName();
 	}
+
+	// JavaFX properties
+	public ObservableBooleanValue coxProperty() {
+		return new SimpleBooleanProperty(isCox());
+	}
+
 }
