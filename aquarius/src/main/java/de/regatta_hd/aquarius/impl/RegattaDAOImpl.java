@@ -107,16 +107,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		final EntityManager entityManager = super.db.getEntityManager();
 
 		// get all planed heats ordered by the heat number
-		race.getHeatsOrderedByNumber().stream().forEach(heat -> {
+		race.getHeatsOrderedByNumber().forEach(heat -> {
 			// first clean existing heat assignments
 			heat.getEntries().forEach(entityManager::remove);
 
-			for (int r = 0; r < laneCount; r++) {
+			for (int lane = 1; lane <= laneCount; lane++) {
 				if (!stack.isEmpty()) {
 					Registration registration = stack.pop().getRegistration();
 
 					HeatRegistration heatReg = HeatRegistration.builder().heat(heat).registration(registration)
-							.lane((short) (r + 1)).build();
+							.lane((short) lane).build();
 					entityManager.merge(heatReg);
 				} else {
 					break;
