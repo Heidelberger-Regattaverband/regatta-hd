@@ -131,13 +131,17 @@ public class SetRaceController extends AbstractBaseController {
 			// then load new crew lists from DB
 			this.dbTask.run(() -> {
 				Set<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getCrews() : null;
-				List<Crew> finalCrews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews()
-						: null;
-				return new Pair<>(srcCrew, finalCrews);
+				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
+				if (srcCrew != null) {
+					srcCrew.forEach(Crew::getAthlet);
+				}
+				if (crews != null) {
+					crews.forEach(Crew::getAthlet);
+				}
+				return new Pair<>(srcCrew, crews);
 			}, (dbResult -> {
-				Pair<Set<Crew>, List<Crew>> result;
 				try {
-					result = dbResult.getResult();
+					Pair<Set<Crew>, List<Crew>> result = dbResult.getResult();
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
