@@ -52,6 +52,9 @@
                   text="%SetRaceView.deleteSetListBtn.text" />
               </ToolBar>
               <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
+                <placeholder>
+                  <Label text="%SetRaceView.noSetList" />
+                </placeholder>
                 <columns>
                   <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
                     <cellValueFactory>
@@ -96,6 +99,9 @@
                 <children>
                   <Label fx:id="srcCrewLbl" />
                   <TableView fx:id="srcCrewTbl">
+                    <placeholder>
+                      <Label text="%SetRaceView.noCrew" />
+                    </placeholder>
                     <columns>
                       <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
                         <cellValueFactory>
@@ -125,6 +131,9 @@
                 <children>
                   <Label fx:id="crewLbl" />
                   <TableView fx:id="crewTbl">
+                    <placeholder>
+                      <Label text="%SetRaceView.noCrew" />
+                    </placeholder>
                     <columns>
                       <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
                         <cellValueFactory>

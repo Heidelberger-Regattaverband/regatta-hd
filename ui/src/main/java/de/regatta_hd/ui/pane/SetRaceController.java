@@ -148,7 +148,7 @@ public class SetRaceController extends AbstractBaseController {
 						this.srcCrewLbl.setText(createCrewsLabel(entry, entry.getSrcRegistration()));
 						FxUtils.autoResizeColumns(this.srcCrewTbl);
 					} else {
-						this.srcCrewLbl.setText("Kein Boot gefunden.");
+						this.srcCrewLbl.setText(getText("SetRaceView.noBoat"));
 					}
 
 					if (result.getValue() != null) {
@@ -156,7 +156,7 @@ public class SetRaceController extends AbstractBaseController {
 						this.crewLbl.setText(createCrewsLabel(entry, entry.getRegistration()));
 						FxUtils.autoResizeColumns(this.crewTbl);
 					} else {
-						this.crewLbl.setText("Kein Boot gefunden.");
+						this.crewLbl.setText(getText("SetRaceView.noBoat"));
 					}
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
