@@ -14,21 +14,25 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
+<?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
 
-<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.SetRaceController">
+<GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.SetRaceController">
   <padding>
     <Insets bottom="10" left="10" right="10" top="10" />
   </padding>
 
   <children>
     <Label text="%SetRaceView.raceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction" promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction"
+      promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
         <RaceStringConverter />
       </converter>
     </SearchableComboBox>
 
-    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0"
+      GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <VBox>
           <children>
@@ -42,8 +46,10 @@
           <VBox spacing="5.0">
             <children>
               <ToolBar>
-                <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
-                <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction" text="%SetRaceView.deleteSetListBtn.text" />
+                <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction"
+                  text="%SetRaceView.createSetListBtn.text" />
+                <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction"
+                  text="%SetRaceView.deleteSetListBtn.text" />
               </ToolBar>
               <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
                 <columns>
@@ -62,8 +68,9 @@
                       <PropertyValueFactory property="boat" />
                     </cellValueFactory>
                   </TableColumn>
-                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory> <PropertyValueFactory
-                    property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory> </TableColumn -->
+                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory>
+                    <PropertyValueFactory property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory>
+                    </TableColumn -->
                   <TableColumn style="-fx-alignment: CENTER;" text="%common.heatAbr">
                     <cellValueFactory>
                       <PropertyValueFactory property="heatNumber" />
@@ -95,6 +102,16 @@
                           <PropertyValueFactory property="pos" />
                         </cellValueFactory>
                       </TableColumn>
+                      <TableColumn style="-fx-alignment: CENTER;" text="%common.coxAbr">
+                        <cellValueFactory>
+                          <PropertyValueFactory>
+                            <property>cox</property>
+                          </PropertyValueFactory>
+                        </cellValueFactory>
+                        <cellFactory>
+                          <CheckBoxTableCellFactory />
+                        </cellFactory>
+                      </TableColumn>
                       <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
                         <cellValueFactory>
                           <PropertyValueFactory property="name" />
@@ -113,6 +130,16 @@
                         <cellValueFactory>
                           <PropertyValueFactory property="pos" />
                         </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn style="-fx-alignment: CENTER;" text="%common.coxAbr">
+                        <cellValueFactory>
+                          <PropertyValueFactory>
+                            <property>cox</property>
+                          </PropertyValueFactory>
+                        </cellValueFactory>
+                        <cellFactory>
+                          <CheckBoxTableCellFactory />
+                        </cellFactory>
                       </TableColumn>
                       <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
                         <cellValueFactory>
