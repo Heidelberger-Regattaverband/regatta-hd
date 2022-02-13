@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -20,6 +22,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Crew")
+@NamedEntityGraph(name = "crew-all", attributeNodes = { @NamedAttributeNode("athlet"), @NamedAttributeNode("club") })
 //lombok
 @Getter
 @Setter
