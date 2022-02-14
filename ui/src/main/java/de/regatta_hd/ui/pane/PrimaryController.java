@@ -22,7 +22,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import javafx.event.ActionEvent;
 
 public class PrimaryController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
