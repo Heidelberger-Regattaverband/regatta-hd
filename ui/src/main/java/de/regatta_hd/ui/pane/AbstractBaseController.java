@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -52,6 +54,9 @@ abstract class AbstractBaseController implements Initializable {
 		Stage stage = new Stage();
 		stage.setTitle(title);
 		stage.setScene(new Scene(parent));
+		try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("icon.png")) {
+			stage.getIcons().add(new Image(in));
+		}
 
 		FxUtils.loadSizeAndPos(resource, stage);
 		stage.show();

@@ -1,6 +1,7 @@
 package de.regatta_hd.ui;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -13,6 +14,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -28,6 +30,10 @@ public class RegattaHD extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		this.context.init();
+
+		try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("icon.png")) {
+			primaryStage.getIcons().add(new Image(in));
+		}
 
 		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
