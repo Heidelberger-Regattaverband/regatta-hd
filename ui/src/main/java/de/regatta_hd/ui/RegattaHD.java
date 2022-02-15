@@ -5,10 +5,13 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDBModule;
+import de.regatta_hd.ui.util.DBLogHandler;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -27,9 +30,15 @@ public class RegattaHD extends Application {
 	@Inject
 	private FXMLLoader fxmlLoader;
 
+	@Inject
+	private DBLogHandler dbLogHandler;
+
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		this.context.init();
+
+		Logger rootLogger = LogManager.getLogManager().getLogger("");
+		rootLogger.addHandler(this.dbLogHandler);
 
 		try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("icon.png")) {
 			primaryStage.getIcons().add(new Image(in));
