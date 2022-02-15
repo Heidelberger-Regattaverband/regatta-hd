@@ -35,7 +35,7 @@ public class DBLogHandler extends Handler {
 
 		manager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
 			if (event.getAquariusDB().isOpen()) {
-				this.logRecords.forEach(this::persist);
+				persist();
 			}
 		});
 	}
@@ -48,7 +48,7 @@ public class DBLogHandler extends Handler {
 			if (this.db.isOpen()) {
 				persist(dbRecord);
 			} else {
-				this.logRecords.push(dbRecord);
+				this.logRecords.addLast(dbRecord);
 			}
 		}
 	}
@@ -66,6 +66,17 @@ public class DBLogHandler extends Handler {
 	private void persist(LogRecord dbRecord) {
 		this.dbRunner.runInTransaction(() -> {
 			this.db.getEntityManager().merge(dbRecord);
+			return null;
+		}, result -> {
+			// nothing to do with result
+		});
+	}
+
+	private void persist() {
+		this.dbRunner.runInTransaction(() -> {
+			while (!this.logRecords.isEmpty()) {
+				this.db.getEntityManager().merge(this.logRecords.pop());
+			}
 			return null;
 		}, result -> {
 			// nothing to do with result
