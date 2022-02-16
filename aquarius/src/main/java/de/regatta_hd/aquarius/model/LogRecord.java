@@ -45,6 +45,7 @@ public class LogRecord {
 		if (logRecord.getThrown() != null) {
 			try (StringWriter strWriter = new StringWriter(); PrintWriter writer = new PrintWriter(strWriter);) {
 				logRecord.getThrown().printStackTrace(writer);
+				setStackTrace(strWriter.toString());
 			} catch (IOException e) {
 				// ignored
 			}
