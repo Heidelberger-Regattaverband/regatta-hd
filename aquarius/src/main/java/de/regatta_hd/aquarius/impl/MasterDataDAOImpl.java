@@ -8,6 +8,7 @@ import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
+import de.regatta_hd.aquarius.model.LogRecord;
 
 @Singleton
 public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO {
@@ -35,5 +36,10 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	@Override
 	public BoatClass getBoatClass(int id) {
 		return super.db.getEntityManager().find(BoatClass.class, Integer.valueOf(id));
+	}
+
+	@Override
+	public List<LogRecord> getLogRecords() {
+		return getEntities(LogRecord.class);
 	}
 }

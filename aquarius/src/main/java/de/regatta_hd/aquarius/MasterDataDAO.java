@@ -5,6 +5,7 @@ import java.util.List;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
+import de.regatta_hd.aquarius.model.LogRecord;
 
 /**
  * Provides access to the master data of the Aquarius database.
@@ -37,4 +38,6 @@ public interface MasterDataDAO {
 	 * @return a {@link List} with all known {@link Club clubs}
 	 */
 	List<Club> getClubs();
+
+	List<LogRecord> getLogRecords();
 }

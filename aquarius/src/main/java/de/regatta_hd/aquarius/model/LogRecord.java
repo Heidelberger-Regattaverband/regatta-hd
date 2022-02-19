@@ -32,17 +32,18 @@ public class LogRecord {
 
 	public LogRecord(String hostName, String hostAddr, java.util.logging.LogRecord logRecord) {
 		setInstant(logRecord.getInstant());
-		setLoggerName(logRecord.getLoggerName());
+		setLogger(logRecord.getLoggerName());
 		setMessage(logRecord.getMessage());
 		setThreadID(logRecord.getThreadID());
 		setHostName(hostName);
-		setHostAddress(hostAddr);
+		setHostIP(hostAddr);
 		setLevelName(logRecord.getLevel().getName());
 		setLevelValue(logRecord.getLevel().intValue());
-		setSourceClassName(logRecord.getSourceClassName());
-		setSourceMethodName(logRecord.getSourceMethodName());
+		setSourceClass(logRecord.getSourceClassName());
+		setSourceMethod(logRecord.getSourceMethodName());
 
 		if (logRecord.getThrown() != null) {
+			setThrowableClass(logRecord.getThrown().getClass().getName());
 			try (StringWriter strWriter = new StringWriter(); PrintWriter writer = new PrintWriter(strWriter);) {
 				logRecord.getThrown().printStackTrace(writer);
 				setStackTrace(strWriter.toString());
@@ -66,8 +67,8 @@ public class LogRecord {
 	@Column(name = "hostName")
 	private String hostName;
 
-	@Column(name = "hostAddress")
-	private String hostAddress;
+	@Column(name = "hostIP")
+	private String hostIP;
 
 	@Column(name = "levelName")
 	private String levelName;
@@ -78,20 +79,20 @@ public class LogRecord {
 	/**
 	 * Name of the source Logger.
 	 */
-	@Column(name = "loggerName")
-	private String loggerName;
+	@Column(name = "logger")
+	private String logger;
 
 	/**
 	 * Class that issued logging call
 	 */
-	@Column(name = "sourceClassName")
-	private String sourceClassName;
+	@Column(name = "sourceClass")
+	private String sourceClass;
 
 	/**
 	 * Method that issued logging call
 	 */
-	@Column(name = "sourceMethodName")
-	private String sourceMethodName;
+	@Column(name = "sourceMethod")
+	private String sourceMethod;
 
 	/**
 	 * Non-localized raw message text
@@ -105,6 +106,9 @@ public class LogRecord {
 	@Column(name = "threadId")
 	private int threadID;
 
-	@Column(name = "stacktrace")
+	@Column(name = "stackTrace")
 	private String stackTrace;
+
+	@Column(name = "throwableClass")
+	private String throwableClass;
 }

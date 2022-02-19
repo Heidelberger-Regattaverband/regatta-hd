@@ -68,14 +68,16 @@
     <createTable tableName="LogRecord">
     <column name="id" type="BIGINT" autoIncrement="true" />
     <column name="instant" type="TIMESTAMP"/>
-    <column name="hostName" type="VARCHAR(255)"/>
-    <column name="hostAddress" type="VARCHAR(15)"/>
-    <column name="levelName" type="VARCHAR(10)"/>
+    <column name="hostName" type="VARCHAR(64)"/>
+    <column name="hostIP" type="VARCHAR(15)"/>
+    <column name="levelName" type="VARCHAR(8)"/>
     <column name="levelValue" type="INTEGER"/>
-    <column name="loggerName" type="VARCHAR(255)"/>
-    <column name="sourceClassName" type="VARCHAR(255)"/>
-    <column name="sourceMethodName" type="VARCHAR(255)"/>
-    <column name="message" type="VARCHAR(255)"/>
+    <column name="logger" type="VARCHAR(256)"/>
+    <column name="sourceClass" type="VARCHAR(256)"/>
+    <column name="sourceMethod" type="VARCHAR(128)"/>
+    <column name="message" type="VARCHAR(256)"/>
+    <column name="exception" type="VARCHAR(256)"/>
+    <column name="throwableClass" type="VARCHAR(256)"/>
     <column name="stacktrace" type="LONGVARCHAR"/>
     <column name="threadId" type="INTEGER"/>
     </createTable>

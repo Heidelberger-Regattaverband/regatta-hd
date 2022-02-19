@@ -53,6 +53,8 @@ public interface AquariusDB {
 	 */
 	EntityTransaction beginTransaction();
 
+	DBConfig getConfig();
+
 	interface StateChangedEvent {
 
 		AquariusDB getAquariusDB();

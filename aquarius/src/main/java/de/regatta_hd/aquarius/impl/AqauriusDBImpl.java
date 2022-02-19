@@ -39,6 +39,8 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private Thread sessionThread;
 
+	private DBConfig config;
+
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
@@ -144,5 +146,10 @@ public class AqauriusDBImpl implements AquariusDB {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
+	}
+
+	@Override
+	public DBConfig getConfig() {
+		return this.config;
 	}
 }
