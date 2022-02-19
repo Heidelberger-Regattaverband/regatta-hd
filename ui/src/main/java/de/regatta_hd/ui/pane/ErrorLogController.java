@@ -16,8 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableView;
 
 public class ErrorLogController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
@@ -36,15 +36,38 @@ public class ErrorLogController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		loadRegattas(false);
+		loadHostNames();
 	}
 
 	@FXML
 	public void handleRefreshOnAction() {
-		loadRegattas(true);
+		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), true);
 	}
 
-	private void loadRegattas(boolean refresh) {
+	@FXML
+	public void handleHostNameOnAction() {
+		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), true);
+	}
+
+	private void loadHostNames() {
+		this.hostNameCbx.getItems().clear();
+		this.dbTask.run(() -> {
+			return this.dao.getHostNames();
+		}, dbResult -> {
+			try {
+				ObservableList<String> regattas = FXCollections.observableArrayList(dbResult.getResult());
+				this.hostNameCbx.setItems(regattas);
+				this.hostNameCbx.getSelectionModel().select(InetAddress.getLocalHost().getHostName());
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
+			}
+		});
+	}
+
+	private void loadLogRecords(String hostName, boolean refresh) {
 		disableButtons(true);
 		this.logRecordsTbl.getItems().clear();
 
@@ -53,7 +76,7 @@ public class ErrorLogController extends AbstractBaseController {
 			if (refresh) {
 				entityManager.clear();
 			}
-			return this.dao.getLogRecords(InetAddress.getLocalHost().getHostName());
+			return this.dao.getLogRecords(hostName);
 		}, dbResult -> {
 			try {
 				ObservableList<LogRecord> regattas = FXCollections.observableArrayList(dbResult.getResult());
@@ -71,5 +94,4 @@ public class ErrorLogController extends AbstractBaseController {
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 	}
-
 }

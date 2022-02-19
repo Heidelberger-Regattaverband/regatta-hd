@@ -22,7 +22,7 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
-        <ComboBox fx:id="hostNameCbx" prefWidth="150.0" />
+        <ComboBox fx:id="hostNameCbx" onAction="#handleHostNameOnAction" />
       </items>
     </ToolBar>
     <TableView fx:id="logRecordsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
@@ -69,8 +69,4 @@
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-  <rowConstraints>
-    <RowConstraints />
-    <RowConstraints />
-  </rowConstraints>
 </GridPane>

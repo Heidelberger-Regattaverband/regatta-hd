@@ -48,7 +48,7 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public List<String> getHostNames() {
-		return super.db.getEntityManager().createQuery("SELECT lr.hostName FROM LogRecord lr", String.class)
+		return super.db.getEntityManager().createQuery("SELECT DISTINCT lr.hostName FROM LogRecord lr", String.class)
 				.getResultList();
 	}
 }
