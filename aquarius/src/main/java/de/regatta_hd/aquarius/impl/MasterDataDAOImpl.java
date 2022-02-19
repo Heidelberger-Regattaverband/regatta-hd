@@ -9,6 +9,7 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
+import jakarta.persistence.EntityManager;
 
 @Singleton
 public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO {
@@ -39,7 +40,10 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	}
 
 	@Override
-	public List<LogRecord> getLogRecords() {
-		return getEntities(LogRecord.class);
+	public List<LogRecord> getLogRecords(String hostName) {
+		EntityManager entityManager = super.db.getEntityManager();
+
+		return entityManager.createQuery("SELECT l FROM LogRecord l WHERE l.hostName = :hostName ORDER BY l.instant DESC",
+				LogRecord.class).setParameter("hostName", hostName).getResultList();
 	}
 }

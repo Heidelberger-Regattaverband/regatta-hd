@@ -32,22 +32,33 @@
         <Label text="%common.loadData" />
       </placeholder>
       <columns>
-        <TableColumn style="-fx-alignment: CENTER;" text="%common.id">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>id</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn text="Zeitpunkt">
+        <TableColumn text="%common.instant">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>instant</property>
             </PropertyValueFactory>
           </cellValueFactory>
-          <cellFactory>
-            <DateTableCellFactory />
-          </cellFactory>
+        </TableColumn>
+        <TableColumn style="-fx-alignment: CENTER;" text="%common.level">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>levelName</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%common.logger">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>logger</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="%common.message">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>message</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
         </TableColumn>
       </columns>
       <columnResizePolicy>

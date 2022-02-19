@@ -39,5 +39,5 @@ public interface MasterDataDAO {
 	 */
 	List<Club> getClubs();
 
-	List<LogRecord> getLogRecords();
+	List<LogRecord> getLogRecords(String hostName);
 }

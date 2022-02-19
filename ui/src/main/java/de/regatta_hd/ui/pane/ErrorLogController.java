@@ -1,5 +1,6 @@
 package de.regatta_hd.ui.pane;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -50,7 +51,7 @@ public class ErrorLogController extends AbstractBaseController {
 			if (refresh) {
 				entityManager.clear();
 			}
-			return this.dao.getLogRecords();
+			return this.dao.getLogRecords(InetAddress.getLocalHost().getHostName());
 		}, dbResult -> {
 			try {
 				ObservableList<LogRecord> regattas = FXCollections.observableArrayList(dbResult.getResult());
