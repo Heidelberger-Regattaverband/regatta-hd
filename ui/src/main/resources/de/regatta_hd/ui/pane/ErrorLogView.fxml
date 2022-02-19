@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.regatta_hd.ui.control.DateTableCellFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
@@ -24,6 +22,7 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+        <ComboBox fx:id="hostNameCbx" prefWidth="150.0" />
       </items>
     </ToolBar>
     <TableView fx:id="logRecordsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
@@ -70,4 +69,8 @@
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints />
+  </rowConstraints>
 </GridPane>

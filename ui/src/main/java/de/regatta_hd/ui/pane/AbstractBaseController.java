@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.ui.FXMLLoaderFactory;
 import de.regatta_hd.ui.util.DBTaskRunner;
 import de.regatta_hd.ui.util.FxUtils;
@@ -31,13 +30,10 @@ abstract class AbstractBaseController implements Initializable {
 
 	@Inject
 	protected FXMLLoaderFactory fxmlLoaderFactory;
-
 	@Inject
 	protected DBTaskRunner dbTask;
 	@Inject
 	protected AquariusDB db;
-	@Inject
-	protected RegattaDAO regattaDAO;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

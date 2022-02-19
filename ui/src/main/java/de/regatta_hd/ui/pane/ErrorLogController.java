@@ -17,15 +17,17 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ComboBox;
 
 public class ErrorLogController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
 
 	@FXML
 	private Button refreshBtn;
-
 	@FXML
 	private TableView<LogRecord> logRecordsTbl;
+	@FXML
+	private ComboBox<String> hostNameCbx;
 
 	@Inject
 	private MasterDataDAO dao;

@@ -35,7 +35,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
-public class SetRaceController extends AbstractBaseController {
+public class SetRaceController extends AbstractRegattaController {
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
 	private static final String FULL_GRAPH = "race-to-results";
 

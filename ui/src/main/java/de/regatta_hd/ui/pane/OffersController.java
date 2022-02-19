@@ -17,7 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-public class OffersController extends AbstractBaseController {
+public class OffersController extends AbstractRegattaController {
 	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
 
 	// UI Controls

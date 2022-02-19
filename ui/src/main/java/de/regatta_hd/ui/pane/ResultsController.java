@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 
-public class ResultsController extends AbstractBaseController {
+public class ResultsController extends AbstractRegattaController {
 	private static final Logger logger = Logger.getLogger(ResultsController.class.getName());
 
 	@FXML
