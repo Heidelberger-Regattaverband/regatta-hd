@@ -46,7 +46,7 @@ public class PrimaryController extends AbstractRegattaController {
 	@FXML
 	private MenuItem scoreMitm;
 	@FXML
-	private MenuItem logRecordsMitm;
+	private MenuItem errorLogMitm;
 
 	@FXML
 	private MenuBar mainMbar;
@@ -212,6 +212,7 @@ public class PrimaryController extends AbstractRegattaController {
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
+		this.errorLogMitm.setDisable(!isOpen);
 	}
 
 	@FXML
