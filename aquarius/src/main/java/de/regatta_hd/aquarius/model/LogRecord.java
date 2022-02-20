@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,6 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 public class LogRecord {
+	private static final Logger log = Logger.getLogger(LogRecord.class.getName());
 
 	public LogRecord(String hostName, String hostAddr, java.util.logging.LogRecord logRecord) {
 		setInstant(logRecord.getInstant());
@@ -48,19 +49,15 @@ public class LogRecord {
 				logRecord.getThrown().printStackTrace(writer);
 				setStackTrace(strWriter.toString());
 			} catch (IOException e) {
-				// ignored
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
-
 	/**
 	 * Event time.
 	 */
+	@Id
 	@Column(name = "instant")
 	private Instant instant;
 

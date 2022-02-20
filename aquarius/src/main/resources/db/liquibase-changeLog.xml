@@ -66,8 +66,7 @@
       </not>
     </preConditions>
     <createTable tableName="LogRecord">
-    <column name="id" type="BIGINT" autoIncrement="true" />
-    <column name="instant" type="TIMESTAMP"/>
+    <column name="instant" type="TIMESTAMP" />
     <column name="hostName" type="VARCHAR(64)"/>
     <column name="hostIP" type="VARCHAR(15)"/>
     <column name="levelName" type="VARCHAR(8)"/>
