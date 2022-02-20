@@ -5,6 +5,8 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.logging.Handler;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -14,6 +16,8 @@ import de.regatta_hd.common.ListenerManager;
 
 @Singleton
 public class DBLogHandler extends Handler {
+
+	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName() };
 
 	private final AquariusDB db;
 
@@ -32,7 +36,10 @@ public class DBLogHandler extends Handler {
 		InetAddress host = InetAddress.getLocalHost();
 		this.hostName = host.getHostName();
 		this.hostAddress = host.getHostAddress();
-
+		setFilter(logRecord -> {
+			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
+			return !contains;
+		});
 		manager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
 			if (event.getAquariusDB().isOpen()) {
 				persist();
