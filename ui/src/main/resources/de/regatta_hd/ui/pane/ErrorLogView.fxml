@@ -28,7 +28,7 @@
       </items>
     </ToolBar>
 
-    <SplitPane fx:id="splitPan" dividerPositions="0.8" orientation="VERTICAL" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.8" orientation="VERTICAL" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <TableView fx:id="logRecordsTbl">
           <placeholder>
