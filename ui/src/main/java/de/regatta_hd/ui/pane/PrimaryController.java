@@ -23,7 +23,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-public class PrimaryController extends AbstractBaseController {
+public class PrimaryController extends AbstractRegattaController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
 	@Inject
