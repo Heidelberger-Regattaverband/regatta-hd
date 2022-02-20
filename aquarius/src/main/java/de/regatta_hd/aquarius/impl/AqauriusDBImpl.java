@@ -147,9 +147,4 @@ public class AqauriusDBImpl implements AquariusDB {
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
 	}
-
-	@Override
-	public DBConfig getConfig() {
-		return this.config;
-	}
 }
