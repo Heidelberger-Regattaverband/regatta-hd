@@ -1,7 +1,5 @@
 package de.regatta_hd.ui.util;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.logging.Handler;
 
@@ -9,6 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.model.LogRecord;
@@ -25,17 +24,18 @@ public class DBLogHandler extends Handler {
 
 	private final LinkedList<LogRecord> logRecords = new LinkedList<>();
 
-	private final String hostName;
-
-	private final String hostAddress;
+	@Inject
+	@Named("hostName")
+	private String hostName;
 
 	@Inject
-	DBLogHandler(AquariusDB db, DBTaskRunner dbRunner, ListenerManager manager) throws UnknownHostException {
+	@Named("hostAddress")
+	private String hostAddress;
+
+	@Inject
+	DBLogHandler(AquariusDB db, DBTaskRunner dbRunner, ListenerManager manager) {
 		this.db = db;
 		this.dbRunner = dbRunner;
-		InetAddress host = InetAddress.getLocalHost();
-		this.hostName = host.getHostName();
-		this.hostAddress = host.getHostAddress();
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
 			return !contains;

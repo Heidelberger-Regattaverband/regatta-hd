@@ -6,11 +6,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.SplitPane?>
 
 <GridPane hgap="10" vgap="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="de.regatta_hd.ui.pane.ErrorLogController">
@@ -25,45 +27,50 @@
         <ComboBox fx:id="hostNameCbx" onAction="#handleHostNameOnAction" />
       </items>
     </ToolBar>
-    <TableView fx:id="logRecordsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-      GridPane.vgrow="ALWAYS">
-      <placeholder>
-        <Label text="%common.loadData" />
-      </placeholder>
-      <columns>
-        <TableColumn sortType="DESCENDING" text="%common.instant">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>instant</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER;" text="%common.level">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>levelName</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn sortable="false" text="%common.logger">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>logger</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn sortable="false" text="%common.message">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>message</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-      </columns>
-      <columnResizePolicy>
-        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
-      </columnResizePolicy>
-    </TableView>
+
+    <SplitPane dividerPositions="0.8" orientation="VERTICAL" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <items>
+        <TableView fx:id="logRecordsTbl">
+          <placeholder>
+            <Label text="%common.loadData" />
+          </placeholder>
+          <columns>
+            <TableColumn sortType="DESCENDING" text="%common.instant">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>instant</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn sortable="false" style="-fx-alignment: CENTER;" text="%common.level">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>levelName</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn sortable="false" text="%common.logger">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>logger</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn sortable="false" text="%common.message">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>message</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+          </columns>
+          <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+          </columnResizePolicy>
+        </TableView>
+        <TextArea editable="false" fx:id="stackTraceTar"/>
+      </items>
+    </SplitPane>
   </children>
 
   <columnConstraints>

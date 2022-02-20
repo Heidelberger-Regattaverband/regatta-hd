@@ -33,7 +33,7 @@
         </Menu>
         <Menu text="%common.help">
           <items>
-            <MenuItem fx:id="logRecordsMitm" onAction="#handleLogRecordsOnAction" text="%PrimaryView.errorLogMitm.text" />
+            <MenuItem fx:id="errorLogMitm" onAction="#handleLogRecordsOnAction" text="%PrimaryView.errorLogMitm.text" />
           </items>
         </Menu>
       </menus>
