@@ -55,7 +55,8 @@ import lombok.ToString;
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
 				@NamedAttributeNode("ageClass"), //
 				@NamedAttributeNode("boatClass"), //
-				@NamedAttributeNode("raceMode") //
+				@NamedAttributeNode("raceMode"), //
+				@NamedAttributeNode("registrations") //
 		} //
 )
 // lombok
