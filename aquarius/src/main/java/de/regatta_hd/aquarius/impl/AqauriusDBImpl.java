@@ -39,8 +39,6 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private Thread sessionThread;
 
-	private DBConfig config;
-
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
