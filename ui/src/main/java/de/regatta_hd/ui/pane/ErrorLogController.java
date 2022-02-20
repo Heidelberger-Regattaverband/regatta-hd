@@ -35,7 +35,6 @@ public class ErrorLogController extends AbstractBaseController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-
 		loadHostNames();
 	}
 
@@ -46,11 +45,13 @@ public class ErrorLogController extends AbstractBaseController {
 
 	@FXML
 	public void handleHostNameOnAction() {
-		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), true);
+		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), false);
 	}
 
 	private void loadHostNames() {
+		disableButtons(true);
 		this.hostNameCbx.getItems().clear();
+
 		this.dbTask.run(() -> {
 			return this.dao.getHostNames();
 		}, dbResult -> {
@@ -93,5 +94,6 @@ public class ErrorLogController extends AbstractBaseController {
 
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
+		this.hostNameCbx.setDisable(disabled);
 	}
 }

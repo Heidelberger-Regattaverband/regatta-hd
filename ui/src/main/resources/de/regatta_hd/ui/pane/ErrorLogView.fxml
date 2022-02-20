@@ -31,7 +31,7 @@
         <Label text="%common.loadData" />
       </placeholder>
       <columns>
-        <TableColumn text="%common.instant">
+        <TableColumn sortType="DESCENDING" text="%common.instant">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>instant</property>
@@ -45,14 +45,14 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%common.logger">
+        <TableColumn sortable="false" text="%common.logger">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>logger</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%common.message">
+        <TableColumn sortable="false" text="%common.message">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>message</property>
