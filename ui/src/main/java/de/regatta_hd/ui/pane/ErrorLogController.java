@@ -52,9 +52,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.hostNameCbx.getItems().clear();
 
-		this.dbTask.run(() -> {
-			return this.dao.getHostNames();
-		}, dbResult -> {
+		this.dbTask.run(() -> this.dao.getHostNames(), dbResult -> {
 			try {
 				ObservableList<String> regattas = FXCollections.observableArrayList(dbResult.getResult());
 				this.hostNameCbx.setItems(regattas);
