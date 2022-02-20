@@ -49,20 +49,12 @@ import lombok.ToString;
 				), //
 				@NamedSubgraph(name = "registration.crews", //
 						attributeNodes = { //
-								@NamedAttributeNode(value = "crews", subgraph = "crew.club"), //
-								@NamedAttributeNode(value = "crews", subgraph = "crew.athlet") //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club")//
 						} //
 				), //
 				@NamedSubgraph(name = "crew.club", //
-						attributeNodes = { //
-								@NamedAttributeNode("club") //
-						} //
-				), //
-				@NamedSubgraph(name = "crew.athlet", //
-				attributeNodes = { //
-						@NamedAttributeNode("athlet") //
-				} //
-		) //
+						attributeNodes = { @NamedAttributeNode("club"), @NamedAttributeNode("athlet") } //
+				)
 		}, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
