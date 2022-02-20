@@ -37,11 +37,14 @@ public class LogRecord {
 		setMessage(logRecord.getMessage());
 		setThreadID(logRecord.getThreadID());
 		setHostName(hostName);
-		setHostIP(hostAddr);
-		setLevelName(logRecord.getLevel().getName());
-		setLevelValue(logRecord.getLevel().intValue());
+		setHostAddress(hostAddr);
 		setSourceClass(logRecord.getSourceClassName());
 		setSourceMethod(logRecord.getSourceMethodName());
+
+		if (logRecord.getLevel() != null) {
+			setLevelName(logRecord.getLevel().getName());
+			setLevelValue(logRecord.getLevel().intValue());
+		}
 
 		if (logRecord.getThrown() != null) {
 			setThrowableClass(logRecord.getThrown().getClass().getName());
@@ -64,8 +67,8 @@ public class LogRecord {
 	@Column(name = "hostName")
 	private String hostName;
 
-	@Column(name = "hostIP")
-	private String hostIP;
+	@Column(name = "hostAddress")
+	private String hostAddress;
 
 	@Column(name = "levelName")
 	private String levelName;
