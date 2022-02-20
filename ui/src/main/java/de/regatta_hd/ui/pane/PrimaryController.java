@@ -23,7 +23,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-public class PrimaryController extends AbstractBaseController {
+public class PrimaryController extends AbstractRegattaController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
 	@Inject
@@ -45,18 +45,19 @@ public class PrimaryController extends AbstractBaseController {
 	private MenuItem setRaceMitm;
 	@FXML
 	private MenuItem scoreMitm;
+	@FXML
+	private MenuItem logRecordsMitm;
 
 	@FXML
 	private MenuBar mainMbar;
 
+	// stages
 	private Stage setRaceStage;
-
-	private Stage eventViewStage;
-
-	private Stage offersViewStage;
-
+	private Stage regattasViewStage;
+	private Stage racesViewStage;
 	private Stage scoresViewStage;
 	private Stage resultsStage;
+	private Stage errorLogStage;
 
 	@FXML
 	private MenuItem resultsMitm;
@@ -140,29 +141,29 @@ public class PrimaryController extends AbstractBaseController {
 
 	@FXML
 	private void handleEvents() {
-		if (this.eventViewStage == null) {
+		if (this.regattasViewStage == null) {
 			try {
-				this.eventViewStage = newWindow("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"),
-						event -> this.eventViewStage = null);
+				this.regattasViewStage = newWindow("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"),
+						event -> this.regattasViewStage = null);
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		} else {
-			this.eventViewStage.requestFocus();
+			this.regattasViewStage.requestFocus();
 		}
 	}
 
 	@FXML
 	private void handleRacesOnAction() {
-		if (this.offersViewStage == null) {
+		if (this.racesViewStage == null) {
 			try {
-				this.offersViewStage = newWindow("OffersView.fxml", getText("PrimaryView.racesMitm.text"),
-						event -> this.offersViewStage = null);
+				this.racesViewStage = newWindow("OffersView.fxml", getText("PrimaryView.racesMitm.text"),
+						event -> this.racesViewStage = null);
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		} else {
-			this.offersViewStage.requestFocus();
+			this.racesViewStage.requestFocus();
 		}
 	}
 
@@ -224,6 +225,20 @@ public class PrimaryController extends AbstractBaseController {
 			}
 		} else {
 			this.resultsStage.requestFocus();
+		}
+	}
+
+	@FXML
+	public void handleLogRecordsOnAction() {
+		if (this.errorLogStage == null) {
+			try {
+				this.errorLogStage = newWindow("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"),
+						event -> this.errorLogStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.errorLogStage.requestFocus();
 		}
 	}
 }

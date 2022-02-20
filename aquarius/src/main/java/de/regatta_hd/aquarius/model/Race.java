@@ -37,9 +37,7 @@ import lombok.ToString;
 @NamedEntityGraph(name = "race-to-results", //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
-						attributeNodes = { //
-								@NamedAttributeNode(value = "entries", subgraph = "heatreg.results") //
-						} //
+						attributeNodes = { @NamedAttributeNode(value = "entries", subgraph = "heatreg.results") } //
 				), //
 				@NamedSubgraph(name = "heatreg.results", //
 						attributeNodes = { //
@@ -48,22 +46,11 @@ import lombok.ToString;
 						} //
 				), //
 				@NamedSubgraph(name = "registration.crews", //
-						attributeNodes = { //
-								@NamedAttributeNode(value = "crews", subgraph = "crew.club"), //
-								@NamedAttributeNode(value = "crews", subgraph = "crew.athlet") //
-						} //
+						attributeNodes = { @NamedAttributeNode(value = "crews", subgraph = "crew.club") } //
 				), //
 				@NamedSubgraph(name = "crew.club", //
-						attributeNodes = { //
-								@NamedAttributeNode("club") //
-						} //
-				), //
-				@NamedSubgraph(name = "crew.athlet", //
-				attributeNodes = { //
-						@NamedAttributeNode("athlet") //
-				} //
-		) //
-		}, //
+						attributeNodes = { @NamedAttributeNode("club"), @NamedAttributeNode("athlet") } //
+				) }, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
 				@NamedAttributeNode("ageClass"), //

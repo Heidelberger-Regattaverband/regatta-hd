@@ -58,4 +58,27 @@
       <column name="points" type="FLOAT" />
     </createTable>
   </changeSet>
+
+  <changeSet id="5" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="LogRecord" />
+      </not>
+    </preConditions>
+    <createTable tableName="LogRecord">
+    <column name="instant" type="TIMESTAMP" />
+    <column name="hostName" type="VARCHAR(64)"/>
+    <column name="hostIP" type="VARCHAR(15)"/>
+    <column name="levelName" type="VARCHAR(8)"/>
+    <column name="levelValue" type="INTEGER"/>
+    <column name="logger" type="VARCHAR(256)"/>
+    <column name="sourceClass" type="VARCHAR(256)"/>
+    <column name="sourceMethod" type="VARCHAR(128)"/>
+    <column name="message" type="VARCHAR(256)"/>
+    <column name="exception" type="VARCHAR(256)"/>
+    <column name="throwableClass" type="VARCHAR(256)"/>
+    <column name="stacktrace" type="LONGVARCHAR"/>
+    <column name="threadId" type="INTEGER"/>
+    </createTable>
+  </changeSet>
 </databaseChangeLog>
