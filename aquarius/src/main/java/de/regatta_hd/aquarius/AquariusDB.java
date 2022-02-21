@@ -4,6 +4,7 @@ import java.util.EventListener;
 import java.util.concurrent.Executor;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 /**
@@ -50,6 +51,8 @@ public interface AquariusDB {
 	 */
 	Executor getExecutor();
 
+	<R> void runInTransaction(DBRunnable<R> runnable);
+
 	interface StateChangedEvent {
 
 		AquariusDB getAquariusDB();
@@ -62,5 +65,10 @@ public interface AquariusDB {
 	interface StateChangedEventListener extends EventListener {
 
 		void stateChanged(StateChangedEvent event);
+	}
+
+	@FunctionalInterface
+	interface DBRunnable<R> {
+		R run(EntityManager entityManager, EntityTransaction transcation);
 	}
 }

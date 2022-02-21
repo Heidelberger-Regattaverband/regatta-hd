@@ -20,8 +20,6 @@ public class DBLogHandler extends Handler {
 
 	private final AquariusDB db;
 
-	private final DBTaskRunner dbRunner;
-
 	private final LinkedList<LogRecord> logRecords = new LinkedList<>();
 
 	@Inject
@@ -33,9 +31,8 @@ public class DBLogHandler extends Handler {
 	private String hostAddress;
 
 	@Inject
-	DBLogHandler(AquariusDB db, DBTaskRunner dbRunner, ListenerManager manager) {
+	DBLogHandler(AquariusDB db, ListenerManager manager) {
 		this.db = db;
-		this.dbRunner = dbRunner;
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
 			return !contains;
@@ -62,7 +59,7 @@ public class DBLogHandler extends Handler {
 
 	@Override
 	public void flush() {
-		this.db.getEntityManager().flush();
+		// nothing to flush here
 	}
 
 	@Override
@@ -71,24 +68,18 @@ public class DBLogHandler extends Handler {
 	}
 
 	private void persist(LogRecord logRecord) {
-		this.dbRunner.runInTransaction(() -> {
-			this.db.getEntityManager().persist(logRecord);
+		this.db.runInTransaction((em, tr) -> {
+			em.persist(logRecord);
 			return null;
-		}, result -> {
-			// nothing to do with result
 		});
 	}
 
 	private void persist() {
-		this.dbRunner.runInTransaction(() -> {
+		this.db.runInTransaction((em, tr) -> {
 			while (!this.logRecords.isEmpty()) {
-				LogRecord logRecord = this.logRecords.pop();
-				this.db.getEntityManager().persist(logRecord);
+				em.persist(this.logRecords.pop());
 			}
-			this.db.getEntityManager().flush();
 			return null;
-		}, result -> {
-			// nothing to do with result
 		});
 	}
 }
