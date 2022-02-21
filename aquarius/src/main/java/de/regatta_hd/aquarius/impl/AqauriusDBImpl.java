@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -23,7 +21,6 @@ import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import liquibase.Contexts;
@@ -115,29 +112,8 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public Executor getExecutor() {
+	public ExecutorService getExecutor() {
 		return databaseExecutor;
-	}
-
-	@Override
-	public <R> void runInTransaction(DBRunnable<R> runnable) {
-		Objects.requireNonNull(runnable, "runnable must not be null");
-
-		getExecutor().execute(() -> {
-			EntityTransaction transaction = this.entityManager.getTransaction();
-
-			if (!transaction.isActive()) {
-				transaction.begin();
-			}
-
-			runnable.run(this.entityManager);
-
-			this.entityManager.flush();
-
-			if (transaction.isActive()) {
-				transaction.commit();
-			}
-		});
 	}
 
 	private void checkIsOpen() {

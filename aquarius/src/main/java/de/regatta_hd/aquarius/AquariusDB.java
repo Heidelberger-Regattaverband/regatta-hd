@@ -50,8 +50,6 @@ public interface AquariusDB {
 	 */
 	Executor getExecutor();
 
-	<R> void runInTransaction(DBRunnable<R> runnable);
-
 	interface StateChangedEvent {
 
 		AquariusDB getAquariusDB();
