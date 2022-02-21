@@ -85,6 +85,7 @@ public class DBLogHandler extends Handler {
 				LogRecord logRecord = this.logRecords.pop();
 				this.db.getEntityManager().persist(logRecord);
 			}
+			this.db.getEntityManager().flush();
 			return null;
 		}, result -> {
 			// nothing to do with result
