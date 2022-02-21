@@ -130,7 +130,7 @@ public class AqauriusDBImpl implements AquariusDB {
 				transaction.begin();
 			}
 
-			runnable.run(this.entityManager, transaction);
+			runnable.run(this.entityManager);
 
 			this.entityManager.flush();
 
