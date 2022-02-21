@@ -17,7 +17,6 @@ import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import liquibase.Contexts;
@@ -102,15 +101,6 @@ public class AqauriusDBImpl implements AquariusDB {
 				}
 			});
 		}
-	}
-
-	@Override
-	public synchronized EntityTransaction beginTransaction() {
-		EntityTransaction entityTransaction = getEntityManager().getTransaction();
-		if (!entityTransaction.isActive()) {
-			entityTransaction.begin();
-		}
-		return entityTransaction;
 	}
 
 	private void checkIsOpen() {
