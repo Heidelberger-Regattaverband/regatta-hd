@@ -68,16 +68,16 @@ public class DBLogHandler extends Handler {
 	}
 
 	private void persist(LogRecord logRecord) {
-		this.db.runInTransaction((em, tr) -> {
-			em.persist(logRecord);
+		this.db.runInTransaction(entityManager -> {
+			entityManager.persist(logRecord);
 			return null;
 		});
 	}
 
 	private void persist() {
-		this.db.runInTransaction((em, tr) -> {
+		this.db.runInTransaction(entityManager -> {
 			while (!this.logRecords.isEmpty()) {
-				em.persist(this.logRecords.pop());
+				entityManager.persist(this.logRecords.pop());
 			}
 			return null;
 		});

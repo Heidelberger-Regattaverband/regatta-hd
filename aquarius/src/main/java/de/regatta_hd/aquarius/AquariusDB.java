@@ -4,7 +4,6 @@ import java.util.EventListener;
 import java.util.concurrent.Executor;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 /**
@@ -69,6 +68,6 @@ public interface AquariusDB {
 
 	@FunctionalInterface
 	interface DBRunnable<R> {
-		R run(EntityManager entityManager, EntityTransaction transcation);
+		R run(EntityManager entityManager);
 	}
 }
