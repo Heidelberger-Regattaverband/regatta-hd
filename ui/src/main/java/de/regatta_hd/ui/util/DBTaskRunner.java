@@ -1,10 +1,6 @@
 package de.regatta_hd.ui.util;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import com.google.inject.Inject;
@@ -15,9 +11,6 @@ import javafx.concurrent.Task;
 
 @Singleton
 public class DBTaskRunner {
-
-	// executes database operations concurrent to JavaFX operations.
-	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
 
 	@Inject
 	private AquariusDB db;
@@ -51,20 +44,9 @@ public class DBTaskRunner {
 		return new DBTask<>(callable, resultConsumer, inTransaction, this.db);
 	}
 
-	private static <V> Task<V> runTask(Task<V> task) {
-		databaseExecutor.submit(task);
+	private <V> Task<V> runTask(Task<V> task) {
+		this.db.getExecutor().execute(task);
 		return task;
-	}
-
-	private static class DatabaseThreadFactory implements ThreadFactory {
-		private static final AtomicInteger poolNumber = new AtomicInteger(1);
-
-		@Override
-		public Thread newThread(Runnable runnable) {
-			Thread thread = new Thread(runnable, "Database-Connection-" + poolNumber.getAndIncrement() + "-thread");
-			thread.setDaemon(true);
-			return thread;
-		}
 	}
 
 }

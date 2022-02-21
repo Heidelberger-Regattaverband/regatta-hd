@@ -19,7 +19,6 @@ import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
 import de.regatta_hd.aquarius.model.Result;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EntityTransaction;
 
 @ExtendWith(BaseDBTest.class)
 class AquariusDBTests extends BaseDBTest {
@@ -87,13 +86,6 @@ class AquariusDBTests extends BaseDBTest {
 
 		AgeClass ageClass = ageClasses.get(0);
 		Assertions.assertEquals(1500, ageClass.getDistance());
-	}
-
-	@Test
-	void testCalcScores() {
-		EntityTransaction transaction = aquariusDb.beginTransaction();
-		regattaDAO.calculateScores();
-		transaction.commit();
 	}
 
 	// static helpers

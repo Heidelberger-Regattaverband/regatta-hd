@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hibernate.Session;
 
@@ -17,7 +21,6 @@ import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import liquibase.Contexts;
@@ -31,6 +34,9 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {
+
+	// executes database operations concurrent to JavaFX operations.
+	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
 
 	@Inject
 	private ListenerManager listenerManager;
@@ -86,6 +92,7 @@ public class AqauriusDBImpl implements AquariusDB {
 							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
 					database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
 					database.setDatabaseChangeLogTableName("HRV_ChangeLog");
+
 					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
 							new ClassLoaderResourceAccessor(), database);
 					liquibase.update(new Contexts(), new LabelExpression());
@@ -105,12 +112,8 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public synchronized EntityTransaction beginTransaction() {
-		EntityTransaction entityTransaction = getEntityManager().getTransaction();
-		if (!entityTransaction.isActive()) {
-			entityTransaction.begin();
-		}
-		return entityTransaction;
+	public ExecutorService getExecutor() {
+		return databaseExecutor;
 	}
 
 	private void checkIsOpen() {
@@ -127,7 +130,8 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
-		List<StateChangedEventListener> listeners = this.listenerManager.getListener(AquariusDB.StateChangedEventListener.class);
+		List<StateChangedEventListener> listeners = this.listenerManager
+				.getListener(AquariusDB.StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}
@@ -146,5 +150,16 @@ public class AqauriusDBImpl implements AquariusDB {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
+	}
+
+	private static class DatabaseThreadFactory implements ThreadFactory {
+		private static final AtomicInteger poolNumber = new AtomicInteger(1);
+
+		@Override
+		public Thread newThread(Runnable runnable) {
+			Thread thread = new Thread(runnable, "Database-Connection-" + poolNumber.getAndIncrement() + "-thread");
+			thread.setDaemon(true);
+			return thread;
+		}
 	}
 }

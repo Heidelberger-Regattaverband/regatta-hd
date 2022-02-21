@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDBModule;
-import de.regatta_hd.ui.util.DBLogHandler;
+import de.regatta_hd.aquarius.DBLogHandler;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

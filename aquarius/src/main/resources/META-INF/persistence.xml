@@ -10,6 +10,9 @@
       <property name="hibernate.format_sql" value="true" />
       <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect" />
       <property name="hibernate.hbm2ddl.auto" value="none" />
+      <property name="hibernate.jdbc.batch_size" value="25" />
+      <property name="hibernate.order_inserts" value="true" />
+      <property name="hibernate.order_updates" value="true" />
     </properties>
   </persistence-unit>
 </persistence>

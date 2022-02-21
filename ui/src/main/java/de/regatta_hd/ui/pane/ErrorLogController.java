@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class ErrorLogController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
@@ -31,9 +32,12 @@ public class ErrorLogController extends AbstractBaseController {
 	private ComboBox<String> hostNameCbx;
 	@FXML
 	private TextArea stackTraceTar;
+	@FXML
+	private TextField throwableTxf;
 
 	@Inject
 	private MasterDataDAO dao;
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -42,8 +46,10 @@ public class ErrorLogController extends AbstractBaseController {
 		this.logRecordsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.stackTraceTar.setText(newSelection.getStackTrace());
+				this.throwableTxf.setText(newSelection.getThrowableClass());
 			} else {
 				this.stackTraceTar.setText(null);
+				this.throwableTxf.setText(null);
 			}
 		});
 

@@ -1,5 +1,6 @@
-package de.regatta_hd.ui.util;
+package de.regatta_hd.aquarius;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Handler;
 
@@ -9,7 +10,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.common.ListenerManager;
 
@@ -20,9 +20,7 @@ public class DBLogHandler extends Handler {
 
 	private final AquariusDB db;
 
-	private final DBTaskRunner dbRunner;
-
-	private final LinkedList<LogRecord> logRecords = new LinkedList<>();
+	private final Deque<LogRecord> logRecords = new LinkedList<>();
 
 	@Inject
 	@Named("hostName")
@@ -33,9 +31,8 @@ public class DBLogHandler extends Handler {
 	private String hostAddress;
 
 	@Inject
-	DBLogHandler(AquariusDB db, DBTaskRunner dbRunner, ListenerManager manager) {
+	DBLogHandler(AquariusDB db, ListenerManager manager) {
 		this.db = db;
-		this.dbRunner = dbRunner;
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
 			return !contains;
@@ -62,7 +59,7 @@ public class DBLogHandler extends Handler {
 
 	@Override
 	public void flush() {
-		this.db.getEntityManager().flush();
+		// nothing to flush here
 	}
 
 	@Override
@@ -71,23 +68,14 @@ public class DBLogHandler extends Handler {
 	}
 
 	private void persist(LogRecord logRecord) {
-		this.dbRunner.runInTransaction(() -> {
-			this.db.getEntityManager().merge(logRecord);
-			return null;
-		}, result -> {
-			// nothing to do with result
-		});
+		this.db.getExecutor().execute(() -> this.db.getEntityManager().persist(logRecord));
 	}
 
 	private void persist() {
-		this.dbRunner.runInTransaction(() -> {
+		this.db.getExecutor().execute(() -> {
 			while (!this.logRecords.isEmpty()) {
-				LogRecord logRecord = this.logRecords.pop();
-				this.db.getEntityManager().merge(logRecord);
+				this.db.getEntityManager().persist(this.logRecords.pop());
 			}
-			return null;
-		}, result -> {
-			// nothing to do with result
 		});
 	}
 }
