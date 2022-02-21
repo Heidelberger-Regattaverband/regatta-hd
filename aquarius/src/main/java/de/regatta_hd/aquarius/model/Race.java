@@ -33,7 +33,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Offer")
-@SecondaryTable(name = "OfferExt", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
+@SecondaryTable(name = "HRV_Offer", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 @NamedEntityGraph(name = "race-to-results", //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
@@ -168,7 +168,7 @@ public class Race {
 
 	// Second table columns
 
-	@Column(name = "isSet", table = "OfferExt")
+	@Column(name = "isSet", table = "HRV_Offer")
 	private Boolean set;
 
 	// JavaFX properties

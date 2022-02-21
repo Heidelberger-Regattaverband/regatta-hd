@@ -84,6 +84,8 @@ public class AqauriusDBImpl implements AquariusDB {
 				try {
 					Database database = DatabaseFactory.getInstance()
 							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
+					database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
+					database.setDatabaseChangeLogTableName("HRV_ChangeLog");
 					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
 							new ClassLoaderResourceAccessor(), database);
 					liquibase.update(new Contexts(), new LabelExpression());

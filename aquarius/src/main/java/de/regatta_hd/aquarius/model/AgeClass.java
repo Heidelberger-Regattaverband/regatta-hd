@@ -22,7 +22,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "AgeClass")
-@SecondaryTable(name = "AgeClassExt", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
+@SecondaryTable(name = "HRV_AgeClass", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
@@ -81,7 +81,7 @@ public class AgeClass {
 	@OrderBy("number")
 	private List<Race> races;
 
-	@Column(name = "distance", table="AgeClassExt")
+	@Column(name = "distance", table="HRV_AgeClass")
 	private short distance;
 
 	// transient fields
