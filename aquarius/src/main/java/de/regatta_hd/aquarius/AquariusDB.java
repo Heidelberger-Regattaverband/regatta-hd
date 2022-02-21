@@ -3,7 +3,6 @@ package de.regatta_hd.aquarius;
 import java.util.EventListener;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 /**
@@ -44,14 +43,6 @@ public interface AquariusDB {
 	 * @param connectionData the {@link DBConfig connection data}
 	 */
 	void open(DBConfig connectionData);
-
-	/**
-	 * Begins a new DB transaction or re-uses an existing one.
-	 *
-	 * @return the transaction
-	 * @throws IllegalStateException if the entity manager has been closed
-	 */
-	EntityTransaction beginTransaction();
 
 	interface StateChangedEvent {
 
