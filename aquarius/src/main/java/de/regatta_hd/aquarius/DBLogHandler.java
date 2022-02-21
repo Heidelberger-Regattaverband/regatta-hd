@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.util;
+package de.regatta_hd.aquarius;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.common.ListenerManager;
 

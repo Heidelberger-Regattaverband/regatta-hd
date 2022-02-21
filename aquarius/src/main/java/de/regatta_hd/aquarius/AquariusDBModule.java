@@ -22,5 +22,6 @@ public class AquariusDBModule extends AbstractModule {
 		bind(RegattaDAO.class).to(RegattaDAOImpl.class);
 		bind(MasterDataDAO.class).to(MasterDataDAOImpl.class);
 		bind(DBConfigStore.class).to(DBConfigStoreImpl.class);
+		bind(DBLogHandler.class);
 	}
 }
