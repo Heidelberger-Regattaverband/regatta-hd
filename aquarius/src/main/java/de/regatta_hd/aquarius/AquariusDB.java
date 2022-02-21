@@ -64,8 +64,4 @@ public interface AquariusDB {
 		void stateChanged(StateChangedEvent event);
 	}
 
-	@FunctionalInterface
-	interface DBRunnable<R> {
-		R run(EntityManager entityManager);
-	}
 }
