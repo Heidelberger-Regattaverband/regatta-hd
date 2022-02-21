@@ -72,7 +72,7 @@ public class DBLogHandler extends Handler {
 
 	private void persist(LogRecord logRecord) {
 		this.dbRunner.runInTransaction(() -> {
-			this.db.getEntityManager().merge(logRecord);
+			this.db.getEntityManager().persist(logRecord);
 			return null;
 		}, result -> {
 			// nothing to do with result
@@ -83,7 +83,7 @@ public class DBLogHandler extends Handler {
 		this.dbRunner.runInTransaction(() -> {
 			while (!this.logRecords.isEmpty()) {
 				LogRecord logRecord = this.logRecords.pop();
-				this.db.getEntityManager().merge(logRecord);
+				this.db.getEntityManager().persist(logRecord);
 			}
 			return null;
 		}, result -> {
