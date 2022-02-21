@@ -21,7 +21,7 @@ import lombok.Setter;
 * The entity contains a log record.
 */
 @Entity
-@Table(schema = "dbo", name = "LogRecord")
+@Table(schema = "dbo", name = "HRV_LogRecord")
 //lombok
 @Getter
 @Builder

@@ -4,12 +4,12 @@
   <changeSet author="markus@ofterdinger.de" id="1">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="AgeClassExt" />
+        <tableExists tableName="HRV_AgeClass" />
       </not>
     </preConditions>
-    <createTable tableName="AgeClassExt">
+    <createTable tableName="HRV_AgeClass">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_AgeClassExt" referencedTableName="AgeClass" referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_AgeClass" referencedTableName="AgeClass" referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
       </column>
       <column name="distance" type="SMALLINT">
         <constraints nullable="false" />
@@ -18,7 +18,7 @@
   </changeSet>
 
   <changeSet author="liquibase-docs" id="2" runOnChange="true">
-    <loadUpdateData encoding="UTF-8" file="AgeClassExt.csv" quotchar="&quot;" relativeToChangelogFile="true" separator="," tableName="AgeClassExt" primaryKey="id">
+    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;" relativeToChangelogFile="true" separator="," tableName="HRV_AgeClass" primaryKey="id">
       <column header="id" name="id" type="NUMERIC" />
       <column header="distance" name="distance" type="NUMERIC" />
       <column header="comment" type="SKIP" />
@@ -28,12 +28,12 @@
   <changeSet author="markus@ofterdinger.de" id="3">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="OfferExt" />
+        <tableExists tableName="HRV_Offer" />
       </not>
     </preConditions>
-    <createTable tableName="OfferExt">
+    <createTable tableName="HRV_Offer">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OfferExt" referencedTableName="Offer" referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Offer" referencedTableName="Offer" referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
       </column>
       <column name="isSet" type="BOOLEAN">
         <constraints nullable="true" />
@@ -44,10 +44,10 @@
   <changeSet id="4" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="Score" />
+        <tableExists tableName="HRV_Score" />
       </not>
     </preConditions>
-    <createTable tableName="Score">
+    <createTable tableName="HRV_Score">
       <column name="club_id" type="INT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Club" referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
       </column>
@@ -62,10 +62,10 @@
   <changeSet id="5" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="LogRecord" />
+        <tableExists tableName="HRV_LogRecord" />
       </not>
     </preConditions>
-    <createTable tableName="LogRecord">
+    <createTable tableName="HRV_LogRecord">
     <column name="instant" type="TIMESTAMP" />
     <column name="hostName" type="VARCHAR(64)"/>
     <column name="hostAddress" type="VARCHAR(15)"/>

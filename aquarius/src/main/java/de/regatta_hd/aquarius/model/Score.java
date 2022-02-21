@@ -19,7 +19,7 @@ import lombok.ToString;
  * The age class of a race.
  */
 @Entity
-@Table(schema = "dbo", name = "Score")
+@Table(schema = "dbo", name = "HRV_Score")
 // lombok
 @Getter
 @Setter
