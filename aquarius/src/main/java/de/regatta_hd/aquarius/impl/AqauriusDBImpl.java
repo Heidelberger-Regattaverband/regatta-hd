@@ -6,6 +6,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hibernate.Session;
 
@@ -30,6 +35,9 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
 public class AqauriusDBImpl implements AquariusDB {
+
+	// executes database operations concurrent to JavaFX operations.
+	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
 
 	@Inject
 	private ListenerManager listenerManager;
@@ -103,6 +111,11 @@ public class AqauriusDBImpl implements AquariusDB {
 		}
 	}
 
+	@Override
+	public Executor getExecutor() {
+		return databaseExecutor;
+	}
+
 	private void checkIsOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
@@ -117,7 +130,8 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
-		List<StateChangedEventListener> listeners = this.listenerManager.getListener(AquariusDB.StateChangedEventListener.class);
+		List<StateChangedEventListener> listeners = this.listenerManager
+				.getListener(AquariusDB.StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}
@@ -137,4 +151,16 @@ public class AqauriusDBImpl implements AquariusDB {
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
 	}
+
+	private static class DatabaseThreadFactory implements ThreadFactory {
+		private static final AtomicInteger poolNumber = new AtomicInteger(1);
+
+		@Override
+		public Thread newThread(Runnable runnable) {
+			Thread thread = new Thread(runnable, "Database-Connection-" + poolNumber.getAndIncrement() + "-thread");
+			thread.setDaemon(true);
+			return thread;
+		}
+	}
+
 }
