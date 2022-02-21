@@ -1,5 +1,6 @@
 package de.regatta_hd.ui.util;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Handler;
 
@@ -20,7 +21,7 @@ public class DBLogHandler extends Handler {
 
 	private final AquariusDB db;
 
-	private final LinkedList<LogRecord> logRecords = new LinkedList<>();
+	private final Deque<LogRecord> logRecords = new LinkedList<>();
 
 	@Inject
 	@Named("hostName")
