@@ -60,7 +60,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
-          <!-- http://openjpa.apache.org/builds/3.2.1/apache-openjpa/docs/manual.html#ref_guide_pc_reverse -->
+          <!-- http://openjpa.apache.org/builds/3.1.2/apache-openjpa/docs/manual.html#ref_guide_pc_reverse -->
           <mainClass>org.apache.openjpa.jdbc.meta.ReverseMappingTool</mainClass>
           <arguments>
             <argument>-package</argument>
