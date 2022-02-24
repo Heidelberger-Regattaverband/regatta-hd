@@ -5,8 +5,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.ui.util.FxUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -18,7 +20,7 @@ public class ResultsController extends AbstractRegattaDAOController {
 	private Button refreshBtn;
 
 	@FXML
-	private TableView<HeatRegistration> resultsTbl;
+	private TableView<Heat> resultsTbl;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -35,12 +37,12 @@ public class ResultsController extends AbstractRegattaDAOController {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getRegattas();
+			return this.regattaDAO.getOfficialHeats();
 		}, dbResult -> {
 			try {
-//				ObservableList<Regatta> regattas = FXCollections.observableArrayList(dbResult.getResult());
-//				this.resultsTbl.setItems(regattas);
-//				FxUtils.autoResizeColumns(this.resultsTbl);
+				ObservableList<Heat> heats = FXCollections.observableArrayList(dbResult.getResult());
+				this.resultsTbl.setItems(heats);
+				FxUtils.autoResizeColumns(this.resultsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);

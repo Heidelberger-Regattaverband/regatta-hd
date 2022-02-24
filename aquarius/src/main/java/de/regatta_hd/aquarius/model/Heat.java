@@ -102,6 +102,10 @@ public class Heat {
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "heat")
 	private Set<ReportInfo> reportInfos;
 
+	public String getLabel() {
+		return getRace().getNumber() + " " + getRace().getShortLabel() + " " + getHeatNumber();
+	}
+
 	/**
 	 * @return {@code true} if the heat is set, but not started yet.
 	 */

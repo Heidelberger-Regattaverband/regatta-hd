@@ -1,5 +1,10 @@
 package de.regatta_hd.aquarius;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -35,7 +40,7 @@ class AquariusDBTests extends BaseDBTest {
 		masterData = injector.getInstance(MasterDataDAO.class);
 
 		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
-		Assertions.assertEquals(regattaId, regatta.getId());
+		assertEquals(regattaId, regatta.getId());
 		Assertions.assertNotNull(regatta);
 		regattaDAO.setActiveRegatta(regatta);
 	}
@@ -49,14 +54,20 @@ class AquariusDBTests extends BaseDBTest {
 	}
 
 	@Test
+	void testGetOfficialHeats() {
+		List<Heat> heats = regattaDAO.getOfficialHeats();
+		assertFalse(heats.isEmpty());
+	}
+
+	@Test
 	void testIsOpen() {
-		Assertions.assertTrue(aquariusDb.isOpen());
+		assertTrue(aquariusDb.isOpen());
 	}
 
 	@Test
 	void testGetEvents() {
 		List<Regatta> events = regattaDAO.getRegattas();
-		Assertions.assertFalse(events.isEmpty());
+		assertFalse(events.isEmpty());
 	}
 
 	@Test
@@ -65,14 +76,14 @@ class AquariusDBTests extends BaseDBTest {
 		System.out.println(regatta.toString());
 
 		Race offer = regattaDAO.getRace("104");
-		Assertions.assertEquals("104", offer.getNumber());
+		assertEquals("104", offer.getNumber());
 		trace(offer, 1);
 	}
 
 	@Test
 	void testGetEventFailed() {
 		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
-		Assertions.assertThrows(EntityNotFoundException.class, () -> {
+		assertThrows(EntityNotFoundException.class, () -> {
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
 			regatta.getClub();
@@ -82,10 +93,10 @@ class AquariusDBTests extends BaseDBTest {
 	@Test
 	void testGetAgeClasses() {
 		List<AgeClass> ageClasses = masterData.getAgeClasses();
-		Assertions.assertFalse(ageClasses.isEmpty());
+		assertFalse(ageClasses.isEmpty());
 
 		AgeClass ageClass = ageClasses.get(0);
-		Assertions.assertEquals(1500, ageClass.getDistance());
+		assertEquals(1500, ageClass.getDistance());
 	}
 
 	// static helpers

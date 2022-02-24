@@ -441,4 +441,14 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return srcHeatRegs;
 	}
 
+	@Override
+	public List<Heat> getOfficialHeats() {
+		TypedQuery<Heat> query = this.db.getEntityManager()
+				.createQuery(
+						"SELECT h FROM Heat h, Race r WHERE h.race = r AND h.regatta = :regatta AND h.state = 5 ORDER BY r.number ASC, h.heatNumber ASC",
+						Heat.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta());
+		return query.getResultList();
+	}
+
 }
