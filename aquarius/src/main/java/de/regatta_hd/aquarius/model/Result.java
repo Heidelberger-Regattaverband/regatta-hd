@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +19,8 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Result")
+@SecondaryTable(name = "HRV_Result", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "Result_CE_ID_FK"),
+		@PrimaryKeyJoinColumn(name = "Result_SplitNr") })
 @IdClass(ResultId.class)
 //lombok
 @Getter
@@ -79,6 +83,9 @@ public class Result {
 	@Column(name = "Result_SortValue")
 	@ToString.Include
 	private Integer sortValue;
+
+	@Column(name = "points", table="HRV_Result")
+	private Float points;
 
 	public boolean isFinalResult() {
 		return getSplitNr() == FINAL;
