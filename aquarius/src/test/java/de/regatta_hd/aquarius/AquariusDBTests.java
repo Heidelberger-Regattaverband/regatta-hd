@@ -55,8 +55,8 @@ class AquariusDBTests extends BaseDBTest {
 
 	@Test
 	void testGetOfficialHeats() {
-		List<Heat> heats = regattaDAO.getOfficialHeats();
-		assertFalse(heats.isEmpty());
+		List<ResultEntry> results = regattaDAO.getOfficialResults();
+		assertFalse(results.isEmpty());
 	}
 
 	@Test

@@ -276,11 +276,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	public List<Score> getScores() {
 		EntityManager entityManager = this.db.getEntityManager();
 
-		// first clear persistence context
-		entityManager.clear();
-
 		return entityManager
 				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.rank ASC", Score.class)
+				.setHint("javax.persistence.fetchgraph", entityManager.getEntityGraph("score-club"))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
@@ -442,9 +440,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return srcHeatRegs;
 	}
 
-	@Override
-	public List<Heat> getOfficialHeats() {
+	private List<Heat> getOfficialHeats() {
 		EntityManager entityManager = this.db.getEntityManager();
+
 		TypedQuery<Heat> query = entityManager
 				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND (h.state = 5 OR h.state = 4)",
 						Heat.class)

@@ -9,30 +9,31 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.ScoresController">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.ScoresController">
   <children>
     <ToolBar>
       <items>
         <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%common.refresh" />
-        <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%ScoreView.calculateBtn.text" />
+        <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%common.calculate" />
       </items>
     </ToolBar>
-    <TableView fx:id="scoreTbl" VBox.vgrow="ALWAYS">
+    <TableView fx:id="scoresTbl" VBox.vgrow="ALWAYS">
       <placeholder>
-          <Label text="%common.loadData" />
+        <Label text="%common.loadData" />
       </placeholder>
       <columns>
-            <TableColumn style="-fx-alignment: CENTER;" text="%common.rank">
-               <cellValueFactory>
-                  <PropertyValueFactory property="rank" />
-               </cellValueFactory>
-            </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
+        <TableColumn fx:id="rankCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.rank">
+          <cellValueFactory>
+            <PropertyValueFactory property="rank" />
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%ScoreView.clubCol.text">
+        <TableColumn reorderable="false" text="%ScoreView.clubCol.text">
           <cellValueFactory>
             <PropertyValueFactory property="clubName" />
           </cellValueFactory>
@@ -40,7 +41,7 @@
       </columns>
     </TableView>
   </children>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" />
-   </padding>
+  <padding>
+    <Insets bottom="10.0" left="10.0" right="10.0" />
+  </padding>
 </VBox>

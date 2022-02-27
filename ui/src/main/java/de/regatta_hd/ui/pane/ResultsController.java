@@ -20,6 +20,8 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	private Button refreshBtn;
 	@FXML
+	private Button setPointsBtn;
+	@FXML
 	private TableView<ResultEntry> resultsTbl;
 	@FXML
 	private TableColumn<ResultEntry, String> numberCol;
@@ -61,6 +63,14 @@ public class ResultsController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	public void handleSetPointsOnAction() {
+		disableButtons(true);
+
+
+		disableButtons(false);
+	}
+
+	@FXML
 	public void handleRefreshOnAction() {
 		disableButtons(true);
 
@@ -71,5 +81,6 @@ public class ResultsController extends AbstractRegattaDAOController {
 
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
+		this.setPointsBtn.setDisable(disabled);
 	}
 }
