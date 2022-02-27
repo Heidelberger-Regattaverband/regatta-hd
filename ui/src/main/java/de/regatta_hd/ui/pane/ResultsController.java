@@ -1,11 +1,15 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.ResultEntry;
+import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,15 +63,44 @@ public class ResultsController extends AbstractRegattaDAOController {
 				disableButtons(false);
 			}
 		});
-
 	}
 
 	@FXML
 	public void handleSetPointsOnAction() {
 		disableButtons(true);
+		this.resultsList.clear();
 
+		this.dbTask.runInTransaction(() -> {
+			this.resultsList.forEach(resultEntry -> {
+				Race race = resultEntry.getHeat().getRace();
+				short laneCount = race.getRaceMode().getLaneCount();
+				byte numRowers = race.getBoatClass().getNumRowers();
 
-		disableButtons(false);
+				List<HeatRegistration> heatRegs = resultEntry.getHeat().getHeatRegistrationsOrderedByRank();
+				for (HeatRegistration heatReg : heatRegs) {
+					Result result = heatReg.getFinalResult();
+					float pointsBoat = 0;
+					if (result.getRank() > 0) {
+						pointsBoat = (numRowers * (laneCount + 1 - result.getRank()));
+					}
+					result.setPoints(Float.valueOf(pointsBoat));
+					this.db.getEntityManager().merge(result);
+				}
+			});
+			this.db.getEntityManager().flush();
+			return this.regattaDAO.getOfficialResults();
+		}, dbResult -> {
+			try {
+				this.resultsList.setAll(dbResult.getResult());
+				this.resultsTbl.sort();
+				FxUtils.autoResizeColumns(this.resultsTbl);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(e);
+			} finally {
+				disableButtons(false);
+			}
+		});
 	}
 
 	@FXML

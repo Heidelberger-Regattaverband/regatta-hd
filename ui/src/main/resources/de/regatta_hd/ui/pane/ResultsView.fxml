@@ -81,7 +81,8 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
+          text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>firstPoints</property>
@@ -95,7 +96,8 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
+          text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>secondPoints</property>
@@ -109,7 +111,8 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
+          text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>thirdPoints</property>
@@ -123,7 +126,8 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
+          text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>fourthPoints</property>
