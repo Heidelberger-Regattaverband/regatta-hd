@@ -29,6 +29,8 @@ public interface RegattaDAO {
 
 	List<Heat> getOfficialHeats();
 
+	List<ResultEntry> getOfficialResults();
+
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
 	 *

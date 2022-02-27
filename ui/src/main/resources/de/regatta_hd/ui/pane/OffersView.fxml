@@ -28,42 +28,49 @@
           <Label text="%common.loadData" />
       </placeholder>
       <columns>
-        <TableColumn style="-fx-alignment: CENTER;" text="%common.numberAbr">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>id</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.numberAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%OffersView.labelShortCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%OffersView.labelShortCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>shortLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%OffersView.labelLongCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%OffersView.labelLongCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>longLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%OffersView.distanceCol.text">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%OffersView.distanceCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>distance</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="groupModeCol" style="-fx-alignment: CENTER;" text="%OffersView.groupModeCol.text">
+        <TableColumn reorderable="false" fx:id="groupModeCol" style="-fx-alignment: CENTER;" text="%OffersView.groupModeCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>groupMode</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.lightweightCol.text">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%OffersView.lightweightCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>lightweight</property>
@@ -73,7 +80,7 @@
             <CheckBoxTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.setCol.text">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%OffersView.setCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>set</property>

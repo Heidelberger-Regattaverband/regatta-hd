@@ -5,12 +5,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.model.Heat;
+import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class ResultsController extends AbstractRegattaDAOController {
@@ -18,30 +19,34 @@ public class ResultsController extends AbstractRegattaDAOController {
 
 	@FXML
 	private Button refreshBtn;
-
 	@FXML
-	private TableView<Heat> resultsTbl;
+	private TableView<ResultEntry> resultsTbl;
+	@FXML
+	private TableColumn<ResultEntry, String> numberCol;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		this.resultsTbl.getSortOrder().add(this.numberCol);
 
 		loadResults(false);
 	}
 
 	private void loadResults(boolean refresh) {
 		disableButtons(true);
-		this.resultsTbl.getItems().clear();
 
 		this.dbTask.run(() -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getOfficialHeats();
+			return this.regattaDAO.getOfficialResults();
 		}, dbResult -> {
 			try {
-				ObservableList<Heat> heats = FXCollections.observableArrayList(dbResult.getResult());
-				this.resultsTbl.setItems(heats);
+				ObservableList<ResultEntry> results = FXCollections.observableArrayList(dbResult.getResult());
+				this.resultsTbl.setItems(results);
+				this.resultsTbl.getSortOrder().addAll(this.numberCol);
+
 				FxUtils.autoResizeColumns(this.resultsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -56,6 +61,8 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	public void handleRefreshOnAction() {
 		disableButtons(true);
+
+		loadResults(true);
 
 		disableButtons(false);
 	}

@@ -18,6 +18,7 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Club;
@@ -443,12 +444,19 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public List<Heat> getOfficialHeats() {
-		TypedQuery<Heat> query = this.db.getEntityManager()
-				.createQuery(
-						"SELECT h FROM Heat h, Race r WHERE h.race = r AND h.regatta = :regatta AND h.state = 5 ORDER BY r.number ASC, h.heatNumber ASC",
+		EntityManager entityManager = this.db.getEntityManager();
+		TypedQuery<Heat> query = entityManager
+				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND (h.state = 5 OR h.state = 4)",
 						Heat.class)
+				.setHint("javax.persistence.fetchgraph", entityManager.getEntityGraph("heat-all"))
 				.setParameter(PARAM_REGATTA, getActiveRegatta());
 		return query.getResultList();
+	}
+
+	@Override
+	public List<ResultEntry> getOfficialResults() {
+		return getOfficialHeats().stream().map(heat -> ResultEntry.builder().heat(heat).build())
+				.collect(Collectors.toList());
 	}
 
 }
