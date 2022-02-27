@@ -68,7 +68,6 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	public void handleSetPointsOnAction() {
 		disableButtons(true);
-		this.resultsList.clear();
 
 		this.dbTask.runInTransaction(() -> {
 			this.resultsList.forEach(resultEntry -> {
@@ -90,6 +89,8 @@ public class ResultsController extends AbstractRegattaDAOController {
 			this.db.getEntityManager().flush();
 			return this.regattaDAO.getOfficialResults();
 		}, dbResult -> {
+			this.resultsList.clear();
+
 			try {
 				this.resultsList.setAll(dbResult.getResult());
 				this.resultsTbl.sort();
