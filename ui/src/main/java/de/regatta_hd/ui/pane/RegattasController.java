@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class RegattasController extends AbstractRegattaDAOController {
@@ -19,13 +20,19 @@ public class RegattasController extends AbstractRegattaDAOController {
 
 	@FXML
 	private Button refreshBtn;
-
 	@FXML
 	private TableView<Regatta> regattasTbl;
+	@FXML
+	private TableColumn<Regatta, Integer> idCol;
+
+	private final ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		this.regattasTbl.setItems(this.regattasList);
+		this.regattasTbl.getSortOrder().add(this.idCol);
 
 		loadRegattas(false);
 	}
@@ -43,7 +50,7 @@ public class RegattasController extends AbstractRegattaDAOController {
 
 	private void loadRegattas(boolean refresh) {
 		disableButtons(true);
-		this.regattasTbl.getItems().clear();
+		this.regattasList.clear();
 
 		this.dbTask.run(() -> {
 			if (refresh) {
@@ -52,9 +59,9 @@ public class RegattasController extends AbstractRegattaDAOController {
 			return this.regattaDAO.getRegattas();
 		}, dbResult -> {
 			try {
-				ObservableList<Regatta> regattas = FXCollections.observableArrayList(dbResult.getResult());
-				this.regattasTbl.setItems(regattas);
+				this.regattasList.setAll(dbResult.getResult());
 				FxUtils.autoResizeColumns(this.regattasTbl);
+				this.regattasTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);

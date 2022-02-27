@@ -51,7 +51,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%common.shortLabelAbr">
+        <TableColumn reorderable="false" sortable="false" text="%common.shortLabelAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>raceLabel</property>
@@ -66,63 +66,63 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="Status">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="Status">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>state</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="1. Platz">
+        <TableColumn reorderable="false" sortable="false" text="1. Platz">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>first</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>firstPoints</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="2. Platz">
+        <TableColumn reorderable="false" sortable="false" text="2. Platz">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>second</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>secondPoints</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="3. Platz">
+        <TableColumn reorderable="false" sortable="false" text="3. Platz">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>third</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>thirdPoints</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="4. Platz">
+        <TableColumn reorderable="false" sortable="false" text="4. Platz">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>fourth</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%common.points">
+        <TableColumn reorderable="false" sortable="false" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>fourthPoints</property>

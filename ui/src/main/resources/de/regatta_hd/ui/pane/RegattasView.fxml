@@ -14,7 +14,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.RegattasController">
+<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.RegattasController">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" />
   </padding>
@@ -25,26 +26,27 @@
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
       </items>
     </ToolBar>
-    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+      GridPane.vgrow="ALWAYS">
       <placeholder>
         <Label text="%common.loadData" />
       </placeholder>
       <columns>
-        <TableColumn style="-fx-alignment: CENTER;" text="%common.id">
+        <TableColumn fx:id="idCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>id</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.titleCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%RegattasView.titleCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>title</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.beginCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%RegattasView.beginCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>startDate</property>
@@ -54,7 +56,7 @@
             <DateTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.endCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%RegattasView.endCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>endDate</property>
@@ -81,8 +83,8 @@
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints />
+  </rowConstraints>
 </GridPane>

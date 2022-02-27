@@ -24,10 +24,13 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<ResultEntry, String> numberCol;
 
+	private final ObservableList<ResultEntry> resultsList = FXCollections.observableArrayList();
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.resultsTbl.setItems(this.resultsList);
 		this.resultsTbl.getSortOrder().add(this.numberCol);
 
 		loadResults(false);
@@ -35,6 +38,7 @@ public class ResultsController extends AbstractRegattaDAOController {
 
 	private void loadResults(boolean refresh) {
 		disableButtons(true);
+		this.resultsList.clear();
 
 		this.dbTask.run(() -> {
 			if (refresh) {
@@ -43,10 +47,8 @@ public class ResultsController extends AbstractRegattaDAOController {
 			return this.regattaDAO.getOfficialResults();
 		}, dbResult -> {
 			try {
-				ObservableList<ResultEntry> results = FXCollections.observableArrayList(dbResult.getResult());
-				this.resultsTbl.setItems(results);
-				this.resultsTbl.getSortOrder().addAll(this.numberCol);
-
+				this.resultsList.setAll(dbResult.getResult());
+				this.resultsTbl.sort();
 				FxUtils.autoResizeColumns(this.resultsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -70,5 +72,4 @@ public class ResultsController extends AbstractRegattaDAOController {
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 	}
-
 }

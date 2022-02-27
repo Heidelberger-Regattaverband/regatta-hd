@@ -1,12 +1,12 @@
 package de.regatta_hd.ui.pane;
 
-import java.net.InetAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.LogRecord;
@@ -37,11 +37,19 @@ public class ErrorLogController extends AbstractBaseController {
 
 	@Inject
 	private MasterDataDAO dao;
+	@Inject
+	@Named("hostName")
+	private String hostName;
 
+	private final ObservableList<LogRecord> logRecordsList = FXCollections.observableArrayList();
+	private final ObservableList<String> hostNamesList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		this.logRecordsTbl.setItems(this.logRecordsList);
+		this.hostNameCbx.setItems(this.hostNamesList);
 
 		this.logRecordsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
@@ -68,13 +76,12 @@ public class ErrorLogController extends AbstractBaseController {
 
 	private void loadHostNames() {
 		disableButtons(true);
-		this.hostNameCbx.getItems().clear();
+		this.hostNamesList.clear();
 
 		this.dbTask.run(() -> this.dao.getHostNames(), dbResult -> {
 			try {
-				ObservableList<String> regattas = FXCollections.observableArrayList(dbResult.getResult());
-				this.hostNameCbx.setItems(regattas);
-				this.hostNameCbx.getSelectionModel().select(InetAddress.getLocalHost().getHostName());
+				this.hostNamesList.setAll(dbResult.getResult());
+				this.hostNameCbx.getSelectionModel().select(this.hostName);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
@@ -86,7 +93,7 @@ public class ErrorLogController extends AbstractBaseController {
 
 	private void loadLogRecords(String hostName, boolean refresh) {
 		disableButtons(true);
-		this.logRecordsTbl.getItems().clear();
+		this.logRecordsList.clear();
 
 		this.dbTask.run(() -> {
 			EntityManager entityManager = super.db.getEntityManager();
@@ -96,8 +103,7 @@ public class ErrorLogController extends AbstractBaseController {
 			return this.dao.getLogRecords(hostName);
 		}, dbResult -> {
 			try {
-				ObservableList<LogRecord> regattas = FXCollections.observableArrayList(dbResult.getResult());
-				this.logRecordsTbl.setItems(regattas);
+				this.logRecordsList.setAll(dbResult.getResult());
 				FxUtils.autoResizeColumns(this.logRecordsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
