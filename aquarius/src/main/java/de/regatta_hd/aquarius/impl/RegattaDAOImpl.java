@@ -241,30 +241,26 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Map<Club, Score> scores = new HashMap<>();
 		Regatta regatta = getActiveRegatta();
 
-		for (Race race : getRaces("race-to-results")) {
-			if (race.isOfficial()) {
-				short laneCount = race.getRaceMode().getLaneCount();
-				byte numRowers = race.getBoatClass().getNumRowers();
-				if (race.getBoatClass().isCoxed()) {
-					numRowers++;
-				}
+		for (ResultEntry resultEntry : getOfficialResults()) {
+			Race race = resultEntry.getHeat().getRace();
+			short laneCount = race.getRaceMode().getLaneCount();
+			byte numRowers = race.getBoatClass().getNumRowers();
+//			if (race.getBoatClass().isCoxed()) {
+//				numRowers++;
+//			}
 
-				for (Heat heat : race.getHeats()) {
-					for (HeatRegistration heatReg : heat.getEntries()) {
-						byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
+			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
+				byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
 
-						if (rank > 0) {
-							float pointsBoat = (numRowers * (laneCount + 1 - rank));
-							float pointsPerCrew = pointsBoat / numRowers;
+				if (rank > 0) {
+					float pointsBoat = (numRowers * (laneCount + 1 - rank));
+//					float pointsPerCrew = pointsBoat / numRowers;
 
-							heatReg.getRegistration().getCrews().forEach(crew -> {
-								Score score = scores.computeIfAbsent(crew.getClub(),
-										key -> Score.builder().club(key).regatta(regatta).points(0).build());
-								score.getClubName();
-								score.addPoints(pointsPerCrew);
-							});
-						}
-					}
+//					heatReg.getRegistration().getCrews().forEach(crew -> {
+						Score score = scores.computeIfAbsent(heatReg.getRegistration().getClub(),
+								key -> Score.builder().club(key).regatta(regatta).points(0).build());
+						score.addPoints(pointsBoat);
+//					});
 				}
 			}
 		}
