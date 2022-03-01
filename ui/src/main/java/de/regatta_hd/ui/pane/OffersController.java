@@ -24,6 +24,8 @@ public class OffersController extends AbstractRegattaDAOController {
 	@FXML
 	private TableView<Race> racesTbl;
 	@FXML
+	private TableColumn<Race, Integer> idCol;
+	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
 	@FXML
 	private Button refreshBtn;
@@ -44,6 +46,8 @@ public class OffersController extends AbstractRegattaDAOController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.racesTbl.setItems(this.racesObservableList);
+		this.racesTbl.getSortOrder().add(this.idCol);
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
 		loadRaces();
@@ -109,6 +113,7 @@ public class OffersController extends AbstractRegattaDAOController {
 			try {
 				this.racesObservableList.setAll(dbResult.getResult());
 				FxUtils.autoResizeColumns(this.racesTbl);
+				this.racesTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);

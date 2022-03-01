@@ -12,6 +12,8 @@ import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.common.ListenerManager;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 @Singleton
 public class DBLogHandler extends Handler {
@@ -73,9 +75,14 @@ public class DBLogHandler extends Handler {
 
 	private void persist() {
 		this.db.getExecutor().execute(() -> {
+			EntityManager entityManager = this.db.getEntityManager();
+			EntityTransaction transaction = entityManager.getTransaction();
+			transaction.begin();
 			while (!this.logRecords.isEmpty()) {
-				this.db.getEntityManager().persist(this.logRecords.pop());
+				entityManager.persist(this.logRecords.pop());
 			}
+			entityManager.flush();
+			transaction.commit();
 		});
 	}
 }

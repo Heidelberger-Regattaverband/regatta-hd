@@ -1,8 +1,6 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,8 +8,10 @@ import java.util.logging.Logger;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class ScoresController extends AbstractRegattaDAOController {
@@ -22,11 +22,18 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	private Button calculateBtn;
 	@FXML
-	private TableView<Score> scoreTbl;
+	private TableView<Score> scoresTbl;
+	@FXML
+	private TableColumn<Score, Integer> rankCol;
+
+	private final ObservableList<Score> scoresList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		this.scoresTbl.setItems(this.scoresList);
+		this.scoresTbl.getSortOrder().add(this.rankCol);
 
 		handleRefresh();
 	}
@@ -34,10 +41,13 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	void handleRefresh() {
 		disableButtons(true);
-		setScores(Collections.emptyList());
+		this.scoresList.clear();
+
 		this.dbTask.run(() -> this.regattaDAO.getScores(), scores -> {
 			try {
-				setScores(scores.getResult());
+				this.scoresList.setAll(scores.getResult());
+				this.scoresTbl.sort();
+				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
@@ -50,10 +60,13 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	void handleCalculate() {
 		disableButtons(true);
-		setScores(Collections.emptyList());
+		this.scoresList.clear();
+
 		this.dbTask.runInTransaction(() -> this.regattaDAO.calculateScores(), scores -> {
 			try {
-				setScores(scores.getResult());
+				this.scoresList.setAll(scores.getResult());
+				this.scoresTbl.sort();
+				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(e);
@@ -61,13 +74,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 				disableButtons(false);
 			}
 		});
-	}
-
-	private void setScores(List<Score> scores) {
-		this.scoreTbl.setItems(FXCollections.observableArrayList(scores));
-		if (!scores.isEmpty()) {
-			FxUtils.autoResizeColumns(this.scoreTbl);
-		}
 	}
 
 	private void disableButtons(boolean disabled) {

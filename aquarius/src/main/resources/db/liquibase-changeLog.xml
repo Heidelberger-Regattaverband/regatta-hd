@@ -1,5 +1,8 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
   <changeSet author="markus@ofterdinger.de" id="1">
     <preConditions onFail="MARK_RAN">
@@ -9,7 +12,8 @@
     </preConditions>
     <createTable tableName="HRV_AgeClass">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_AgeClass" referencedTableName="AgeClass" referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_AgeClass"
+          referencedTableName="AgeClass" referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
       </column>
       <column name="distance" type="SMALLINT">
         <constraints nullable="false" />
@@ -18,7 +22,8 @@
   </changeSet>
 
   <changeSet author="liquibase-docs" id="2" runOnChange="true">
-    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;" relativeToChangelogFile="true" separator="," tableName="HRV_AgeClass" primaryKey="id">
+    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;"
+      relativeToChangelogFile="true" separator="," tableName="HRV_AgeClass" primaryKey="id">
       <column header="id" name="id" type="NUMERIC" />
       <column header="distance" name="distance" type="NUMERIC" />
       <column header="comment" type="SKIP" />
@@ -33,7 +38,8 @@
     </preConditions>
     <createTable tableName="HRV_Offer">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Offer" referencedTableName="Offer" referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Offer"
+          referencedTableName="Offer" referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
       </column>
       <column name="isSet" type="BOOLEAN">
         <constraints nullable="true" />
@@ -49,10 +55,12 @@
     </preConditions>
     <createTable tableName="HRV_Score">
       <column name="club_id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Club" referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event"
+          referencedTableName="Club" referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
       </column>
       <column name="event_id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event"
+          referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
       </column>
       <column name="rank" type="SMALLINT" />
       <column name="points" type="FLOAT" />
@@ -66,19 +74,42 @@
       </not>
     </preConditions>
     <createTable tableName="HRV_LogRecord">
-    <column name="instant" type="TIMESTAMP" />
-    <column name="hostName" type="VARCHAR(64)"/>
-    <column name="hostAddress" type="VARCHAR(15)"/>
-    <column name="levelName" type="VARCHAR(8)"/>
-    <column name="levelValue" type="INTEGER"/>
-    <column name="logger" type="VARCHAR(256)"/>
-    <column name="sourceClass" type="VARCHAR(256)"/>
-    <column name="sourceMethod" type="VARCHAR(128)"/>
-    <column name="message" type="VARCHAR(256)"/>
-    <column name="exception" type="VARCHAR(256)"/>
-    <column name="throwableClass" type="VARCHAR(256)"/>
-    <column name="stacktrace" type="LONGVARCHAR"/>
-    <column name="threadId" type="INTEGER"/>
+      <column name="instant" type="TIMESTAMP" />
+      <column name="hostName" type="VARCHAR(64)" />
+      <column name="hostAddress" type="VARCHAR(15)" />
+      <column name="levelName" type="VARCHAR(8)" />
+      <column name="levelValue" type="INTEGER" />
+      <column name="logger" type="VARCHAR(256)" />
+      <column name="sourceClass" type="VARCHAR(256)" />
+      <column name="sourceMethod" type="VARCHAR(128)" />
+      <column name="message" type="VARCHAR(256)" />
+      <column name="exception" type="VARCHAR(256)" />
+      <column name="throwableClass" type="VARCHAR(256)" />
+      <column name="stacktrace" type="LONGVARCHAR" />
+      <column name="threadId" type="INTEGER" />
     </createTable>
   </changeSet>
+
+  <changeSet id="6" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="HRV_Result" />
+      </not>
+    </preConditions>
+    <createTable tableName="HRV_Result">
+      <column name="Result_CE_ID_FK" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="Result_SplitNr" type="TINYINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="points" type="FLOAT" />
+    </createTable>
+    <addPrimaryKey columnNames="Result_CE_ID_FK,Result_SplitNr" tableName="HRV_Result"
+      constraintName="PK_HRV_Result" />
+    <addForeignKeyConstraint constraintName="FK_HRV_Result" referencedTableName="Result"
+      baseColumnNames="Result_CE_ID_FK,Result_SplitNr" baseTableName="HRV_Result"
+      referencedColumnNames="Result_CE_ID_FK,Result_SplitNr" />
+  </changeSet>
+
 </databaseChangeLog>

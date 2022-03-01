@@ -18,6 +18,7 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Club;
@@ -41,6 +42,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private static final String PARAM_RACE_NUMBER = "number";
 	private static final String PARAM_REGATTA = "regatta";
 	private static final String ACTIVE_REGATTA = "activeRegatta";
+	private static final String JAVAX_PERSISTENCE_FETCHGRAPH = "javax.persistence.fetchgraph";
 
 	private final ListenerManager listenerManager;
 
@@ -66,21 +68,24 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return getEntities(Regatta.class);
 	}
 
+	@Override
 	public List<Race> getRaces() {
 		return getRaces(null);
 	}
 
+	@Override
 	public List<Race> getRaces(String graphName) {
 		TypedQuery<Race> query = this.db.getEntityManager()
 				.createQuery("SELECT r FROM Race r WHERE r.regatta = :regatta ORDER BY r.number ASC", Race.class)
 				.setParameter(PARAM_REGATTA, getActiveRegatta());
 		if (graphName != null) {
 			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
-			query.setHint("javax.persistence.fetchgraph", entityGraph);
+			query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityGraph);
 		}
 		return query.getResultList();
 	}
 
+	@Override
 	public Race getRace(String raceNumber) {
 		return getRace(raceNumber, null);
 	}
@@ -94,7 +99,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).setParameter(PARAM_RACE_NUMBER, raceNumber);
 		if (graphName != null) {
 			EntityGraph<?> entityGraph = entityManager.getEntityGraph(graphName);
-			query.setHint("javax.persistence.fetchgraph", entityGraph);
+			query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityGraph);
 		}
 		return query.getSingleResult();
 	}
@@ -170,6 +175,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return null;
 	}
 
+	@Override
 	public void cleanRaceHeats(Race race) {
 		EntityManager entityManager = super.db.getEntityManager();
 
@@ -240,30 +246,23 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Map<Club, Score> scores = new HashMap<>();
 		Regatta regatta = getActiveRegatta();
 
-		for (Race race : getRaces("race-to-results")) {
-			if (race.isOfficial()) {
-				short laneCount = race.getRaceMode().getLaneCount();
-				byte numRowers = race.getBoatClass().getNumRowers();
-				if (race.getBoatClass().isCoxed()) {
-					numRowers++;
-				}
+		for (ResultEntry resultEntry : getOfficialResults()) {
+			Race race = resultEntry.getHeat().getRace();
+			byte numRowers = race.getBoatClass().getNumRowers();
+//			if (race.getBoatClass().isCoxed()) {
+//				numRowers++;
+//			}
 
-				for (Heat heat : race.getHeats()) {
-					for (HeatRegistration heatReg : heat.getEntries()) {
-						byte rank = heatReg.getFinalResult() != null ? heatReg.getFinalResult().getRank() : 0;
+			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
+				Float pointsBoat = heatReg.getFinalResult().getPoints();
+				if (pointsBoat != null) {
+					float pointsPerCrew = pointsBoat.floatValue() / numRowers;
 
-						if (rank > 0) {
-							float pointsBoat = (numRowers * (laneCount + 1 - rank));
-							float pointsPerCrew = pointsBoat / numRowers;
-
-							heatReg.getRegistration().getCrews().forEach(crew -> {
-								Score score = scores.computeIfAbsent(crew.getClub(),
-										key -> Score.builder().club(key).regatta(regatta).points(0).build());
-								score.getClubName();
-								score.addPoints(pointsPerCrew);
-							});
-						}
-					}
+					heatReg.getRegistration().getCrews().forEach(crew -> {
+						Score score = scores.computeIfAbsent(heatReg.getRegistration().getClub(),
+								key -> Score.builder().club(key).regatta(regatta).points(0).build());
+						score.addPoints(pointsPerCrew);
+					});
 				}
 			}
 		}
@@ -275,11 +274,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	public List<Score> getScores() {
 		EntityManager entityManager = this.db.getEntityManager();
 
-		// first clear persistence context
-		entityManager.clear();
-
 		return entityManager
 				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.rank ASC", Score.class)
+				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("score-club"))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
@@ -319,6 +316,23 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		});
 
 		return races;
+	}
+
+	@Override
+	public List<ResultEntry> getOfficialResults() {
+		return getOfficialHeats().stream().map(heat -> ResultEntry.builder().heat(heat).build())
+				.collect(Collectors.toList());
+	}
+
+	private List<Heat> getOfficialHeats() {
+		EntityManager entityManager = this.db.getEntityManager();
+
+		TypedQuery<Heat> query = entityManager
+				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND (h.state = 5 OR h.state = 4)",
+						Heat.class)
+				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
+				.setParameter(PARAM_REGATTA, getActiveRegatta());
+		return query.getResultList();
 	}
 
 	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {

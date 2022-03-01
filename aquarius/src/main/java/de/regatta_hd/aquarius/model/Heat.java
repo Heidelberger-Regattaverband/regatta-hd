@@ -13,6 +13,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
@@ -28,6 +32,20 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
+@NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
+		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
+		@NamedAttributeNode(value = "race"), //
+		@NamedAttributeNode(value = "raceModeDetail") //
+}, subgraphs = { //
+		@NamedSubgraph(name = "heat.entries", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "registration", subgraph = "registration.club"), //
+						@NamedAttributeNode(value = "results") //
+				}), //
+		@NamedSubgraph(name = "registration.club", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "club"), @NamedAttributeNode(value = "crews") //
+				}) }))
 //lombok
 @Getter
 @Setter
@@ -101,6 +119,10 @@ public class Heat {
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "heat")
 	private Set<ReportInfo> reportInfos;
+
+	public String getLabel() {
+		return getRace().getNumber() + " - " + getRace().getShortLabel();
+	}
 
 	/**
 	 * @return {@code true} if the heat is set, but not started yet.

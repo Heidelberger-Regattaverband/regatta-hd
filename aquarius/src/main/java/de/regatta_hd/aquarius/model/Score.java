@@ -6,6 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "HRV_Score")
+@NamedEntityGraph(name = "score-club", attributeNodes = { @NamedAttributeNode(value = "club") })
 // lombok
 @Getter
 @Setter

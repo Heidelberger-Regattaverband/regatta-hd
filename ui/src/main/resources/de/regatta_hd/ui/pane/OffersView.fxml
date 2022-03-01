@@ -12,58 +12,71 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.OffersController">
+<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.OffersController">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" />
   </padding>
 
   <children>
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <Button fx:id="refreshBtn" onAction="#refresh" text="%common.refresh" />
-        <Button fx:id="setDistancesBtn" onAction="#setDistances" text="%OffersView.setDistances" />
-        <Button fx:id="setMastersAgeClassesBtn" onAction="#setMastersAgeClasses" text="%OffersView.setMastersAgeClasses" />
+      <Button fx:id="refreshBtn" onAction="#refresh" text="%common.refresh" />
+      <Button fx:id="setDistancesBtn" onAction="#setDistances" text="%OffersView.setDistances" />
+      <Button fx:id="setMastersAgeClassesBtn" onAction="#setMastersAgeClasses"
+        text="%OffersView.setMastersAgeClasses" />
     </ToolBar>
-    <TableView fx:id="racesTbl" items="${controller.racesObservableList}" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <TableView fx:id="racesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+      GridPane.vgrow="ALWAYS">
       <placeholder>
-          <Label text="%common.loadData" />
+        <Label text="%common.loadData" />
       </placeholder>
       <columns>
-        <TableColumn style="-fx-alignment: CENTER;" text="%common.numberAbr">
+        <TableColumn fx:id="idCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>id</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.numberAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%OffersView.labelShortCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%OffersView.labelShortCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>shortLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%OffersView.labelLongCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%OffersView.labelLongCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>longLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER-RIGHT;" text="%OffersView.distanceCol.text">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER-RIGHT;"
+          text="%OffersView.distanceCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>distance</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="groupModeCol" style="-fx-alignment: CENTER;" text="%OffersView.groupModeCol.text">
+        <TableColumn reorderable="false" fx:id="groupModeCol" style="-fx-alignment: CENTER;"
+          text="%OffersView.groupModeCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>groupMode</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.lightweightCol.text">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;"
+          text="%OffersView.lightweightCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>lightweight</property>
@@ -73,7 +86,7 @@
             <CheckBoxTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn style="-fx-alignment: CENTER;" text="%OffersView.setCol.text">
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%OffersView.setCol.text">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>set</property>
@@ -93,8 +106,8 @@
   <columnConstraints>
     <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints />
+  </rowConstraints>
 </GridPane>
