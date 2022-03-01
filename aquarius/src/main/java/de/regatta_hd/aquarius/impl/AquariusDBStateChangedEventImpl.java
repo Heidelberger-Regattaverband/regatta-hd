@@ -12,6 +12,7 @@ class AquariusDBStateChangedEventImpl extends EventObject implements AquariusDB.
 		super(source);
 	}
 
+	@Override
 	public AquariusDB getAquariusDB() {
 		return (AquariusDB) super.source;
 	}
