@@ -1,0 +1,4 @@
+// Grant everyone the following permission:
+grant {
+  permission java.util.logging.LoggingPermission "control";
+};
