@@ -71,6 +71,9 @@
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
+            <manifest>
+              <mainClass>${mainClass}</mainClass>
+            </manifest>
             <manifestEntries>
               <Permissions>all-permissions</Permissions>
               <Codebase>*</Codebase>
