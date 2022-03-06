@@ -80,7 +80,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		this.setListTbl.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldSelection, newSelection) -> handleSetListSelectedItemChanged(newSelection));
 
-		this.dbTask.run(() -> {
+		this.dbTask.run(progress -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
@@ -129,7 +129,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			this.crewTbl.getItems().clear();
 
 			// then load new crew lists from DB
-			this.dbTask.run(() -> {
+			this.dbTask.run(progress -> {
 				Set<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getCrews() : null;
 				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
 				if (srcCrew != null) {
@@ -183,7 +183,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				// remove onAction eventhandler to avoid multiple calls -> workaround
 				this.raceCbo.setOnAction(null);
 
-				this.dbTask.run(() -> {
+				this.dbTask.run(progress -> {
 					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
 					return new Race[] { srcRace, race };
@@ -213,7 +213,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (selectedRace != null) {
 			disableButtons();
 
-			this.dbTask.run(() -> {
+			this.dbTask.run(progress -> {
 				this.db.getEntityManager().clear();
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
@@ -242,7 +242,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 
 			AtomicReference<Race> raceRef = new AtomicReference<>();
-			this.dbTask.run(() -> {
+			this.dbTask.run(progress -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
 				raceRef.set(race);
@@ -269,7 +269,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 			this.setListTbl.getItems().clear();
 
-			this.dbTask.run(() -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH), dbResult -> {
+			this.dbTask.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH), dbResult -> {
 				Race race = null;
 				try {
 					race = dbResult.getResult();
@@ -290,7 +290,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
 			disableButtons();
 
-			this.dbTask.runInTransaction(() -> {
+			this.dbTask.runInTransaction(progress -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
 
@@ -320,7 +320,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				getText("SetRaceView.confirmDelete.question"))) {
 			disableButtons();
 
-			this.dbTask.runInTransaction(() -> {
+			this.dbTask.runInTransaction(progress -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.cleanRaceHeats(race);
 				return race;

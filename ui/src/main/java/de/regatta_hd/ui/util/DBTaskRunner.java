@@ -23,7 +23,7 @@ public class DBTaskRunner {
 	 *                      state.
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
-	public <V> Task<DBResult<V>> run(Callable<V> callable, Consumer<DBResult<V>> resultHandler) {
+	public <V> Task<DBResult<V>> run(DBExecutable<V> callable, Consumer<DBResult<V>> resultHandler) {
 		return runTask(createTask(callable, resultHandler, false));
 	}
 
@@ -35,11 +35,11 @@ public class DBTaskRunner {
 	 *                       SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link Callable}
 	 */
-	public <V> Task<DBResult<V>> runInTransaction(Callable<V> callable, Consumer<DBResult<V>> resultConsumer) {
+	public <V> Task<DBResult<V>> runInTransaction(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer) {
 		return runTask(createTask(callable, resultConsumer, true));
 	}
 
-	private <V> Task<DBResult<V>> createTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer,
+	private <V> Task<DBResult<V>> createTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer,
 			boolean inTransaction) {
 		return new DBTask<>(callable, resultConsumer, inTransaction, this.db);
 	}

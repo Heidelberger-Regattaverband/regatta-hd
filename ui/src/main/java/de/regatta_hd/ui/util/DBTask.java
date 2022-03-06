@@ -1,7 +1,6 @@
 package de.regatta_hd.ui.util;
 
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +13,7 @@ import javafx.concurrent.Task;
 class DBTask<V> extends Task<DBResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
-	private final Callable<V> callable;
+	private final DBExecutable<V> callable;
 
 	private Consumer<DBResult<V>> resultConsumer;
 
@@ -22,7 +21,7 @@ class DBTask<V> extends Task<DBResult<V>> {
 
 	private final boolean inTransaction;
 
-	DBTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
+	DBTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;
@@ -53,7 +52,7 @@ class DBTask<V> extends Task<DBResult<V>> {
 			transaction.begin();
 		}
 
-		V result = this.callable.call();
+		V result = this.callable.execute(this::updateProgress);
 
 		// if an active transaction exists it is committed
 		if (transaction != null && transaction.isActive()) {

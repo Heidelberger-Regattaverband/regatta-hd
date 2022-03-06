@@ -46,7 +46,7 @@ public class ResultsController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.resultsList.clear();
 
-		this.dbTask.run(() -> {
+		this.dbTask.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
@@ -69,7 +69,7 @@ public class ResultsController extends AbstractRegattaDAOController {
 	public void handleSetPointsOnAction() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(() -> {
+		this.dbTask.runInTransaction(progress -> {
 			this.resultsList.forEach(resultEntry -> {
 				Race race = resultEntry.getHeat().getRace();
 				short laneCount = race.getRaceMode().getLaneCount();

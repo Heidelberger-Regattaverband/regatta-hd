@@ -98,7 +98,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(Optional<DBConfig> connectionData) {
-		super.dbTask.run(() -> {
+		super.dbTask.run(progress -> {
 			updateControls(true);
 			super.db.open(connectionData.get());
 			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
@@ -190,7 +190,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		boolean isOpen = super.db.isOpen();
 
 		if (isOpen) {
-			this.dbTask.run(super.regattaDAO::getActiveRegatta, dbResult -> {
+			this.dbTask.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
 				try {
 					boolean hasActiveRegatta = dbResult.getResult() != null;
 
