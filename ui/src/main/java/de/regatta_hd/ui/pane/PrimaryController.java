@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.dialog.ProgressDialog;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.DBConfig;
@@ -15,8 +17,10 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.common.ListenerManager;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
+import de.regatta_hd.ui.util.DBResult;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -98,10 +102,20 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(Optional<DBConfig> connectionData) {
-		super.dbTask.run(progress -> {
+		Task<DBResult<Pair<DBConfig, Regatta>>> dbTask = super.dbTask.run(progress -> {
+			final int MAX = 4;
 			updateControls(true);
+			progress.updateProgress(1, MAX);
+
 			super.db.open(connectionData.get());
+			progress.updateProgress(2, MAX);
+
+			super.db.updateSchema();
+			progress.updateProgress(3, MAX);
+
 			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+			progress.updateProgress(4, MAX);
+
 			return new Pair<>(connectionData.get(), activeRegatta);
 		}, dbResult -> {
 			try {
@@ -115,6 +129,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				updateControls(false);
 			}
 		});
+
+		ProgressDialog dialog = new ProgressDialog(dbTask);
+		dialog.setTitle("Datenbank Anmeldung");
+		dialog.setHeaderText("Login to Database");
+		dialog.showAndWait();
 	}
 
 	@FXML

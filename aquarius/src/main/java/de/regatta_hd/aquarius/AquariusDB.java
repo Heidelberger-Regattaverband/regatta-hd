@@ -64,4 +64,6 @@ public interface AquariusDB {
 		void stateChanged(StateChangedEvent event);
 	}
 
+	void updateSchema();
+
 }

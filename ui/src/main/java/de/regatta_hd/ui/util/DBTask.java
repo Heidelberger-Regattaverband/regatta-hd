@@ -52,7 +52,7 @@ class DBTask<V> extends Task<DBResult<V>> {
 			transaction.begin();
 		}
 
-		V result = this.callable.execute(this::updateProgress);
+		V result = this.callable.execute(DBTask.this::updateProgress);
 
 		// if an active transaction exists it is committed
 		if (transaction != null && transaction.isActive()) {
@@ -60,6 +60,11 @@ class DBTask<V> extends Task<DBResult<V>> {
 		}
 
 		return new DBResultImpl<>(result);
+	}
+
+	@Override
+	protected void updateProgress(double workDone, double max) { // NOSONAR
+		super.updateProgress(workDone, max);
 	}
 
 	private class DBResultImpl<R> implements DBResult<R> {
