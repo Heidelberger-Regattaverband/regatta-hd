@@ -16,13 +16,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 public class DBConnectionDialog extends Dialog<DBConfig> {
 
 	private DBConfig connectionData;
 
-	public DBConnectionDialog(Stage primaryStage, boolean decorated, ResourceBundle resources, DBConfig dbCfg) {
-		initOwner(Objects.requireNonNull(primaryStage, "primaryStage"));
+	public DBConnectionDialog(Window window, boolean decorated, ResourceBundle resources, DBConfig dbCfg) {
+		initOwner(Objects.requireNonNull(window, "window"));
 		this.connectionData = Objects.requireNonNullElse(dbCfg, DBConfig.builder().build());
 
 		if (!decorated) {

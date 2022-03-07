@@ -87,9 +87,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private void handleDatabaseConnect() {
 		if (!super.db.isOpen()) {
-			Stage stage = (Stage) this.mainMbar.getScene().getWindow();
 			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(stage, true, super.resources,
+				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(), true, super.resources,
 						this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
@@ -131,6 +130,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		});
 
 		ProgressDialog dialog = new ProgressDialog(dbTask);
+		dialog.initOwner(this.mainMbar.getScene().getWindow());
 		dialog.setTitle("Datenbank Anmeldung");
 		dialog.setHeaderText("Login to Database");
 		dialog.showAndWait();
@@ -201,6 +201,34 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleResultsOnAction() {
+		if (this.resultsStage == null) {
+			try {
+				this.resultsStage = newWindow("ResultsView.fxml", getText("common.results"),
+						event -> this.resultsStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.resultsStage.requestFocus();
+		}
+	}
+
+	@FXML
+	void handleLogRecordsOnAction() {
+		if (this.errorLogStage == null) {
+			try {
+				this.errorLogStage = newWindow("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"),
+						event -> this.errorLogStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.errorLogStage.requestFocus();
+		}
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
@@ -232,33 +260,5 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
 		this.errorLogMitm.setDisable(!isOpen);
-	}
-
-	@FXML
-	public void handleResultsOnAction() {
-		if (this.resultsStage == null) {
-			try {
-				this.resultsStage = newWindow("ResultsView.fxml", getText("common.results"),
-						event -> this.resultsStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.resultsStage.requestFocus();
-		}
-	}
-
-	@FXML
-	public void handleLogRecordsOnAction() {
-		if (this.errorLogStage == null) {
-			try {
-				this.errorLogStage = newWindow("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"),
-						event -> this.errorLogStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.errorLogStage.requestFocus();
-		}
 	}
 }
