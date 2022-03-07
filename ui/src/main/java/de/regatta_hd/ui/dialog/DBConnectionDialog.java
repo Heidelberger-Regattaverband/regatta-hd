@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
@@ -49,14 +48,17 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 		encryptCbox.setSelected(dbCfg.isEncrypt());
 		gridpane.add(encryptCbox, 0, 5);
 
-		CheckBox trustServerCertificateCbox = new CheckBox(resources.getString("DatabaseConnectionDialog.trustServerCertificate"));
+		CheckBox trustServerCertificateCbox = new CheckBox(
+				resources.getString("DatabaseConnectionDialog.trustServerCertificate"));
 		trustServerCertificateCbox.setSelected(dbCfg.isTrustServerCertificate());
 		trustServerCertificateCbox.setDisable(!encryptCbox.isSelected());
 		gridpane.add(trustServerCertificateCbox, 0, 6);
 
-		encryptCbox.addEventHandler(ActionEvent.ACTION, event -> trustServerCertificateCbox.setDisable(!encryptCbox.isSelected()));
+		encryptCbox.addEventHandler(ActionEvent.ACTION,
+				event -> trustServerCertificateCbox.setDisable(!encryptCbox.isSelected()));
 
 		TextField hostNameFld = new TextField(this.connectionData.getDbHost());
+		hostNameFld.setPrefColumnCount(20);
 		gridpane.add(hostNameFld, 1, 1);
 		TextField dbNameFld = new TextField(this.connectionData.getDbName());
 		gridpane.add(dbNameFld, 1, 2);
