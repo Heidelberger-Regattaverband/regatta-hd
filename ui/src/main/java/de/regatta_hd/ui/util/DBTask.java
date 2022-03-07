@@ -10,7 +10,7 @@ import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-class DBTask<V> extends Task<DBResult<V>> {
+public class DBTask<V> extends Task<DBResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
 	private final DBExecutable<V> callable;
@@ -20,6 +20,8 @@ class DBTask<V> extends Task<DBResult<V>> {
 	private final AquariusDB db;
 
 	private final boolean inTransaction;
+
+	private volatile Consumer<String> progressMessageConsumer;
 
 	DBTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
@@ -43,6 +45,10 @@ class DBTask<V> extends Task<DBResult<V>> {
 		});
 	}
 
+	public void setProgressMessageConsumer(Consumer<String> progressMessageConsumer) {
+		this.progressMessageConsumer = progressMessageConsumer;
+	}
+
 	@Override
 	protected DBResult<V> call() throws Exception {
 		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
@@ -62,9 +68,12 @@ class DBTask<V> extends Task<DBResult<V>> {
 		return new DBResultImpl<>(result);
 	}
 
-	@Override
-	protected void updateProgress(double workDone, double max) { // NOSONAR
+	protected void updateProgress(double workDone, double max, String msg) {
 		super.updateProgress(workDone, max);
+
+		if (this.progressMessageConsumer != null) {
+			this.progressMessageConsumer.accept(msg);
+		}
 	}
 
 	private class DBResultImpl<R> implements DBResult<R> {

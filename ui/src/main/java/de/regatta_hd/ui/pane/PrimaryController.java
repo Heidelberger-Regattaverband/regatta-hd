@@ -17,10 +17,9 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.common.ListenerManager;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
-import de.regatta_hd.ui.util.DBResult;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -88,8 +87,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private void handleDatabaseConnect() {
 		if (!super.db.isOpen()) {
 			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(), true, super.resources,
-						this.dbCfgStore.getLastSuccessful());
+				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(), true,
+						super.resources, this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					openDbConnection(connectionData);
@@ -101,19 +100,19 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(Optional<DBConfig> connectionData) {
-		Task<DBResult<Pair<DBConfig, Regatta>>> dbTask = super.dbTask.run(progress -> {
-			final int MAX = 4;
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.run(progress -> {
+			final int MAX = 3;
 			updateControls(true);
-			progress.updateProgress(1, MAX);
 
+			progress.updateProgress(1, MAX, "Öffne Datenbank Verbindung");
 			super.db.open(connectionData.get());
-			progress.updateProgress(2, MAX);
 
+			progress.updateProgress(2, MAX, "Aktualisiere Datenbank");
 			super.db.updateSchema();
-			progress.updateProgress(3, MAX);
+
+			progress.updateProgress(3, MAX, "Setze aktive Regatta");
 
 			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
-			progress.updateProgress(4, MAX);
 
 			return new Pair<>(connectionData.get(), activeRegatta);
 		}, dbResult -> {
@@ -130,9 +129,12 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		});
 
 		ProgressDialog dialog = new ProgressDialog(dbTask);
+
+		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+
 		dialog.initOwner(this.mainMbar.getScene().getWindow());
 		dialog.setTitle("Datenbank Anmeldung");
-		dialog.setHeaderText("Login to Database");
+//		dialog.setHeaderText("Login to Database");
 		dialog.showAndWait();
 	}
 
