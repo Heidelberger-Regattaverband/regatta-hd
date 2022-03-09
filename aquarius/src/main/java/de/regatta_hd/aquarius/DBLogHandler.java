@@ -14,6 +14,7 @@ import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
 
 @Singleton
 public class DBLogHandler extends Handler {
@@ -78,11 +79,15 @@ public class DBLogHandler extends Handler {
 			EntityManager entityManager = this.db.getEntityManager();
 			EntityTransaction transaction = entityManager.getTransaction();
 			transaction.begin();
-			while (!this.logRecords.isEmpty()) {
-				entityManager.persist(this.logRecords.pop());
+			try {
+				while (!this.logRecords.isEmpty()) {
+					entityManager.persist(this.logRecords.pop());
+				}
+				entityManager.flush();
+				transaction.commit();
+			} catch (PersistenceException e) {
+				e.printStackTrace();
 			}
-			entityManager.flush();
-			transaction.commit();
 		});
 	}
 }
