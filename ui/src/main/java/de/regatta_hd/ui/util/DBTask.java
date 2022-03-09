@@ -1,7 +1,6 @@
 package de.regatta_hd.ui.util;
 
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,10 +10,10 @@ import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-class DBTask<V> extends Task<DBResult<V>> {
+public class DBTask<V> extends Task<DBResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
-	private final Callable<V> callable;
+	private final DBExecutable<V> callable;
 
 	private Consumer<DBResult<V>> resultConsumer;
 
@@ -22,7 +21,9 @@ class DBTask<V> extends Task<DBResult<V>> {
 
 	private final boolean inTransaction;
 
-	DBTask(Callable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
+	private volatile Consumer<String> progressMessageConsumer;
+
+	DBTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;
@@ -44,6 +45,10 @@ class DBTask<V> extends Task<DBResult<V>> {
 		});
 	}
 
+	public void setProgressMessageConsumer(Consumer<String> progressMessageConsumer) {
+		this.progressMessageConsumer = progressMessageConsumer;
+	}
+
 	@Override
 	protected DBResult<V> call() throws Exception {
 		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
@@ -53,7 +58,7 @@ class DBTask<V> extends Task<DBResult<V>> {
 			transaction.begin();
 		}
 
-		V result = this.callable.call();
+		V result = this.callable.execute(DBTask.this::updateProgress);
 
 		// if an active transaction exists it is committed
 		if (transaction != null && transaction.isActive()) {
@@ -61,6 +66,14 @@ class DBTask<V> extends Task<DBResult<V>> {
 		}
 
 		return new DBResultImpl<>(result);
+	}
+
+	protected void updateProgress(double workDone, double max, String msg) {
+		super.updateProgress(workDone, max);
+
+		if (this.progressMessageConsumer != null) {
+			this.progressMessageConsumer.accept(msg);
+		}
 	}
 
 	private class DBResultImpl<R> implements DBResult<R> {

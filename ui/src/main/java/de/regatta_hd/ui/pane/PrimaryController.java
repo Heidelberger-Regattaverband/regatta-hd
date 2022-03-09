@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.dialog.ProgressDialog;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.DBConfig;
@@ -15,6 +17,7 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.common.ListenerManager;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -83,10 +86,9 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private void handleDatabaseConnect() {
 		if (!super.db.isOpen()) {
-			Stage stage = (Stage) this.mainMbar.getScene().getWindow();
 			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(stage, true, super.resources,
-						this.dbCfgStore.getLastSuccessful());
+				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(), true,
+						super.resources, this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					openDbConnection(connectionData);
@@ -98,10 +100,20 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(Optional<DBConfig> connectionData) {
-		super.dbTask.run(() -> {
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.createTask(progress -> {
+			final int MAX = 3;
 			updateControls(true);
+
+			progress.updateProgress(1, MAX, "Öffne Datenbank Verbindung");
 			super.db.open(connectionData.get());
+
+			progress.updateProgress(2, MAX, "Aktualisiere Datenbank");
+			super.db.updateSchema();
+
+			progress.updateProgress(3, MAX, "Setze aktive Regatta");
+
 			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+
 			return new Pair<>(connectionData.get(), activeRegatta);
 		}, dbResult -> {
 			try {
@@ -114,7 +126,17 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			} finally {
 				updateControls(false);
 			}
-		});
+		}, false);
+
+		ProgressDialog dialog = new ProgressDialog(dbTask);
+
+		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+		super.dbTask.runTask(dbTask);
+
+		dialog.initOwner(this.mainMbar.getScene().getWindow());
+		dialog.setTitle("Datenbank Anmeldung");
+//		dialog.setHeaderText("Login to Database");
+		dialog.showAndWait();
 	}
 
 	@FXML
@@ -182,6 +204,34 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleResultsOnAction() {
+		if (this.resultsStage == null) {
+			try {
+				this.resultsStage = newWindow("ResultsView.fxml", getText("common.results"),
+						event -> this.resultsStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.resultsStage.requestFocus();
+		}
+	}
+
+	@FXML
+	void handleLogRecordsOnAction() {
+		if (this.errorLogStage == null) {
+			try {
+				this.errorLogStage = newWindow("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"),
+						event -> this.errorLogStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.errorLogStage.requestFocus();
+		}
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
@@ -190,7 +240,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		boolean isOpen = super.db.isOpen();
 
 		if (isOpen) {
-			this.dbTask.run(super.regattaDAO::getActiveRegatta, dbResult -> {
+			this.dbTask.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
 				try {
 					boolean hasActiveRegatta = dbResult.getResult() != null;
 
@@ -213,33 +263,5 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
 		this.errorLogMitm.setDisable(!isOpen);
-	}
-
-	@FXML
-	public void handleResultsOnAction() {
-		if (this.resultsStage == null) {
-			try {
-				this.resultsStage = newWindow("ResultsView.fxml", getText("common.results"),
-						event -> this.resultsStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.resultsStage.requestFocus();
-		}
-	}
-
-	@FXML
-	public void handleLogRecordsOnAction() {
-		if (this.errorLogStage == null) {
-			try {
-				this.errorLogStage = newWindow("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"),
-						event -> this.errorLogStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.errorLogStage.requestFocus();
-		}
 	}
 }

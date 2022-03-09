@@ -73,7 +73,6 @@ public class AqauriusDBImpl implements AquariusDB {
 		return isOpenImpl();
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public synchronized void open(DBConfig dbCfg) {
 		requireNonNull(dbCfg, "dbCfg must not be null");
@@ -84,31 +83,35 @@ public class AqauriusDBImpl implements AquariusDB {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 		this.entityManager = factory.createEntityManager();
 
-		if (this.entityManager.isOpen()) {
-			Session session = this.entityManager.unwrap(Session.class);
-			session.doWork(connection -> {
-				try {
-					Database database = DatabaseFactory.getInstance()
-							.findCorrectDatabaseImplementation(new JdbcConnection(connection));
-					database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
-					database.setDatabaseChangeLogTableName("HRV_ChangeLog");
+		// store current thread to ensure further DB access is done in same thread
+		this.sessionThread = Thread.currentThread();
+	}
 
-					Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml",
-							new ClassLoaderResourceAccessor(), database);
-					liquibase.update(new Contexts(), new LabelExpression());
+	@SuppressWarnings("resource")
+	@Override
+	public void updateSchema() {
+		checkIsOpen();
 
-					// store current thread to ensure further DB access is done in same thread
-					this.sessionThread = Thread.currentThread();
+		Session session = this.entityManager.unwrap(Session.class);
+		session.doWork(connection -> {
+			try {
+				Database database = DatabaseFactory.getInstance()
+						.findCorrectDatabaseImplementation(new JdbcConnection(connection));
+				database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
+				database.setDatabaseChangeLogTableName("HRV_ChangeLog");
 
-					// notify listeners about changed AquariusDB state
-					notifyListeners(new AquariusDBStateChangedEventImpl(this));
-				} catch (LiquibaseException e) {
-					this.entityManager.close();
-					this.entityManager = null;
-					throw new SQLException(e);
-				}
-			});
-		}
+				Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(),
+						database);
+				liquibase.update(new Contexts(), new LabelExpression());
+
+				// notify listeners about changed AquariusDB state
+				notifyListeners(new AquariusDBStateChangedEventImpl(this));
+			} catch (LiquibaseException e) {
+				this.entityManager.close();
+				this.entityManager = null;
+				throw new SQLException(e);
+			}
+		});
 	}
 
 	@Override
