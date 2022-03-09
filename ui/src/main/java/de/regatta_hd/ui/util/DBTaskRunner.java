@@ -39,12 +39,12 @@ public class DBTaskRunner {
 		return runTask(createTask(callable, resultConsumer, true));
 	}
 
-	private <V> DBTask<V> createTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer,
+	public <V> DBTask<V> createTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer,
 			boolean inTransaction) {
 		return new DBTask<>(callable, resultConsumer, inTransaction, this.db);
 	}
 
-	private <V> DBTask<V> runTask(DBTask<V> task) {
+	public <V> DBTask<V> runTask(DBTask<V> task) {
 		this.db.getExecutor().execute(task);
 		return task;
 	}

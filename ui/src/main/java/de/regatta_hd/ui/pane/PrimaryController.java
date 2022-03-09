@@ -100,7 +100,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(Optional<DBConfig> connectionData) {
-		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.run(progress -> {
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.createTask(progress -> {
 			final int MAX = 3;
 			updateControls(true);
 
@@ -126,11 +126,12 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			} finally {
 				updateControls(false);
 			}
-		});
+		}, false);
 
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+		super.dbTask.runTask(dbTask);
 
 		dialog.initOwner(this.mainMbar.getScene().getWindow());
 		dialog.setTitle("Datenbank Anmeldung");
