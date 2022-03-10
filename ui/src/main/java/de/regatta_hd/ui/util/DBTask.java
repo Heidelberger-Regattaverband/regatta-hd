@@ -13,7 +13,7 @@ import javafx.concurrent.Task;
 public class DBTask<V> extends Task<DBResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
-	private final DBExecutable<V> callable;
+	private final DBCallable<V> callable;
 
 	private Consumer<DBResult<V>> resultConsumer;
 
@@ -23,7 +23,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTask(DBExecutable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
+	DBTask(DBCallable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;
@@ -58,7 +58,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 			transaction.begin();
 		}
 
-		V result = this.callable.execute(DBTask.this::updateProgress);
+		V result = this.callable.call(DBTask.this::updateProgress);
 
 		// if an active transaction exists it is committed
 		if (transaction != null && transaction.isActive()) {
