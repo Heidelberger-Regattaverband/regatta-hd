@@ -359,7 +359,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	private void notifyListeners(RegattaDAO.RegattaChangedEvent event) {
 		List<RegattaChangedEventListener> listeners = this.listenerManager
-				.getListener(RegattaDAO.RegattaChangedEventListener.class);
+				.getListeners(RegattaDAO.RegattaChangedEventListener.class);
 		for (RegattaChangedEventListener listener : listeners) {
 			listener.regattaChanged(event);
 		}
