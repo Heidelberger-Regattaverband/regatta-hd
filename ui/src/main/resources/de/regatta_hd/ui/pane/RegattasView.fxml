@@ -39,7 +39,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%RegattasView.titleCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%common.title">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>title</property>
