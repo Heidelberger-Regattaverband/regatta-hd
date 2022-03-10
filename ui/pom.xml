@@ -98,16 +98,18 @@
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-resource-one</id>
+            <id>copy-download</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
             <configuration>
               <outputDirectory>${download.build.directory}</outputDirectory>
+              <overwrite>true</overwrite>
               <resources>
                 <resource>
                   <directory>${project.basedir}/download</directory>
+                  <filtering>true</filtering>
                 </resource>
               </resources>
             </configuration>
