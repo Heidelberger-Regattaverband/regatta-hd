@@ -46,7 +46,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%RegattasView.beginCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%common.begin">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>startDate</property>
@@ -56,7 +56,7 @@
             <DateTableCellFactory />
           </cellFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%RegattasView.endCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%common.end">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>endDate</property>

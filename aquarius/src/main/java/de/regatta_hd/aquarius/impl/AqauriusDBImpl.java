@@ -134,7 +134,7 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
 		List<StateChangedEventListener> listeners = this.listenerManager
-				.getListener(AquariusDB.StateChangedEventListener.class);
+				.getListeners(AquariusDB.StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}
