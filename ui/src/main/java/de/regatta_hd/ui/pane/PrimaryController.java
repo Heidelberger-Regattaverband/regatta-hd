@@ -10,12 +10,14 @@ import java.util.logging.Logger;
 import org.controlsfx.dialog.ProgressDialog;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.common.ListenerManager;
+import de.regatta_hd.ui.dialog.AboutDialog;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
@@ -31,13 +33,14 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@Inject
 	private DBConfigStore dbCfgStore;
-
 	@Inject
 	private ListenerManager listenerManager;
+	@Inject
+	@Named("version")
+	private String version;
 
 	@FXML
 	private MenuItem dbConnectMitm;
-
 	@FXML
 	private MenuItem dbDisconnectMitm;
 	@FXML
@@ -50,7 +53,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private MenuItem scoreMitm;
 	@FXML
 	private MenuItem errorLogMitm;
-
 	@FXML
 	private MenuBar mainMbar;
 
@@ -87,7 +89,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private void handleDatabaseConnect() {
 		if (!super.db.isOpen()) {
 			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(), true,
+				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(),
 						super.resources, this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
@@ -135,7 +137,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		dialog.initOwner(this.mainMbar.getScene().getWindow());
 		dialog.setTitle("Datenbank Anmeldung");
-//		dialog.setHeaderText("Login to Database");
 		dialog.showAndWait();
 	}
 
@@ -263,5 +264,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
 		this.errorLogMitm.setDisable(!isOpen);
+	}
+
+	@FXML
+	void handleAboutOnAction() {
+		AboutDialog aboutDlg = new AboutDialog(this.mainMbar.getScene().getWindow(), this.resources, this.version);
+		aboutDlg.showAndWait();
 	}
 }

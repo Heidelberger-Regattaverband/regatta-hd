@@ -34,6 +34,7 @@
         <Menu text="%common.help">
           <items>
             <MenuItem fx:id="errorLogMitm" onAction="#handleLogRecordsOnAction" text="%PrimaryView.errorLogMitm.text" />
+            <MenuItem onAction="#handleAboutOnAction" text="%common.about" />
           </items>
         </Menu>
       </menus>
