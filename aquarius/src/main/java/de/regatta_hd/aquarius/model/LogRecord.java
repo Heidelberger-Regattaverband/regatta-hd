@@ -2,6 +2,7 @@ package de.regatta_hd.aquarius.model;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.time.Instant;
 import java.util.logging.Level;
@@ -28,7 +29,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-public class LogRecord {
+public class LogRecord implements Serializable {
+	private static final long serialVersionUID = 1984221053172318902L;
+
 	private static final Logger log = Logger.getLogger(LogRecord.class.getName());
 
 	public LogRecord(String hostName, String hostAddr, java.util.logging.LogRecord logRecord) {
@@ -47,7 +50,7 @@ public class LogRecord {
 		}
 
 		if (logRecord.getThrown() != null) {
-			setThrowableClass(logRecord.getThrown().getClass().getName());
+			setThrowable(logRecord.getThrown().getClass().getName());
 			try (StringWriter strWriter = new StringWriter(); PrintWriter writer = new PrintWriter(strWriter);) {
 				logRecord.getThrown().printStackTrace(writer);
 				setStackTrace(strWriter.toString());
@@ -70,9 +73,15 @@ public class LogRecord {
 	@Column(name = "hostAddress")
 	private String hostAddress;
 
+	/**
+	 * The name of the log level, e.g. INFO or WARN.
+	 */
 	@Column(name = "levelName")
 	private String levelName;
 
+	/**
+	 * An integer value representing the log level.
+	 */
 	@Column(name = "levelValue")
 	private int levelValue;
 
@@ -83,13 +92,13 @@ public class LogRecord {
 	private String logger;
 
 	/**
-	 * Class that issued logging call
+	 * Class that issued logging call.
 	 */
 	@Column(name = "sourceClass")
 	private String sourceClass;
 
 	/**
-	 * Method that issued logging call
+	 * Method that issued logging call.
 	 */
 	@Column(name = "sourceMethod")
 	private String sourceMethod;
@@ -97,6 +106,7 @@ public class LogRecord {
 	/**
 	 * Non-localized raw message text
 	 */
+	@Id
 	@Column(name = "message")
 	private String message;
 
@@ -109,6 +119,6 @@ public class LogRecord {
 	@Column(name = "stackTrace")
 	private String stackTrace;
 
-	@Column(name = "throwableClass")
-	private String throwableClass;
+	@Column(name = "throwable")
+	private String throwable;
 }
