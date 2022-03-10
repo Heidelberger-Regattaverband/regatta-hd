@@ -14,42 +14,38 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 public class DBConnectionDialog extends Dialog<DBConfig> {
 
 	private DBConfig connectionData;
 
-	public DBConnectionDialog(Window window, boolean decorated, ResourceBundle resources, DBConfig dbCfg) {
+	public DBConnectionDialog(Window window, ResourceBundle bundle, DBConfig dbCfg) {
 		initOwner(Objects.requireNonNull(window, "window"));
 		this.connectionData = Objects.requireNonNullElse(dbCfg, DBConfig.builder().build());
 
-		if (!decorated) {
-			initStyle(StageStyle.UNDECORATED);
-		}
-		setHeaderText(resources.getString("DatabaseConnectionDialog.title"));
+		setHeaderText(bundle.getString("DatabaseConnectionDialog.title"));
 
 		GridPane gridpane = new GridPane();
 		gridpane.setPadding(new Insets(5));
 		gridpane.setHgap(5);
 		gridpane.setVgap(5);
 
-		Label dbHostLbl = new Label(resources.getString("DatabaseConnectionDialog.dbHost"));
+		Label dbHostLbl = new Label(bundle.getString("DatabaseConnectionDialog.dbHost"));
 		gridpane.add(dbHostLbl, 0, 1);
-		Label dbNameLbl = new Label(resources.getString("DatabaseConnectionDialog.dbName"));
+		Label dbNameLbl = new Label(bundle.getString("DatabaseConnectionDialog.dbName"));
 		gridpane.add(dbNameLbl, 0, 2);
-		Label userNameLbl = new Label(resources.getString("DatabaseConnectionDialog.userName"));
+		Label userNameLbl = new Label(bundle.getString("DatabaseConnectionDialog.userName"));
 		gridpane.add(userNameLbl, 0, 3);
-		Label passwordLbl = new Label(resources.getString("DatabaseConnectionDialog.password"));
+		Label passwordLbl = new Label(bundle.getString("DatabaseConnectionDialog.password"));
 		gridpane.add(passwordLbl, 0, 4);
 
-		CheckBox encryptCbox = new CheckBox(resources.getString("DatabaseConnectionDialog.encrypt"));
+		CheckBox encryptCbox = new CheckBox(bundle.getString("DatabaseConnectionDialog.encrypt"));
 		encryptCbox.setSelected(dbCfg.isEncrypt());
 		gridpane.add(encryptCbox, 0, 5);
 
 		CheckBox trustServerCertificateCbox = new CheckBox(
-				resources.getString("DatabaseConnectionDialog.trustServerCertificate"));
+				bundle.getString("DatabaseConnectionDialog.trustServerCertificate"));
 		trustServerCertificateCbox.setSelected(dbCfg.isTrustServerCertificate());
 		trustServerCertificateCbox.setDisable(!encryptCbox.isSelected());
 		gridpane.add(trustServerCertificateCbox, 0, 6);
