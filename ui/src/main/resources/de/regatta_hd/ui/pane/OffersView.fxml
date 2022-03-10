@@ -45,14 +45,14 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%OffersView.labelShortCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%common.labelShort">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>shortLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%OffersView.labelLongCol.text">
+        <TableColumn reorderable="false" sortable="false" text="%common.label">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>longLabel</property>
