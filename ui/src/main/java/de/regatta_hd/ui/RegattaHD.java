@@ -37,8 +37,7 @@ public class RegattaHD extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		this.context.init();
 
-		Logger rootLogger = LogManager.getLogManager().getLogger("");
-		rootLogger.addHandler(this.dbLogHandler);
+		initLogging();
 
 		try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("icon.png")) {
 			primaryStage.getIcons().add(new Image(in));
@@ -56,6 +55,16 @@ public class RegattaHD extends Application {
 		primaryStage.setOnCloseRequest(event -> FxUtils.storeSizeAndPos("Primary.fxml", primaryStage));
 
 		primaryStage.show();
+	}
+
+	private void initLogging() throws IOException {
+		// must set before the Logger, loads logging.properties from the classpath
+		try (InputStream is = RegattaHD.class.getClassLoader().getResourceAsStream("logging.properties")) {
+			LogManager.getLogManager().readConfiguration(is);
+		}
+
+		Logger rootLogger = LogManager.getLogManager().getLogger("");
+		rootLogger.addHandler(this.dbLogHandler);
 	}
 
 	private Parent loadFXML(String fxml, ResourceBundle bundle) throws IOException {
