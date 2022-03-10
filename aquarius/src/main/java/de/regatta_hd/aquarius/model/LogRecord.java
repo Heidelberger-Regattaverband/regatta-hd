@@ -50,7 +50,7 @@ public class LogRecord implements Serializable {
 		}
 
 		if (logRecord.getThrown() != null) {
-			setThrowableClass(logRecord.getThrown().getClass().getName());
+			setThrowable(logRecord.getThrown().getClass().getName());
 			try (StringWriter strWriter = new StringWriter(); PrintWriter writer = new PrintWriter(strWriter);) {
 				logRecord.getThrown().printStackTrace(writer);
 				setStackTrace(strWriter.toString());
@@ -119,6 +119,6 @@ public class LogRecord implements Serializable {
 	@Column(name = "stackTrace")
 	private String stackTrace;
 
-	@Column(name = "throwableClass")
-	private String throwableClass;
+	@Column(name = "throwable")
+	private String throwable;
 }

@@ -54,7 +54,7 @@ public class ErrorLogController extends AbstractBaseController {
 		this.logRecordsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.stackTraceTar.setText(newSelection.getStackTrace());
-				this.throwableTxf.setText(newSelection.getThrowableClass());
+				this.throwableTxf.setText(newSelection.getThrowable());
 			} else {
 				this.stackTraceTar.setText(null);
 				this.throwableTxf.setText(null);
