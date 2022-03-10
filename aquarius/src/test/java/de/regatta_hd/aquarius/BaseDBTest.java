@@ -27,6 +27,8 @@ class BaseDBTest implements BeforeAllCallback {
 
 		aquariusDb = injector.getInstance(AquariusDB.class);
 		aquariusDb.open(connectionData);
+
+		aquariusDb.updateSchema();
 	}
 
 	@Test
