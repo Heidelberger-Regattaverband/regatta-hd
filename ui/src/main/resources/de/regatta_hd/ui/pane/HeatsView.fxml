@@ -65,13 +65,6 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.label">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>raceLongLabel</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
       </columns>
     </TableView>
   </children>
