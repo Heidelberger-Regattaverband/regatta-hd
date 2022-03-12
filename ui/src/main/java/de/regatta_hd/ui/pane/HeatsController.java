@@ -91,7 +91,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportOnAction() {
 		disableButtons(true);
 
-		DBTask<String> dbTask = this.dbTask.createTask(progress -> createCsv(progress), dbResult -> {
+		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
 			try {
 				File file = FxUtils.showSaveDialog(this.refreshBtn.getScene().getWindow(),
 						getText("heats.csv.description"), "*.csv");
@@ -109,11 +109,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 		dialog.initOwner(this.refreshBtn.getScene().getWindow());
 		dialog.setTitle(getText("heats.csv.export"));
-
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		this.dbTask.runTask(dbTask);
 
-		dialog.showAndWait();
+		this.dbTask.runTask(dbTask);
 	}
 
 	private void disableButtons(boolean disabled) {
@@ -123,6 +121,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private String createCsv(DBProgressProvider progress) {
 		StringBuilder builder = new StringBuilder(4096);
+
+		// add header line
 		addCsvHeader(builder);
 
 		for (int j = 0; j < this.heatsList.size(); j++) {

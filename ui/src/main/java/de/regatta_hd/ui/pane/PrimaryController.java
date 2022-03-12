@@ -136,11 +136,10 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		super.dbTask.runTask(dbTask);
-
 		dialog.initOwner(this.mainMbar.getScene().getWindow());
 		dialog.setTitle(getText("DatabaseConnectionDialog.title"));
-		dialog.showAndWait();
+
+		super.dbTask.runTask(dbTask);
 	}
 
 	@FXML
