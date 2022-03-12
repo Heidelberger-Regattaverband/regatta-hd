@@ -59,9 +59,9 @@ public class RegattaHD extends Application {
 
 	private void initLogging() throws IOException {
 		// must set before the Logger, loads logging.properties from the classpath
-		try (InputStream is = RegattaHD.class.getClassLoader().getResourceAsStream("logging.properties")) {
-			LogManager.getLogManager().readConfiguration(is);
-		}
+//		try (InputStream is = RegattaHD.class.getClassLoader().getResourceAsStream("logging.properties")) {
+//			LogManager.getLogManager().readConfiguration(is);
+//		}
 
 		Logger rootLogger = LogManager.getLogManager().getLogger("");
 		rootLogger.addHandler(this.dbLogHandler);

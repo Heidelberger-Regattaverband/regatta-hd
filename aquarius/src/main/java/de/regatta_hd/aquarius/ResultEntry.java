@@ -25,8 +25,8 @@ public class ResultEntry {
 		return this.heat.getNumber();
 	}
 
-	public short getHeatNumber() {
-		return this.heat.getHeatNumber();
+	public short getDevisionNumber() {
+		return this.heat.getDevisionNumber();
 	}
 
 	public String getRaceNumber() {

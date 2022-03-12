@@ -44,8 +44,8 @@ public class SetListEntry {
 		return boatBuilder.toString();
 	}
 
-	public Short getHeatNumber() {
-		return this.srcHeatRregistration != null ? Short.valueOf(this.srcHeatRregistration.getHeat().getHeatNumber())
+	public Short getDevisionNumber() {
+		return this.srcHeatRregistration != null ? Short.valueOf(this.srcHeatRregistration.getHeat().getDevisionNumber())
 				: null;
 	}
 

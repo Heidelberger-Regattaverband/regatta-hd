@@ -62,7 +62,7 @@ public class Heat {
 
 	@Column(name = "Comp_HeatNumber")
 	@ToString.Include(rank = 10)
-	private short heatNumber;
+	private short devisionNumber;
 
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
@@ -166,5 +166,17 @@ public class Heat {
 
 	public void setStateSet() {
 		setState((byte) 1);
+	}
+
+	public String getRaceNumber() {
+		return this.race.getNumber();
+	}
+
+	public String getRaceShortLabel() {
+		return this.race.getShortLabel();
+	}
+
+	public String getRaceLongLabel() {
+		return this.race.getLongLabel();
 	}
 }

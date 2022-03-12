@@ -63,7 +63,7 @@
           text="%common.heatAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>heatNumber</property>
+              <property>devisionNumber</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>

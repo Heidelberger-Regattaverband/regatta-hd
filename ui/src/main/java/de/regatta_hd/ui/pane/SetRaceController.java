@@ -361,7 +361,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			SortedList<HeatRegistration> sortedList = new SortedList<>(
 					FXCollections.observableArrayList(heat.getEntries()));
 
-			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getHeatNumber())));
+			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 			compEntriesTable.setItems(sortedList);
 			compEntriesTable.sort();
