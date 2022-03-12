@@ -98,7 +98,7 @@ public class Race {
 	private BoatClass boatClass;
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
-	@OrderBy("heatNumber")
+	@OrderBy("devisionNumber")
 	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
@@ -183,7 +183,7 @@ public class Race {
 
 	public List<Heat> getHeatsOrderedByNumber() {
 		List<Heat> sorted = new ArrayList<>(getHeats());
-		sorted.sort((entry1, entry2) -> entry1.getHeatNumber() > entry2.getHeatNumber() ? 1 : -1);
+		sorted.sort((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
 		return sorted;
 	}
 

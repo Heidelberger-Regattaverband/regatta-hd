@@ -324,15 +324,23 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public List<Heat> getHeats() {
+		EntityManager entityManager = this.db.getEntityManager();
+
+		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta", Heat.class)
+				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
+	}
+
 	private List<Heat> getOfficialHeats() {
 		EntityManager entityManager = this.db.getEntityManager();
 
-		TypedQuery<Heat> query = entityManager
+		return entityManager
 				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND (h.state = 5 OR h.state = 4)",
 						Heat.class)
 				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
-				.setParameter(PARAM_REGATTA, getActiveRegatta());
-		return query.getResultList();
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
 	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.EventListener;
 import java.util.List;
 
+import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Score;
@@ -25,6 +26,8 @@ public interface RegattaDAO {
 	Race getRace(String raceNumber);
 
 	Race getRace(String raceNumber, String graphName);
+
+	List<Heat> getHeats();
 
 	List<ResultEntry> getOfficialResults();
 

@@ -25,16 +25,16 @@ public class ResultEntry {
 		return this.heat.getNumber();
 	}
 
-	public short getHeatNumber() {
-		return this.heat.getHeatNumber();
+	public short getDevisionNumber() {
+		return this.heat.getDevisionNumber();
 	}
 
 	public String getRaceNumber() {
-		return this.heat.getRace().getNumber();
+		return this.heat.getRaceNumber();
 	}
 
 	public String getRaceLabel() {
-		return this.heat.getRace().getShortLabel();
+		return this.heat.getRaceShortLabel();
 	}
 
 	public String getFirst() {

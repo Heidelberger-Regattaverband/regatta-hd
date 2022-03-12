@@ -71,7 +71,7 @@
                     </TableColumn -->
                   <TableColumn style="-fx-alignment: CENTER;" text="%common.heatAbr">
                     <cellValueFactory>
-                      <PropertyValueFactory property="heatNumber" />
+                      <PropertyValueFactory property="devisionNumber" />
                     </cellValueFactory>
                   </TableColumn>
                   <TableColumn style="-fx-alignment: CENTER;" text="%common.rank">

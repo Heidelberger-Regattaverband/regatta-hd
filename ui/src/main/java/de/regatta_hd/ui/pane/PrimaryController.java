@@ -39,6 +39,9 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@Named("version")
 	private String version;
 
+	// menu and menu items
+	@FXML
+	private MenuBar mainMbar;
 	@FXML
 	private MenuItem dbConnectMitm;
 	@FXML
@@ -54,7 +57,9 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private MenuItem errorLogMitm;
 	@FXML
-	private MenuBar mainMbar;
+	private MenuItem resultsMitm;
+	@FXML
+	private MenuItem heatsMitm;
 
 	// stages
 	private Stage setRaceStage;
@@ -63,9 +68,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage scoresViewStage;
 	private Stage resultsStage;
 	private Stage errorLogStage;
-
-	@FXML
-	private MenuItem resultsMitm;
+	private Stage heatsStage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -233,6 +236,20 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleHeatsOnAction() {
+		if (this.heatsStage == null) {
+			try {
+				this.heatsStage = newWindow("HeatsView.fxml", getText("heats.title"),
+						event -> this.heatsStage = null);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		} else {
+			this.heatsStage.requestFocus();
+		}
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
@@ -249,6 +266,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 					this.setRaceMitm.setDisable(!hasActiveRegatta);
 					this.scoreMitm.setDisable(!hasActiveRegatta);
 					this.resultsMitm.setDisable(!hasActiveRegatta);
+					this.heatsMitm.setDisable(!hasActiveRegatta);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
@@ -258,6 +276,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			this.setRaceMitm.setDisable(!isOpen);
 			this.scoreMitm.setDisable(!isOpen);
 			this.resultsMitm.setDisable(!isOpen);
+			this.heatsMitm.setDisable(!isOpen);
 		}
 
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
