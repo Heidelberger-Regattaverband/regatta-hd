@@ -13,10 +13,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.dialog.ProgressDialog;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.ui.util.DBProgressProvider;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -87,9 +91,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportOnAction() {
 		disableButtons(true);
 
-		this.dbTask.run(progress -> {
-			return createCsv(this.heatsList);
-		}, dbResult -> {
+		DBTask<String> dbTask = this.dbTask.createTask(progress -> createCsv(progress), dbResult -> {
 			try {
 				File file = FxUtils.showSaveDialog(this.refreshBtn.getScene().getWindow(),
 						getText("heats.csv.description"), "*.csv");
@@ -102,7 +104,16 @@ public class HeatsController extends AbstractRegattaDAOController {
 			} finally {
 				disableButtons(false);
 			}
-		});
+		}, false);
+
+		ProgressDialog dialog = new ProgressDialog(dbTask);
+		dialog.initOwner(this.refreshBtn.getScene().getWindow());
+		dialog.setTitle(getText("heats.csv.export"));
+
+		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+		this.dbTask.runTask(dbTask);
+
+		dialog.showAndWait();
 	}
 
 	private void disableButtons(boolean disabled) {
@@ -110,13 +121,13 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.exportBtn.setDisable(disabled);
 	}
 
-	// static helpers
-
-	private static String createCsv(List<Heat> heats) {
+	private String createCsv(DBProgressProvider progress) {
 		StringBuilder builder = new StringBuilder(4096);
 		addCsvHeader(builder);
 
-		for (Heat heat : heats) {
+		for (int j = 0; j < this.heatsList.size(); j++) {
+			Heat heat = this.heatsList.get(j);
+
 			builder.append(heat.getNumber()).append(DELIMITER);
 			builder.append(heat.getRaceNumber()).append(DELIMITER);
 			builder.append(heat.getDevisionNumber()).append(DELIMITER);
@@ -128,17 +139,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			// add delays
 			if (heat.getRace().getAgeClass().isMasters()) {
 				for (HeatRegistration heatReg : heatRegs) {
-					String comment = heatReg.getRegistration().getComment();
-					if (StringUtils.isNotBlank(comment)) {
-						String delay = "0";
-						Matcher matcher = delayPattern.matcher(comment);
-						if (matcher.find()) {
-							delay = matcher.group();
-						}
-						builder.append(delay).append(DELIMITER);
-					} else {
-						builder.append("0").append(DELIMITER);
-					}
+					builder.append(getDelay(heatReg)).append(DELIMITER);
 				}
 				for (int i = 0; i < diff; i++) {
 					builder.append("0").append(DELIMITER);
@@ -159,9 +160,25 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 			// add status
 			builder.append("-").append(StringUtils.LF);
+
+			progress.updateProgress(j, this.heatsList.size(), getText("heats.csv.progress", heat.getNumber()));
 		}
 
 		return builder.toString();
+	}
+
+	// static helpers
+
+	private static String getDelay(HeatRegistration heatReg) {
+		String delay = "0";
+		String comment = heatReg.getRegistration().getComment();
+		if (StringUtils.isNotBlank(comment)) {
+			Matcher matcher = delayPattern.matcher(comment);
+			if (matcher.find()) {
+				delay = matcher.group();
+			}
+		}
+		return delay;
 	}
 
 	private static void addCsvHeader(StringBuilder builder) {

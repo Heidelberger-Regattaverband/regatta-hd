@@ -139,7 +139,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		super.dbTask.runTask(dbTask);
 
 		dialog.initOwner(this.mainMbar.getScene().getWindow());
-		dialog.setTitle("Datenbank Anmeldung");
+		dialog.setTitle(getText("DatabaseConnectionDialog.title"));
 		dialog.showAndWait();
 	}
 
@@ -239,8 +239,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	void handleHeatsOnAction() {
 		if (this.heatsStage == null) {
 			try {
-				this.heatsStage = newWindow("HeatsView.fxml", getText("heats.title"),
-						event -> this.heatsStage = null);
+				this.heatsStage = newWindow("HeatsView.fxml", getText("heats.title"), event -> this.heatsStage = null);
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
