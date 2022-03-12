@@ -164,7 +164,7 @@ public class Heat {
 		return sorted;
 	}
 
-	public List<HeatRegistration> getHeatRegistrationsOrderedByLane() {
+	public List<HeatRegistration> getEntriesSortedByLane() {
 		List<HeatRegistration> sorted = new ArrayList<>(getEntries());
 		sorted.sort((entry1, entry2) -> {
 			if (entry1.getLane() == entry2.getLane()) {

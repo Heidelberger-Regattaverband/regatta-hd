@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.FileChooser;
 
 public class HeatsController extends AbstractRegattaDAOController {
 	private static final String DELIMITER = ";";
@@ -85,13 +84,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		String csvContent = createCsv();
 
-		FileChooser fileChooser = new FileChooser();
-
-		// Set extension filter for text files
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv"));
-
-		// Show save file dialog
-		File file = fileChooser.showSaveDialog(this.refreshBtn.getScene().getWindow());
+		File file = FxUtils.showSaveDialog(this.refreshBtn.getScene().getWindow(), getText("heats.csv.description"),
+				"*.csv");
 
 		if (file != null) {
 			saveTextToFile(csvContent, file);
@@ -117,11 +111,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 			builder.append("0").append(DELIMITER); // delay lane 3
 			builder.append("0").append(DELIMITER); // delay lane 4
 
-			short laneCount = heat.getRace().getRaceMode().getLaneCount();
-			List<HeatRegistration> heatRegs = heat.getHeatRegistrationsOrderedByLane();
+			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			for (HeatRegistration heatReg : heatRegs) {
 				builder.append(heatReg.getRegistration().getBib()).append(DELIMITER);
 			}
+
+			short laneCount = heat.getRace().getRaceMode().getLaneCount();
 			short diff = (short) (laneCount - heatRegs.size());
 			for (int i = 0; i < diff; i++) {
 				builder.append("0").append(DELIMITER);

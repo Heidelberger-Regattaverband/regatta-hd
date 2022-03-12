@@ -1,5 +1,6 @@
 package de.regatta_hd.ui.util;
 
+import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -10,7 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class FxUtils {
 	private static final String WINDOW_POSITION_X = "Window_Position_X";
@@ -26,6 +29,16 @@ public class FxUtils {
 
 	private FxUtils() {
 		// avoid instances
+	}
+
+	public static File showSaveDialog(Window window, String description, final String... extensions) {
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter for text files
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description, extensions));
+
+		// Show save file dialog
+		return fileChooser.showSaveDialog(window);
 	}
 
 	public static void showErrorMessage(Throwable exception) {
