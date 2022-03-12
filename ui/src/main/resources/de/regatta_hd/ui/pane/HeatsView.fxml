@@ -21,7 +21,7 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
-        <Button fx:id="exportLightSystemBtn" onAction="#handleExportLightSystemhOnAction" text="CSV Export für Ampelanlage" />
+        <Button fx:id="exportBtn" onAction="#handleExportOnAction" text="CSV Export für Ampelanlage" />
       </items>
     </ToolBar>
 

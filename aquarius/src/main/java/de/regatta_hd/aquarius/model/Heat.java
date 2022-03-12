@@ -164,6 +164,17 @@ public class Heat {
 		return sorted;
 	}
 
+	public List<HeatRegistration> getHeatRegistrationsOrderedByLane() {
+		List<HeatRegistration> sorted = new ArrayList<>(getEntries());
+		sorted.sort((entry1, entry2) -> {
+			if (entry1.getLane() == entry2.getLane()) {
+				return 0;
+			}
+			return entry1.getLane() > entry2.getLane() ? 1 : -1;
+		});
+		return sorted;
+	}
+
 	public void setStateSet() {
 		setState((byte) 1);
 	}

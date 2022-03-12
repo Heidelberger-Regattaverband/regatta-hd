@@ -30,11 +30,11 @@ public class ResultEntry {
 	}
 
 	public String getRaceNumber() {
-		return this.heat.getRace().getNumber();
+		return this.heat.getRaceNumber();
 	}
 
 	public String getRaceLabel() {
-		return this.heat.getRace().getShortLabel();
+		return this.heat.getRaceShortLabel();
 	}
 
 	public String getFirst() {
