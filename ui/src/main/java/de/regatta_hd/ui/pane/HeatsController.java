@@ -29,7 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class HeatsController extends AbstractRegattaDAOController {
-	private static final String DELAY_ZERO = "'0";
+	private static final String DELAY_ZERO = "0";
 
 	private static final String DELIMITER = ";";
 
@@ -177,7 +177,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		if (StringUtils.isNotBlank(comment)) {
 			Matcher matcher = delayPattern.matcher(comment);
 			if (matcher.find()) {
-				delay = "'" + matcher.group().replace(",", ".");
+				delay = matcher.group().replace(",", ".");
 			}
 		}
 		return delay;
