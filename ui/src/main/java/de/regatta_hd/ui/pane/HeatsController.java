@@ -177,7 +177,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		if (StringUtils.isNotBlank(comment)) {
 			Matcher matcher = delayPattern.matcher(comment);
 			if (matcher.find()) {
-				delay = "'" + matcher.group();
+				delay = "'" + matcher.group().replace(",", ".");
 			}
 		}
 		return delay;
