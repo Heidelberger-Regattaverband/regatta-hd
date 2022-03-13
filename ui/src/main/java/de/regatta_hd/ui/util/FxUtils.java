@@ -50,14 +50,16 @@ public class FxUtils {
 		alert.showAndWait();
 	}
 
-	public static void showInfoDialog(String msg) {
+	public static void showInfoDialog(Window window, String msg) {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
+		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.showAndWait();
 	}
 
-	public static boolean showConfirmDialog(String title, String msg) {
+	public static boolean showConfirmDialog(Window window, String title, String msg) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.setTitle(title);
 		alert.getButtonTypes().clear();

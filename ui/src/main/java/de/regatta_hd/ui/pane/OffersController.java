@@ -67,10 +67,11 @@ public class OffersController extends AbstractRegattaDAOController {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
-					FxUtils.showInfoDialog("Keine Rennen geändert.");
+					FxUtils.showInfoDialog(getWindow(), "Keine Rennen geändert.");
 				} else {
 					refresh();
-					FxUtils.showInfoDialog(String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
+					FxUtils.showInfoDialog(getWindow(),
+							String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -89,10 +90,11 @@ public class OffersController extends AbstractRegattaDAOController {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
-					FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
+					FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
 				} else {
 					refresh();
-					FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+					FxUtils.showInfoDialog(getWindow(),
+							String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -133,4 +135,5 @@ public class OffersController extends AbstractRegattaDAOController {
 	private Window getWindow() {
 		return this.refreshBtn.getScene().getWindow();
 	}
+
 }

@@ -317,7 +317,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private void handleDeleteOnAction() {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null && FxUtils.showConfirmDialog(getText("SetRaceView.confirmDelete.title"),
+		if (selectedRace != null && FxUtils.showConfirmDialog(getWindow(), getText("SetRaceView.confirmDelete.title"),
 				getText("SetRaceView.confirmDelete.question"))) {
 			disableButtons();
 
