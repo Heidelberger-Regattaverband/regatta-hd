@@ -29,6 +29,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class HeatsController extends AbstractRegattaDAOController {
+	private static final String DELAY_ZERO = "'0";
+
 	private static final String DELIMITER = ";";
 
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
@@ -142,11 +144,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 					builder.append(getDelay(heatReg)).append(DELIMITER);
 				}
 				for (int i = 0; i < diff; i++) {
-					builder.append("0").append(DELIMITER);
+					builder.append(DELAY_ZERO).append(DELIMITER);
 				}
 			} else {
 				for (int i = 0; i < laneCount; i++) {
-					builder.append("0").append(DELIMITER);
+					builder.append(DELAY_ZERO).append(DELIMITER);
 				}
 			}
 
@@ -155,7 +157,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 				builder.append(heatReg.getRegistration().getBib()).append(DELIMITER);
 			}
 			for (int i = 0; i < diff; i++) {
-				builder.append("0").append(DELIMITER);
+				builder.append(DELAY_ZERO).append(DELIMITER);
 			}
 
 			// add status
@@ -170,12 +172,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 	// static helpers
 
 	private static String getDelay(HeatRegistration heatReg) {
-		String delay = "0";
+		String delay = DELAY_ZERO;
 		String comment = heatReg.getRegistration().getComment();
 		if (StringUtils.isNotBlank(comment)) {
 			Matcher matcher = delayPattern.matcher(comment);
 			if (matcher.find()) {
-				delay = matcher.group();
+				delay = "'" + matcher.group();
 			}
 		}
 		return delay;
