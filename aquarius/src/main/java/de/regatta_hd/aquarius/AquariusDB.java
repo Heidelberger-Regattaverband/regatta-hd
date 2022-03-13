@@ -3,6 +3,8 @@ package de.regatta_hd.aquarius;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
@@ -40,8 +42,9 @@ public interface AquariusDB {
 	 * Opens connection to Aquarius database.
 	 *
 	 * @param connectionData the {@link DBConfig connection data}
+	 * @throws SQLServerException
 	 */
-	void open(DBConfig connectionData);
+	void open(DBConfig connectionData) throws SQLServerException;
 
 	/**
 	 * Returns the executor for DB tasks.

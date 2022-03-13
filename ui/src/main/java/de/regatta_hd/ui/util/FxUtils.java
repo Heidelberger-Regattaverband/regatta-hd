@@ -41,9 +41,10 @@ public class FxUtils {
 		return fileChooser.showSaveDialog(window);
 	}
 
-	public static void showErrorMessage(Throwable exception) {
+	public static void showErrorMessage(Window window, Throwable exception) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Ein Programmfehler ist aufgetreten");
+		alert.initOwner(window);
+		alert.setTitle(bundle.getString("error.title"));
 		alert.setHeaderText(exception.getClass().getCanonicalName());
 		alert.setContentText(exception.getMessage());
 		alert.showAndWait();

@@ -127,7 +127,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				setTitle(pair.getValue());
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
 			} finally {
 				updateControls(false);
 			}
@@ -248,6 +248,12 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleAboutOnAction() {
+		AboutDialog aboutDlg = new AboutDialog(this.mainMbar.getScene().getWindow(), this.resources, this.version);
+		aboutDlg.showAndWait();
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
 	}
@@ -283,9 +289,4 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.errorLogMitm.setDisable(!isOpen);
 	}
 
-	@FXML
-	void handleAboutOnAction() {
-		AboutDialog aboutDlg = new AboutDialog(this.mainMbar.getScene().getWindow(), this.resources, this.version);
-		aboutDlg.showAndWait();
-	}
 }

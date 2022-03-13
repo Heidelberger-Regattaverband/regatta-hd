@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 class BaseDBTest implements BeforeAllCallback {
 
@@ -32,7 +33,7 @@ class BaseDBTest implements BeforeAllCallback {
 	}
 
 	@Test
-	void testOpen() {
+	void testOpen() throws SQLServerException {
 		aquariusDb.open(connectionData);
 		Assertions.assertTrue(aquariusDb.isOpen());
 	}

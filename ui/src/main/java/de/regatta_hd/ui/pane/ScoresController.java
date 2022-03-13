@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Window;
 
 public class ScoresController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
@@ -50,7 +51,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -69,7 +70,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -80,4 +81,9 @@ public class ScoresController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.calculateBtn.setDisable(disabled);
 	}
+
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
+	}
+
 }
