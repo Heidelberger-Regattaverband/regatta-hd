@@ -180,6 +180,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = super.db.getEntityManager();
 
 		race.getHeats().forEach(heat -> {
+			heat.setState((byte)0);
+			entityManager.merge(heat);
 			heat.getEntries().forEach(entityManager::remove);
 			heat.getEntries().clear();
 		});
