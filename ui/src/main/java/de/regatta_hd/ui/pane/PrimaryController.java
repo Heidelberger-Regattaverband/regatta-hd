@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Pair;
 
 public class PrimaryController extends AbstractRegattaDAOController {
@@ -83,17 +84,16 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void setTitle(Regatta regatta) {
-		Stage stage = (Stage) this.mainMbar.getScene().getWindow();
 		String title = regatta != null ? regatta.getTitle() : getText("MainWindow.title");
-		stage.setTitle(title);
+		((Stage) getWindow()).setTitle(title);
 	}
 
 	@FXML
 	private void handleDatabaseConnect() {
 		if (!super.db.isOpen()) {
 			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(this.mainMbar.getScene().getWindow(),
-						super.resources, this.dbCfgStore.getLastSuccessful());
+				DBConnectionDialog dialog = new DBConnectionDialog(getWindow(), super.resources,
+						this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					openDbConnection(connectionData);
@@ -127,7 +127,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				setTitle(pair.getValue());
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
 			} finally {
 				updateControls(false);
 			}
@@ -136,7 +136,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		dialog.initOwner(this.mainMbar.getScene().getWindow());
+		dialog.initOwner(getWindow());
 		dialog.setTitle(getText("DatabaseConnectionDialog.title"));
 
 		super.dbTask.runTask(dbTask);
@@ -248,8 +248,18 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleAboutOnAction() {
+		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources, this.version);
+		aboutDlg.showAndWait();
+	}
+
+	@FXML
 	private void handleExit() {
 		Platform.exit();
+	}
+
+	private Window getWindow() {
+		return this.mainMbar.getScene().getWindow();
 	}
 
 	private void updateControls(boolean isConnecting) {
@@ -283,9 +293,4 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.errorLogMitm.setDisable(!isOpen);
 	}
 
-	@FXML
-	void handleAboutOnAction() {
-		AboutDialog aboutDlg = new AboutDialog(this.mainMbar.getScene().getWindow(), this.resources, this.version);
-		aboutDlg.showAndWait();
-	}
 }

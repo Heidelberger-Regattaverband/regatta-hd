@@ -145,7 +145,7 @@ public class Heat {
 		return getState() == 4;
 	}
 
-	public List<HeatRegistration> getHeatRegistrationsOrderedByRank() {
+	public List<HeatRegistration> getEntriesSortedByRank() {
 		List<HeatRegistration> sorted = new ArrayList<>(getEntries());
 		sorted.sort((entry1, entry2) -> {
 			byte rank1 = entry1.getFinalResult() != null ? entry1.getFinalResult().getRank() : Byte.MAX_VALUE;

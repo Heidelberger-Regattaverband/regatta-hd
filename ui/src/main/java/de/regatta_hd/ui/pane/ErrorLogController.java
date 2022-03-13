@@ -20,6 +20,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Window;
 
 public class ErrorLogController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
@@ -53,7 +54,8 @@ public class ErrorLogController extends AbstractBaseController {
 
 		this.logRecordsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
-				String stackTraceTxt = newSelection.getStackTrace() != null ? newSelection.getStackTrace() : newSelection.getMessage();
+				String stackTraceTxt = newSelection.getStackTrace() != null ? newSelection.getStackTrace()
+						: newSelection.getMessage();
 				this.stackTraceTar.setText(stackTraceTxt);
 				this.throwableTxf.setText(newSelection.getThrowable());
 			} else {
@@ -85,7 +87,7 @@ public class ErrorLogController extends AbstractBaseController {
 				this.hostNameCbx.getSelectionModel().select(this.hostName);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -108,7 +110,7 @@ public class ErrorLogController extends AbstractBaseController {
 				FxUtils.autoResizeColumns(this.logRecordsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -118,5 +120,9 @@ public class ErrorLogController extends AbstractBaseController {
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.hostNameCbx.setDisable(disabled);
+	}
+
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
 	}
 }

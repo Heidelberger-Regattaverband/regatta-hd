@@ -113,7 +113,7 @@ class AquariusDBTests extends BaseDBTest {
 		indent(indent);
 		System.out.println(heat.toString());
 
-		heat.getHeatRegistrationsOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
+		heat.getEntriesSortedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
 	private static void trace(Registration registration, int indent) {

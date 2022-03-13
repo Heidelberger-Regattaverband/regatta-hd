@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Window;
 
 public class ResultsController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ResultsController.class.getName());
@@ -58,7 +59,7 @@ public class ResultsController extends AbstractRegattaDAOController {
 				FxUtils.autoResizeColumns(this.resultsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -68,19 +69,22 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	public void handleSetPointsOnAction() {
 		disableButtons(true);
+		this.resultsList.clear();
 
 		this.dbTask.runInTransaction(progress -> {
 			this.resultsList.forEach(resultEntry -> {
 				Race race = resultEntry.getHeat().getRace();
-				short laneCount = race.getRaceMode().getLaneCount();
+				int maxPoints = race.getRaceMode().getLaneCount() + 1;
 				byte numRowers = race.getBoatClass().getNumRowers();
 
-				List<HeatRegistration> heatRegs = resultEntry.getHeat().getHeatRegistrationsOrderedByRank();
+				List<HeatRegistration> heatRegs = resultEntry.getHeat().getEntriesSortedByRank();
 				for (HeatRegistration heatReg : heatRegs) {
 					Result result = heatReg.getFinalResult();
-					float pointsBoat = 0;
+					int pointsBoat = 0;
 					if (result.getRank() > 0) {
-						pointsBoat = (numRowers * (laneCount + 1 - result.getRank()));
+						// 1.: 5 - 1 + 4 = 8
+						// 2.: 5 - 2 + 4 = 7
+						pointsBoat = maxPoints - result.getRank() + numRowers;
 					}
 					result.setPoints(Float.valueOf(pointsBoat));
 					this.db.getEntityManager().merge(result);
@@ -89,7 +93,6 @@ public class ResultsController extends AbstractRegattaDAOController {
 			this.db.getEntityManager().flush();
 			return this.regattaDAO.getOfficialResults();
 		}, dbResult -> {
-			this.resultsList.clear();
 
 			try {
 				this.resultsList.setAll(dbResult.getResult());
@@ -97,7 +100,7 @@ public class ResultsController extends AbstractRegattaDAOController {
 				FxUtils.autoResizeColumns(this.resultsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -117,4 +120,9 @@ public class ResultsController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setPointsBtn.setDisable(disabled);
 	}
+
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
+	}
+
 }

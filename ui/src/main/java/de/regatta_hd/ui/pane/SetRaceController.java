@@ -33,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 import javafx.util.Pair;
 
 public class SetRaceController extends AbstractRegattaDAOController {
@@ -116,7 +117,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				this.setListTbl.setDisable(false);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			}
 		});
 	}
@@ -160,7 +161,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					}
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				}
 			}));
 		} else {
@@ -195,7 +196,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 						showRace(race);
 					} catch (Exception e) {
 						logger.log(Level.SEVERE, e.getMessage(), e);
-						FxUtils.showErrorMessage(e);
+						FxUtils.showErrorMessage(getWindow(), e);
 					} finally {
 						enableButtons(race);
 
@@ -226,7 +227,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					showRace(race);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
 					enableButtons(race);
 				}
@@ -253,7 +254,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					FxUtils.autoResizeColumns(this.setListTbl);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
 					enableButtons(raceRef.get());
 				}
@@ -275,7 +276,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					race = dbResult.getResult();
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
 					enableButtons(race);
 				}
@@ -304,7 +305,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					showRace(race);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
 					enableButtons(race);
 				}
@@ -316,7 +317,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private void handleDeleteOnAction() {
 		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null && FxUtils.showConfirmDialog(getText("SetRaceView.confirmDelete.title"),
+		if (selectedRace != null && FxUtils.showConfirmDialog(getWindow(), getText("SetRaceView.confirmDelete.title"),
 				getText("SetRaceView.confirmDelete.question"))) {
 			disableButtons();
 
@@ -331,7 +332,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					showRace(race);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
 					enableButtons(race);
 				}
@@ -361,7 +362,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			SortedList<HeatRegistration> sortedList = new SortedList<>(
 					FXCollections.observableArrayList(heat.getEntries()));
 
-			Label heatNrLabel = new Label(getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
+			Label heatNrLabel = new Label(
+					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 			compEntriesTable.setItems(sortedList);
 			compEntriesTable.sort();
@@ -458,6 +460,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		}
 
 		return heatRegsTbl;
+	}
+
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
 	}
 
 	// static helpers

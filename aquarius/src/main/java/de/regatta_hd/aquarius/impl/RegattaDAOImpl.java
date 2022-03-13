@@ -180,6 +180,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = super.db.getEntityManager();
 
 		race.getHeats().forEach(heat -> {
+			heat.setState((byte)0);
+			entityManager.merge(heat);
 			heat.getEntries().forEach(entityManager::remove);
 			heat.getEntries().clear();
 		});
@@ -337,7 +339,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = this.db.getEntityManager();
 
 		return entityManager
-				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND (h.state = 5 OR h.state = 4)",
+				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND h.state = 4",
 						Heat.class)
 				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
@@ -455,7 +457,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		// loop over source race heats and get all heat registrations sorted by time
 		srcRace.getHeats().forEach(heat -> {
-			List<HeatRegistration> byRank = heat.getHeatRegistrationsOrderedByRank();
+			List<HeatRegistration> byRank = heat.getEntriesSortedByRank();
 			for (int j = 0; j < byRank.size(); j++) {
 				srcHeatRegs.get(j).add(byRank.get(j));
 			}

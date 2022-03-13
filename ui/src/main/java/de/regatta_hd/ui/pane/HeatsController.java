@@ -27,8 +27,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Window;
 
 public class HeatsController extends AbstractRegattaDAOController {
+	private static final String DELAY_ZERO = "0";
+
 	private static final String DELIMITER = ";";
 
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
@@ -53,10 +56,41 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.numberCol);
 
-		loadResults(false);
+		loadHeats(false);
 	}
 
-	private void loadResults(boolean refresh) {
+	@FXML
+	void handleRefreshOnAction() {
+		loadHeats(true);
+	}
+
+	@FXML
+	void handleExportOnAction() {
+		disableButtons(true);
+
+		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
+			try {
+				File file = FxUtils.showSaveDialog(getWindow(), getText("heats.csv.description"), "*.csv");
+				if (file != null) {
+					saveTextToFile(dbResult.getResult(), file);
+				}
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			} finally {
+				disableButtons(false);
+			}
+		}, false);
+
+		ProgressDialog dialog = new ProgressDialog(dbTask);
+		dialog.initOwner(this.refreshBtn.getScene().getWindow());
+		dialog.setTitle(getText("heats.csv.export"));
+		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+
+		this.dbTask.runTask(dbTask);
+	}
+
+	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		this.heatsList.clear();
 
@@ -72,46 +106,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 				FxUtils.autoResizeColumns(this.heatsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
 		});
-	}
-
-	@FXML
-	void handleRefreshOnAction() {
-		disableButtons(true);
-
-		loadResults(true);
-
-	}
-
-	@FXML
-	void handleExportOnAction() {
-		disableButtons(true);
-
-		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
-			try {
-				File file = FxUtils.showSaveDialog(this.refreshBtn.getScene().getWindow(),
-						getText("heats.csv.description"), "*.csv");
-				if (file != null) {
-					saveTextToFile(dbResult.getResult(), file);
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
-			} finally {
-				disableButtons(false);
-			}
-		}, false);
-
-		ProgressDialog dialog = new ProgressDialog(dbTask);
-		dialog.initOwner(this.refreshBtn.getScene().getWindow());
-		dialog.setTitle(getText("heats.csv.export"));
-		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-
-		this.dbTask.runTask(dbTask);
 	}
 
 	private void disableButtons(boolean disabled) {
@@ -142,11 +141,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 					builder.append(getDelay(heatReg)).append(DELIMITER);
 				}
 				for (int i = 0; i < diff; i++) {
-					builder.append("0").append(DELIMITER);
+					builder.append(DELAY_ZERO).append(DELIMITER);
 				}
 			} else {
 				for (int i = 0; i < laneCount; i++) {
-					builder.append("0").append(DELIMITER);
+					builder.append(DELAY_ZERO).append(DELIMITER);
 				}
 			}
 
@@ -155,7 +154,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 				builder.append(heatReg.getRegistration().getBib()).append(DELIMITER);
 			}
 			for (int i = 0; i < diff; i++) {
-				builder.append("0").append(DELIMITER);
+				builder.append(DELAY_ZERO).append(DELIMITER);
 			}
 
 			// add status
@@ -167,15 +166,28 @@ public class HeatsController extends AbstractRegattaDAOController {
 		return builder.toString();
 	}
 
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
+	}
+
+	private void saveTextToFile(String csvContent, File file) {
+		try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
+			writer.println(csvContent);
+		} catch (IOException ex) {
+			logger.log(Level.SEVERE, null, ex);
+			FxUtils.showErrorMessage(getWindow(), ex);
+		}
+	}
+
 	// static helpers
 
 	private static String getDelay(HeatRegistration heatReg) {
-		String delay = "0";
+		String delay = DELAY_ZERO;
 		String comment = heatReg.getRegistration().getComment();
 		if (StringUtils.isNotBlank(comment)) {
 			Matcher matcher = delayPattern.matcher(comment);
 			if (matcher.find()) {
-				delay = matcher.group();
+				delay = matcher.group().replace(",", ".");
 			}
 		}
 		return delay;
@@ -187,15 +199,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 				.append("Delay Bahn 3").append(DELIMITER).append("Delay Bahn 4").append(DELIMITER).append("Boot Bahn 1")
 				.append(DELIMITER).append("Boot Bahn 2").append(DELIMITER).append("Boot Bahn 3").append(DELIMITER)
 				.append("Boot Bahn 4").append(DELIMITER).append("Status").append(StringUtils.LF);
-	}
-
-	private static void saveTextToFile(String csvContent, File file) {
-		try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
-			writer.println(csvContent);
-		} catch (IOException ex) {
-			logger.log(Level.SEVERE, null, ex);
-			FxUtils.showErrorMessage(ex);
-		}
 	}
 
 }

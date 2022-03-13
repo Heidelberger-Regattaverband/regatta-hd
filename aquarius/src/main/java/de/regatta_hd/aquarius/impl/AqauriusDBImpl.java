@@ -11,10 +11,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
@@ -22,6 +24,7 @@ import de.regatta_hd.common.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -74,17 +77,25 @@ public class AqauriusDBImpl implements AquariusDB {
 	}
 
 	@Override
-	public synchronized void open(DBConfig dbCfg) {
+	public synchronized void open(DBConfig dbCfg) throws SQLServerException {
 		requireNonNull(dbCfg, "dbCfg must not be null");
 
 		close();
 
 		Map<String, String> props = getProperties(dbCfg);
-		EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
-		this.entityManager = factory.createEntityManager();
+		try {
+			EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
+			this.entityManager = factory.createEntityManager();
 
-		// store current thread to ensure further DB access is done in same thread
-		this.sessionThread = Thread.currentThread();
+			// store current thread to ensure further DB access is done in same thread
+			this.sessionThread = Thread.currentThread();
+		} catch (PersistenceException e) {
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+			if (rootCause instanceof SQLServerException) {
+				throw (SQLServerException) rootCause;
+			}
+			throw e;
+		}
 	}
 
 	@SuppressWarnings("resource")

@@ -38,7 +38,7 @@ public class ResultEntry {
 	}
 
 	public String getFirst() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (!result.isEmpty()) {
 			return result.get(0).getRegistration().getClub().getAbbreviation();
 		}
@@ -46,7 +46,7 @@ public class ResultEntry {
 	}
 
 	public Float getFirstPoints() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (!result.isEmpty()) {
 			return result.get(0).getFinalResult().getPoints();
 		}
@@ -54,7 +54,7 @@ public class ResultEntry {
 	}
 
 	public String getSecond() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 1) {
 			return result.get(1).getRegistration().getClub().getAbbreviation();
 		}
@@ -62,7 +62,7 @@ public class ResultEntry {
 	}
 
 	public Float getSecondPoints() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 1) {
 			return result.get(1).getFinalResult().getPoints();
 		}
@@ -70,7 +70,7 @@ public class ResultEntry {
 	}
 
 	public String getThird() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 2) {
 			return result.get(2).getRegistration().getClub().getAbbreviation();
 		}
@@ -78,7 +78,7 @@ public class ResultEntry {
 	}
 
 	public Float getThirdPoints() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 2) {
 			return result.get(2).getFinalResult().getPoints();
 		}
@@ -86,7 +86,7 @@ public class ResultEntry {
 	}
 
 	public String getFourth() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 3) {
 			return result.get(3).getRegistration().getClub().getAbbreviation();
 		}
@@ -94,7 +94,7 @@ public class ResultEntry {
 	}
 
 	public Float getFourthPoints() {
-		List<HeatRegistration> result = this.heat.getHeatRegistrationsOrderedByRank();
+		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 3) {
 			return result.get(3).getFinalResult().getPoints();
 		}

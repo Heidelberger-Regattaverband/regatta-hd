@@ -41,22 +41,25 @@ public class FxUtils {
 		return fileChooser.showSaveDialog(window);
 	}
 
-	public static void showErrorMessage(Throwable exception) {
+	public static void showErrorMessage(Window window, Throwable exception) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Ein Programmfehler ist aufgetreten");
+		alert.initOwner(window);
+		alert.setTitle(bundle.getString("error.title"));
 		alert.setHeaderText(exception.getClass().getCanonicalName());
 		alert.setContentText(exception.getMessage());
 		alert.showAndWait();
 	}
 
-	public static void showInfoDialog(String msg) {
+	public static void showInfoDialog(Window window, String msg) {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
+		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.showAndWait();
 	}
 
-	public static boolean showConfirmDialog(String title, String msg) {
+	public static boolean showConfirmDialog(Window window, String title, String msg) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.setTitle(title);
 		alert.getButtonTypes().clear();

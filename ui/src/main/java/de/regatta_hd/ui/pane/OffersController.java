@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Window;
 
 public class OffersController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
@@ -66,14 +67,15 @@ public class OffersController extends AbstractRegattaDAOController {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
-					FxUtils.showInfoDialog("Keine Rennen geändert.");
+					FxUtils.showInfoDialog(getWindow(), "Keine Rennen geändert.");
 				} else {
 					refresh();
-					FxUtils.showInfoDialog(String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
+					FxUtils.showInfoDialog(getWindow(),
+							String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -88,14 +90,15 @@ public class OffersController extends AbstractRegattaDAOController {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
-					FxUtils.showInfoDialog("Keine Masters Rennen geändert.");
+					FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
 				} else {
 					refresh();
-					FxUtils.showInfoDialog(String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+					FxUtils.showInfoDialog(getWindow(),
+							String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -116,7 +119,7 @@ public class OffersController extends AbstractRegattaDAOController {
 				this.racesTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				disableButtons(false);
 			}
@@ -128,4 +131,9 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
 	}
+
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
+	}
+
 }
