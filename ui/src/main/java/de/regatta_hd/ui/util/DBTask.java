@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.common.AsyncCallable;
+import de.regatta_hd.common.ProgressMonitor;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -13,7 +15,7 @@ import javafx.concurrent.Task;
 public class DBTask<V> extends Task<DBResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
-	private final DBCallable<V> callable;
+	private final AsyncCallable<V> callable;
 
 	private Consumer<DBResult<V>> resultConsumer;
 
@@ -23,7 +25,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTask(DBCallable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
+	DBTask(AsyncCallable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;
@@ -58,7 +60,18 @@ public class DBTask<V> extends Task<DBResult<V>> {
 			transaction.begin();
 		}
 
-		V result = this.callable.call(DBTask.this::updateProgress);
+		V result = this.callable.call(new ProgressMonitor() {
+
+			@Override
+			public void update(double workDone, double max, String message) {
+				updateProgress(workDone, max, message);
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return DBTask.this.isCancelled();
+			}
+		});
 
 		// if an active transaction exists it is committed
 		if (transaction != null && transaction.isActive()) {

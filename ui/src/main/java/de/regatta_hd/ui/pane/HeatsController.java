@@ -17,7 +17,7 @@ import org.controlsfx.dialog.ProgressDialog;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.ui.util.DBProgressProvider;
+import de.regatta_hd.common.ProgressMonitor;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
@@ -118,7 +118,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.exportBtn.setDisable(disabled);
 	}
 
-	private String createCsv(DBProgressProvider progress) {
+	private String createCsv(ProgressMonitor progress) {
 		StringBuilder builder = new StringBuilder(4096);
 
 		// add header line
@@ -160,7 +160,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			// add status
 			builder.append("-").append(StringUtils.LF);
 
-			progress.updateProgress(j, this.heatsList.size(), getText("heats.csv.progress", heat.getNumber()));
+			progress.update(j, this.heatsList.size(), getText("heats.csv.progress", Short.valueOf(heat.getNumber())));
 		}
 
 		return builder.toString();
