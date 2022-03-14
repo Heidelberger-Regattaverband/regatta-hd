@@ -109,13 +109,13 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			final int MAX = 3;
 			updateControls(true);
 
-			progress.updateProgress(1, MAX, getText("login.openingDb"));
+			progress.update(1, MAX, getText("login.openingDb"));
 			super.db.open(connectionData.get());
 
-			progress.updateProgress(2, MAX, getText("login.updatingDb"));
+			progress.update(2, MAX, getText("login.updatingDb"));
 			super.db.updateSchema();
 
-			progress.updateProgress(3, MAX, getText("login.settingActiveRegatta"));
+			progress.update(3, MAX, getText("login.settingActiveRegatta"));
 
 			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 

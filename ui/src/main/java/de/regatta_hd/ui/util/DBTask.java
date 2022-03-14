@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.common.ProgressMonitor;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -58,7 +59,18 @@ public class DBTask<V> extends Task<DBResult<V>> {
 			transaction.begin();
 		}
 
-		V result = this.callable.call(DBTask.this::updateProgress);
+		V result = this.callable.call(new ProgressMonitor() {
+
+			@Override
+			public void update(double workDone, double max, String message) {
+				updateProgress(workDone, max, message);
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return DBTask.this.isCancelled();
+			}
+		});
 
 		// if an active transaction exists it is committed
 		if (transaction != null && transaction.isActive()) {
