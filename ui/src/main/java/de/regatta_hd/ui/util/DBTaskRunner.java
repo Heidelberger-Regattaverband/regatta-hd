@@ -1,12 +1,12 @@
 package de.regatta_hd.ui.util;
 
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.common.AsyncCallable;
 import javafx.concurrent.Task;
 
 @Singleton
@@ -16,30 +16,30 @@ public class DBTaskRunner {
 	private AquariusDB db;
 
 	/**
-	 * Executes the given {@link Callable} in a DB task.
+	 * Executes the given {@link AsyncCallable} in a DB task.
 	 *
-	 * @param callable      the {@link Callable} to execute, must not be null
+	 * @param callable      the {@link AsyncCallable} to execute, must not be null
 	 * @param resultHandler the onSucceeded event handler is called whenever the Task state transitions to the SUCCEEDED
 	 *                      state.
-	 * @return the {@link Task} executing the given {@link Callable}
+	 * @return the {@link Task} executing the given {@link AsyncCallable}
 	 */
-	public <V> DBTask<V> run(DBCallable<V> callable, Consumer<DBResult<V>> resultHandler) {
+	public <V> DBTask<V> run(AsyncCallable<V> callable, Consumer<DBResult<V>> resultHandler) {
 		return runTask(createTask(callable, resultHandler, false));
 	}
 
 	/**
-	 * Executes the given {@link Callable} in a DB task within a transaction.
+	 * Executes the given {@link AsyncCallable} in a DB task within a transaction.
 	 *
-	 * @param callable       the {@link Callable} to execute
+	 * @param callable       the {@link AsyncCallable} to execute
 	 * @param resultConsumer the onSucceeded event handler is called whenever the Task state transitions to the
 	 *                       SUCCEEDED state.
-	 * @return the {@link Task} executing the given {@link Callable}
+	 * @return the {@link Task} executing the given {@link AsyncCallable}
 	 */
-	public <V> DBTask<V> runInTransaction(DBCallable<V> callable, Consumer<DBResult<V>> resultConsumer) {
+	public <V> DBTask<V> runInTransaction(AsyncCallable<V> callable, Consumer<DBResult<V>> resultConsumer) {
 		return runTask(createTask(callable, resultConsumer, true));
 	}
 
-	public <V> DBTask<V> createTask(DBCallable<V> callable, Consumer<DBResult<V>> resultConsumer,
+	public <V> DBTask<V> createTask(AsyncCallable<V> callable, Consumer<DBResult<V>> resultConsumer,
 			boolean inTransaction) {
 		return new DBTask<>(callable, resultConsumer, inTransaction, this.db);
 	}
@@ -48,5 +48,4 @@ public class DBTaskRunner {
 		this.db.getExecutor().execute(task);
 		return task;
 	}
-
 }
