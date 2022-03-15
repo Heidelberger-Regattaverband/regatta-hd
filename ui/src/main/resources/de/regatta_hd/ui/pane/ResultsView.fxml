@@ -21,7 +21,7 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
-        <Button fx:id="setPointsBtn" onAction="#handleSetPointsOnAction" text="%common.setPoints" />
+        <Button fx:id="setPointsBtn" onAction="#handleSetPointsOnAction" text="%common.calculate" />
       </items>
     </ToolBar>
 

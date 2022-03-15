@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.control.DateTimeTableCellFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -44,6 +45,16 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
+        <TableColumn reorderable="false" sortable="false" text="%common.instant">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>instant</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+          <cellFactory>
+            <DateTimeTableCellFactory />
+          </cellFactory>
+        </TableColumn>
         <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr">
           <cellValueFactory>
             <PropertyValueFactory>
@@ -54,7 +65,7 @@
         <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.heatAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>devisionNumber</property>
+              <property>devisionLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>

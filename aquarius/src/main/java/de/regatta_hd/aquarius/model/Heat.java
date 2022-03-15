@@ -1,9 +1,11 @@
 package de.regatta_hd.aquarius.model;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,8 +46,14 @@ import lombok.ToString;
 				}), //
 		@NamedSubgraph(name = "registration.club", //
 				attributeNodes = { //
-						@NamedAttributeNode(value = "club"), @NamedAttributeNode(value = "crews") //
-				}) }))
+						@NamedAttributeNode(value = "club"), //
+						@NamedAttributeNode(value = "crews", subgraph = "crew.athlet") //
+				}), //
+		@NamedSubgraph(name = "crew.athlet", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "athlet") //
+				}) //
+}))
 //lombok
 @Getter
 @Setter
@@ -68,7 +76,7 @@ public class Heat {
 	private boolean cancelled;
 
 	@Column(name = "Comp_DateTime")
-	private Date dateTime;
+	private Instant instant;
 
 	@Column(name = "Comp_Dummy")
 	private boolean dummy;
@@ -82,7 +90,7 @@ public class Heat {
 
 	@Column(name = "Comp_Label", length = 32)
 	@ToString.Include(rank = 9)
-	private String label;
+	private String roundLabel;
 
 	@Column(name = "Comp_Locked")
 	private boolean locked;
@@ -184,10 +192,52 @@ public class Heat {
 	}
 
 	public String getRaceShortLabel() {
-		return this.race.getShortLabel();
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.race.getShortLabel());
+		if (StringUtils.isNotBlank(this.race.getComment())) {
+			builder.append(" - ").append(this.race.getComment());
+		}
+		return builder.toString();
+	}
+
+	public String getDevisionLabel() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getRoundCode()).append(getRoundLabel());
+		if (this.race.getAgeClass().isMasters()) {
+			builder.append(", AK ").append(getGroupValueLabel());
+		}
+		return builder.toString();
 	}
 
 	public String getRaceLongLabel() {
 		return this.race.getLongLabel();
+	}
+
+	private String getGroupValueLabel() {
+		switch (getGroupValue()) {
+		case 0:
+			return "A";
+		case 4:
+			return "B";
+		case 8:
+			return "C";
+		case 12:
+			return "D";
+		case 16:
+			return "E";
+		case 20:
+			return "F";
+		case 24:
+			return "G";
+		case 28:
+			return "H";
+		case 32:
+			return "I";
+		case 36:
+			return "J";
+		default:
+			return null;
+		}
+
 	}
 }
