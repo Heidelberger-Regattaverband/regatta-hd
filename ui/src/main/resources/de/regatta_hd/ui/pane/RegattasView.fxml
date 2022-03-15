@@ -26,8 +26,7 @@
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
       </items>
     </ToolBar>
-    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-      GridPane.vgrow="ALWAYS">
+    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
         <Label text="%common.loadData" />
       </placeholder>

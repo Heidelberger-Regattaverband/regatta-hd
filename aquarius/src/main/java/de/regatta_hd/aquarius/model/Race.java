@@ -181,7 +181,7 @@ public class Race {
 		return new SimpleBooleanProperty(isSet);
 	}
 
-	public List<Heat> getHeatsOrderedByNumber() {
+	public List<Heat> getHeatsSortedByDevisionNumber() {
 		List<Heat> sorted = new ArrayList<>(getHeats());
 		sorted.sort((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
 		return sorted;

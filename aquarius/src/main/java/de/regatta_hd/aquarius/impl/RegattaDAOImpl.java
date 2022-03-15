@@ -112,7 +112,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		final EntityManager entityManager = super.db.getEntityManager();
 
 		// get all planed heats ordered by the heat number
-		race.getHeatsOrderedByNumber().forEach(heat -> {
+		race.getHeatsSortedByDevisionNumber().forEach(heat -> {
 			// first clean existing heat assignments
 			heat.getEntries().forEach(entityManager::remove);
 

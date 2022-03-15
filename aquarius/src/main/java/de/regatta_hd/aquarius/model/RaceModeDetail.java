@@ -31,7 +31,7 @@ public class RaceModeDetail {
 	private int id;
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "raceModeDetail")
-	private List<Heat> races;
+	private List<Heat> heats;
 
 	@OneToMany(targetEntity = ProgressionRule.class, mappedBy = "raceModeDetail")
 	private Set<ProgressionRule> progressionRules;

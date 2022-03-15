@@ -29,6 +29,10 @@ public class ResultEntry {
 		return this.heat.getDevisionNumber();
 	}
 
+	public String getDevisionLabel() {
+		return this.heat.getDevisionLabel();
+	}
+
 	public String getRaceNumber() {
 		return this.heat.getRaceNumber();
 	}
