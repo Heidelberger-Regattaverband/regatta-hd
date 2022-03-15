@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,7 +34,7 @@ import lombok.ToString;
 @Table(schema = "dbo", name = "Comp")
 @NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
-		@NamedAttributeNode(value = "race"), //
+		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
 }, subgraphs = { //
 		@NamedSubgraph(name = "heat.entries", //
@@ -52,6 +50,10 @@ import lombok.ToString;
 		@NamedSubgraph(name = "crew.athlet", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "athlet") //
+				}), //
+		@NamedSubgraph(name = "race.ageClass", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "ageClass") //
 				}) //
 }))
 //lombok
@@ -128,10 +130,6 @@ public class Heat {
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "heat")
 	private Set<ReportInfo> reportInfos;
 
-	public String getLabel() {
-		return getRace().getNumber() + " - " + getRace().getShortLabel();
-	}
-
 	/**
 	 * @return {@code true} if the heat is set, but not started yet.
 	 */
@@ -192,12 +190,7 @@ public class Heat {
 	}
 
 	public String getRaceShortLabel() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.race.getShortLabel());
-		if (StringUtils.isNotBlank(this.race.getComment())) {
-			builder.append(" - ").append(this.race.getComment());
-		}
-		return builder.toString();
+		return this.race.getShortLabel();
 	}
 
 	public String getDevisionLabel() {
@@ -238,6 +231,5 @@ public class Heat {
 		default:
 			return null;
 		}
-
 	}
 }
