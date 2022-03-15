@@ -443,11 +443,13 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 						@SuppressWarnings("unchecked")
 						TableRow<HeatRegistration> sourceRow = (TableRow<HeatRegistration>) event.getGestureSource();
-						ObservableList<HeatRegistration> srcItems = sourceRow.getTableView().getItems();
+						TableView<HeatRegistration> srcTable = sourceRow.getTableView();
+						ObservableList<HeatRegistration> srcItems = srcTable.getItems();
 
 						@SuppressWarnings("unchecked")
 						TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
-						ObservableList<HeatRegistration> targetItems = targetRow.getTableView().getItems();
+						TableView<HeatRegistration> targetTable = targetRow.getTableView();
+						ObservableList<HeatRegistration> targetItems = targetTable.getItems();
 
 						if (targetItems.size() < 4) {
 							HeatRegistration draggedEntry = srcItems.remove(draggedIndex.intValue());
@@ -459,11 +461,13 @@ public class SetRaceController extends AbstractRegattaDAOController {
 							targetItems.add(dropIndex, draggedEntry);
 
 							super.dbTask.runInTransaction(monitor -> {
+								// re-calculate lanes in source heat
 								for (short i = 0; i < srcItems.size(); i++) {
 									HeatRegistration heatReg = srcItems.get(i);
 									heatReg.setLane((short) (i + 1));
 									super.db.getEntityManager().merge(heatReg);
 								}
+								// re-calculate lanes in target heat
 								for (short i = 0; i < targetItems.size(); i++) {
 									HeatRegistration heatRegistration = targetItems.get(i);
 									heatRegistration.setLane((short) (i + 1));
@@ -471,6 +475,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 								}
 								return null;
 							}, result -> {
+								srcTable.refresh();
+								targetTable.refresh();
 								event.setDropCompleted(true);
 								event.consume();
 							});
