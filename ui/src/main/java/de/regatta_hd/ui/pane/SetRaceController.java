@@ -3,6 +3,7 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -25,13 +26,19 @@ import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 import javafx.util.Pair;
@@ -39,6 +46,7 @@ import javafx.util.Pair;
 public class SetRaceController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
 	private static final String FULL_GRAPH = "race-to-results";
+	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
 	@FXML
 	private SearchableComboBox<Race> raceCbo;
@@ -359,17 +367,17 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		// loops over all heats of race and reads required data from DB
 		race.getHeats().forEach(heat -> {
-			SortedList<HeatRegistration> sortedList = new SortedList<>(
-					FXCollections.observableArrayList(heat.getEntries()));
+//			SortedList<HeatRegistration> sortedList = new SortedList<>(
+//					FXCollections.observableArrayList(heat.getEntries()));
 
 			Label heatNrLabel = new Label(
 					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-			compEntriesTable.setItems(sortedList);
+			compEntriesTable.setItems(FXCollections.observableArrayList(heat.getEntries()));
 			compEntriesTable.sort();
 			FxUtils.autoResizeColumns(compEntriesTable);
 
-			sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
+//			sortedList.comparatorProperty().bind(compEntriesTable.comparatorProperty());
 
 			vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 		});
@@ -401,6 +409,57 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	private TableView<HeatRegistration> createTableView(boolean withResult) {
 		TableView<HeatRegistration> heatRegsTbl = new TableView<>();
+
+		if (!withResult) {
+			heatRegsTbl.setRowFactory(tv -> {
+				TableRow<HeatRegistration> row = new TableRow<>();
+				row.setOnDragDetected(event -> {
+					Integer index = row.getIndex();
+					Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+					db.setDragView(row.snapshot(null, null));
+					ClipboardContent cc = new ClipboardContent();
+					cc.put(SERIALIZED_MIME_TYPE, index);
+					db.setContent(cc);
+					event.consume();
+				});
+
+				row.setOnDragOver(event -> {
+					Dragboard db = event.getDragboard();
+					if (db.hasContent(SERIALIZED_MIME_TYPE)
+							&& row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+						event.acceptTransferModes(TransferMode.MOVE);
+						event.consume();
+					}
+
+				});
+
+				row.setOnDragDropped(event -> {
+					Dragboard db = event.getDragboard();
+					if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+						int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+						TableRow<HeatRegistration> sourceRow = (TableRow<HeatRegistration>) event.getGestureSource();
+						TableView<HeatRegistration> tableView = sourceRow.getTableView();
+						ObservableList<HeatRegistration> items = tableView.getItems();
+						HeatRegistration draggedEntry = items.remove(draggedIndex);
+
+						int dropIndex;
+
+						if (row.isEmpty()) {
+							dropIndex = heatRegsTbl.getItems().size();
+						} else {
+							dropIndex = row.getIndex();
+						}
+
+						heatRegsTbl.getItems().add(dropIndex, draggedEntry);
+
+						event.setDropCompleted(true);
+						heatRegsTbl.getSelectionModel().select(dropIndex);
+						event.consume();
+					}
+				});
+				return row;
+			});
+		}
 
 		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(getText("common.bibAbr"));
 		bibCol.setStyle("-fx-alignment: CENTER;");
