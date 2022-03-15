@@ -409,83 +409,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		TableView<HeatRegistration> heatRegsTbl = new TableView<>();
 
 		if (!sourceTable) {
-			heatRegsTbl.setRowFactory(tv -> {
-				TableRow<HeatRegistration> row = new TableRow<>();
-
-				row.setOnDragDetected(event -> {
-					ClipboardContent content = new ClipboardContent();
-					content.put(SERIALIZED_MIME_TYPE, Integer.valueOf(row.getIndex()));
-
-					Dragboard dragboard = row.startDragAndDrop(TransferMode.MOVE);
-					dragboard.setDragView(row.snapshot(null, null));
-					dragboard.setContent(content);
-
-					event.consume();
-				});
-
-				row.setOnDragOver(event -> {
-					Dragboard dragboard = event.getDragboard();
-					if (dragboard.hasContent(SERIALIZED_MIME_TYPE)) {
-						@SuppressWarnings("unchecked")
-						TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
-						ObservableList<HeatRegistration> targetItems = targetRow.getTableView().getItems();
-						if (targetItems.size() < 4) {
-							event.acceptTransferModes(TransferMode.MOVE);
-							event.consume();
-						}
-					}
-				});
-
-				row.setOnDragDropped(event -> {
-					Dragboard dragboard = event.getDragboard();
-					if (dragboard.hasContent(SERIALIZED_MIME_TYPE)) {
-						Integer draggedIndex = (Integer) dragboard.getContent(SERIALIZED_MIME_TYPE);
-
-						@SuppressWarnings("unchecked")
-						TableRow<HeatRegistration> sourceRow = (TableRow<HeatRegistration>) event.getGestureSource();
-						TableView<HeatRegistration> srcTable = sourceRow.getTableView();
-						ObservableList<HeatRegistration> srcItems = srcTable.getItems();
-
-						@SuppressWarnings("unchecked")
-						TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
-						TableView<HeatRegistration> targetTable = targetRow.getTableView();
-						ObservableList<HeatRegistration> targetItems = targetTable.getItems();
-
-						if (targetItems.size() < 4) {
-							HeatRegistration draggedEntry = srcItems.remove(draggedIndex.intValue());
-
-							// set new heat at dropped entry
-							draggedEntry.setHeat(targetItems.get(0).getHeat());
-
-							int dropIndex = row.isEmpty() ? targetItems.size() : row.getIndex();
-							targetItems.add(dropIndex, draggedEntry);
-
-							super.dbTask.runInTransaction(monitor -> {
-								// re-calculate lanes in source heat
-								for (short i = 0; i < srcItems.size(); i++) {
-									HeatRegistration heatReg = srcItems.get(i);
-									heatReg.setLane((short) (i + 1));
-									super.db.getEntityManager().merge(heatReg);
-								}
-								// re-calculate lanes in target heat
-								for (short i = 0; i < targetItems.size(); i++) {
-									HeatRegistration heatRegistration = targetItems.get(i);
-									heatRegistration.setLane((short) (i + 1));
-									super.db.getEntityManager().merge(heatRegistration);
-								}
-								return null;
-							}, result -> {
-								srcTable.refresh();
-								targetTable.refresh();
-								event.setDropCompleted(true);
-								event.consume();
-							});
-						}
-					}
-				});
-
-				return row;
-			});
+			heatRegsTbl.setRowFactory(tv -> getHeatRegTableRow());
 		}
 
 		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(getText("common.bibAbr"));
@@ -554,6 +478,81 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		}
 
 		return heatRegsTbl;
+	}
+
+	private TableRow<HeatRegistration> getHeatRegTableRow() {
+		TableRow<HeatRegistration> row = new TableRow<>();
+
+		row.setOnDragDetected(event -> {
+			ClipboardContent content = new ClipboardContent();
+			content.put(SERIALIZED_MIME_TYPE, Integer.valueOf(row.getIndex()));
+
+			Dragboard dragboard = row.startDragAndDrop(TransferMode.MOVE);
+			dragboard.setDragView(row.snapshot(null, null));
+			dragboard.setContent(content);
+
+			event.consume();
+		});
+		row.setOnDragOver(event -> {
+			Dragboard dragboard = event.getDragboard();
+			if (dragboard.hasContent(SERIALIZED_MIME_TYPE)) {
+				@SuppressWarnings("unchecked")
+				TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
+				ObservableList<HeatRegistration> targetItems = targetRow.getTableView().getItems();
+				if (targetItems.size() < 4) {
+					event.acceptTransferModes(TransferMode.MOVE);
+					event.consume();
+				}
+			}
+		});
+		row.setOnDragDropped(event -> {
+			Dragboard dragboard = event.getDragboard();
+			if (dragboard.hasContent(SERIALIZED_MIME_TYPE)) {
+				Integer draggedIndex = (Integer) dragboard.getContent(SERIALIZED_MIME_TYPE);
+
+				@SuppressWarnings("unchecked")
+				TableRow<HeatRegistration> sourceRow = (TableRow<HeatRegistration>) event.getGestureSource();
+				TableView<HeatRegistration> srcTable = sourceRow.getTableView();
+				ObservableList<HeatRegistration> srcItems = srcTable.getItems();
+
+				@SuppressWarnings("unchecked")
+				TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
+				TableView<HeatRegistration> targetTable = targetRow.getTableView();
+				ObservableList<HeatRegistration> targetItems = targetTable.getItems();
+
+				if (targetItems.size() < 4) {
+					HeatRegistration draggedEntry = srcItems.remove(draggedIndex.intValue());
+
+					// set new heat at dropped entry
+					draggedEntry.setHeat(targetItems.get(0).getHeat());
+
+					int dropIndex = row.isEmpty() ? targetItems.size() : row.getIndex();
+					targetItems.add(dropIndex, draggedEntry);
+
+					super.dbTask.runInTransaction(monitor -> {
+						// re-calculate lanes in source heat
+						for (short i = 0; i < srcItems.size(); i++) {
+							HeatRegistration heatReg = srcItems.get(i);
+							heatReg.setLane((short) (i + 1));
+							super.db.getEntityManager().merge(heatReg);
+						}
+						// re-calculate lanes in target heat
+						for (short i = 0; i < targetItems.size(); i++) {
+							HeatRegistration heatRegistration = targetItems.get(i);
+							heatRegistration.setLane((short) (i + 1));
+							super.db.getEntityManager().merge(heatRegistration);
+						}
+						return null;
+					}, result -> {
+						srcTable.refresh();
+						targetTable.refresh();
+						event.setDropCompleted(true);
+						event.consume();
+					});
+				}
+			}
+		});
+		return row;
 	}
 
 	private Window getWindow() {
