@@ -405,56 +405,79 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(true);
 	}
 
-	private TableView<HeatRegistration> createTableView(boolean withResult) {
+	private TableView<HeatRegistration> createTableView(boolean sourceTable) {
 		TableView<HeatRegistration> heatRegsTbl = new TableView<>();
 
-		if (!withResult) {
+		if (!sourceTable) {
 			heatRegsTbl.setRowFactory(tv -> {
 				TableRow<HeatRegistration> row = new TableRow<>();
+
 				row.setOnDragDetected(event -> {
-					Integer index = row.getIndex();
-					Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
-					db.setDragView(row.snapshot(null, null));
-					ClipboardContent cc = new ClipboardContent();
-					cc.put(SERIALIZED_MIME_TYPE, index);
-					db.setContent(cc);
+					ClipboardContent content = new ClipboardContent();
+					content.put(SERIALIZED_MIME_TYPE, Integer.valueOf(row.getIndex()));
+
+					Dragboard dragboard = row.startDragAndDrop(TransferMode.MOVE);
+					dragboard.setDragView(row.snapshot(null, null));
+					dragboard.setContent(content);
+
 					event.consume();
 				});
 
 				row.setOnDragOver(event -> {
-					Dragboard db = event.getDragboard();
-					if (db.hasContent(SERIALIZED_MIME_TYPE)
-							&& row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
-						event.acceptTransferModes(TransferMode.MOVE);
-						event.consume();
+					Dragboard dragboard = event.getDragboard();
+					if (dragboard.hasContent(SERIALIZED_MIME_TYPE)) {
+						@SuppressWarnings("unchecked")
+						TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
+						ObservableList<HeatRegistration> targetItems = targetRow.getTableView().getItems();
+						if (targetItems.size() < 4) {
+							event.acceptTransferModes(TransferMode.MOVE);
+							event.consume();
+						}
 					}
-
 				});
 
 				row.setOnDragDropped(event -> {
-					Dragboard db = event.getDragboard();
-					if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-						int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+					Dragboard dragboard = event.getDragboard();
+					if (dragboard.hasContent(SERIALIZED_MIME_TYPE)) {
+						Integer draggedIndex = (Integer) dragboard.getContent(SERIALIZED_MIME_TYPE);
+
+						@SuppressWarnings("unchecked")
 						TableRow<HeatRegistration> sourceRow = (TableRow<HeatRegistration>) event.getGestureSource();
-						TableView<HeatRegistration> tableView = sourceRow.getTableView();
-						ObservableList<HeatRegistration> items = tableView.getItems();
-						HeatRegistration draggedEntry = items.remove(draggedIndex);
+						ObservableList<HeatRegistration> srcItems = sourceRow.getTableView().getItems();
 
-						int dropIndex;
+						@SuppressWarnings("unchecked")
+						TableRow<HeatRegistration> targetRow = (TableRow<HeatRegistration>) event.getSource();
+						ObservableList<HeatRegistration> targetItems = targetRow.getTableView().getItems();
 
-						if (row.isEmpty()) {
-							dropIndex = heatRegsTbl.getItems().size();
-						} else {
-							dropIndex = row.getIndex();
+						if (targetItems.size() < 4) {
+							HeatRegistration draggedEntry = srcItems.remove(draggedIndex.intValue());
+
+							// set new heat at dropped entry
+							draggedEntry.setHeat(targetItems.get(0).getHeat());
+
+							int dropIndex = row.isEmpty() ? targetItems.size() : row.getIndex();
+							targetItems.add(dropIndex, draggedEntry);
+
+							super.dbTask.runInTransaction(monitor -> {
+								for (short i = 0; i < srcItems.size(); i++) {
+									HeatRegistration heatReg = srcItems.get(i);
+									heatReg.setLane((short) (i + 1));
+									super.db.getEntityManager().merge(heatReg);
+								}
+								for (short i = 0; i < targetItems.size(); i++) {
+									HeatRegistration heatRegistration = targetItems.get(i);
+									heatRegistration.setLane((short) (i + 1));
+									super.db.getEntityManager().merge(heatRegistration);
+								}
+								return null;
+							}, result -> {
+								event.setDropCompleted(true);
+								event.consume();
+							});
 						}
-
-						heatRegsTbl.getItems().add(dropIndex, draggedEntry);
-
-						event.setDropCompleted(true);
-						heatRegsTbl.getSelectionModel().select(dropIndex);
-						event.consume();
 					}
 				});
+
 				return row;
 			});
 		}
@@ -484,7 +507,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		TableColumn<HeatRegistration, Number> rankCol = null;
 		TableColumn<HeatRegistration, String> resultCol = null;
-		if (withResult) {
+		if (sourceTable) {
 			rankCol = new TableColumn<>(getText("common.rank"));
 			rankCol.setStyle("-fx-alignment: CENTER;");
 			rankCol.setCellValueFactory(row -> {
@@ -507,6 +530,14 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			heatRegsTbl.getColumns().add(rankCol);
 			heatRegsTbl.getSortOrder().add(resultCol);
+		} else {
+			TableColumn<HeatRegistration, Number> laneCol = null;
+			laneCol = new TableColumn<>(getText("common.lane"));
+			laneCol.setStyle("-fx-alignment: CENTER;");
+			laneCol.setCellValueFactory(row -> new SimpleIntegerProperty(row.getValue().getLane()));
+
+			heatRegsTbl.getColumns().add(laneCol);
+			heatRegsTbl.getSortOrder().add(laneCol);
 		}
 
 		heatRegsTbl.getColumns().add(bibCol);
