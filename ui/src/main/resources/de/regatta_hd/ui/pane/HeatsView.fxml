@@ -62,17 +62,17 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.heatAbr">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>devisionLabel</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
         <TableColumn reorderable="false" sortable="false" text="%common.shortLabelAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>raceShortLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.heatAbr">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>devisionLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
