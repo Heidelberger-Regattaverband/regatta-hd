@@ -1,4 +1,4 @@
-package de.regatta_hd.common;
+package de.regatta_hd.common.concurrent;
 
 /**
  * An asynchronously callable which gets access to a progress monitor.

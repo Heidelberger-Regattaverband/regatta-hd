@@ -6,18 +6,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.common.AsyncCallable;
-import de.regatta_hd.common.ProgressMonitor;
+import de.regatta_hd.common.concurrent.AsyncCallable;
+import de.regatta_hd.common.concurrent.AsyncResult;
+import de.regatta_hd.common.concurrent.ProgressMonitor;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class DBTask<V> extends Task<DBResult<V>> {
+public class DBTask<V> extends Task<AsyncResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
 	private final AsyncCallable<V> callable;
 
-	private Consumer<DBResult<V>> resultConsumer;
+	private Consumer<AsyncResult<V>> resultConsumer;
 
 	private final AquariusDB db;
 
@@ -25,7 +26,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTask(AsyncCallable<V> callable, Consumer<DBResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
+	DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;
@@ -34,7 +35,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 		setOnSucceeded(event -> {
 			@SuppressWarnings("unchecked")
 			// get result from worker
-			DBResult<V> result = (DBResult<V>) event.getSource().getValue();
+			AsyncResult<V> result = (AsyncResult<V>) event.getSource().getValue();
 
 			// call given consumer with result in UX thread
 			Platform.runLater(() -> this.resultConsumer.accept(result));
@@ -52,7 +53,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 	}
 
 	@Override
-	protected DBResult<V> call() throws Exception {
+	protected AsyncResult<V> call() throws Exception {
 		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
 
 		// begin transaction if required
@@ -89,7 +90,7 @@ public class DBTask<V> extends Task<DBResult<V>> {
 		}
 	}
 
-	private class DBResultImpl<R> implements DBResult<R> {
+	private class DBResultImpl<R> implements AsyncResult<R> {
 
 		private final R result;
 
