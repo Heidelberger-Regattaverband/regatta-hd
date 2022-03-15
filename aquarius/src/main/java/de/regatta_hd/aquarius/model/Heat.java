@@ -1,7 +1,7 @@
 package de.regatta_hd.aquarius.model;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ import lombok.ToString;
 @Table(schema = "dbo", name = "Comp")
 @NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
-		@NamedAttributeNode(value = "race"), //
+		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
 }, subgraphs = { //
 		@NamedSubgraph(name = "heat.entries", //
@@ -44,8 +44,19 @@ import lombok.ToString;
 				}), //
 		@NamedSubgraph(name = "registration.club", //
 				attributeNodes = { //
-						@NamedAttributeNode(value = "club"), @NamedAttributeNode(value = "crews") //
-				}) }))
+						@NamedAttributeNode(value = "club"), //
+						@NamedAttributeNode(value = "crews", subgraph = "crew.athlet") //
+				}), //
+		@NamedSubgraph(name = "crew.athlet", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "athlet") //
+				}), //
+		@NamedSubgraph(name = "race.ageClass", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "ageClass"), //
+						@NamedAttributeNode(value = "boatClass") //
+				}) //
+}))
 //lombok
 @Getter
 @Setter
@@ -68,7 +79,7 @@ public class Heat {
 	private boolean cancelled;
 
 	@Column(name = "Comp_DateTime")
-	private Date dateTime;
+	private Instant instant;
 
 	@Column(name = "Comp_Dummy")
 	private boolean dummy;
@@ -82,7 +93,7 @@ public class Heat {
 
 	@Column(name = "Comp_Label", length = 32)
 	@ToString.Include(rank = 9)
-	private String label;
+	private String roundLabel;
 
 	@Column(name = "Comp_Locked")
 	private boolean locked;
@@ -119,10 +130,6 @@ public class Heat {
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "heat")
 	private Set<ReportInfo> reportInfos;
-
-	public String getLabel() {
-		return getRace().getNumber() + " - " + getRace().getShortLabel();
-	}
 
 	/**
 	 * @return {@code true} if the heat is set, but not started yet.
@@ -187,7 +194,43 @@ public class Heat {
 		return this.race.getShortLabel();
 	}
 
+	public String getDevisionLabel() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getRoundCode()).append(getRoundLabel());
+		if (this.race.getAgeClass().isMasters()) {
+			builder.append(", AK ").append(getGroupValueLabel());
+		}
+		return builder.toString();
+	}
+
 	public String getRaceLongLabel() {
 		return this.race.getLongLabel();
+	}
+
+	private String getGroupValueLabel() {
+		switch (getGroupValue()) {
+		case 0:
+			return "A";
+		case 4:
+			return "B";
+		case 8:
+			return "C";
+		case 12:
+			return "D";
+		case 16:
+			return "E";
+		case 20:
+			return "F";
+		case 24:
+			return "G";
+		case 28:
+			return "H";
+		case 32:
+			return "I";
+		case 36:
+			return "J";
+		default:
+			return null;
+		}
 	}
 }

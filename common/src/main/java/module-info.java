@@ -4,5 +4,6 @@ open module de.regatta_hd.common {
 	requires java.logging;
 
 	exports de.regatta_hd.common;
+	exports de.regatta_hd.common.concurrent;
 	exports de.regatta_hd.common.impl to de.regatta_hd.aquarius;
 }
