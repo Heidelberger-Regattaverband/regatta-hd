@@ -65,7 +65,7 @@ public class DBTask<V> extends Task<AsyncResult<V>> {
 
 			@Override
 			public void update(double workDone, double max, String message) {
-				updateProgress(workDone, max, message);
+				DBTask.this.updateProgress(workDone, max, message);
 			}
 
 			@Override
