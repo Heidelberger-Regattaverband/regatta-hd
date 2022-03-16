@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -13,6 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.controlsfx.dialog.ProgressDialog;
 
 import de.regatta_hd.aquarius.model.Heat;
@@ -30,8 +35,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Window;
 
 public class HeatsController extends AbstractRegattaDAOController {
-	private static final String DELAY_ZERO = "0";
-
 	private static final String DELIMITER = ";";
 
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
@@ -41,7 +44,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private Button refreshBtn;
 	@FXML
-	private Button exportBtn;
+	private Button exportCsvBtn;
+	@FXML
+	private Button exportXslBtn;
 	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
@@ -65,29 +70,45 @@ public class HeatsController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	void handleExportOnAction() {
+	void handleExportCsvOnAction() {
 		disableButtons(true);
 
 		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
-			try {
-				File file = FxUtils.showSaveDialog(getWindow(), getText("heats.csv.description"), "*.csv");
-				if (file != null) {
-					saveTextToFile(dbResult.getResult(), file);
+			File file = FxUtils.showSaveDialog(getWindow(), getText("heats.csv.description"), "*.csv");
+			if (file != null) {
+				try {
+					saveCsvFile(dbResult.getResult(), file);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
 				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
 			}
 		}, false);
 
-		ProgressDialog dialog = new ProgressDialog(dbTask);
-		dialog.initOwner(this.refreshBtn.getScene().getWindow());
-		dialog.setTitle(getText("heats.csv.export"));
-		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+		runTask(dbTask);
+	}
 
-		this.dbTask.runTask(dbTask);
+	@FXML
+	public void handleExportXslOnAction() {
+		disableButtons(true);
+
+		DBTask<Workbook> dbTask = this.dbTask.createTask(this::createXsl, dbResult -> {
+			File file = FxUtils.showSaveDialog(getWindow(), getText("heats.xsl.description"), "*.xsl");
+			if (file != null) {
+				try (Workbook workbook = dbResult.getResult()) {
+					saveXslFile(workbook, file);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			}
+		}, false);
+
+		runTask(dbTask);
 	}
 
 	private void loadHeats(boolean refresh) {
@@ -113,9 +134,55 @@ public class HeatsController extends AbstractRegattaDAOController {
 		});
 	}
 
-	private void disableButtons(boolean disabled) {
-		this.refreshBtn.setDisable(disabled);
-		this.exportBtn.setDisable(disabled);
+	private Workbook createXsl(ProgressMonitor progress) {
+		Workbook workbook = new HSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Startliste");
+
+		Row row = sheet.createRow(0);
+		addXslHeader(row);
+
+		for (int j = 0; j < this.heatsList.size(); j++) {
+			int cellIdx = 0;
+
+			Heat heat = this.heatsList.get(j);
+			row = sheet.createRow(j + 1);
+
+			row.createCell(cellIdx++).setCellValue(heat.getNumber());
+			row.createCell(cellIdx++).setCellValue(heat.getRaceNumber());
+			row.createCell(cellIdx++).setCellValue(heat.getDevisionNumber());
+
+			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
+			short laneCount = heat.getRace().getRaceMode().getLaneCount();
+			short diff = (short) (laneCount - heatRegs.size());
+
+			// add delays
+			if (heat.getRace().getAgeClass().isMasters()) {
+				for (HeatRegistration heatReg : heatRegs) {
+					row.createCell(cellIdx++).setCellValue(getDelay(heatReg));
+				}
+				for (int i = 0; i < diff; i++) {
+					row.createCell(cellIdx++).setCellValue(0);
+				}
+			} else {
+				for (int i = 0; i < laneCount; i++) {
+					row.createCell(cellIdx++).setCellValue(0);
+				}
+			}
+
+			// add bibs
+			for (HeatRegistration heatReg : heatRegs) {
+				row.createCell(cellIdx++).setCellValue(heatReg.getRegistration().getBib());
+			}
+			for (int i = 0; i < diff; i++) {
+				row.createCell(cellIdx++).setCellValue(0);
+			}
+
+			// add status
+			row.createCell(cellIdx).setCellValue("-");
+
+			progress.update(j, this.heatsList.size(), getText("heats.csv.progress", Short.valueOf(heat.getNumber())));
+		}
+		return workbook;
 	}
 
 	private String createCsv(ProgressMonitor progress) {
@@ -141,11 +208,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 					builder.append(getDelay(heatReg)).append(DELIMITER);
 				}
 				for (int i = 0; i < diff; i++) {
-					builder.append(DELAY_ZERO).append(DELIMITER);
+					builder.append(0).append(DELIMITER);
 				}
 			} else {
 				for (int i = 0; i < laneCount; i++) {
-					builder.append(DELAY_ZERO).append(DELIMITER);
+					builder.append(0).append(DELIMITER);
 				}
 			}
 
@@ -154,7 +221,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 				builder.append(heatReg.getRegistration().getBib()).append(DELIMITER);
 			}
 			for (int i = 0; i < diff; i++) {
-				builder.append(DELAY_ZERO).append(DELIMITER);
+				builder.append(0).append(DELIMITER);
 			}
 
 			// add status
@@ -166,31 +233,75 @@ public class HeatsController extends AbstractRegattaDAOController {
 		return builder.toString();
 	}
 
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
-	}
-
-	private void saveTextToFile(String csvContent, File file) {
+	private void saveCsvFile(String csvContent, File file) {
 		try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
 			writer.println(csvContent);
 		} catch (IOException ex) {
-			logger.log(Level.SEVERE, null, ex);
+			logger.log(Level.SEVERE, ex.getMessage(), ex);
 			FxUtils.showErrorMessage(getWindow(), ex);
 		}
 	}
 
+	private void saveXslFile(Workbook workbook, File file) {
+		try (FileOutputStream fileOut = new FileOutputStream(file)) {
+			workbook.write(fileOut);
+		} catch (IOException ex) {
+			logger.log(Level.SEVERE, ex.getMessage(), ex);
+			FxUtils.showErrorMessage(getWindow(), ex);
+		}
+	}
+
+	private void runTask(DBTask<?> dbTask) {
+		ProgressDialog dialog = new ProgressDialog(dbTask);
+		dialog.initOwner(getWindow());
+		dialog.setTitle(getText("heats.csv.export"));
+		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+		this.dbTask.runTask(dbTask);
+	}
+
+	private void disableButtons(boolean disabled) {
+		this.refreshBtn.setDisable(disabled);
+		this.exportCsvBtn.setDisable(disabled);
+		this.exportXslBtn.setDisable(disabled);
+	}
+
+	private Window getWindow() {
+		return this.refreshBtn.getScene().getWindow();
+	}
+
 	// static helpers
 
-	private static String getDelay(HeatRegistration heatReg) {
-		String delay = DELAY_ZERO;
+	private static float getDelay(HeatRegistration heatReg) {
+		float delay = 0;
 		String comment = heatReg.getRegistration().getComment();
 		if (StringUtils.isNotBlank(comment)) {
 			Matcher matcher = delayPattern.matcher(comment);
 			if (matcher.find()) {
-				delay = matcher.group().replace(",", ".");
+				String delayStr = matcher.group().replace(",", ".");
+				try {
+					delay = Float.parseFloat(delayStr);
+				} catch (NumberFormatException e) {
+					logger.log(Level.WARNING, e.getMessage(), e);
+				}
 			}
 		}
 		return delay;
+	}
+
+	private static void addXslHeader(Row row) {
+		int idx = 0;
+		row.createCell(idx++).setCellValue("Index");
+		row.createCell(idx++).setCellValue("RennNr");
+		row.createCell(idx++).setCellValue("Abtlg");
+		row.createCell(idx++).setCellValue("Delay Bahn 1");
+		row.createCell(idx++).setCellValue("Delay Bahn 2");
+		row.createCell(idx++).setCellValue("Delay Bahn 3");
+		row.createCell(idx++).setCellValue("Delay Bahn 4");
+		row.createCell(idx++).setCellValue("Boot Bahn 1");
+		row.createCell(idx++).setCellValue("Boot Bahn 2");
+		row.createCell(idx++).setCellValue("Boot Bahn 3");
+		row.createCell(idx++).setCellValue("Boot Bahn 4");
+		row.createCell(idx).setCellValue("Status");
 	}
 
 	private static void addCsvHeader(StringBuilder builder) {

@@ -22,7 +22,8 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
-        <Button fx:id="exportBtn" onAction="#handleExportOnAction" text="%heats.csv.export" />
+        <Button fx:id="exportCsvBtn" onAction="#handleExportCsvOnAction" text="%heats.csv.export" />
+        <Button fx:id="exportXslBtn" onAction="#handleExportXslOnAction" text="%heats.xsl.export" />
       </items>
     </ToolBar>
 

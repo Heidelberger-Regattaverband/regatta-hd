@@ -68,6 +68,9 @@
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>4.8.0</liquibase.version>
+
+    <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
+    <poi.version>5.2.1</poi.version>
   </properties>
 
   <modules>
@@ -184,6 +187,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>${poi.version}</version>
       </dependency>
 
       <!-- ========== -->

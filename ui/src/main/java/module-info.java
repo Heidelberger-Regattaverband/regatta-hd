@@ -16,6 +16,7 @@ open module de.regatta_hd.ui {
 	requires lombok;
 	requires java.prefs;
 	requires org.controlsfx.controls;
+	requires org.apache.poi.poi;
 
 	exports de.regatta_hd.ui;
 }
