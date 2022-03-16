@@ -18,10 +18,13 @@ public class DateTimeTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 		if (empty) {
 			setText(null);
 		} else {
-			LocalDateTime localDateTime = getItem().atZone(ZoneId.systemDefault()).toLocalDateTime();
-			String text = localDateTime
-					.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.GERMANY));
-			setText(text);
+			Instant instant = getItem();
+			if (instant != null) {
+				LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+				String text = localDateTime
+						.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.GERMANY));
+				setText(text);
+			}
 		}
 	}
 
