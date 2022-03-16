@@ -74,7 +74,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		disableButtons(true);
 
 		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), getText("heats.csv.description"), "*.csv");
+			File file = FxUtils.showSaveDialog(getWindow(), "startlist.csv", getText("heats.csv.description"), "*.csv");
 			if (file != null) {
 				try {
 					saveCsvFile(dbResult.getResult(), file);
@@ -95,7 +95,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		disableButtons(true);
 
 		DBTask<Workbook> dbTask = this.dbTask.createTask(this::createXsl, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), getText("heats.xsl.description"), "*.xsl");
+			File file = FxUtils.showSaveDialog(getWindow(), "startlist.xsl", getText("heats.xsl.description"), "*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
 					saveXslFile(workbook, file);
