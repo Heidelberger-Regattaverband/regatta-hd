@@ -92,7 +92,6 @@ public class ResultsController extends AbstractRegattaDAOController {
 			this.db.getEntityManager().flush();
 			return this.regattaDAO.getOfficialResults();
 		}, dbResult -> {
-
 			try {
 				this.resultsList.setAll(dbResult.getResult());
 				this.resultsTbl.sort();
