@@ -31,12 +31,12 @@ public class FxUtils {
 		// avoid instances
 	}
 
-	public static File showSaveDialog(Window window, String description, final String... extensions) {
+	public static File showSaveDialog(Window window,  String fileName, String description, final String... extensions) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter for text files
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description, extensions));
-
+		fileChooser.setInitialFileName(fileName);
 		// Show save file dialog
 		return fileChooser.showSaveDialog(window);
 	}

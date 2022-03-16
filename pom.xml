@@ -43,7 +43,7 @@
     <maven.compiler.release>11</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>17.0.2</openjfx.version>
+    <openjfx.version>18</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.1.1</controlsfx.version>
@@ -55,7 +55,7 @@
     <guice.version>5.1.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
-    <hibernate.version>5.6.5.Final</hibernate.version>
+    <hibernate.version>5.6.6.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>10.2.0.jre11</mssql.version>
@@ -68,6 +68,9 @@
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>4.8.0</liquibase.version>
+
+    <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
+    <poi.version>5.2.1</poi.version>
   </properties>
 
   <modules>
@@ -184,6 +187,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>${poi.version}</version>
       </dependency>
 
       <!-- ========== -->
