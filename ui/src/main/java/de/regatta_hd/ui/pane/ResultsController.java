@@ -69,7 +69,6 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	public void handleSetPointsOnAction() {
 		disableButtons(true);
-		this.resultsList.clear();
 
 		this.dbTask.runInTransaction(progress -> {
 			this.resultsList.forEach(resultEntry -> {
