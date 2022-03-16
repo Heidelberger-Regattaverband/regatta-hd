@@ -1,15 +1,20 @@
 package de.regatta_hd.ui.control;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Locale;
+import java.util.Objects;
 
 import javafx.scene.control.TableCell;
 
 public class DateTimeTableCell<B> extends TableCell<B, Instant> { // NOSONAR
+
+	private final DateTimeFormatter formatter;
+
+	public DateTimeTableCell(DateTimeFormatter formatter) {
+		this.formatter = Objects.requireNonNull(formatter, "formatter must not be null");
+	}
 
 	@Override
 	public void updateItem(Instant item, boolean empty) {
@@ -20,10 +25,8 @@ public class DateTimeTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 		} else {
 			Instant instant = getItem();
 			if (instant != null) {
-				LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-				String text = localDateTime
-						.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.GERMANY));
-				setText(text);
+				ZonedDateTime dateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+				setText(dateTime.format(this.formatter));
 			}
 		}
 	}

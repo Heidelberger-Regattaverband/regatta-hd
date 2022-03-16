@@ -53,7 +53,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <DateTimeTableCellFactory />
+            <DateTimeTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
         <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr">
