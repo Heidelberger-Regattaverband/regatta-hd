@@ -16,20 +16,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.SetRaceController">
+<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.SetRaceController">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
   </padding>
 
   <children>
     <Label text="%SetRaceView.raceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction" promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction"
+      promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
         <RaceStringConverter />
       </converter>
     </SearchableComboBox>
 
-    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
+      GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <VBox>
           <children>
@@ -66,9 +69,8 @@
                       <PropertyValueFactory property="boat" />
                     </cellValueFactory>
                   </TableColumn>
-                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory>
-                    <PropertyValueFactory property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory>
-                    </TableColumn -->
+                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory> <PropertyValueFactory
+                    property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory> </TableColumn -->
                   <TableColumn style="-fx-alignment: CENTER;" text="%common.heatAbr">
                     <cellValueFactory>
                       <PropertyValueFactory property="devisionNumber" />
@@ -110,7 +112,7 @@
                           </PropertyValueFactory>
                         </cellValueFactory>
                         <cellFactory>
-                          <CheckBoxTableCellFactory />
+                          <CheckBoxTableCellFactory fx:factory="create" />
                         </cellFactory>
                       </TableColumn>
                       <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
@@ -142,7 +144,7 @@
                           </PropertyValueFactory>
                         </cellValueFactory>
                         <cellFactory>
-                          <CheckBoxTableCellFactory />
+                          <CheckBoxTableCellFactory fx:factory="create" />
                         </cellFactory>
                       </TableColumn>
                       <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">

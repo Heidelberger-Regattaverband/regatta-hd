@@ -5,10 +5,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 
-public class CheckBoxTableCellFactory<S, T> implements Callback<TableColumn<S, T>, TableCell<S, T>> {
+public class CheckBoxTableCellFactory {
 
-	@Override
-	public TableCell<S, T> call(TableColumn<S, T> column) {
-		return new CheckBoxTableCell<>();
+	private CheckBoxTableCellFactory() {
+		// avoid instances
+	}
+
+	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> create() {
+		return column -> new CheckBoxTableCell<>();
 	}
 }
