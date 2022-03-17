@@ -9,6 +9,11 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
+/**
+ * A factory for {@link DateTimeTableCell}.
+ *
+ * @see https://stackoverflow.com/a/59531087
+ */
 public class DateTimeTableCellFactory {
 
 	private DateTimeTableCellFactory() {

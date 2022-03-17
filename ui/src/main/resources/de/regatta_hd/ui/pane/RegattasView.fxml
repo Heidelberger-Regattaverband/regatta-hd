@@ -52,7 +52,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <DateTableCellFactory />
+            <DateTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
         <TableColumn reorderable="false" sortable="false" text="%common.end">
@@ -62,7 +62,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <DateTableCellFactory />
+            <DateTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
       </columns>

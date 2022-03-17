@@ -1,15 +1,22 @@
 package de.regatta_hd.ui.control;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-public class DateTableCellFactory<S> implements Callback<TableColumn<S, Instant>, TableCell<S, Instant>> {
+public class DateTableCellFactory {
 
-	@Override
-	public TableCell<S, Instant> call(TableColumn<S, Instant> column) {
-		return new DateTableCell<>();
+	private DateTableCellFactory() {
+		// avoid instances
+	}
+
+	public static <S> Callback<TableColumn<S, Instant>, TableCell<S, Instant>> createMedium() {
+		return column -> new DateTableCell<>(
+				DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.GERMANY));
 	}
 }

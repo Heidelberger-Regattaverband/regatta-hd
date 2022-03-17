@@ -4,8 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +15,12 @@ public class DateTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 	private static final Logger logger = Logger.getLogger(DateTableCell.class.getName());
 
 	private DatePicker datePicker;
+
+	private final DateTimeFormatter formatter;
+
+	public DateTableCell(DateTimeFormatter formatter) {
+		this.formatter = Objects.requireNonNull(formatter, "formatter must not be null");
+	}
 
 	@Override
 	public void startEdit() {
@@ -30,7 +35,6 @@ public class DateTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 	@Override
 	public void cancelEdit() {
 		super.cancelEdit();
-
 		setText(getDate().toString());
 		setGraphic(null);
 	}
@@ -50,8 +54,7 @@ public class DateTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 				setText(null);
 				setGraphic(this.datePicker);
 			} else {
-				setText(getDate()
-						.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.GERMANY)));
+				setText(getDate().format(this.formatter));
 				setGraphic(null);
 			}
 		}
