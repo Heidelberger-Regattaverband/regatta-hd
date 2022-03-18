@@ -39,4 +39,9 @@ public class DBConfig {
 	 * Trust server certificate without validation if encrypted connection is enabled.
 	 */
 	private boolean trustServerCertificate;
+
+	/**
+	 * Update schema of database.
+	 */
+	private boolean updateSchema;
 }

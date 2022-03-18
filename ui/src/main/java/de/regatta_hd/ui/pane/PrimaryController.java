@@ -96,7 +96,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 						this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
-					openDbConnection(connectionData);
+					openDbConnection(connectionData.get());
 				}
 			} catch (IOException e) {
 				logger.log(Level.WARNING, e.getMessage(), e);
@@ -104,22 +104,23 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		}
 	}
 
-	private void openDbConnection(Optional<DBConfig> connectionData) {
+	private void openDbConnection(DBConfig connectionData) {
 		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.createTask(progress -> {
 			final int MAX = 3;
 			updateControls(true);
 
 			progress.update(1, MAX, getText("login.openingDb"));
-			super.db.open(connectionData.get());
+			super.db.open(connectionData);
 
-			progress.update(2, MAX, getText("login.updatingDb"));
-			super.db.updateSchema();
+			if (connectionData.isUpdateSchema()) {
+				progress.update(2, MAX, getText("login.updatingDb"));
+				super.db.updateSchema();
+			}
 
 			progress.update(3, MAX, getText("login.settingActiveRegatta"));
-
 			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 
-			return new Pair<>(connectionData.get(), activeRegatta);
+			return new Pair<>(connectionData, activeRegatta);
 		}, dbResult -> {
 			try {
 				Pair<DBConfig, Regatta> pair = dbResult.getResult();
