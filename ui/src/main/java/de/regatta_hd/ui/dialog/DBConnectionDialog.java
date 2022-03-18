@@ -40,15 +40,19 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 		Label passwordLbl = new Label(bundle.getString("DatabaseConnectionDialog.password"));
 		gridpane.add(passwordLbl, 0, 4);
 
+		CheckBox updateSchemaCbox = new CheckBox(bundle.getString("DatabaseConnectionDialog.updateSchema"));
+		updateSchemaCbox.setSelected(dbCfg.isUpdateSchema());
+		gridpane.add(updateSchemaCbox, 0, 5);
+
 		CheckBox encryptCbox = new CheckBox(bundle.getString("DatabaseConnectionDialog.encrypt"));
 		encryptCbox.setSelected(dbCfg.isEncrypt());
-		gridpane.add(encryptCbox, 0, 5);
+		gridpane.add(encryptCbox, 0, 6);
 
 		CheckBox trustServerCertificateCbox = new CheckBox(
 				bundle.getString("DatabaseConnectionDialog.trustServerCertificate"));
 		trustServerCertificateCbox.setSelected(dbCfg.isTrustServerCertificate());
 		trustServerCertificateCbox.setDisable(!encryptCbox.isSelected());
-		gridpane.add(trustServerCertificateCbox, 0, 6);
+		gridpane.add(trustServerCertificateCbox, 0, 7);
 
 		encryptCbox.addEventHandler(ActionEvent.ACTION,
 				event -> trustServerCertificateCbox.setDisable(!encryptCbox.isSelected()));
@@ -73,6 +77,7 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 				this.connectionData.setDbName(dbNameFld.getText());
 				this.connectionData.setUsername(userNameFld.getText());
 				this.connectionData.setPassword(passwordFld.getText());
+				this.connectionData.setUpdateSchema(updateSchemaCbox.isSelected());
 				this.connectionData.setEncrypt(encryptCbox.isSelected());
 				this.connectionData.setTrustServerCertificate(trustServerCertificateCbox.isSelected());
 				return this.connectionData;
