@@ -12,8 +12,8 @@
     </preConditions>
     <createTable tableName="HRV_AgeClass">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_AgeClass"
-          referencedTableName="AgeClass" referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_AgeClass" referencedTableName="AgeClass"
+          referencedColumnNames="AgeClass_ID" foreignKeyName="FK_AgeClass" />
       </column>
       <column name="distance" type="SMALLINT">
         <constraints nullable="false" />
@@ -21,9 +21,9 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="liquibase-docs" id="2" runOnChange="true">
-    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;"
-      relativeToChangelogFile="true" separator="," tableName="HRV_AgeClass" primaryKey="id">
+  <changeSet author="markus@ofterdinger.de" id="2" runOnChange="true">
+    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;" relativeToChangelogFile="true" separator=","
+      tableName="HRV_AgeClass" primaryKey="id">
       <column header="id" name="id" type="NUMERIC" />
       <column header="distance" name="distance" type="NUMERIC" />
       <column header="comment" type="SKIP" />
@@ -38,8 +38,8 @@
     </preConditions>
     <createTable tableName="HRV_Offer">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Offer"
-          referencedTableName="Offer" referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Offer" referencedTableName="Offer"
+          referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
       </column>
       <column name="isSet" type="BOOLEAN">
         <constraints nullable="true" />
@@ -55,12 +55,12 @@
     </preConditions>
     <createTable tableName="HRV_Score">
       <column name="club_id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event"
-          referencedTableName="Club" referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Club"
+          referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
       </column>
       <column name="event_id" type="INT">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event"
-          referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event"
+          referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
       </column>
       <column name="rank" type="SMALLINT" />
       <column name="points" type="FLOAT" />
@@ -104,11 +104,9 @@
       </column>
       <column name="points" type="FLOAT" />
     </createTable>
-    <addPrimaryKey columnNames="Result_CE_ID_FK,Result_SplitNr" tableName="HRV_Result"
-      constraintName="PK_HRV_Result" />
+    <addPrimaryKey columnNames="Result_CE_ID_FK,Result_SplitNr" tableName="HRV_Result" constraintName="PK_HRV_Result" />
     <addForeignKeyConstraint constraintName="FK_HRV_Result" referencedTableName="Result"
-      baseColumnNames="Result_CE_ID_FK,Result_SplitNr" baseTableName="HRV_Result"
-      referencedColumnNames="Result_CE_ID_FK,Result_SplitNr" />
+      baseColumnNames="Result_CE_ID_FK,Result_SplitNr" baseTableName="HRV_Result" referencedColumnNames="Result_CE_ID_FK,Result_SplitNr" />
   </changeSet>
 
 </databaseChangeLog>
