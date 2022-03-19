@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Window;
 
 public class RegattasController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RegattasController.class.getName());
@@ -53,7 +52,7 @@ public class RegattasController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.regattasList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
@@ -74,10 +73,6 @@ public class RegattasController extends AbstractRegattaDAOController {
 
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
-	}
-
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
 	}
 
 }

@@ -20,7 +20,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Window;
 
 public class ErrorLogController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
@@ -81,7 +80,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.hostNamesList.clear();
 
-		this.dbTask.run(progress -> this.dao.getHostNames(), dbResult -> {
+		super.dbTaskRunner.run(progress -> this.dao.getHostNames(), dbResult -> {
 			try {
 				this.hostNamesList.setAll(dbResult.getResult());
 				this.hostNameCbx.getSelectionModel().select(this.hostName);
@@ -98,7 +97,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.logRecordsList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			EntityManager entityManager = super.db.getEntityManager();
 			if (refresh) {
 				entityManager.clear();
@@ -122,7 +121,4 @@ public class ErrorLogController extends AbstractBaseController {
 		this.hostNameCbx.setDisable(disabled);
 	}
 
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
-	}
 }

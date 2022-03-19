@@ -18,21 +18,18 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.controlsfx.dialog.ProgressDialog;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.common.concurrent.ProgressMonitor;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Window;
 
 public class HeatsController extends AbstractRegattaDAOController {
 	private static final String DELIMITER = ";";
@@ -73,8 +70,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportCsvOnAction() {
 		disableButtons(true);
 
-		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"), "*.csv");
+		DBTask<String> dbTask = super.dbTaskRunner.createTask(this::createCsv, dbResult -> {
+			File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"),
+					"*.csv");
 			if (file != null) {
 				try {
 					saveCsvFile(dbResult.getResult(), file);
@@ -84,18 +82,21 @@ public class HeatsController extends AbstractRegattaDAOController {
 				} finally {
 					disableButtons(false);
 				}
+			} else {
+				disableButtons(false);
 			}
 		}, false);
 
-		runTask(dbTask);
+		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"));
 	}
 
 	@FXML
-	public void handleExportXslOnAction() {
+	void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = this.dbTask.createTask(this::createXsl, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xsl", getText("heats.xsl.description"), "*.xls");
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createXsl, dbResult -> {
+			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"),
+					"*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
 					saveXslFile(workbook, file);
@@ -105,17 +106,19 @@ public class HeatsController extends AbstractRegattaDAOController {
 				} finally {
 					disableButtons(false);
 				}
+			} else {
+				disableButtons(false);
 			}
 		}, false);
 
-		runTask(dbTask);
+		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"));
 	}
 
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		this.heatsList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
@@ -251,22 +254,10 @@ public class HeatsController extends AbstractRegattaDAOController {
 		}
 	}
 
-	private void runTask(DBTask<?> dbTask) {
-		ProgressDialog dialog = new ProgressDialog(dbTask);
-		dialog.initOwner(getWindow());
-		dialog.setTitle(getText("heats.csv.export"));
-		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		this.dbTask.runTask(dbTask);
-	}
-
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
-	}
-
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
 	}
 
 	// static helpers

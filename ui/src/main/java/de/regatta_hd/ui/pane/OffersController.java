@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Window;
 
 public class OffersController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
@@ -63,7 +62,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void setDistances() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(em -> this.regattaDAO.setDistances(), dbResult -> {
+		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.setDistances(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -86,7 +85,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(em -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
+		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -109,7 +108,7 @@ public class OffersController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.racesObservableList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			this.db.getEntityManager().clear();
 			return this.regattaDAO.getRaces();
 		}, dbResult -> {
@@ -130,10 +129,6 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
-	}
-
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
 	}
 
 }

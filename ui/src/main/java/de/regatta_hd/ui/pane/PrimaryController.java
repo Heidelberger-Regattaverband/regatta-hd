@@ -2,6 +2,7 @@ package de.regatta_hd.ui.pane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import org.controlsfx.dialog.ProgressDialog;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.aquarius.RegattaDAO;
@@ -22,11 +24,13 @@ import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Pair;
 
 public class PrimaryController extends AbstractRegattaDAOController {
@@ -61,6 +65,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private MenuItem resultsMitm;
 	@FXML
 	private MenuItem heatsMitm;
+	@FXML
+	private ComboBox<Regatta> activeRegattaCBox;
+
+	// fields
+	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	// stages
 	private Stage setRaceStage;
@@ -77,10 +86,36 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		updateControls(false);
 
-		Platform.runLater(this::handleDatabaseConnect);
+		Platform.runLater(this::handleConnectOnAction);
+
+		this.activeRegattaCBox.setItems(this.regattasList);
 
 		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
 				event -> setTitle(event.getActiveRegatta()));
+
+		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
+			if (event.getAquariusDB().isOpen()) {
+				this.activeRegattaCBox.setDisable(true);
+
+				super.dbTaskRunner.run(progress -> {
+					List<Regatta> regattas = super.regattaDAO.getRegattas();
+					Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+					return new Pair<>(regattas, activeRegatta);
+				}, dbResult -> {
+					try {
+						this.regattasList.setAll(dbResult.getResult().getKey());
+						this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
+					} catch (Exception e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+					} finally {
+						this.activeRegattaCBox.setDisable(false);
+					}
+				});
+			} else {
+				this.regattasList.clear();
+			}
+		});
 	}
 
 	private void setTitle(Regatta regatta) {
@@ -89,7 +124,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void handleDatabaseConnect() {
+	void handleConnectOnAction() {
 		if (!super.db.isOpen()) {
 			try {
 				DBConnectionDialog dialog = new DBConnectionDialog(getWindow(), super.resources,
@@ -105,7 +140,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(DBConfig connectionData) {
-		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.createTask(progress -> {
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
 			final int MAX = 3;
 			updateControls(true);
 
@@ -134,12 +169,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		ProgressDialog dialog = new ProgressDialog(dbTask);
-		dialog.initOwner(getWindow());
-		dialog.setTitle(getText("DatabaseConnectionDialog.title"));
-
-		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		super.dbTask.runTask(dbTask);
+		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"));
 	}
 
 	@FXML
@@ -254,19 +284,26 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void handleExit() {
-		Platform.exit();
+	void handleActiveRegattaOnAction() {
+		Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
+		try {
+			super.regattaDAO.setActiveRegatta(regatta);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+		}
 	}
 
-	private Window getWindow() {
-		return this.mainMbar.getScene().getWindow();
+	@FXML
+	private void handleExit() {
+		Platform.exit();
 	}
 
 	private void updateControls(boolean isConnecting) {
 		boolean isOpen = super.db.isOpen();
 
 		if (isOpen) {
-			this.dbTask.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
+			super.dbTaskRunner.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
 				try {
 					boolean hasActiveRegatta = dbResult.getResult() != null;
 
