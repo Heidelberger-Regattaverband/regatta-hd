@@ -95,7 +95,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		disableButtons(true);
 
 		DBTask<Workbook> dbTask = this.dbTask.createTask(this::createXsl, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xsl", getText("heats.xsl.description"), "*.xls");
+			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"), "*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
 					saveXslFile(workbook, file);
