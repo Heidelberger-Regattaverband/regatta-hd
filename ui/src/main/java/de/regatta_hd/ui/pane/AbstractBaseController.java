@@ -8,18 +8,25 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import org.controlsfx.dialog.ProgressDialog;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.ui.FXMLLoaderFactory;
+import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.DBTaskRunner;
 import de.regatta_hd.ui.util.FxUtils;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 abstract class AbstractBaseController implements Initializable {
@@ -34,6 +41,9 @@ abstract class AbstractBaseController implements Initializable {
 	protected DBTaskRunner dbTaskRunner;
 	@Inject
 	protected AquariusDB db;
+
+	@FXML
+	protected Pane rootPane;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -73,4 +83,17 @@ abstract class AbstractBaseController implements Initializable {
 		}
 		return text;
 	}
+
+	protected Window getWindow() {
+		return this.rootPane.getScene().getWindow();
+	}
+
+	protected void runTaskWithProgressDialog(DBTask<?> dbTask, String title) {
+		ProgressDialog dialog = new ProgressDialog(dbTask);
+		dialog.initOwner(getWindow());
+		dialog.setTitle(title);
+		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
+		this.dbTaskRunner.runTask(dbTask);
+	}
+
 }

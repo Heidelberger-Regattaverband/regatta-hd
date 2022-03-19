@@ -38,7 +38,6 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
 import javafx.util.Pair;
 
 public class SetRaceController extends AbstractRegattaDAOController {
@@ -555,10 +554,6 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			}
 		});
 		return row;
-	}
-
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
 	}
 
 	// static helpers

@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Window;
 
 public class OffersController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
@@ -130,10 +129,6 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
-	}
-
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
 	}
 
 }

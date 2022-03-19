@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="de.regatta_hd.ui.pane.ResultsController">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" />
@@ -25,8 +25,7 @@
       </items>
     </ToolBar>
 
-    <TableView fx:id="resultsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-      GridPane.vgrow="ALWAYS">
+    <TableView fx:id="resultsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
         <Label text="%common.loadData" />
       </placeholder>
@@ -59,8 +58,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;"
-          text="%common.heatAbr">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.heatAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>devisionLabel</property>
@@ -81,8 +79,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
-          text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>firstPoints</property>
@@ -96,8 +93,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
-          text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>secondPoints</property>
@@ -111,8 +107,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
-          text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>thirdPoints</property>
@@ -126,8 +121,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;"
-          text="%common.points">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>fourthPoints</property>

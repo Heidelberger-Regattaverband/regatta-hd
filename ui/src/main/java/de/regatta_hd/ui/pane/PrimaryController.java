@@ -31,7 +31,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Pair;
 
 public class PrimaryController extends AbstractRegattaDAOController {
@@ -170,12 +169,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		ProgressDialog dialog = new ProgressDialog(dbTask);
-		dialog.initOwner(getWindow());
-		dialog.setTitle(getText("DatabaseConnectionDialog.title"));
-
-		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		super.dbTaskRunner.runTask(dbTask);
+		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"));
 	}
 
 	@FXML
@@ -303,10 +297,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private void handleExit() {
 		Platform.exit();
-	}
-
-	private Window getWindow() {
-		return this.mainMbar.getScene().getWindow();
 	}
 
 	private void updateControls(boolean isConnecting) {

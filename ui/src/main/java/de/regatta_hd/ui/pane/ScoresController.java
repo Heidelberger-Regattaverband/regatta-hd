@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Window;
 
 public class ScoresController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
@@ -80,10 +79,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.calculateBtn.setDisable(disabled);
-	}
-
-	private Window getWindow() {
-		return this.refreshBtn.getScene().getWindow();
 	}
 
 }
