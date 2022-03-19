@@ -67,11 +67,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	public List<Regatta> getRegattas() {
 		List<Regatta> regattas = getEntities(Regatta.class);
 		if (this.activeRegatta != null) {
-			regattas.forEach(regatta -> {
-				if (regatta.getId() == this.activeRegatta.getId()) {
-					regatta.setActive(true);
-				}
-			});
+			regattas.forEach(regatta -> regatta.setActive(regatta.getId() == this.activeRegatta.getId()));
 		}
 		return regattas;
 	}
