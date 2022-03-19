@@ -2,6 +2,7 @@ package de.regatta_hd.ui.pane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import org.controlsfx.dialog.ProgressDialog;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.aquarius.RegattaDAO;
@@ -22,7 +24,10 @@ import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
@@ -61,6 +66,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private MenuItem resultsMitm;
 	@FXML
 	private MenuItem heatsMitm;
+	@FXML
+	private ComboBox<Regatta> activeRegattaCBox;
+
+	// fields
+	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	// stages
 	private Stage setRaceStage;
@@ -79,8 +89,34 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		Platform.runLater(this::handleDatabaseConnect);
 
+		this.activeRegattaCBox.setItems(this.regattasList);
+
 		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
 				event -> setTitle(event.getActiveRegatta()));
+
+		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
+			if (event.getAquariusDB().isOpen()) {
+				this.activeRegattaCBox.setDisable(true);
+
+				super.dbTask.run(progress -> {
+					List<Regatta> regattas = super.regattaDAO.getRegattas();
+					Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+					return new Pair<>(regattas, activeRegatta);
+				}, dbResult -> {
+					try {
+						this.regattasList.setAll(dbResult.getResult().getKey());
+						this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
+					} catch (Exception e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+					} finally {
+						this.activeRegattaCBox.setDisable(false);
+					}
+				});
+			} else {
+				this.regattasList.clear();
+			}
+		});
 	}
 
 	private void setTitle(Regatta regatta) {
@@ -251,6 +287,17 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	void handleAboutOnAction() {
 		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources, this.version);
 		aboutDlg.showAndWait();
+	}
+
+	@FXML
+	void handleActiveRegattaOnAction() {
+		Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
+		try {
+			super.regattaDAO.setActiveRegatta(regatta);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+		}
 	}
 
 	@FXML

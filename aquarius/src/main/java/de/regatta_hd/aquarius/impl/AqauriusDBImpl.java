@@ -89,6 +89,9 @@ public class AqauriusDBImpl implements AquariusDB {
 
 			// store current thread to ensure further DB access is done in same thread
 			this.sessionThread = Thread.currentThread();
+
+			// notify listeners about changed AquariusDB state
+			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
@@ -114,9 +117,6 @@ public class AqauriusDBImpl implements AquariusDB {
 				Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(),
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
-
-				// notify listeners about changed AquariusDB state
-				notifyListeners(new AquariusDBStateChangedEventImpl(this));
 			} catch (LiquibaseException e) {
 				this.entityManager.close();
 				this.entityManager = null;
