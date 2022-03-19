@@ -20,7 +20,7 @@
           <menus>
             <Menu text="%PrimaryView.dbMenu.text">
               <items>
-                <MenuItem fx:id="dbConnectMitm" onAction="#handleDatabaseConnect" text="%PrimaryView.dbConnectMitm.text" />
+                <MenuItem fx:id="dbConnectMitm" onAction="#handleConnectOnAction" text="%PrimaryView.dbConnectMitm.text" />
                 <MenuItem fx:id="dbDisconnectMitm" onAction="#handleDatabaseDisconnect" text="%PrimaryView.dbDisconnectMitm.text" />
                 <SeparatorMenuItem />
                 <MenuItem onAction="#handleExit" text="%PrimaryView.MenuItem.Exit.text" />

@@ -73,7 +73,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportCsvOnAction() {
 		disableButtons(true);
 
-		DBTask<String> dbTask = this.dbTask.createTask(this::createCsv, dbResult -> {
+		DBTask<String> dbTask = super.dbTaskRunner.createTask(this::createCsv, dbResult -> {
 			File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"), "*.csv");
 			if (file != null) {
 				try {
@@ -87,14 +87,14 @@ public class HeatsController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		runTask(dbTask);
+		runTaskWithProgressDialog(dbTask);
 	}
 
 	@FXML
 	public void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = this.dbTask.createTask(this::createXsl, dbResult -> {
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createXsl, dbResult -> {
 			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"), "*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
@@ -108,14 +108,14 @@ public class HeatsController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		runTask(dbTask);
+		runTaskWithProgressDialog(dbTask);
 	}
 
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		this.heatsList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
@@ -251,12 +251,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 		}
 	}
 
-	private void runTask(DBTask<?> dbTask) {
+	private void runTaskWithProgressDialog(DBTask<?> dbTask) {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 		dialog.initOwner(getWindow());
 		dialog.setTitle(getText("heats.csv.export"));
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		this.dbTask.runTask(dbTask);
+		super.dbTaskRunner.runTask(dbTask);
 	}
 
 	private void disableButtons(boolean disabled) {

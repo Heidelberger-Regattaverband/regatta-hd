@@ -44,7 +44,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.scoresList.clear();
 
-		this.dbTask.run(progress -> this.regattaDAO.getScores(), scores -> {
+		super.dbTaskRunner.run(progress -> this.regattaDAO.getScores(), scores -> {
 			try {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();
@@ -63,7 +63,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.scoresList.clear();
 
-		this.dbTask.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
+		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
 			try {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();

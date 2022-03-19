@@ -53,7 +53,7 @@ public class RegattasController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.regattasList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}

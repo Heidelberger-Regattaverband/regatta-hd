@@ -63,7 +63,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void setDistances() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(em -> this.regattaDAO.setDistances(), dbResult -> {
+		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.setDistances(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -86,7 +86,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		this.dbTask.runInTransaction(em -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
+		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -109,7 +109,7 @@ public class OffersController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		this.racesObservableList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			this.db.getEntityManager().clear();
 			return this.regattaDAO.getRaces();
 		}, dbResult -> {

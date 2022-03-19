@@ -31,7 +31,7 @@ abstract class AbstractBaseController implements Initializable {
 	@Inject
 	protected FXMLLoaderFactory fxmlLoaderFactory;
 	@Inject
-	protected DBTaskRunner dbTask;
+	protected DBTaskRunner dbTaskRunner;
 	@Inject
 	protected AquariusDB db;
 

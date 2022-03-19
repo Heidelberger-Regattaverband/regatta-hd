@@ -87,7 +87,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		updateControls(false);
 
-		Platform.runLater(this::handleDatabaseConnect);
+		Platform.runLater(this::handleConnectOnAction);
 
 		this.activeRegattaCBox.setItems(this.regattasList);
 
@@ -98,7 +98,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			if (event.getAquariusDB().isOpen()) {
 				this.activeRegattaCBox.setDisable(true);
 
-				super.dbTask.run(progress -> {
+				super.dbTaskRunner.run(progress -> {
 					List<Regatta> regattas = super.regattaDAO.getRegattas();
 					Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 					return new Pair<>(regattas, activeRegatta);
@@ -125,7 +125,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void handleDatabaseConnect() {
+	void handleConnectOnAction() {
 		if (!super.db.isOpen()) {
 			try {
 				DBConnectionDialog dialog = new DBConnectionDialog(getWindow(), super.resources,
@@ -141,7 +141,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	private void openDbConnection(DBConfig connectionData) {
-		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTask.createTask(progress -> {
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
 			final int MAX = 3;
 			updateControls(true);
 
@@ -175,7 +175,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		dialog.setTitle(getText("DatabaseConnectionDialog.title"));
 
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
-		super.dbTask.runTask(dbTask);
+		super.dbTaskRunner.runTask(dbTask);
 	}
 
 	@FXML
@@ -313,7 +313,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		boolean isOpen = super.db.isOpen();
 
 		if (isOpen) {
-			this.dbTask.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
+			super.dbTaskRunner.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
 				try {
 					boolean hasActiveRegatta = dbResult.getResult() != null;
 

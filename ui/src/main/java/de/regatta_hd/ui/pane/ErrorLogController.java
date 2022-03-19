@@ -81,7 +81,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.hostNamesList.clear();
 
-		this.dbTask.run(progress -> this.dao.getHostNames(), dbResult -> {
+		super.dbTaskRunner.run(progress -> this.dao.getHostNames(), dbResult -> {
 			try {
 				this.hostNamesList.setAll(dbResult.getResult());
 				this.hostNameCbx.getSelectionModel().select(this.hostName);
@@ -98,7 +98,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.logRecordsList.clear();
 
-		this.dbTask.run(progress -> {
+		super.dbTaskRunner.run(progress -> {
 			EntityManager entityManager = super.db.getEntityManager();
 			if (refresh) {
 				entityManager.clear();
