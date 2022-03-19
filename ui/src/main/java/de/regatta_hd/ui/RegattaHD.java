@@ -57,7 +57,7 @@ public class RegattaHD extends Application {
 		primaryStage.show();
 	}
 
-	private void initLogging() throws IOException {
+	private void initLogging() {
 		// must set before the Logger, loads logging.properties from the classpath
 //		try (InputStream is = RegattaHD.class.getClassLoader().getResourceAsStream("logging.properties")) {
 //			LogManager.getLogManager().readConfiguration(is);

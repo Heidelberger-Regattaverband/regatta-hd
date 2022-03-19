@@ -15,6 +15,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -108,4 +111,11 @@ public class Regatta {
 
 	@OneToMany(targetEntity = ReportInfo.class, mappedBy = "regatta")
 	private Set<ReportInfo> reportInfos;
+
+	@Transient
+	private boolean active;
+
+	public BooleanProperty activeProperty() {
+		return new SimpleBooleanProperty(this.active);
+	}
 }

@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.controlsfx.dialog.ProgressDialog;
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 

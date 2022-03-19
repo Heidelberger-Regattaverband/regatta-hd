@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.control.CheckBoxTableCellFactory?>
 <?import de.regatta_hd.ui.control.DateTableCellFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -31,6 +32,16 @@
         <Label text="%common.loadData" />
       </placeholder>
       <columns>
+        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.active">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>active</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+          <cellFactory>
+            <CheckBoxTableCellFactory fx:factory="create" />
+          </cellFactory>
+        </TableColumn>
         <TableColumn fx:id="idCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
           <cellValueFactory>
             <PropertyValueFactory>

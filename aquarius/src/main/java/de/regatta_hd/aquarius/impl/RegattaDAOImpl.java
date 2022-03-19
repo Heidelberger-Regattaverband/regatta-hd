@@ -65,7 +65,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public List<Regatta> getRegattas() {
-		return getEntities(Regatta.class);
+		List<Regatta> regattas = getEntities(Regatta.class);
+		regattas.forEach(regatta -> {
+			if (regatta.getId() == this.activeRegatta.getId()) {
+				regatta.setActive(true);
+			}
+		});
+		return regattas;
 	}
 
 	@Override
@@ -180,7 +186,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = super.db.getEntityManager();
 
 		race.getHeats().forEach(heat -> {
-			heat.setState((byte)0);
+			heat.setState((byte) 0);
 			entityManager.merge(heat);
 			heat.getEntries().forEach(entityManager::remove);
 			heat.getEntries().clear();
@@ -338,9 +344,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	private List<Heat> getOfficialHeats() {
 		EntityManager entityManager = this.db.getEntityManager();
 
-		return entityManager
-				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND h.state = 4",
-						Heat.class)
+		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND h.state = 4", Heat.class)
 				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
