@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.regatta_hd.ui.util.RegattaStringConverter?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
@@ -49,20 +48,16 @@
             </Menu>
           </menus>
         </MenuBar>
-
-        <HBox alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
-          <children>
-            <Label text="Aktive Regatta:" />
-            <ComboBox prefWidth="300" fx:id="activeRegattaCBox" onAction="#handleActiveRegattaOnAction" HBox.hgrow="SOMETIMES">
+        <ToolBar>
+          <items>
+            <Label text="%PrimaryView.activeRegatta" />
+            <ComboBox fx:id="activeRegattaCBox" onAction="#handleActiveRegattaOnAction" prefWidth="300">
               <converter>
                 <RegattaStringConverter />
               </converter>
             </ComboBox>
-          </children>
-          <VBox.margin>
-            <Insets left="5.0" top="5.0" />
-          </VBox.margin>
-        </HBox>
+          </items>
+        </ToolBar>
       </children>
     </VBox>
   </top>
