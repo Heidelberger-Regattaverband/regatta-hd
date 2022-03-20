@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -52,6 +53,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	void handleCalculate() {
 		disableButtons(true);
+		updatePlaceholder(getText("common.loadData"));
 		this.scoresList.clear();
 
 		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
@@ -63,6 +65,9 @@ public class ScoresController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
+				if (this.scoresList.isEmpty()) {
+					updatePlaceholder(getText("common.noDataAvailable"));
+				}
 				disableButtons(false);
 			}
 		});
@@ -70,6 +75,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	private void loadScores(boolean refresh) {
 		disableButtons(true);
+		updatePlaceholder(getText("common.loadData"));
 		this.scoresList.clear();
 
 		super.dbTaskRunner.run(progress -> {
@@ -86,9 +92,16 @@ public class ScoresController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
+				if (this.scoresList.isEmpty()) {
+					updatePlaceholder(getText("common.noDataAvailable"));
+				}
 				disableButtons(false);
 			}
 		});
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.scoresTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {

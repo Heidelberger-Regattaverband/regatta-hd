@@ -20,7 +20,7 @@
     </ToolBar>
     <TableView fx:id="scoresTbl" VBox.vgrow="ALWAYS">
       <placeholder>
-        <Label text="%common.loadData" />
+        <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
         <TableColumn fx:id="rankCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.rank">
