@@ -88,6 +88,10 @@ abstract class AbstractBaseController implements Initializable {
 		return this.rootPane.getScene().getWindow();
 	}
 
+	protected void setTitle(String title) {
+		((Stage) getWindow()).setTitle(title);
+	}
+
 	protected void runTaskWithProgressDialog(DBTask<?> dbTask, String title) {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 		dialog.initOwner(getWindow());

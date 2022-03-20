@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;
@@ -35,15 +36,25 @@ public class ScoresController extends AbstractRegattaDAOController {
 		this.scoresTbl.setItems(this.scoresList);
 		this.scoresTbl.getSortOrder().add(this.rankCol);
 
-		handleRefresh();
+		loadScores(false);
+
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
+			setTitle(getText("PrimaryView.scoresMitm.text") + " - " + event.getActiveRegatta().getTitle());
+			loadScores(true);
+		});
 	}
 
 	@FXML
 	void handleRefresh() {
+		loadScores(true);
+	}
+
+	@FXML
+	void handleCalculate() {
 		disableButtons(true);
 		this.scoresList.clear();
 
-		super.dbTaskRunner.run(progress -> this.regattaDAO.getScores(), scores -> {
+		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
 			try {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();
@@ -57,12 +68,16 @@ public class ScoresController extends AbstractRegattaDAOController {
 		});
 	}
 
-	@FXML
-	void handleCalculate() {
+	private void loadScores(boolean refresh) {
 		disableButtons(true);
 		this.scoresList.clear();
 
-		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
+		super.dbTaskRunner.run(progress -> {
+			if (refresh) {
+				super.db.getEntityManager().clear();
+			}
+			return this.regattaDAO.getScores();
+		}, scores -> {
 			try {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();

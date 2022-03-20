@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
@@ -40,6 +41,11 @@ public class ResultsController extends AbstractRegattaDAOController {
 		this.resultsTbl.getSortOrder().add(this.numberCol);
 
 		loadResults(false);
+
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
+			setTitle(getText("common.results") + " - " + event.getActiveRegatta().getTitle());
+			loadResults(true);
+		});
 	}
 
 	private void loadResults(boolean refresh) {
@@ -68,9 +74,10 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	void handleSetPointsOnAction() {
 		disableButtons(true);
+		this.resultsList.clear();
 
 		super.dbTaskRunner.runInTransaction(progress -> {
-			this.resultsList.forEach(resultEntry -> {
+			this.regattaDAO.getOfficialResults().forEach(resultEntry -> {
 				Race race = resultEntry.getHeat().getRace();
 				int maxPoints = race.getRaceMode().getLaneCount() + 1;
 				byte numRowers = race.getBoatClass().getNumRowers();
