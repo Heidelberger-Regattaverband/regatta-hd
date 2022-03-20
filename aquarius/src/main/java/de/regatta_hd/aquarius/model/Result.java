@@ -84,7 +84,7 @@ public class Result {
 	@ToString.Include
 	private Integer sortValue;
 
-	@Column(name = "points", table="HRV_Result")
+	@Column(name = "points", table = "HRV_Result")
 	private Float points;
 
 	public boolean isFinalResult() {
