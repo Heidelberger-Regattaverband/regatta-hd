@@ -16,7 +16,6 @@ import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.common.ListenerManager;
 import de.regatta_hd.ui.dialog.AboutDialog;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.DBTask;
@@ -36,8 +35,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@Inject
 	private DBConfigStore dbCfgStore;
-	@Inject
-	private ListenerManager listenerManager;
 	@Inject
 	@Named("version")
 	private String version;

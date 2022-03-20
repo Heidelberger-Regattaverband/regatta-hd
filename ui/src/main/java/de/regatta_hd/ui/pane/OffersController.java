@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.ui.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
@@ -50,12 +51,17 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.racesTbl.getSortOrder().add(this.idCol);
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
-		loadRaces();
+		loadRaces(false);
+
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
+			setTitle(getText("PrimaryView.racesMitm.text") + " - " + event.getActiveRegatta().getTitle());
+			loadRaces(true);
+		});
 	}
 
 	@FXML
 	private void refresh() {
-		loadRaces();
+		loadRaces(true);
 	}
 
 	@FXML
@@ -104,12 +110,14 @@ public class OffersController extends AbstractRegattaDAOController {
 		});
 	}
 
-	private void loadRaces() {
+	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		this.racesObservableList.clear();
 
 		super.dbTaskRunner.run(progress -> {
-			this.db.getEntityManager().clear();
+			if (refresh) {
+				this.db.getEntityManager().clear();
+			}
 			return this.regattaDAO.getRaces();
 		}, dbResult -> {
 			try {

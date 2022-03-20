@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.common.concurrent.ProgressMonitor;
@@ -32,10 +33,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class HeatsController extends AbstractRegattaDAOController {
-	private static final String DELIMITER = ";";
-
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
-
+	private static final String DELIMITER = ";";
 	private static final Pattern delayPattern = Pattern.compile("\\d*[\\.,]?\\d+");
 
 	@FXML
@@ -59,6 +58,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.heatsTbl.getSortOrder().add(this.numberCol);
 
 		loadHeats(false);
+
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
+			setTitle(getText("heats.title") + " - " + event.getActiveRegatta().getTitle());
+			loadHeats(true);
+		});
 	}
 
 	@FXML
