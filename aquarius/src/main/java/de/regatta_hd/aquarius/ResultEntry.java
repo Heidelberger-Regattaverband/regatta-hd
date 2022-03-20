@@ -1,9 +1,12 @@
 package de.regatta_hd.aquarius;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.RegistrationLabel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,7 +47,7 @@ public class ResultEntry {
 	public String getFirst() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (!result.isEmpty()) {
-			return result.get(0).getRegistration().getClub().getAbbreviation();
+			return getRegistrationLabel(result.get(0).getRegistration());
 		}
 		return null;
 	}
@@ -60,7 +63,7 @@ public class ResultEntry {
 	public String getSecond() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 1) {
-			return result.get(1).getRegistration().getClub().getAbbreviation();
+			return getRegistrationLabel(result.get(1).getRegistration());
 		}
 		return null;
 	}
@@ -76,7 +79,7 @@ public class ResultEntry {
 	public String getThird() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 2) {
-			return result.get(2).getRegistration().getClub().getAbbreviation();
+			return getRegistrationLabel(result.get(2).getRegistration());
 		}
 		return null;
 	}
@@ -92,7 +95,7 @@ public class ResultEntry {
 	public String getFourth() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 3) {
-			return result.get(3).getRegistration().getClub().getAbbreviation();
+			return getRegistrationLabel(result.get(3).getRegistration());
 		}
 		return null;
 	}
@@ -114,5 +117,12 @@ public class ResultEntry {
 		default:
 			return "-";
 		}
+	}
+
+	// static helpers
+
+	private static String getRegistrationLabel(Registration registration) {
+		Optional<RegistrationLabel> label = registration.getLabels().stream().findAny();
+		return label.isPresent() ? label.get().getLabel().getLabelShort() : null;
 	}
 }
