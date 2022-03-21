@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.dialog;
+package de.regatta_hd.commons.fx.dialog;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;

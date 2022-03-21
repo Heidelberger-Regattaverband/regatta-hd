@@ -9,5 +9,6 @@ open module de.regatta_hd.commons.fx {
 
 	// regatta_hd modules
 	exports de.regatta_hd.commons.fx.control;
+	exports de.regatta_hd.commons.fx.dialog;
 	exports de.regatta_hd.commons.fx.util;
 }
