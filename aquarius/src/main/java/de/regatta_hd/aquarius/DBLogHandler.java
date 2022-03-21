@@ -71,7 +71,19 @@ public class DBLogHandler extends Handler {
 	}
 
 	private void persist(LogRecord logRecord) {
-		this.db.getExecutor().execute(() -> this.db.getEntityManager().persist(logRecord));
+		this.db.getExecutor().execute(() -> {
+			EntityManager entityManager = this.db.getEntityManager();
+			EntityTransaction transaction = entityManager.getTransaction();
+			transaction.begin();
+			try {
+				this.db.getEntityManager().persist(logRecord);
+				entityManager.flush();
+				transaction.commit();
+			} catch (PersistenceException e) {
+				transaction.rollback();
+				e.printStackTrace();
+			}
+		});
 	}
 
 	private void persist() {
@@ -86,6 +98,7 @@ public class DBLogHandler extends Handler {
 				entityManager.flush();
 				transaction.commit();
 			} catch (PersistenceException e) {
+				transaction.rollback();
 				e.printStackTrace();
 			}
 		});
