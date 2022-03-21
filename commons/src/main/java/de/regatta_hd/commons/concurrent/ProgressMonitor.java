@@ -1,4 +1,4 @@
-package de.regatta_hd.common.concurrent;
+package de.regatta_hd.commons.concurrent;
 
 /**
  * Via this interface asynchronous tasks can update the current progress information.

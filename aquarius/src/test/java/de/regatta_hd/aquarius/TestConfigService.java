@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.common.ConfigService;
-import de.regatta_hd.common.impl.ConfigServiceImpl;
+import de.regatta_hd.commons.ConfigService;
+import de.regatta_hd.commons.impl.ConfigServiceImpl;
 
 class TestConfigService implements ConfigService {
 

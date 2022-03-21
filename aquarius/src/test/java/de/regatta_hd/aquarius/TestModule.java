@@ -2,8 +2,8 @@ package de.regatta_hd.aquarius;
 
 import com.google.inject.AbstractModule;
 
-import de.regatta_hd.common.ConfigService;
-import de.regatta_hd.common.impl.ConfigServiceImpl;
+import de.regatta_hd.commons.ConfigService;
+import de.regatta_hd.commons.impl.ConfigServiceImpl;
 
 class TestModule extends AbstractModule {
 

@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
-import de.regatta_hd.common.ConfigService;
+import de.regatta_hd.commons.ConfigService;
 
 @Singleton
 public class DBConfigStoreImpl implements DBConfigStore {

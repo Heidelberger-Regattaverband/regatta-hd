@@ -1,4 +1,4 @@
-package de.regatta_hd.common.concurrent;
+package de.regatta_hd.commons.concurrent;
 
 /**
  * This interface provides access to the result of an asynchronous task.

@@ -22,7 +22,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.common.concurrent.ProgressMonitor;
+import de.regatta_hd.commons.concurrent.ProgressMonitor;
 import de.regatta_hd.ui.util.DBTask;
 import de.regatta_hd.ui.util.FxUtils;
 import javafx.collections.FXCollections;

@@ -1,4 +1,4 @@
-package de.regatta_hd.common;
+package de.regatta_hd.commons;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +12,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 
-import de.regatta_hd.common.impl.ConfigServiceImpl;
-import de.regatta_hd.common.impl.ListenerManagerImpl;
+import de.regatta_hd.commons.impl.ConfigServiceImpl;
+import de.regatta_hd.commons.impl.ListenerManagerImpl;
 
 public class CommonModule extends AbstractModule {
 	private static final Logger logger = Logger.getLogger(CommonModule.class.getName());

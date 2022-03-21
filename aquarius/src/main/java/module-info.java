@@ -10,7 +10,7 @@ open module de.regatta_hd.aquarius {
 	requires org.apache.commons.lang3;
 	requires org.hibernate.orm.core;
 
-	requires de.regatta_hd.common;
+	requires de.regatta_hd.commons;
 
 	exports de.regatta_hd.aquarius;
 	exports de.regatta_hd.aquarius.model;

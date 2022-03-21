@@ -1,4 +1,4 @@
-package de.regatta_hd.common.impl;
+package de.regatta_hd.commons.impl;
 
 import java.util.Arrays;
 import java.util.EventListener;
@@ -9,7 +9,7 @@ import javax.swing.event.EventListenerList;
 
 import com.google.inject.Singleton;
 
-import de.regatta_hd.common.ListenerManager;
+import de.regatta_hd.commons.ListenerManager;
 
 @Singleton
 public class ListenerManagerImpl implements ListenerManager {

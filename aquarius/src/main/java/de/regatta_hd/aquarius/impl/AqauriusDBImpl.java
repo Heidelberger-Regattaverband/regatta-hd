@@ -20,7 +20,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
-import de.regatta_hd.common.ListenerManager;
+import de.regatta_hd.commons.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
