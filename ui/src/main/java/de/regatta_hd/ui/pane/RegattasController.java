@@ -1,6 +1,5 @@
 package de.regatta_hd.ui.pane;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -43,7 +42,7 @@ public class RegattasController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void handleSelectRegattaOnAction() throws IOException {
+	private void handleSelectRegattaOnAction() {
 		Regatta regatta = this.regattasTbl.getSelectionModel().getSelectedItem();
 		this.regattaDAO.setActiveRegatta(regatta);
 	}
