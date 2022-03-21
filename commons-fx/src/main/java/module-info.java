@@ -1,4 +1,4 @@
-open module de.regatta_hd.commons {
+open module de.regatta_hd.commons.fx {
 
 	requires com.google.guice;
 	requires java.desktop;

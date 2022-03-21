@@ -97,6 +97,12 @@
 
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>commons-fx</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>aquarius</artifactId>
         <version>${project.version}</version>
       </dependency>
