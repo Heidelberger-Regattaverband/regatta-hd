@@ -40,8 +40,14 @@ public class ScoresController extends AbstractRegattaDAOController {
 		loadScores(false);
 
 		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(getText("PrimaryView.scoresMitm.text") + " - " + event.getActiveRegatta().getTitle());
-			loadScores(true);
+			if (event.getActiveRegatta() != null) {
+				setTitle(getText("PrimaryView.scoresMitm.text") + " - " + event.getActiveRegatta().getTitle());
+				loadScores(true);
+			} else {
+				setTitle(getText("PrimaryView.scoresMitm.text"));
+				this.scoresList.clear();
+				disableButtons(true);
+			}
 		});
 	}
 
@@ -92,9 +98,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				if (this.scoresList.isEmpty()) {
-					updatePlaceholder(getText("common.noDataAvailable"));
-				}
+				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});

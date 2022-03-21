@@ -29,6 +29,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -60,8 +61,14 @@ public class HeatsController extends AbstractRegattaDAOController {
 		loadHeats(false);
 
 		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(getText("heats.title") + " - " + event.getActiveRegatta().getTitle());
-			loadHeats(true);
+			if (event.getActiveRegatta() != null) {
+				setTitle(getText("heats.title") + " - " + event.getActiveRegatta().getTitle());
+				loadHeats(true);
+			} else {
+				setTitle(getText("heats.title"));
+				this.heatsList.clear();
+				disableButtons(true);
+			}
 		});
 	}
 
@@ -120,6 +127,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
+		updatePlaceholder(getText("common.loadData"));
 		this.heatsList.clear();
 
 		super.dbTaskRunner.run(progress -> {
@@ -136,6 +144,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -262,6 +271,10 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.heatsTbl.getPlaceholder()).setText(text);
 	}
 
 	// static helpers

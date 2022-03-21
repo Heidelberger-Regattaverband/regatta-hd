@@ -281,11 +281,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	void handleActiveRegattaOnAction() {
 		Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
-		try {
+		if (regatta != null) {
 			super.regattaDAO.setActiveRegatta(regatta);
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
 		}
 	}
 

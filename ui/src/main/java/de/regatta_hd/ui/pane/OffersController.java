@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -36,26 +37,27 @@ public class OffersController extends AbstractRegattaDAOController {
 	private Button setMastersAgeClassesBtn;
 
 	// fields
-	private final ObservableList<Race> racesObservableList = FXCollections.observableArrayList();
-
-	// needs to be a public getter, otherwise items are not bound
-	public ObservableList<Race> getRacesObservableList() {
-		return this.racesObservableList;
-	}
+	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.racesTbl.setItems(this.racesObservableList);
+		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
 		loadRaces(false);
 
 		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(getText("PrimaryView.racesMitm.text") + " - " + event.getActiveRegatta().getTitle());
-			loadRaces(true);
+			if (event.getActiveRegatta() != null) {
+				setTitle(getText("PrimaryView.racesMitm.text") + " - " + event.getActiveRegatta().getTitle());
+				loadRaces(true);
+			} else {
+				setTitle(getText("PrimaryView.racesMitm.text"));
+				this.racesList.clear();
+				disableButtons(true);
+			}
 		});
 	}
 
@@ -112,7 +114,8 @@ public class OffersController extends AbstractRegattaDAOController {
 
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
-		this.racesObservableList.clear();
+		updatePlaceholder(getText("common.loadData"));
+		this.racesList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -121,16 +124,21 @@ public class OffersController extends AbstractRegattaDAOController {
 			return this.regattaDAO.getRaces();
 		}, dbResult -> {
 			try {
-				this.racesObservableList.setAll(dbResult.getResult());
+				this.racesList.setAll(dbResult.getResult());
 				FxUtils.autoResizeColumns(this.racesTbl);
 				this.racesTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.racesTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {

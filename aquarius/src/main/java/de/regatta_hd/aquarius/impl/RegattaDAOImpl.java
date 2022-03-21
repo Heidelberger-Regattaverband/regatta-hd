@@ -58,7 +58,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			if (event.getAquariusDB().isOpen()) {
 				getActiveRegatta();
 			} else {
-				this.activeRegatta = null;
+				setActiveRegatta(null);
 			}
 		});
 	}
@@ -147,13 +147,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void setActiveRegatta(Regatta regatta) throws IOException {
+	public void setActiveRegatta(Regatta regatta) {
 		if (regatta != null) {
 			this.activeRegatta = regatta;
-			this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
+			try {
+				this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
 		} else {
 			this.activeRegatta = null;
-			this.cfgService.removeProperty(ACTIVE_REGATTA);
 		}
 
 		notifyListeners(new RegattaDAORegattaChangedEventImpl(this, this.activeRegatta));
@@ -174,7 +177,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 			return this.activeRegatta;
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, e, null);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		return null;
 	}
