@@ -4,8 +4,6 @@ open module de.regatta_hd.ui {
 	requires java.sql;
 
 	// JavaFX modules
-	requires javafx.base;
-	requires javafx.controls;
 	requires javafx.fxml;
 	requires transitive javafx.graphics;
 
