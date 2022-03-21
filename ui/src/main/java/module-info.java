@@ -6,7 +6,7 @@ open module de.regatta_hd.ui {
 	// JavaFX modules
 	requires javafx.base;
 	requires javafx.controls;
-	requires transitive javafx.fxml;
+	requires javafx.fxml;
 	requires transitive javafx.graphics;
 
 	requires transitive com.google.guice;
@@ -18,9 +18,7 @@ open module de.regatta_hd.ui {
 	requires org.apache.poi.poi;
 
 	// regatta_hd modules
-	requires transitive de.regatta_hd.aquarius;
+	requires de.regatta_hd.aquarius;
 	requires de.regatta_hd.commons;
 	requires de.regatta_hd.commons.fx;
-
-	exports de.regatta_hd.ui;
 }

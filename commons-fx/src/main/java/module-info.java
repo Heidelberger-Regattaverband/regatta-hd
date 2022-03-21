@@ -1,4 +1,4 @@
-open module de.regatta_hd.commons.fx {
+module de.regatta_hd.commons.fx {
 
 	// Java modules
 	requires java.logging;
