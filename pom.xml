@@ -75,6 +75,7 @@
 
   <modules>
     <module>commons</module>
+    <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
   </modules>
