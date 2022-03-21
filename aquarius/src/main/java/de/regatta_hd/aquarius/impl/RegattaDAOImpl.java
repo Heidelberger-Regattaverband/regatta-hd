@@ -262,7 +262,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
 				Integer pointsBoat = heatReg.getFinalResult().getPoints();
 				if (pointsBoat != null) {
-					float pointsPerCrew = pointsBoat.intValue() / numRowers;
+					float pointsPerCrew = (float) pointsBoat.intValue() / numRowers;
 
 					heatReg.getRegistration().getCrews().forEach(crew -> {
 						Score score = scores.computeIfAbsent(heatReg.getRegistration().getClub(),

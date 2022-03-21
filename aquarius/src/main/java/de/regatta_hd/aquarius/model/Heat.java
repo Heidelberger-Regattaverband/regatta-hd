@@ -59,7 +59,8 @@ import lombok.ToString;
 		@NamedSubgraph(name = "race.ageClass", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "ageClass"), //
-						@NamedAttributeNode(value = "boatClass") //
+						@NamedAttributeNode(value = "boatClass"), //
+						@NamedAttributeNode(value = "raceMode") //
 				}) //
 }))
 //lombok
