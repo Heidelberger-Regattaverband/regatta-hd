@@ -58,7 +58,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			if (event.getAquariusDB().isOpen()) {
 				getActiveRegatta();
 			} else {
-				this.activeRegatta = null;
+				setActiveRegatta(null);
 			}
 		});
 	}
@@ -147,13 +147,16 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void setActiveRegatta(Regatta regatta) throws IOException {
+	public void setActiveRegatta(Regatta regatta) {
 		if (regatta != null) {
 			this.activeRegatta = regatta;
-			this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
+			try {
+				this.cfgService.setProperty(ACTIVE_REGATTA, regatta.getId());
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
 		} else {
 			this.activeRegatta = null;
-			this.cfgService.removeProperty(ACTIVE_REGATTA);
 		}
 
 		notifyListeners(new RegattaDAORegattaChangedEventImpl(this, this.activeRegatta));
@@ -174,7 +177,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 			return this.activeRegatta;
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, e, null);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		return null;
 	}
@@ -260,14 +263,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 //			}
 
 			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
-				Float pointsBoat = heatReg.getFinalResult().getPoints();
-				if (pointsBoat != null) {
-					float pointsPerCrew = pointsBoat.floatValue() / numRowers;
+				Integer pointsBoat = heatReg.getFinalResult().getPoints();
 
-					heatReg.getRegistration().getCrews().forEach(crew -> {
-						Score score = scores.computeIfAbsent(heatReg.getRegistration().getClub(),
-								key -> Score.builder().club(key).regatta(regatta).points(0).build());
+				if (pointsBoat != null) {
+					float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
+
+					heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
+						Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
+								key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
 						score.addPoints(pointsPerCrew);
+
+//						System.out.println("Heat=" + heatReg.getHeat().getNumber() + "', Club=" + score.getClubName()
+//								+ ", points=" + pointsPerCrew);
 					});
 				}
 			}

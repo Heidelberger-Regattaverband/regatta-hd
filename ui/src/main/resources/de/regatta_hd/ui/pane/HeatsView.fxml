@@ -29,7 +29,7 @@
 
     <TableView fx:id="heatsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
-        <Label text="%common.loadData" />
+        <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
         <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">

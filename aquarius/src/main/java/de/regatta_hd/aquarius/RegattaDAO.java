@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius;
 
-import java.io.IOException;
 import java.util.EventListener;
 import java.util.List;
 
@@ -35,9 +34,8 @@ public interface RegattaDAO {
 	 * Sets the active regatta that is used for all DB accesses.
 	 *
 	 * @param regatta the active regatta
-	 * @throws IOException if setting active regatta failed
 	 */
-	void setActiveRegatta(Regatta regatta) throws IOException;
+	void setActiveRegatta(Regatta regatta);
 
 	/**
 	 * Returns active regatta.

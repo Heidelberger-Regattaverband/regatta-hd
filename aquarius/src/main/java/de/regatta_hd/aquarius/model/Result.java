@@ -7,8 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +17,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Result")
-@SecondaryTable(name = "HRV_Result", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "Result_CE_ID_FK"),
-		@PrimaryKeyJoinColumn(name = "Result_SplitNr") })
 @IdClass(ResultId.class)
 //lombok
 @Getter
@@ -84,10 +80,20 @@ public class Result {
 	@ToString.Include
 	private Integer sortValue;
 
-	@Column(name = "points", table = "HRV_Result")
-	private Float points;
-
 	public boolean isFinalResult() {
 		return getSplitNr() == FINAL;
+	}
+
+	public Integer getPoints() {
+		Integer points = null;
+		if (getRank() > 0) {
+			Race race = getHeatRegistration().getRegistration().getRace();
+			int maxPoints = race.getRaceMode().getLaneCount() + 1;
+			byte numRowers = race.getBoatClass().getNumRowers();
+			// 1.: 5 - 1 + 4 = 8
+			// 2.: 5 - 2 + 4 = 7
+			points = Integer.valueOf(maxPoints - getRank() + numRowers);
+		}
+		return points;
 	}
 }

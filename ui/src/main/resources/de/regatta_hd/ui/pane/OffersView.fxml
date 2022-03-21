@@ -26,7 +26,7 @@
     </ToolBar>
     <TableView fx:id="racesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
-        <Label text="%common.loadData" />
+        <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
         <TableColumn fx:id="idCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
