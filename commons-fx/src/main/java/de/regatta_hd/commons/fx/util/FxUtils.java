@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.util;
+package de.regatta_hd.commons.fx.util;
 
 import java.io.File;
 import java.util.Locale;

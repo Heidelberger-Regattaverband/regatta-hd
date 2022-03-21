@@ -1,9 +1,13 @@
 open module de.regatta_hd.commons.fx {
 
-	requires com.google.guice;
-	requires java.desktop;
+	// Java modules
 	requires java.logging;
-	requires javafx.controls;
+	requires java.prefs;
 
+	// JavaFX modules
+	requires transitive javafx.controls;
+
+	// regatta_hd modules
 	exports de.regatta_hd.commons.fx.control;
+	exports de.regatta_hd.commons.fx.util;
 }
