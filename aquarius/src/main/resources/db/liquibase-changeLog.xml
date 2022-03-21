@@ -89,24 +89,4 @@
     </createTable>
   </changeSet>
 
-  <changeSet id="6" author="markus@ofterdinger.de">
-    <preConditions onFail="MARK_RAN">
-      <not>
-        <tableExists tableName="HRV_Result" />
-      </not>
-    </preConditions>
-    <createTable tableName="HRV_Result">
-      <column name="Result_CE_ID_FK" type="INT">
-        <constraints nullable="false" />
-      </column>
-      <column name="Result_SplitNr" type="TINYINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="points" type="FLOAT" />
-    </createTable>
-    <addPrimaryKey columnNames="Result_CE_ID_FK,Result_SplitNr" tableName="HRV_Result" constraintName="PK_HRV_Result" />
-    <addForeignKeyConstraint constraintName="FK_HRV_Result" referencedTableName="Result"
-      baseColumnNames="Result_CE_ID_FK,Result_SplitNr" baseTableName="HRV_Result" referencedColumnNames="Result_CE_ID_FK,Result_SplitNr" />
-  </changeSet>
-
 </databaseChangeLog>

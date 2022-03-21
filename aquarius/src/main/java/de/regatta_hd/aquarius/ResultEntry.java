@@ -52,7 +52,7 @@ public class ResultEntry {
 		return null;
 	}
 
-	public Float getFirstPoints() {
+	public Integer getFirstPoints() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (!result.isEmpty()) {
 			return result.get(0).getFinalResult().getPoints();
@@ -68,7 +68,7 @@ public class ResultEntry {
 		return null;
 	}
 
-	public Float getSecondPoints() {
+	public Integer getSecondPoints() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 1) {
 			return result.get(1).getFinalResult().getPoints();
@@ -84,7 +84,7 @@ public class ResultEntry {
 		return null;
 	}
 
-	public Float getThirdPoints() {
+	public Integer getThirdPoints() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 2) {
 			return result.get(2).getFinalResult().getPoints();
@@ -100,7 +100,7 @@ public class ResultEntry {
 		return null;
 	}
 
-	public Float getFourthPoints() {
+	public Integer getFourthPoints() {
 		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
 		if (result.size() > 3) {
 			return result.get(3).getFinalResult().getPoints();
