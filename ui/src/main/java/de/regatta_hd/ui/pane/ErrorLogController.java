@@ -10,7 +10,7 @@ import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.LogRecord;
-import de.regatta_hd.ui.util.FxUtils;
+import de.regatta_hd.commons.fx.util.FxUtils;
 import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.9</version>
+  <version>0.1.10</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -74,7 +74,8 @@
   </properties>
 
   <modules>
-    <module>common</module>
+    <module>commons</module>
+    <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
   </modules>
@@ -90,7 +91,13 @@
       <!-- ========== -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>common</artifactId>
+        <artifactId>commons</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>commons-fx</artifactId>
         <version>${project.version}</version>
       </dependency>
 

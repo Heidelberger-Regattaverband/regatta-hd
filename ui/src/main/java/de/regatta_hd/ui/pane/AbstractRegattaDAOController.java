@@ -3,7 +3,7 @@ package de.regatta_hd.ui.pane;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.RegattaDAO;
-import de.regatta_hd.common.ListenerManager;
+import de.regatta_hd.commons.ListenerManager;
 
 class AbstractRegattaDAOController extends AbstractBaseController {
 

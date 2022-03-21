@@ -6,9 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.common.concurrent.AsyncCallable;
-import de.regatta_hd.common.concurrent.AsyncResult;
-import de.regatta_hd.common.concurrent.ProgressMonitor;
+import de.regatta_hd.commons.concurrent.AsyncCallable;
+import de.regatta_hd.commons.concurrent.AsyncResult;
+import de.regatta_hd.commons.concurrent.ProgressMonitor;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;

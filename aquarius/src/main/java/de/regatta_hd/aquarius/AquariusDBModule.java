@@ -6,7 +6,7 @@ import de.regatta_hd.aquarius.impl.AqauriusDBImpl;
 import de.regatta_hd.aquarius.impl.DBConfigStoreImpl;
 import de.regatta_hd.aquarius.impl.MasterDataDAOImpl;
 import de.regatta_hd.aquarius.impl.RegattaDAOImpl;
-import de.regatta_hd.common.CommonModule;
+import de.regatta_hd.commons.CommonModule;
 
 /**
  * The guice module to register aquarius database bindings and additional

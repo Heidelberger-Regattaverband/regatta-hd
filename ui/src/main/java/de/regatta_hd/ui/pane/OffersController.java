@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Race;
-import de.regatta_hd.ui.util.FxUtils;
+import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

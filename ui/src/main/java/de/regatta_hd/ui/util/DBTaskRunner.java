@@ -6,8 +6,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.common.concurrent.AsyncCallable;
-import de.regatta_hd.common.concurrent.AsyncResult;
+import de.regatta_hd.commons.concurrent.AsyncCallable;
+import de.regatta_hd.commons.concurrent.AsyncResult;
 import javafx.concurrent.Task;
 
 @Singleton
