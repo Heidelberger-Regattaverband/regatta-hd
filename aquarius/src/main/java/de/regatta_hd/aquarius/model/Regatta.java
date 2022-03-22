@@ -2,6 +2,7 @@ package de.regatta_hd.aquarius.model;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -118,4 +119,22 @@ public class Regatta {
 	public BooleanProperty activeProperty() {
 		return new SimpleBooleanProperty(this.active);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Regatta other = (Regatta) obj;
+		return this.id == other.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.id;
+	}
+
 }

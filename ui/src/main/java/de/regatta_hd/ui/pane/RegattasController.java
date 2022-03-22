@@ -45,6 +45,8 @@ public class RegattasController extends AbstractRegattaDAOController {
 	private void handleSelectRegattaOnAction() {
 		Regatta regatta = this.regattasTbl.getSelectionModel().getSelectedItem();
 		this.regattaDAO.setActiveRegatta(regatta);
+
+		loadRegattas(true);
 	}
 
 	private void loadRegattas(boolean refresh) {
