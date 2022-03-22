@@ -88,7 +88,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
 			setTitle(event.getActiveRegatta());
 
-			this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
+//			this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
 		});
 
 		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, event -> {

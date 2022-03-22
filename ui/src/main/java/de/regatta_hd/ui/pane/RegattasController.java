@@ -5,12 +5,14 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -34,6 +36,15 @@ public class RegattasController extends AbstractRegattaDAOController {
 		this.regattasTbl.getSortOrder().add(this.idCol);
 
 		loadRegattas(false);
+
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
+			if (event.getActiveRegatta() != null) {
+				loadRegattas(true);
+			} else {
+				this.regattasList.clear();
+				disableButtons(true);
+			}
+		});
 	}
 
 	@FXML
@@ -41,16 +52,9 @@ public class RegattasController extends AbstractRegattaDAOController {
 		loadRegattas(true);
 	}
 
-	@FXML
-	private void handleSelectRegattaOnAction() {
-		Regatta regatta = this.regattasTbl.getSelectionModel().getSelectedItem();
-		this.regattaDAO.setActiveRegatta(regatta);
-
-		loadRegattas(true);
-	}
-
 	private void loadRegattas(boolean refresh) {
 		disableButtons(true);
+		updatePlaceholder(getText("common.loadData"));
 		this.regattasList.clear();
 
 		super.dbTaskRunner.run(progress -> {
@@ -67,9 +71,14 @@ public class RegattasController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.regattasTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
