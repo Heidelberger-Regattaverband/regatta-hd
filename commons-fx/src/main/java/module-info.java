@@ -7,7 +7,7 @@ module de.regatta_hd.commons.fx {
 	// JavaFX modules
 	requires transitive javafx.controls;
 
-	// regatta_hd modules
+	// exports
 	exports de.regatta_hd.commons.fx.control;
 	exports de.regatta_hd.commons.fx.dialog;
 	exports de.regatta_hd.commons.fx.util;
