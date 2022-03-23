@@ -1,13 +1,14 @@
-open module de.regatta_hd.commons {
-
-	requires com.google.guice;
+module de.regatta_hd.commons {
 
 	// Java modules
 	requires java.desktop;
 	requires java.logging;
 
+	// tools modules
+	requires com.google.guice;
+
 	// exports
 	exports de.regatta_hd.commons;
 	exports de.regatta_hd.commons.concurrent;
-	exports de.regatta_hd.commons.impl to de.regatta_hd.aquarius;
+	exports de.regatta_hd.commons.impl to de.regatta_hd.aquarius, com.google.guice;
 }
