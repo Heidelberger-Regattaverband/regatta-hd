@@ -2,7 +2,6 @@ package de.regatta_hd.aquarius.model;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
