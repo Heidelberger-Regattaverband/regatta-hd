@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
@@ -35,7 +34,7 @@ class AquariusDBTests extends BaseDBTest {
 	private static MasterDataDAO masterData;
 
 	@BeforeAll
-	static void setUpBeforeClass() throws IOException {
+	static void setUpBeforeClass() {
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
