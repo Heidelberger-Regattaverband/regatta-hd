@@ -5,7 +5,7 @@ module de.regatta_hd.commons.fx {
 	requires java.prefs;
 
 	// JavaFX modules
-	requires transitive javafx.controls;
+	requires javafx.controls;
 
 	// exports
 	exports de.regatta_hd.commons.fx.control;
