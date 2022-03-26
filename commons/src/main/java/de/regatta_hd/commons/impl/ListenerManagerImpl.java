@@ -34,4 +34,5 @@ public class ListenerManagerImpl implements ListenerManager {
 		this.listeners.remove(requireNonNull(listenerClass, "listenerClass must not be null"),
 				requireNonNull(listener, "listener must not be null"));
 	}
+
 }

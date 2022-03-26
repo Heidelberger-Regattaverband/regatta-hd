@@ -77,6 +77,31 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
 		setTitle(event.getActiveRegatta());
+//		this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
+	};
+
+	private final AquariusDB.StateChangedEventListener dbStateChangedEventListener = event -> {
+		if (event.getAquariusDB().isOpen()) {
+			this.activeRegattaCBox.setDisable(true);
+
+			super.dbTaskRunner.run(progress -> {
+				List<Regatta> regattas = super.regattaDAO.getRegattas();
+				Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+				return new Pair<>(regattas, activeRegatta);
+			}, dbResult -> {
+				try {
+					this.regattasList.setAll(dbResult.getResult().getKey());
+					this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+				} finally {
+					this.activeRegattaCBox.setDisable(false);
+				}
+			});
+		} else {
+			this.regattasList.clear();
+		}
 	};
 
 	@Override
@@ -89,41 +114,18 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		this.activeRegattaCBox.setItems(this.regattasList);
 
-		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(event.getActiveRegatta());
+		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
 
-//			this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
-		});
-
-		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
-			if (event.getAquariusDB().isOpen()) {
-				this.activeRegattaCBox.setDisable(true);
-
-				super.dbTaskRunner.run(progress -> {
-					List<Regatta> regattas = super.regattaDAO.getRegattas();
-					Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
-					return new Pair<>(regattas, activeRegatta);
-				}, dbResult -> {
-					try {
-						this.regattasList.setAll(dbResult.getResult().getKey());
-						this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
-					} catch (Exception e) {
-						logger.log(Level.SEVERE, e.getMessage(), e);
-						FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
-					} finally {
-						this.activeRegattaCBox.setDisable(false);
-					}
-				});
-			} else {
-				this.regattasList.clear();
-			}
-		});
+		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, this.dbStateChangedEventListener);
 	}
 
 	@Override
 	protected void shutdown() {
 		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
 				this.regattaChangedEventListener);
+		super.listenerManager.removeListener(AquariusDB.StateChangedEventListener.class,
+				this.dbStateChangedEventListener);
 	}
 
 	private void setTitle(Regatta regatta) {
