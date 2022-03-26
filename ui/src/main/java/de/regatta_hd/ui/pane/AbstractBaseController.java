@@ -71,10 +71,14 @@ abstract class AbstractBaseController implements Initializable {
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 			FxUtils.storeSizeAndPos(resource, stage);
 			closeHandler.accept(event);
+			AbstractBaseController controller = loader.getController();
+			controller.shutdown();
 		});
 
 		return stage;
 	}
+
+	protected abstract void shutdown();
 
 	protected String getText(String key, Object... args) {
 		String text = this.resources.getString(key);
