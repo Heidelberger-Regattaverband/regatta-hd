@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.commons.ListenerManager;
 
-class AbstractRegattaDAOController extends AbstractBaseController {
+abstract class AbstractRegattaDAOController extends AbstractBaseController {
 
 	@Inject
 	protected RegattaDAO regattaDAO;

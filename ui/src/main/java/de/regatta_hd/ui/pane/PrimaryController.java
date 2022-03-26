@@ -75,6 +75,10 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage errorLogStage;
 	private Stage heatsStage;
 
+	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
+		setTitle(event.getActiveRegatta());
+	};
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -114,6 +118,12 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				this.regattasList.clear();
 			}
 		});
+	}
+
+	@Override
+	protected void shutdown() {
+		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
 	}
 
 	private void setTitle(Regatta regatta) {

@@ -66,13 +66,18 @@ public class ErrorLogController extends AbstractBaseController {
 		loadHostNames();
 	}
 
+	@Override
+	protected void shutdown() {
+		// nothing to shutdown
+	}
+
 	@FXML
-	public void handleRefreshOnAction() {
+	void handleRefreshOnAction() {
 		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), true);
 	}
 
 	@FXML
-	public void handleHostNameOnAction() {
+	void handleHostNameOnAction() {
 		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), false);
 	}
 
