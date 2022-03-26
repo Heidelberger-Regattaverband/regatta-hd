@@ -1,5 +1,8 @@
 package de.regatta_hd.ui.pane;
 
+import static de.regatta_hd.commons.fx.util.FxConstants.FX_ALIGNMENT_CENTER;
+import static de.regatta_hd.commons.fx.util.FxConstants.FX_ALIGNMENT_CENTER_RIGHT;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +89,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		this.setListTbl.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldSelection, newSelection) -> handleSetListSelectedItemChanged(newSelection));
 
+		loadRaces();
+	}
+
+	private void loadRaces() {
 		super.dbTaskRunner.run(progress -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
 			List<Race> races = new ArrayList<>();
@@ -413,7 +420,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		}
 
 		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(getText("common.bibAbr"));
-		bibCol.setStyle("-fx-alignment: CENTER;");
+		bibCol.setStyle(FX_ALIGNMENT_CENTER);
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getBib() != 0) {
@@ -439,7 +446,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		TableColumn<HeatRegistration, String> resultCol = null;
 		if (sourceTable) {
 			rankCol = new TableColumn<>(getText("common.rank"));
-			rankCol.setStyle("-fx-alignment: CENTER;");
+			rankCol.setStyle(FX_ALIGNMENT_CENTER);
 			rankCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
 				if (result != null) {
@@ -449,7 +456,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			});
 
 			resultCol = new TableColumn<>(getText("common.result"));
-			resultCol.setStyle("-fx-alignment: CENTER_RIGHT;");
+			resultCol.setStyle(FX_ALIGNMENT_CENTER_RIGHT);
 			resultCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
 				if (result != null) {
@@ -463,7 +470,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		} else {
 			TableColumn<HeatRegistration, Number> laneCol = null;
 			laneCol = new TableColumn<>(getText("common.lane"));
-			laneCol.setStyle("-fx-alignment: CENTER;");
+			laneCol.setStyle(FX_ALIGNMENT_CENTER);
 			laneCol.setCellValueFactory(row -> new SimpleIntegerProperty(row.getValue().getLane()));
 
 			heatRegsTbl.getColumns().add(laneCol);
