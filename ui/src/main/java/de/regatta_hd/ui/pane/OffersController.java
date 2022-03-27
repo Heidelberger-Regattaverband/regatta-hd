@@ -42,6 +42,17 @@ public class OffersController extends AbstractRegattaDAOController {
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
 
+	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
+		if (event.getActiveRegatta() != null) {
+			setTitle(getText("PrimaryView.racesMitm.text") + " - " + event.getActiveRegatta().getTitle());
+			loadRaces(true);
+		} else {
+			setTitle(getText("PrimaryView.racesMitm.text"));
+			this.racesList.clear();
+			disableButtons(true);
+		}
+	};
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -52,14 +63,14 @@ public class OffersController extends AbstractRegattaDAOController {
 
 		loadRaces(false);
 
-		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			if (event.getActiveRegatta() != null) {
-				loadRaces(true);
-			} else {
-				this.racesList.clear();
-				disableButtons(true);
-			}
-		});
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
+	}
+
+	@Override
+	protected void shutdown() {
+		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
 	}
 
 	@Override

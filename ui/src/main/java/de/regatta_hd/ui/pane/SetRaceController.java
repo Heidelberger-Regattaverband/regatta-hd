@@ -143,6 +143,11 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		});
 	}
 
+	@Override
+	protected void shutdown() {
+		// nothing to shutdown
+	}
+
 	private void handleSetListSelectedItemChanged(SetListEntry newSelection) {
 		if (newSelection != null) {
 			final SetListEntry entry = this.setListTbl.getSelectionModel().getSelectedItem();
