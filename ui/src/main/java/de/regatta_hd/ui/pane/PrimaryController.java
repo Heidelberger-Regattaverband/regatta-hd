@@ -16,7 +16,6 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.dialog.AboutDialog;
 import de.regatta_hd.commons.fx.util.FxUtils;
@@ -77,10 +76,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage errorLogStage;
 	private Stage heatsStage;
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
-//		this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
-	};
-
 	private final AquariusDB.StateChangedEventListener dbStateChangedEventListener = event -> {
 		if (event.getAquariusDB().isOpen()) {
 			this.activeRegattaCBox.setDisable(true);
@@ -115,16 +110,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		this.activeRegattaCBox.setItems(this.regattasList);
 
-		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
-
 		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, this.dbStateChangedEventListener);
 	}
 
 	@Override
 	protected void shutdown() {
-		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
 		super.listenerManager.removeListener(AquariusDB.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
 	}

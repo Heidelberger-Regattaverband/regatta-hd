@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.SearchableComboBox;
 
+import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -80,6 +81,14 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	@FXML
 	private Button deleteSetListBtn;
 
+	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
+		if (event.getActiveRegatta() != null) {
+			loadRaces();
+		} else {
+			this.raceCbo.getItems().clear();
+		}
+	};
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -91,7 +100,17 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		this.setListTbl.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldSelection, newSelection) -> handleSetListSelectedItemChanged(newSelection));
 
+
+		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
+
 		loadRaces();
+	}
+
+	@Override
+	protected void shutdown() {
+		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
 	}
 
 	@Override
@@ -141,11 +160,6 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				FxUtils.showErrorMessage(getWindow(), e);
 			}
 		});
-	}
-
-	@Override
-	protected void shutdown() {
-		// nothing to shutdown
 	}
 
 	private void handleSetListSelectedItemChanged(SetListEntry newSelection) {

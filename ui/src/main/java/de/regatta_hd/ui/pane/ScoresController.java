@@ -35,10 +35,8 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
 		if (event.getActiveRegatta() != null) {
-			setTitle(getText("PrimaryView.scoresMitm.text") + " - " + event.getActiveRegatta().getTitle());
 			loadScores(true);
 		} else {
-			setTitle(getText("PrimaryView.scoresMitm.text"));
 			this.scoresList.clear();
 			disableButtons(true);
 		}

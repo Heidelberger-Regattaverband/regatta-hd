@@ -56,10 +56,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
 		if (event.getActiveRegatta() != null) {
-			setTitle(getText("heats.title") + " - " + event.getActiveRegatta().getTitle());
 			loadHeats(true);
 		} else {
-			setTitle(getText("heats.title"));
 			this.heatsList.clear();
 			disableButtons(true);
 		}

@@ -33,10 +33,8 @@ public class ResultsController extends AbstractRegattaDAOController {
 
 	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
 		if (event.getActiveRegatta() != null) {
-			setTitle(getText("common.results") + " - " + event.getActiveRegatta().getTitle());
 			loadResults(true);
 		} else {
-			setTitle(getText("common.results"));
 			this.resultsList.clear();
 			disableButtons(true);
 		}

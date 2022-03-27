@@ -44,10 +44,8 @@ public class OffersController extends AbstractRegattaDAOController {
 
 	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
 		if (event.getActiveRegatta() != null) {
-			setTitle(getText("PrimaryView.racesMitm.text") + " - " + event.getActiveRegatta().getTitle());
 			loadRaces(true);
 		} else {
-			setTitle(getText("PrimaryView.racesMitm.text"));
 			this.racesList.clear();
 			disableButtons(true);
 		}
