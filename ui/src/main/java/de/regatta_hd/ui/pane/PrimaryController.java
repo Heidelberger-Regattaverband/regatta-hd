@@ -1,5 +1,7 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -86,7 +88,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.activeRegattaCBox.setItems(this.regattasList);
 
 		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(event.getActiveRegatta());
 
 //			this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
 		});
@@ -116,9 +117,10 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		});
 	}
 
-	private void setTitle(Regatta regatta) {
-		String title = regatta != null ? regatta.getTitle() : getText("MainWindow.title");
-		((Stage) getWindow()).setTitle(title);
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("MainWindow.title") + " - " + activeRegatta.getTitle()
+				: getText("MainWindow.title");
 	}
 
 	@FXML
@@ -158,7 +160,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			try {
 				Pair<DBConfig, Regatta> pair = dbResult.getResult();
 				this.dbCfgStore.setLastSuccessful(pair.getKey());
-				setTitle(pair.getValue());
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);

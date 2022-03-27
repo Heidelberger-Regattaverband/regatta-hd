@@ -1,5 +1,7 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -7,6 +9,7 @@ import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
+import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,14 +42,18 @@ public class ResultsController extends AbstractRegattaDAOController {
 
 		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
 			if (event.getActiveRegatta() != null) {
-				setTitle(getText("common.results") + " - " + event.getActiveRegatta().getTitle());
 				loadResults(true);
 			} else {
-				setTitle(getText("common.results"));
 				this.resultsList.clear();
 				disableButtons(true);
 			}
 		});
+	}
+
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("common.results") + " - " + activeRegatta.getTitle()
+				: getText("common.results");
 	}
 
 	private void loadResults(boolean refresh) {

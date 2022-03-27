@@ -2,6 +2,7 @@ package de.regatta_hd.ui.pane;
 
 import static de.regatta_hd.commons.fx.util.FxConstants.FX_ALIGNMENT_CENTER;
 import static de.regatta_hd.commons.fx.util.FxConstants.FX_ALIGNMENT_CENTER_RIGHT;
+import static java.util.Objects.nonNull;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import de.regatta_hd.aquarius.SetListEntry;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.commons.fx.util.FxUtils;
@@ -92,6 +94,12 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		loadRaces();
 	}
 
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("PrimaryView.setRaceMitm.text") + " - " + activeRegatta.getTitle()
+				: getText("PrimaryView.setRaceMitm.text");
+	}
+
 	private void loadRaces() {
 		super.dbTaskRunner.run(progress -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
@@ -112,7 +120,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			});
 
 			List<Race> filteredRaces = races.stream()
-					// remove master races, open age class and races with one heat, as they will not be set
+					// remove master races, open age class and races with one heat, as they will not
+					// be set
 					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters()
 							&& race.getHeats().size() > 1)
 					// remove races whose source race result isn't official yet

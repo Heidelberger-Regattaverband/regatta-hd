@@ -1,5 +1,7 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -45,6 +47,12 @@ public class RegattasController extends AbstractRegattaDAOController {
 				disableButtons(true);
 			}
 		});
+	}
+
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("PrimaryView.regattasMitm.text") + " - " + activeRegatta.getTitle()
+				: getText("PrimaryView.regattasMitm.text");
 	}
 
 	@FXML

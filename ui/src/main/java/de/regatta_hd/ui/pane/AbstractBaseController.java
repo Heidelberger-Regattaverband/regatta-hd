@@ -1,10 +1,11 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -47,8 +48,8 @@ abstract class AbstractBaseController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.location = Objects.requireNonNull(location, "location");
-		this.resources = Objects.requireNonNull(resources, "resources");
+		this.location = requireNonNull(location, "location must not be null");
+		this.resources = requireNonNull(resources, "resources must not be null");
 	}
 
 	protected Stage newWindow(String resource, String title, Consumer<WindowEvent> closeHandler) throws IOException {
@@ -88,16 +89,16 @@ abstract class AbstractBaseController implements Initializable {
 		return this.rootPane.getScene().getWindow();
 	}
 
-	protected void setTitle(String title) {
-		((Stage) getWindow()).setTitle(title);
-	}
-
 	protected void runTaskWithProgressDialog(DBTask<?> dbTask, String title) {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 		dialog.initOwner(getWindow());
 		dialog.setTitle(title);
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
 		this.dbTaskRunner.runTask(dbTask);
+	}
+
+	protected void setTitle(String title) {
+		((Stage) getWindow()).setTitle(title);
 	}
 
 }
