@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
@@ -30,15 +29,6 @@ public class RegattasController extends AbstractRegattaDAOController {
 
 	private final ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
-		if (event.getActiveRegatta() != null) {
-			loadRegattas(true);
-		} else {
-			this.regattasList.clear();
-			disableButtons(true);
-		}
-	};
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -47,15 +37,16 @@ public class RegattasController extends AbstractRegattaDAOController {
 		this.regattasTbl.getSortOrder().add(this.idCol);
 
 		loadRegattas(false);
-
-		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
 	}
 
 	@Override
-	protected void shutdown() {
-		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
+	protected void onActiveRegattaChanged(Regatta activeRegatta) {
+		if (activeRegatta != null) {
+			loadRegattas(true);
+		} else {
+			this.regattasList.clear();
+			disableButtons(true);
+		}
 	}
 
 	@Override

@@ -18,19 +18,30 @@ abstract class AbstractRegattaDAOController extends AbstractBaseController {
 	@Inject
 	protected ListenerManager listenerManager;
 
-	protected abstract String getTitle(Regatta activeRegatta);
+	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
+		setTitle(getTitle(event.getActiveRegatta()));
+		onActiveRegattaChanged(event.getActiveRegatta());
+	};
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class, event -> {
-			setTitle(getTitle(event.getActiveRegatta()));
-		});
+		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
 
 		Platform.runLater(() -> {
 			setTitle(getTitle(this.db.isOpen() ? this.regattaDAO.getActiveRegatta() : null));
 		});
 	}
 
+	@Override
+	protected void shutdown() {
+		this.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
+				this.regattaChangedEventListener);
+	}
+
+	protected abstract String getTitle(Regatta activeRegatta);
+
+	protected abstract void onActiveRegattaChanged(Regatta activeRegatta);
 }

@@ -106,17 +106,24 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		updateControls(false);
 
-		Platform.runLater(this::handleConnectOnAction);
-
 		this.activeRegattaCBox.setItems(this.regattasList);
 
 		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, this.dbStateChangedEventListener);
+
+		Platform.runLater(this::handleConnectOnAction);
+	}
+
+	@Override
+	protected void onActiveRegattaChanged(Regatta activeRegatta) {
+		// nothing to do
 	}
 
 	@Override
 	protected void shutdown() {
 		super.listenerManager.removeListener(AquariusDB.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
+
+		super.shutdown();
 	}
 
 	@Override
