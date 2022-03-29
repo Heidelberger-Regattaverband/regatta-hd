@@ -17,14 +17,19 @@ class TestConfigService implements ConfigService {
 
 	@Override
 	public String getProperty(String key) throws IOException {
-		String property = System.getProperty(key);
+		// 1. try to get it from config service
+		String property = this.cfgService.getProperty(key);
+
+		// 2. try to get it from system property (command line argument -D....)
 		if (StringUtils.isBlank(property)) {
-			property = System.getenv(key);
+			property = System.getProperty(key);
+
+			// 3. try to get it from environment variable
 			if (StringUtils.isBlank(property)) {
-				String envKey = key.replaceAll("([A-Z])", "_$1").toUpperCase(Locale.ENGLISH);
-				property = System.getenv(envKey);
+				property = System.getenv(key);
 				if (StringUtils.isBlank(property)) {
-					property = this.cfgService.getProperty(key);
+					String envKey = key.replaceAll("([A-Z])", "_$1").toUpperCase(Locale.ENGLISH);
+					property = System.getenv(envKey);
 				}
 			}
 		}
