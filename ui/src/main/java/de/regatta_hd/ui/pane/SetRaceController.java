@@ -233,6 +233,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 						this.raceCbo.setOnAction(this::handleRaceSelectedOnAction);
 					}
 				});
+			} else {
+				enableButtons(null);
 			}
 		}
 	}
@@ -406,12 +408,13 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			// disable setRace button if race is already set or set list is empty
 			this.setRaceBtn.setDisable(isSet || this.setListTbl.getItems().isEmpty());
 			this.deleteBtn.setDisable(!isSet);
+			this.createSetListBtn.setDisable(!this.setListTbl.getItems().isEmpty());
 		} else {
-			this.setRaceBtn.setDisable(false);
-			this.deleteBtn.setDisable(false);
+			this.setRaceBtn.setDisable(true);
+			this.deleteBtn.setDisable(true);
+			this.createSetListBtn.setDisable(true);
 		}
 
-		this.createSetListBtn.setDisable(!this.setListTbl.getItems().isEmpty());
 		this.deleteSetListBtn.setDisable(this.setListTbl.getItems().isEmpty());
 		this.refreshBtn.setDisable(false);
 	}
