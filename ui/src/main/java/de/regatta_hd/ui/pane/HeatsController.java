@@ -1,5 +1,7 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,9 +21,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.DBTask;
@@ -51,17 +53,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
-		if (event.getActiveRegatta() != null) {
-			setTitle(getText("heats.title") + " - " + event.getActiveRegatta().getTitle());
-			loadHeats(true);
-		} else {
-			setTitle(getText("heats.title"));
-			this.heatsList.clear();
-			disableButtons(true);
-		}
-	};
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -70,15 +61,16 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.heatsTbl.getSortOrder().add(this.numberCol);
 
 		loadHeats(false);
-
-		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
 	}
 
 	@Override
-	protected void shutdown() {
-		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
+	protected void onActiveRegattaChanged(Regatta activeRegatta) {
+		if (activeRegatta != null) {
+			loadHeats(true);
+		} else {
+			this.heatsList.clear();
+			disableButtons(true);
+		}
 	}
 
 	@FXML
@@ -132,6 +124,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 		}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"));
+	}
+
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("heats.title") + " - " + activeRegatta.getTitle()
+				: getText("heats.title");
 	}
 
 	private void loadHeats(boolean refresh) {

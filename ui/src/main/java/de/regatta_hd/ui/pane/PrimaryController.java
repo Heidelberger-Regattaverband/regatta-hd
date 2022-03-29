@@ -1,5 +1,7 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -14,7 +16,6 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.aquarius.DBConfigStore;
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.dialog.AboutDialog;
 import de.regatta_hd.commons.fx.util.FxUtils;
@@ -75,11 +76,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage errorLogStage;
 	private Stage heatsStage;
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
-		setTitle(event.getActiveRegatta());
-//		this.activeRegattaCBox.getSelectionModel().select(event.getActiveRegatta());
-	};
-
 	private final AquariusDB.StateChangedEventListener dbStateChangedEventListener = event -> {
 		if (event.getAquariusDB().isOpen()) {
 			this.activeRegattaCBox.setDisable(true);
@@ -110,27 +106,30 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		updateControls(false);
 
-		Platform.runLater(this::handleConnectOnAction);
-
 		this.activeRegattaCBox.setItems(this.regattasList);
 
-		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
-
 		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, this.dbStateChangedEventListener);
+
+		Platform.runLater(this::handleConnectOnAction);
+	}
+
+	@Override
+	protected void onActiveRegattaChanged(Regatta activeRegatta) {
+		// nothing to do
 	}
 
 	@Override
 	protected void shutdown() {
-		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
 		super.listenerManager.removeListener(AquariusDB.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
+
+		super.shutdown();
 	}
 
-	private void setTitle(Regatta regatta) {
-		String title = regatta != null ? regatta.getTitle() : getText("MainWindow.title");
-		((Stage) getWindow()).setTitle(title);
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("MainWindow.title") + " - " + activeRegatta.getTitle()
+				: getText("MainWindow.title");
 	}
 
 	@FXML
@@ -170,7 +169,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			try {
 				Pair<DBConfig, Regatta> pair = dbResult.getResult();
 				this.dbCfgStore.setLastSuccessful(pair.getKey());
-				setTitle(pair.getValue());
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);

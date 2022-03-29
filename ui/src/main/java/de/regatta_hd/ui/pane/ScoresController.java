@@ -1,11 +1,13 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
@@ -30,17 +32,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	private final ObservableList<Score> scoresList = FXCollections.observableArrayList();
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
-		if (event.getActiveRegatta() != null) {
-			setTitle(getText("PrimaryView.scoresMitm.text") + " - " + event.getActiveRegatta().getTitle());
-			loadScores(true);
-		} else {
-			setTitle(getText("PrimaryView.scoresMitm.text"));
-			this.scoresList.clear();
-			disableButtons(true);
-		}
-	};
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -49,15 +40,22 @@ public class ScoresController extends AbstractRegattaDAOController {
 		this.scoresTbl.getSortOrder().add(this.rankCol);
 
 		loadScores(false);
-
-		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
 	}
 
 	@Override
-	protected void shutdown() {
-		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
+	protected void onActiveRegattaChanged(Regatta activeRegatta) {
+		if (activeRegatta != null) {
+			loadScores(true);
+		} else {
+			this.scoresList.clear();
+			disableButtons(true);
+		}
+	}
+
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("PrimaryView.scoresMitm.text") + " - " + activeRegatta.getTitle()
+				: getText("PrimaryView.scoresMitm.text");
 	}
 
 	@FXML

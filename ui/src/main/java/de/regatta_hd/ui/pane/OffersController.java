@@ -1,13 +1,15 @@
 package de.regatta_hd.ui.pane;
 
+import static java.util.Objects.nonNull;
+
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.collections.FXCollections;
@@ -39,17 +41,6 @@ public class OffersController extends AbstractRegattaDAOController {
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
-		if (event.getActiveRegatta() != null) {
-			setTitle(getText("PrimaryView.racesMitm.text") + " - " + event.getActiveRegatta().getTitle());
-			loadRaces(true);
-		} else {
-			setTitle(getText("PrimaryView.racesMitm.text"));
-			this.racesList.clear();
-			disableButtons(true);
-		}
-	};
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
@@ -59,15 +50,22 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
 		loadRaces(false);
-
-		super.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
 	}
 
 	@Override
-	protected void shutdown() {
-		super.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
+	protected void onActiveRegattaChanged(Regatta activeRegatta) {
+		if (activeRegatta != null) {
+			loadRaces(true);
+		} else {
+			this.racesList.clear();
+			disableButtons(true);
+		}
+	}
+
+	@Override
+	protected String getTitle(Regatta activeRegatta) {
+		return nonNull(activeRegatta) ? getText("PrimaryView.racesMitm.text") + " - " + activeRegatta.getTitle()
+				: getText("PrimaryView.racesMitm.text");
 	}
 
 	@FXML
