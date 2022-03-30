@@ -1,5 +1,6 @@
-package de.regatta_hd.ui.dialog;
+package de.regatta_hd.commons.fx.dialog;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -20,7 +21,9 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 
 	private DBConfig connectionData;
 
-	public DBConnectionDialog(Window window, ResourceBundle bundle, DBConfig dbCfg) {
+	public DBConnectionDialog(Window window, DBConfig dbCfg) {
+		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
+
 		initOwner(Objects.requireNonNull(window, "window"));
 		this.connectionData = Objects.requireNonNullElse(dbCfg, DBConfig.builder().build());
 

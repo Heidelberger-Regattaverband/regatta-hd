@@ -18,6 +18,11 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>commons-db</artifactId>
+    </dependency>
   </dependencies>
 
   <build></build>
