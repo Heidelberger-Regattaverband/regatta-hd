@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius;
 
-import java.util.concurrent.Executor;
-
 import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -23,12 +21,5 @@ public interface AquariusDB extends DBConnection {
 	 * @return {@link EntityManager} instance
 	 */
 	EntityManager getEntityManager();
-
-	/**
-	 * Returns the executor for DB tasks.
-	 *
-	 * @return an {@link Executor} for DB tasks.
-	 */
-	Executor getExecutor();
 
 }

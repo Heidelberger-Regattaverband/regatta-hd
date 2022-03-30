@@ -2,6 +2,7 @@ package de.regatta_hd.commons.db;
 
 import java.sql.SQLException;
 import java.util.EventListener;
+import java.util.concurrent.Executor;
 
 public interface DBConnection {
 
@@ -25,6 +26,12 @@ public interface DBConnection {
 	 */
 	void open(DBConfig connectionData) throws SQLException;
 
+	/**
+	 * Returns the executor for DB tasks.
+	 *
+	 * @return an {@link Executor} for DB tasks.
+	 */
+	Executor getExecutor();
 
 	interface StateChangedEvent {
 

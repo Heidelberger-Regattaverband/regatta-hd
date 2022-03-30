@@ -1,8 +1,5 @@
 open module de.regatta_hd.aquarius {
 
-	// Java modules
-	requires java.base;
-
 	// JavaFX modules
 	requires transitive javafx.base;
 
