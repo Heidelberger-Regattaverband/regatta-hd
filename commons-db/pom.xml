@@ -7,24 +7,14 @@
     <version>0.1.12</version>
   </parent>
 
-  <artifactId>commons-fx</artifactId>
-  <name>Regatta HD - Commons JavaFX</name>
+  <artifactId>commons-db</artifactId>
+  <name>Regatta HD - Commons DB</name>
 
   <dependencies>
-    <!-- =========== -->
-    <!-- Open JavaFX -->
-    <!-- =========== -->
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>commons-db</artifactId>
+      <artifactId>commons</artifactId>
     </dependency>
   </dependencies>
-
-  <build></build>
 
 </project>

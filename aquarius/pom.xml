@@ -17,6 +17,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>commons</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>commons-db</artifactId>
+    </dependency>
 
     <!-- =========== -->
     <!-- Open JavaFX -->

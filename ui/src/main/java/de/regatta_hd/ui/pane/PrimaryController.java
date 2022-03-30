@@ -14,12 +14,13 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.aquarius.DBConfig;
-import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.db.DBConfigStore;
+import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.dialog.AboutDialog;
+import de.regatta_hd.commons.fx.dialog.DBConnectionDialog;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.dialog.DBConnectionDialog;
 import de.regatta_hd.ui.util.DBTask;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -77,7 +78,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage heatsStage;
 
 	private final AquariusDB.StateChangedEventListener dbStateChangedEventListener = event -> {
-		if (event.getAquariusDB().isOpen()) {
+		if (event.getDBConnection().isOpen()) {
 			this.activeRegattaCBox.setDisable(true);
 
 			super.dbTaskRunner.run(progress -> {
@@ -108,7 +109,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 		this.activeRegattaCBox.setItems(this.regattasList);
 
-		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, this.dbStateChangedEventListener);
+		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class,
+				this.dbStateChangedEventListener);
 
 		Platform.runLater(this::handleConnectOnAction);
 	}
@@ -120,7 +122,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@Override
 	protected void shutdown() {
-		super.listenerManager.removeListener(AquariusDB.StateChangedEventListener.class,
+		super.listenerManager.removeListener(DBConnection.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
 
 		super.shutdown();
@@ -136,8 +138,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	void handleConnectOnAction() {
 		if (!super.db.isOpen()) {
 			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(getWindow(), super.resources,
-						this.dbCfgStore.getLastSuccessful());
+				DBConnectionDialog dialog = new DBConnectionDialog(getWindow(), this.dbCfgStore.getLastSuccessful());
 				Optional<DBConfig> connectionData = dialog.showAndWait();
 				if (connectionData.isPresent()) {
 					openDbConnection(connectionData.get());

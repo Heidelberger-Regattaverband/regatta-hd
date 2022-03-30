@@ -12,6 +12,7 @@ module de.regatta_hd.ui {
 	// regatta_hd modules
 	requires de.regatta_hd.aquarius;
 	requires de.regatta_hd.commons;
+	requires de.regatta_hd.commons.db;
 	requires de.regatta_hd.commons.fx;
 
 	opens de.regatta_hd.ui to javafx.graphics, com.google.guice;

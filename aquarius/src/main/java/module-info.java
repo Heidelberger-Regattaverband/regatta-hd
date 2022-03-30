@@ -1,8 +1,5 @@
 open module de.regatta_hd.aquarius {
 
-	// Java modules
-	requires java.base;
-
 	// JavaFX modules
 	requires transitive javafx.base;
 
@@ -13,11 +10,10 @@ open module de.regatta_hd.aquarius {
 	requires liquibase.core;
 
 	// tools modules
-	requires com.google.guice;
 	requires lombok;
 	requires org.apache.commons.lang3;
 
-	requires de.regatta_hd.commons;
+	requires de.regatta_hd.commons.db;
 
 	// exports
 	exports de.regatta_hd.aquarius;

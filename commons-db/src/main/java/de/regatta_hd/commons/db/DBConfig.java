@@ -1,4 +1,4 @@
-package de.regatta_hd.aquarius;
+package de.regatta_hd.commons.db;
 
 import lombok.Builder;
 import lombok.Data;
