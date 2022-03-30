@@ -77,7 +77,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage heatsStage;
 
 	private final AquariusDB.StateChangedEventListener dbStateChangedEventListener = event -> {
-		if (event.getAquariusDB().isOpen()) {
+		if (event.getDBConnection().isOpen()) {
 			this.activeRegattaCBox.setDisable(true);
 
 			super.dbTaskRunner.run(progress -> {

@@ -21,6 +21,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.commons.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -145,7 +146,7 @@ public class AqauriusDBImpl implements AquariusDB {
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
 		List<StateChangedEventListener> listeners = this.listenerManager
-				.getListeners(AquariusDB.StateChangedEventListener.class);
+				.getListeners(DBConnection.StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}

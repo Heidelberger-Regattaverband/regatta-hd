@@ -1,6 +1,7 @@
 package de.regatta_hd.commons.db;
 
 import java.sql.SQLException;
+import java.util.EventListener;
 
 public interface DBConnection {
 
@@ -23,5 +24,22 @@ public interface DBConnection {
 	 * @throws SQLException
 	 */
 	void open(DBConfig connectionData) throws SQLException;
+
+
+	interface StateChangedEvent {
+
+		DBConnection getDBConnection();
+	}
+
+	/**
+	 * An event listener interface for Aqurius DB state changed events.
+	 */
+	@FunctionalInterface
+	interface StateChangedEventListener extends EventListener {
+
+		void stateChanged(StateChangedEvent event);
+	}
+
+	void updateSchema();
 
 }

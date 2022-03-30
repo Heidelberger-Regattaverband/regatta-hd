@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius;
 
-import java.util.EventListener;
 import java.util.concurrent.Executor;
 
 import de.regatta_hd.commons.db.DBConnection;
@@ -31,21 +30,5 @@ public interface AquariusDB extends DBConnection {
 	 * @return an {@link Executor} for DB tasks.
 	 */
 	Executor getExecutor();
-
-	interface StateChangedEvent {
-
-		AquariusDB getAquariusDB();
-	}
-
-	/**
-	 * An event listener interface for Aqurius DB state changed events.
-	 */
-	@FunctionalInterface
-	interface StateChangedEventListener extends EventListener {
-
-		void stateChanged(StateChangedEvent event);
-	}
-
-	void updateSchema();
 
 }

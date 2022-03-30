@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.SetListEntry;
@@ -27,11 +26,12 @@ import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
-import de.regatta_hd.commons.ConfigService;
-import de.regatta_hd.commons.ListenerManager;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Score;
+import de.regatta_hd.commons.ConfigService;
+import de.regatta_hd.commons.ListenerManager;
+import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -54,8 +54,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	@Inject
 	RegattaDAOImpl(ListenerManager listenerManager) {
 		this.listenerManager = listenerManager;
-		this.listenerManager.addListener(AquariusDB.StateChangedEventListener.class, event -> {
-			if (event.getAquariusDB().isOpen()) {
+		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class, event -> {
+			if (event.getDBConnection().isOpen()) {
 				getActiveRegatta();
 			} else {
 				setActiveRegatta(null);
@@ -268,6 +268,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				if (pointsBoat != null) {
 					float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
 
+					// ignore cox of boat
 					heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
 						Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
 								key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
