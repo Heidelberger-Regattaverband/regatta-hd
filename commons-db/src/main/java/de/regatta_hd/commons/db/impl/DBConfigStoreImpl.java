@@ -1,4 +1,4 @@
-package de.regatta_hd.aquarius.impl;
+package de.regatta_hd.commons.db.impl;
 
 import static java.util.Objects.requireNonNull;
 
@@ -7,9 +7,9 @@ import java.io.IOException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.regatta_hd.aquarius.DBConfig;
-import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.commons.ConfigService;
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.db.DBConfigStore;
 
 @Singleton
 public class DBConfigStoreImpl implements DBConfigStore {

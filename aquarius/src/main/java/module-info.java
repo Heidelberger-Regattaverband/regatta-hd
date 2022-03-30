@@ -17,7 +17,7 @@ open module de.regatta_hd.aquarius {
 	requires lombok;
 	requires org.apache.commons.lang3;
 
-	requires de.regatta_hd.commons;
+	requires de.regatta_hd.commons.db;
 
 	// exports
 	exports de.regatta_hd.aquarius;

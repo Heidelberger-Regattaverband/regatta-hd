@@ -19,8 +19,8 @@ import com.google.inject.Singleton;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.aquarius.DBConfig;
 import de.regatta_hd.commons.ListenerManager;
+import de.regatta_hd.commons.db.DBConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;

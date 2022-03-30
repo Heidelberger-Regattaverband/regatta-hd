@@ -1,5 +1,7 @@
 package de.regatta_hd.aquarius;
 
+import java.sql.SQLException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -8,7 +10,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
+
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.db.DBConfigStore;
 
 class BaseDBTest implements BeforeAllCallback {
 
@@ -33,7 +37,7 @@ class BaseDBTest implements BeforeAllCallback {
 	}
 
 	@Test
-	void testOpen() throws SQLServerException {
+	void testOpen() throws SQLException {
 		aquariusDb.open(connectionData);
 		Assertions.assertTrue(aquariusDb.isOpen());
 	}

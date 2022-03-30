@@ -14,9 +14,9 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.AquariusDB;
-import de.regatta_hd.aquarius.DBConfig;
-import de.regatta_hd.aquarius.DBConfigStore;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.db.DBConfigStore;
 import de.regatta_hd.commons.fx.dialog.AboutDialog;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.dialog.DBConnectionDialog;

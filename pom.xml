@@ -75,6 +75,7 @@
 
   <modules>
     <module>commons</module>
+    <module>commons-db</module>
     <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
@@ -92,6 +93,12 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>commons-db</artifactId>
         <version>${project.version}</version>
       </dependency>
 
