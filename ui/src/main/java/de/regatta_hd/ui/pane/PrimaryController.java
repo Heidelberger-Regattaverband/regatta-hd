@@ -4,6 +4,7 @@ import static java.util.Objects.nonNull;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -288,7 +289,9 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleAboutOnAction() {
-		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources, this.version);
+		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
+				this.resources.getString("about.header"),
+				MessageFormat.format(this.resources.getString("about.text"), this.version));
 		aboutDlg.showAndWait();
 	}
 
