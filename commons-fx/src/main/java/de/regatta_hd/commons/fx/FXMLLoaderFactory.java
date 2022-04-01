@@ -1,4 +1,4 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.commons.fx;
 
 import javafx.fxml.FXMLLoader;
 

@@ -11,6 +11,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 
+import de.regatta_hd.commons.fx.FXMLLoaderFactory;
 import de.regatta_hd.ui.util.DBTaskRunner;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
