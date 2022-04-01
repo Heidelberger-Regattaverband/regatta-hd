@@ -1,4 +1,4 @@
-package de.regatta_hd.commons.fx;
+package de.regatta_hd.commons.fx.guice;
 
 import javafx.fxml.FXMLLoader;
 

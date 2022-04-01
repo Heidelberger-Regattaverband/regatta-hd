@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusDBModule;
 import de.regatta_hd.aquarius.DBLogHandler;
-import de.regatta_hd.commons.fx.GuiceContext;
+import de.regatta_hd.commons.fx.guice.GuiceContext;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
