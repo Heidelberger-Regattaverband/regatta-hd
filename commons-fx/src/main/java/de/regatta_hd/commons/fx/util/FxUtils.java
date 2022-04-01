@@ -25,7 +25,7 @@ public class FxUtils {
 	private static final double DEFAULT_WIDTH = 1024;
 	private static final double DEFAULT_HEIGHT = 768;
 
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
+	public static final ResourceBundle bundle = ResourceBundle.getBundle("commons-fx_messages", Locale.GERMANY);
 
 	private FxUtils() {
 		// avoid instances

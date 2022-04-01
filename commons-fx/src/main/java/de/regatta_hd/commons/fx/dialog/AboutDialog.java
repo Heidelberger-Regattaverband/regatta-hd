@@ -1,8 +1,5 @@
 package de.regatta_hd.commons.fx.dialog;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.stage.Modality;
@@ -10,12 +7,12 @@ import javafx.stage.Window;
 
 public class AboutDialog extends Dialog<Void> {
 
-	public AboutDialog(Window owner, ResourceBundle bundle, String version) {
+	public AboutDialog(Window owner, String title, String headerText, String text) {
 		initModality(Modality.WINDOW_MODAL);
 		initOwner(owner);
-		setTitle(bundle.getString("about.title"));
-		setHeaderText(bundle.getString("about.header"));
-		setContentText(MessageFormat.format(bundle.getString("about.text"), version));
+		setTitle(title);
+		setHeaderText(headerText);
+		setContentText(text);
 
 		getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 	}
