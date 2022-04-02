@@ -5,7 +5,6 @@ open module de.regatta_hd.aquarius {
 
 	// JDBC / JPA modules
 	requires com.microsoft.sqlserver.jdbc;
-	requires transitive jakarta.persistence;
 	requires org.hibernate.orm.core;
 	requires liquibase.core;
 
@@ -13,7 +12,7 @@ open module de.regatta_hd.aquarius {
 	requires lombok;
 	requires org.apache.commons.lang3;
 
-	requires de.regatta_hd.commons.db;
+	requires transitive de.regatta_hd.commons.db;
 
 	// exports
 	exports de.regatta_hd.aquarius;

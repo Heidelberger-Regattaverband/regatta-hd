@@ -18,7 +18,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.commons.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConnection;
@@ -26,7 +25,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -37,7 +35,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
-public class AqauriusDBImpl implements AquariusDB {
+public class AqauriusDBImpl implements DBConnection {
 
 	// executes database operations concurrent to JavaFX operations.
 	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
@@ -59,11 +57,6 @@ public class AqauriusDBImpl implements AquariusDB {
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		}
-	}
-
-	@Override
-	public synchronized CriteriaBuilder getCriteriaBuilder() {
-		return getEntityManager().getCriteriaBuilder();
 	}
 
 	@Override

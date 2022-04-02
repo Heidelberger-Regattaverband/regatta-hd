@@ -14,15 +14,14 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConfigStore;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.dialog.AboutDialog;
 import de.regatta_hd.commons.fx.dialog.DBConnectionDialog;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.DBTask;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -78,7 +77,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage errorLogStage;
 	private Stage heatsStage;
 
-	private final AquariusDB.StateChangedEventListener dbStateChangedEventListener = event -> {
+	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
 		if (event.getDBConnection().isOpen()) {
 			this.activeRegattaCBox.setDisable(true);
 

@@ -11,10 +11,19 @@
   <name>Regatta HD - Commons DB</name>
 
   <dependencies>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>commons</artifactId>
     </dependency>
-  </dependencies>
 
+    <!-- ============== -->
+    <!-- Database & JPA -->
+    <!-- ============== -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core-jakarta</artifactId>
+    </dependency>
+
+  </dependencies>
 </project>
