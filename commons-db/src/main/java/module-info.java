@@ -6,7 +6,6 @@ module de.regatta_hd.commons.db {
 
 	// tools modules
 	requires lombok;
-	requires com.google.guice;
 	requires transitive jakarta.persistence;
 
 	// exports

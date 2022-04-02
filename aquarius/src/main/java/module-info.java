@@ -10,10 +10,9 @@ open module de.regatta_hd.aquarius {
 
 	// tools modules
 	requires lombok;
-	requires com.google.guice;
 	requires org.apache.commons.lang3;
 
-	requires de.regatta_hd.commons.db;
+	requires transitive de.regatta_hd.commons.db;
 
 	// exports
 	exports de.regatta_hd.aquarius;
