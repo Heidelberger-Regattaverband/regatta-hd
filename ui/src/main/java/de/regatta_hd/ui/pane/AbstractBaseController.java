@@ -13,7 +13,7 @@ import org.controlsfx.dialog.ProgressDialog;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.guice.FXMLLoaderFactory;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.DBTask;
@@ -41,7 +41,7 @@ abstract class AbstractBaseController implements Initializable {
 	@Inject
 	protected DBTaskRunner dbTaskRunner;
 	@Inject
-	protected AquariusDB db;
+	protected DBConnection db;
 
 	@FXML
 	protected Pane rootPane;

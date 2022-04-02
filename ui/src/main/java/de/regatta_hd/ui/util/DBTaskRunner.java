@@ -5,16 +5,16 @@ import java.util.function.Consumer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.commons.concurrent.AsyncCallable;
 import de.regatta_hd.commons.concurrent.AsyncResult;
+import de.regatta_hd.commons.db.DBConnection;
 import javafx.concurrent.Task;
 
 @Singleton
 public class DBTaskRunner {
 
 	@Inject
-	private AquariusDB db;
+	private DBConnection db;
 
 	/**
 	 * Executes the given {@link AsyncCallable} in a DB task.

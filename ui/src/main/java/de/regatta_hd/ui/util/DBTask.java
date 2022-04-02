@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.commons.concurrent.AsyncCallable;
 import de.regatta_hd.commons.concurrent.AsyncResult;
 import de.regatta_hd.commons.concurrent.ProgressMonitor;
+import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -20,13 +20,13 @@ public class DBTask<V> extends Task<AsyncResult<V>> {
 
 	private Consumer<AsyncResult<V>> resultConsumer;
 
-	private final AquariusDB db;
+	private final DBConnection db;
 
 	private final boolean inTransaction;
 
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, AquariusDB db) {
+	DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, DBConnection db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;

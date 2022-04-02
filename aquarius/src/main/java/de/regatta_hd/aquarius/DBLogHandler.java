@@ -22,7 +22,7 @@ public class DBLogHandler extends Handler {
 
 	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName() };
 
-	private final AquariusDB db;
+	private final DBConnection db;
 
 	private final Deque<LogRecord> logRecords = new LinkedList<>();
 
@@ -35,7 +35,7 @@ public class DBLogHandler extends Handler {
 	private String hostAddress;
 
 	@Inject
-	DBLogHandler(AquariusDB db, ListenerManager manager) {
+	DBLogHandler(DBConnection db, ListenerManager manager) {
 		this.db = db;
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());

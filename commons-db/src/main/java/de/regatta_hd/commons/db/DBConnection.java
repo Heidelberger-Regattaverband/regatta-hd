@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
 
+import jakarta.persistence.EntityManager;
+
 public interface DBConnection {
 
 	/**
@@ -48,5 +50,10 @@ public interface DBConnection {
 	}
 
 	void updateSchema();
+
+	/**
+	 * @return {@link EntityManager} instance
+	 */
+	EntityManager getEntityManager();
 
 }

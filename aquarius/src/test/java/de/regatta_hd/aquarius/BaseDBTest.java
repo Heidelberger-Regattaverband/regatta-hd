@@ -13,10 +13,11 @@ import com.google.inject.util.Modules;
 
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConfigStore;
+import de.regatta_hd.commons.db.DBConnection;
 
 class BaseDBTest implements BeforeAllCallback {
 
-	protected static AquariusDB aquariusDb;
+	protected static DBConnection aquariusDb;
 
 	protected static Injector injector;
 
@@ -30,7 +31,7 @@ class BaseDBTest implements BeforeAllCallback {
 		DBConfigStore connStore = injector.getInstance(DBConfigStore.class);
 		connectionData = connStore.getLastSuccessful();
 
-		aquariusDb = injector.getInstance(AquariusDB.class);
+		aquariusDb = injector.getInstance(DBConnection.class);
 		aquariusDb.open(connectionData);
 
 		aquariusDb.updateSchema();
