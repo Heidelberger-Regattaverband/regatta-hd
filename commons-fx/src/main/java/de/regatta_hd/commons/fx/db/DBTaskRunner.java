@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.util;
+package de.regatta_hd.commons.fx.db;
 
 import java.util.function.Consumer;
 

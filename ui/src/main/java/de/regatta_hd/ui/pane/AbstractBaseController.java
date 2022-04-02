@@ -14,10 +14,10 @@ import org.controlsfx.dialog.ProgressDialog;
 import com.google.inject.Inject;
 
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.db.DBTaskRunner;
 import de.regatta_hd.commons.fx.guice.FXMLLoaderFactory;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.DBTask;
-import de.regatta_hd.ui.util.DBTaskRunner;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
