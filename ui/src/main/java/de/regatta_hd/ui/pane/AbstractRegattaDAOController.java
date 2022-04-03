@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.commons.ListenerManager;
+import de.regatta_hd.commons.core.ListenerManager;
 import javafx.application.Platform;
 
 abstract class AbstractRegattaDAOController extends AbstractBaseController {

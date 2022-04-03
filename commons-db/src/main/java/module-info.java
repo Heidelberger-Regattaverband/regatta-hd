@@ -1,6 +1,6 @@
 module de.regatta_hd.commons.db {
 
-	requires transitive de.regatta_hd.commons;
+	requires transitive de.regatta_hd.commons.core;
 
 	requires java.sql;
 

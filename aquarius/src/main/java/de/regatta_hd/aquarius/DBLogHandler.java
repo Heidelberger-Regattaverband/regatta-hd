@@ -11,7 +11,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.model.LogRecord;
-import de.regatta_hd.commons.ListenerManager;
+import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;

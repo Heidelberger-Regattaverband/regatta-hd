@@ -9,10 +9,10 @@ module de.regatta_hd.ui {
 	requires org.apache.poi.poi;
 
 	// regatta_hd modules
-	requires de.regatta_hd.aquarius;
-	requires de.regatta_hd.commons;
+	requires de.regatta_hd.commons.core;
 	requires de.regatta_hd.commons.db;
 	requires de.regatta_hd.commons.fx;
+	requires de.regatta_hd.aquarius;
 
 	opens de.regatta_hd.ui to javafx.graphics, com.google.guice;
 	opens de.regatta_hd.ui.util to javafx.fxml, com.google.guice;

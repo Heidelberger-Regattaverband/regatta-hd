@@ -5,9 +5,9 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.commons.concurrent.AsyncCallable;
-import de.regatta_hd.commons.concurrent.AsyncResult;
-import de.regatta_hd.commons.concurrent.ProgressMonitor;
+import de.regatta_hd.commons.core.concurrent.AsyncCallable;
+import de.regatta_hd.commons.core.concurrent.AsyncResult;
+import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;

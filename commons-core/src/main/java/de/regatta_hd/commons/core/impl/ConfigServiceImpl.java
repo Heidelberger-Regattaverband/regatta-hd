@@ -1,4 +1,4 @@
-package de.regatta_hd.commons.impl;
+package de.regatta_hd.commons.core.impl;
 
 import static java.util.Objects.requireNonNull;
 
@@ -13,7 +13,7 @@ import java.util.Properties;
 
 import com.google.inject.Singleton;
 
-import de.regatta_hd.commons.ConfigService;
+import de.regatta_hd.commons.core.ConfigService;
 
 @Singleton
 public class ConfigServiceImpl implements ConfigService {
