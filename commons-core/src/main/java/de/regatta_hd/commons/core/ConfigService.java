@@ -1,4 +1,4 @@
-package de.regatta_hd.commons;
+package de.regatta_hd.commons.core;
 
 import java.io.IOException;
 

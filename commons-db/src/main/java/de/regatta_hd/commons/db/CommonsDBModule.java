@@ -8,7 +8,7 @@ import de.regatta_hd.commons.db.impl.DBConfigStoreImpl;
 /**
  * The guice module to register common database bindings and additional services.
  */
-public class CommonDBModule extends AbstractModule {
+public class CommonsDBModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

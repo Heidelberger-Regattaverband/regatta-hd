@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 
-import de.regatta_hd.aquarius.AquariusDBModule;
+import de.regatta_hd.aquarius.AquariusModule;
 import de.regatta_hd.aquarius.DBLogHandler;
 import de.regatta_hd.commons.fx.guice.GuiceContext;
 import de.regatta_hd.commons.fx.util.FxUtils;
@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 public class RegattaHD extends Application {
 
 	private final GuiceContext context = new GuiceContext(this,
-			() -> Arrays.asList(new UIModule(), new AquariusDBModule()));
+			() -> Arrays.asList(new UIModule(), new AquariusModule()));
 
 	@Inject
 	private FXMLLoader fxmlLoader;

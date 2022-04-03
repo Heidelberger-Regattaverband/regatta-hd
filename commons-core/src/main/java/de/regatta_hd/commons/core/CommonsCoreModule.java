@@ -1,4 +1,4 @@
-package de.regatta_hd.commons;
+package de.regatta_hd.commons.core;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,11 +12,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 
-import de.regatta_hd.commons.impl.ConfigServiceImpl;
-import de.regatta_hd.commons.impl.ListenerManagerImpl;
+import de.regatta_hd.commons.core.impl.ConfigServiceImpl;
+import de.regatta_hd.commons.core.impl.ListenerManagerImpl;
 
-public class CommonModule extends AbstractModule {
-	private static final Logger logger = Logger.getLogger(CommonModule.class.getName());
+public class CommonsCoreModule extends AbstractModule {
+	private static final Logger logger = Logger.getLogger(CommonsCoreModule.class.getName());
 
 	private final Properties properties = new Properties();
 
@@ -25,7 +25,7 @@ public class CommonModule extends AbstractModule {
 		bind(ConfigService.class).to(ConfigServiceImpl.class);
 		bind(ListenerManager.class).to(ListenerManagerImpl.class);
 
-		try (InputStream input = CommonModule.class.getResourceAsStream("/project.properties")) {
+		try (InputStream input = CommonsCoreModule.class.getResourceAsStream("/project.properties")) {
 			this.properties.load(input);
 		} catch (IOException e) {
 			logger.log(Level.WARNING, e.getMessage(), e);

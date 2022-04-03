@@ -25,7 +25,7 @@ class BaseDBTest implements BeforeAllCallback {
 
 	@Override
 	public void beforeAll(ExtensionContext context) throws Exception {
-		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
+		com.google.inject.Module testModules = Modules.override(new AquariusModule()).with(new TestModule());
 		injector = Guice.createInjector(testModules);
 
 		DBConfigStore connStore = injector.getInstance(DBConfigStore.class);

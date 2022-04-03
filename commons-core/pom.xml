@@ -7,8 +7,8 @@
     <version>0.1.13</version>
   </parent>
 
-  <artifactId>commons</artifactId>
-  <name>Regatta HD - Commons</name>
+  <artifactId>commons-core</artifactId>
+  <name>Regatta HD - Commons Core</name>
 
   <build>
     <resources>

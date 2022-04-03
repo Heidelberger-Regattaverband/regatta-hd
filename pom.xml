@@ -74,7 +74,7 @@
   </properties>
 
   <modules>
-    <module>commons</module>
+    <module>commons-core</module>
     <module>commons-db</module>
     <module>commons-fx</module>
     <module>aquarius</module>
