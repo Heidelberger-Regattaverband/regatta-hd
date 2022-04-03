@@ -101,8 +101,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (activeRegatta != null) {
 			loadRaces();
 		} else {
-			this.racesCbo.getSelectionModel().clearSelection();
-			this.racesList.clear();
+			clearRaces();
 		}
 	}
 
@@ -113,8 +112,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	}
 
 	private void loadRaces() {
-		this.racesCbo.getSelectionModel().clearSelection();
-		this.racesList.clear();
+		clearRaces();
 
 		super.dbTaskRunner.run(progress -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
@@ -588,6 +586,13 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			}
 		});
 		return row;
+	}
+
+	private void clearRaces() {
+		this.racesCbo.getSelectionModel().clearSelection();
+		// workaround to avoid exceptions, see: https://stackoverflow.com/q/12142518
+		this.racesCbo.setValue(null);
+		this.racesList.clear();
 	}
 
 	// static helpers
