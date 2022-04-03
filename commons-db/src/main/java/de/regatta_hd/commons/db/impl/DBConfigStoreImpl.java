@@ -7,7 +7,7 @@ import java.io.IOException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.regatta_hd.commons.ConfigService;
+import de.regatta_hd.commons.core.ConfigService;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConfigStore;
 

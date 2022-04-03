@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.regatta_hd.commons.concurrent.AsyncCallable;
-import de.regatta_hd.commons.concurrent.AsyncResult;
+import de.regatta_hd.commons.core.concurrent.AsyncCallable;
+import de.regatta_hd.commons.core.concurrent.AsyncResult;
 import de.regatta_hd.commons.db.DBConnection;
 import javafx.concurrent.Task;
 

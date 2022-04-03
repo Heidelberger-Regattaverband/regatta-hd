@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import de.regatta_hd.commons.ListenerManager;
+import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConnection;
 import jakarta.persistence.EntityManager;
