@@ -51,7 +51,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
 	@FXML
-	private SearchableComboBox<Race> raceCbo;
+	private SearchableComboBox<Race> racesCbo;
 	@FXML
 	private VBox srcRaceVBox;
 	@FXML
@@ -79,11 +79,14 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	@FXML
 	private Button deleteSetListBtn;
 
+	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.raceCbo.setDisable(true);
+		this.racesCbo.setItems(this.racesList);
+		this.racesCbo.setDisable(true);
 		this.setListTbl.setDisable(true);
 		disableButtons();
 
@@ -98,7 +101,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (activeRegatta != null) {
 			loadRaces();
 		} else {
-			this.raceCbo.getItems().clear();
+			this.racesCbo.getSelectionModel().clearSelection();
+			this.racesList.clear();
 		}
 	}
 
@@ -109,6 +113,9 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	}
 
 	private void loadRaces() {
+		this.racesCbo.getSelectionModel().clearSelection();
+		this.racesList.clear();
+
 		super.dbTaskRunner.run(progress -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
 			List<Race> races = new ArrayList<>();
@@ -141,8 +148,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
 			try {
-				this.raceCbo.setItems(dbResult.getResult());
-				this.raceCbo.setDisable(false);
+				this.racesList.addAll(dbResult.getResult());
+				this.racesCbo.setDisable(false);
 				this.setListTbl.setDisable(false);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -201,17 +208,17 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleRaceSelectedOnAction(ActionEvent event) {
-		if (!event.isConsumed() && event.getSource() == this.raceCbo) {
+		if (!event.isConsumed() && event.getSource() == this.racesCbo) {
 			event.consume();
 
 			this.raceVBox.getChildren().clear();
 			this.srcRaceVBox.getChildren().clear();
 			this.setListTbl.getItems().clear();
 
-			Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+			Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 			if (selectedRace != null) {
 				// remove onAction eventhandler to avoid multiple calls -> workaround
-				this.raceCbo.setOnAction(null);
+				this.racesCbo.setOnAction(null);
 
 				super.dbTaskRunner.run(progress -> {
 					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
@@ -230,7 +237,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 						enableButtons(race);
 
 						// attach onAction eventhandler to get further events
-						this.raceCbo.setOnAction(this::handleRaceSelectedOnAction);
+						this.racesCbo.setOnAction(this::handleRaceSelectedOnAction);
 					}
 				});
 			} else {
@@ -241,7 +248,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleRefreshOnAction() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 		if (selectedRace != null) {
 			disableButtons();
 
@@ -268,7 +275,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleCreateSetListOnAction() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 
 		if (selectedRace != null) {
 			disableButtons();
@@ -295,7 +302,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleDeleteSetListOnAction() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 
 		if (selectedRace != null) {
 			disableButtons();
@@ -318,7 +325,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 
 		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
 			disableButtons();
@@ -347,7 +354,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleDeleteOnAction() {
-		Race selectedRace = this.raceCbo.getSelectionModel().getSelectedItem();
+		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 
 		if (selectedRace != null && FxUtils.showConfirmDialog(getWindow(), getText("SetRaceView.confirmDelete.title"),
 				getText("SetRaceView.confirmDelete.question"))) {

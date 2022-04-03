@@ -24,7 +24,7 @@
 
   <children>
     <Label text="%SetRaceView.raceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <SearchableComboBox fx:id="raceCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction"
+    <SearchableComboBox fx:id="racesCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction"
       promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
         <RaceStringConverter />
