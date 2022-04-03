@@ -24,7 +24,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.commons.concurrent.ProgressMonitor;
+import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
