@@ -132,7 +132,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@Override
-	protected void shutdown() {
+	public void shutdown() {
 		super.listenerManager.removeListener(DBConnection.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
 

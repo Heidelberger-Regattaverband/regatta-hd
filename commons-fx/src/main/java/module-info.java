@@ -16,6 +16,7 @@ module de.regatta_hd.commons.fx {
 	exports de.regatta_hd.commons.fx.db;
 	exports de.regatta_hd.commons.fx.dialog;
 	exports de.regatta_hd.commons.fx.guice;
+	exports de.regatta_hd.commons.fx.stage;
 	exports de.regatta_hd.commons.fx.util;
 
 	opens de.regatta_hd.commons.fx.db to com.google.guice;

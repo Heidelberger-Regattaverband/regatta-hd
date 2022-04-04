@@ -2,6 +2,7 @@ package de.regatta_hd.commons.fx.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -24,10 +25,10 @@ public class WindowManagerImpl implements WindowManager {
 	private FXMLLoaderFactory fxmlLoaderFactory;
 
 	@Override
-	public Stage newStage(String resource, String title, ResourceBundle resources, Consumer<WindowEvent> closeHandler)
+	public Stage newStage(URL resource, String title, ResourceBundle resources, Consumer<WindowEvent> closeHandler)
 			throws IOException {
 		FXMLLoader loader = this.fxmlLoaderFactory.newFXMLLoader();
-		loader.setLocation(getClass().getResource(resource));
+		loader.setLocation(resource);
 		loader.setResources(resources);
 		Parent parent = loader.load();
 
@@ -38,12 +39,12 @@ public class WindowManagerImpl implements WindowManager {
 			stage.getIcons().add(new Image(in));
 		}
 
-		FxUtils.loadSizeAndPos(resource, stage);
+		FxUtils.loadSizeAndPos(resource.toString(), stage);
 		stage.show();
 
 		// When the stage closes store the current size and window location.
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
-			FxUtils.storeSizeAndPos(resource, stage);
+			FxUtils.storeSizeAndPos(resource.toString(), stage);
 			if (closeHandler != null) {
 				closeHandler.accept(event);
 			}
