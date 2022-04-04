@@ -71,7 +71,9 @@ abstract class AbstractBaseController implements Initializable {
 		// When the stage closes store the current size and window location.
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 			FxUtils.storeSizeAndPos(resource, stage);
-			closeHandler.accept(event);
+			if (closeHandler != null) {
+				closeHandler.accept(event);
+			}
 			AbstractBaseController controller = loader.getController();
 			controller.shutdown();
 		});

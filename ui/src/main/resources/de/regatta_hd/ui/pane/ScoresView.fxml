@@ -14,8 +14,9 @@
   <children>
     <ToolBar>
       <items>
-        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%common.refresh" />
-        <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%common.calculate" />
+        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefreshOnAction" text="%common.refresh" />
+        <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculateOnAction" text="%common.calculate" />
+        <Button fx:id="printBtn" mnemonicParsing="false" onAction="#handlePrintOnAction" text="%common.print" />
       </items>
     </ToolBar>
     <TableView fx:id="scoresTbl" VBox.vgrow="ALWAYS">

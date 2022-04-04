@@ -2,6 +2,7 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,6 +26,8 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private Button refreshBtn;
 	@FXML
 	private Button calculateBtn;
+	@FXML
+	private Button printBtn;
 	@FXML
 	private TableView<Score> scoresTbl;
 	@FXML
@@ -59,12 +62,12 @@ public class ScoresController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	void handleRefresh() {
+	void handleRefreshOnAction() {
 		loadScores(true);
 	}
 
 	@FXML
-	void handleCalculate() {
+	void handleCalculateOnAction() {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 		this.scoresList.clear();
@@ -84,6 +87,16 @@ public class ScoresController extends AbstractRegattaDAOController {
 				disableButtons(false);
 			}
 		});
+	}
+
+	@FXML
+	void handlePrintOnAction() {
+		try {
+			newWindow("PrintView.fxml", getText("common.print"), null);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			FxUtils.showErrorMessage(getWindow(), e);
+		}
 	}
 
 	private void loadScores(boolean refresh) {
@@ -118,6 +131,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.calculateBtn.setDisable(disabled);
+		this.printBtn.setDisable(disabled);
 	}
 
 }
