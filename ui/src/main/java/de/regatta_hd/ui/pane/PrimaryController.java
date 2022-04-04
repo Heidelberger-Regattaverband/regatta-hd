@@ -5,7 +5,9 @@ import static java.util.Objects.nonNull;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -68,14 +70,23 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	// fields
 	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
-	// stages
-	private Stage setRaceStage;
-	private Stage regattasViewStage;
-	private Stage racesViewStage;
-	private Stage scoresViewStage;
-	private Stage resultsStage;
-	private Stage errorLogStage;
-	private Stage heatsStage;
+	private final Map<String, Stage> openStages = new HashMap<>();
+
+	private Stage openStage(String resource, String title) {
+		Stage stage = this.openStages.computeIfAbsent(resource, key -> {
+			try {
+				return newWindow(resource, title, event -> this.openStages.remove(key));
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+				return null;
+			}
+		});
+		if (stage != null) {
+			stage.requestFocus();
+		}
+		return stage;
+	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
 		if (event.getDBConnection().isOpen()) {
@@ -91,7 +102,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 					this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
 					this.activeRegattaCBox.setDisable(false);
 				}
@@ -124,6 +135,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	protected void shutdown() {
 		super.listenerManager.removeListener(DBConnection.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
+
+		this.openStages.values().forEach(stage -> stage.close());
 
 		super.shutdown();
 	}
@@ -191,99 +204,37 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@FXML
 	private void handleSetRaceOnAction() {
-		if (this.setRaceStage == null) {
-			try {
-				this.setRaceStage = newWindow("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"),
-						event -> this.setRaceStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.setRaceStage.requestFocus();
-		}
+		openStage("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"));
 	}
 
 	@FXML
 	private void handleEvents() {
-		if (this.regattasViewStage == null) {
-			try {
-				this.regattasViewStage = newWindow("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"),
-						event -> this.regattasViewStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.regattasViewStage.requestFocus();
-		}
+		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
 	}
 
 	@FXML
 	private void handleRacesOnAction() {
-		if (this.racesViewStage == null) {
-			try {
-				this.racesViewStage = newWindow("OffersView.fxml", getText("PrimaryView.racesMitm.text"),
-						event -> this.racesViewStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.racesViewStage.requestFocus();
-		}
+		openStage("OffersView.fxml", getText("PrimaryView.racesMitm.text"));
 	}
 
 	@FXML
 	private void handleScore() {
-		if (this.scoresViewStage == null) {
-			try {
-				this.scoresViewStage = newWindow("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"),
-						event -> this.scoresViewStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.scoresViewStage.requestFocus();
-		}
+		openStage("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"));
 	}
 
 	@FXML
 	void handleResultsOnAction() {
-		if (this.resultsStage == null) {
-			try {
-				this.resultsStage = newWindow("ResultsView.fxml", getText("common.results"),
-						event -> this.resultsStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.resultsStage.requestFocus();
-		}
+		openStage("ResultsView.fxml", getText("common.results"));
 	}
 
 	@FXML
 	void handleLogRecordsOnAction() {
-		if (this.errorLogStage == null) {
-			try {
-				this.errorLogStage = newWindow("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"),
-						event -> this.errorLogStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.errorLogStage.requestFocus();
-		}
+		openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
 	}
 
 	@FXML
 	void handleHeatsOnAction() {
-		if (this.heatsStage == null) {
-			try {
-				this.heatsStage = newWindow("HeatsView.fxml", getText("heats.title"), event -> this.heatsStage = null);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		} else {
-			this.heatsStage.requestFocus();
-		}
+		openStage("HeatsView.fxml", getText("heats.title"));
 	}
 
 	@FXML
@@ -303,7 +254,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void handleExit() {
+	void handleExit() {
 		Platform.exit();
 	}
 
