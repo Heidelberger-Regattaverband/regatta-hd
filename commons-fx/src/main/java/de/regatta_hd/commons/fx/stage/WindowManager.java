@@ -7,5 +7,7 @@ import javafx.stage.Stage;
 
 public interface WindowManager {
 
-	Stage newStage(URL resource, String title, ResourceBundle resources);
+	Stage newStage(URL resourceUrl, String title, ResourceBundle resources);
+
+	void loadStage(Stage stage, URL resourceUrl, String title, ResourceBundle resources);
 }
