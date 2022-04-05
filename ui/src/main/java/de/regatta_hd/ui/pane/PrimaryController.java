@@ -5,9 +5,7 @@ import static java.util.Objects.nonNull;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -39,7 +37,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
 	@Inject
-	protected WindowManager windowManager;
+	private WindowManager windowManager;
 	@Inject
 	private DBConfigStore dbCfgStore;
 	@Inject
@@ -73,23 +71,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	// fields
 	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
-	private final Map<String, Stage> openStages = new HashMap<>();
-
 	private Stage openStage(String resource, String title) {
-		Stage stage = this.openStages.computeIfAbsent(resource, key -> {
-			try {
-				return this.windowManager.newStage(getClass().getResource(resource), title, this.resources,
-						event -> this.openStages.remove(key));
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-				return null;
-			}
-		});
-		if (stage != null) {
-			stage.requestFocus();
-		}
-		return stage;
+		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources);
 	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
@@ -139,8 +122,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	public void shutdown() {
 		super.listenerManager.removeListener(DBConnection.StateChangedEventListener.class,
 				this.dbStateChangedEventListener);
-
-		this.openStages.values().forEach(stage -> stage.close());
 
 		super.shutdown();
 	}
