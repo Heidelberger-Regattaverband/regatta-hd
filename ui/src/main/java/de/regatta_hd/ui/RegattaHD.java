@@ -13,11 +13,8 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.AquariusModule;
 import de.regatta_hd.aquarius.DBLogHandler;
 import de.regatta_hd.commons.fx.guice.GuiceContext;
-import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.commons.fx.stage.WindowManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -30,10 +27,10 @@ public class RegattaHD extends Application {
 			() -> Arrays.asList(new UIModule(), new AquariusModule()));
 
 	@Inject
-	private FXMLLoader fxmlLoader;
+	private DBLogHandler dbLogHandler;
 
 	@Inject
-	private DBLogHandler dbLogHandler;
+	private WindowManager windowManager;
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
@@ -47,16 +44,9 @@ public class RegattaHD extends Application {
 
 		ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
-		FxUtils.loadSizeAndPos("Primary.fxml", primaryStage);
-
-		Scene scene = new Scene(loadFXML("/de/regatta_hd/ui/pane/PrimaryView.fxml", bundle));
-		primaryStage.setScene(scene);
-		primaryStage.setTitle(bundle.getString("MainWindow.title"));
-
-		// When the stage closes store the current size and window location.
-		primaryStage.setOnCloseRequest(event -> FxUtils.storeSizeAndPos("Primary.fxml", primaryStage));
-
-		primaryStage.show();
+		this.windowManager.loadStage(primaryStage,
+				RegattaHD.class.getResource("/de/regatta_hd/ui/pane/PrimaryView.fxml"),
+				bundle.getString("MainWindow.title"), bundle);
 	}
 
 	private void initLogging() {
@@ -67,12 +57,6 @@ public class RegattaHD extends Application {
 
 		Logger rootLogger = LogManager.getLogManager().getLogger("");
 		rootLogger.addHandler(this.dbLogHandler);
-	}
-
-	private Parent loadFXML(String fxml, ResourceBundle bundle) throws IOException {
-		this.fxmlLoader.setLocation(RegattaHD.class.getResource(fxml));
-		this.fxmlLoader.setResources(bundle);
-		return this.fxmlLoader.load();
 	}
 
 	public static void main(String[] args) {

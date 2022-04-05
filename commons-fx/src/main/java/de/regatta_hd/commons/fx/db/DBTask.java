@@ -13,7 +13,7 @@ import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class DBTask<V> extends Task<AsyncResult<V>> {
+public abstract class DBTask<V> extends Task<AsyncResult<V>> {
 	private static final Logger logger = Logger.getLogger(DBTask.class.getName());
 
 	private final AsyncCallable<V> callable;
@@ -26,7 +26,7 @@ public class DBTask<V> extends Task<AsyncResult<V>> {
 
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, DBConnection db) {
+	protected DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, DBConnection db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;

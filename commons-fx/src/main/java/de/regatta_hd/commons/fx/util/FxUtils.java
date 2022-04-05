@@ -3,6 +3,8 @@ package de.regatta_hd.commons.fx.util;
 import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.scene.control.Alert;
@@ -16,6 +18,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class FxUtils {
+	private static final Logger logger = Logger.getLogger(FxUtils.class.getName());
+
 	private static final String WINDOW_POSITION_X = "Window_Position_X";
 	private static final String WINDOW_POSITION_Y = "Window_Position_Y";
 	private static final String WINDOW_WIDTH = "Window_Width";
@@ -31,7 +35,7 @@ public class FxUtils {
 		// avoid instances
 	}
 
-	public static File showSaveDialog(Window window,  String fileName, String description, final String... extensions) {
+	public static File showSaveDialog(Window window, String fileName, String description, final String... extensions) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter for text files
@@ -80,7 +84,10 @@ public class FxUtils {
 	}
 
 	public static void loadSizeAndPos(String resource, Stage stage) {
-		Preferences pref = Preferences.userRoot().node(resource);
+		String node = resource.substring(resource.lastIndexOf('/') + 1);
+		logger.log(Level.INFO, "Load size/pos of resource {0}", node);
+
+		Preferences pref = Preferences.userRoot().node(node);
 		stage.setX(pref.getDouble(WINDOW_POSITION_X, DEFAULT_X));
 		stage.setY(pref.getDouble(WINDOW_POSITION_Y, DEFAULT_Y));
 		stage.setWidth(pref.getDouble(WINDOW_WIDTH, DEFAULT_WIDTH));
@@ -88,7 +95,10 @@ public class FxUtils {
 	}
 
 	public static void storeSizeAndPos(String resource, Stage stage) {
-		Preferences preferences = Preferences.userRoot().node(resource);
+		String node = resource.substring(resource.lastIndexOf('/') + 1);
+		logger.log(Level.INFO, "Store size/pos of resource {0}", node);
+
+		Preferences preferences = Preferences.userRoot().node(node);
 		preferences.putDouble(WINDOW_POSITION_X, stage.getX());
 		preferences.putDouble(WINDOW_POSITION_Y, stage.getY());
 		preferences.putDouble(WINDOW_WIDTH, stage.getWidth());
