@@ -31,7 +31,7 @@ public class FxUtils {
 		// avoid instances
 	}
 
-	public static File showSaveDialog(Window window,  String fileName, String description, final String... extensions) {
+	public static File showSaveDialog(Window window, String fileName, String description, final String... extensions) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter for text files

@@ -59,7 +59,7 @@ public class WindowManagerImpl implements WindowManager {
 
 		Stage stage = createStage(title, loader);
 
-		FxUtils.loadSizeAndPos(resourceUrl.toString(), stage);
+		FxUtils.loadSizeAndPos(resourceUrl.getPath(), stage);
 		stage.show();
 
 		return stage;
@@ -71,7 +71,7 @@ public class WindowManagerImpl implements WindowManager {
 
 		initializeStage(stage, title, loader);
 
-		FxUtils.loadSizeAndPos(resourceUrl.toString(), stage);
+		FxUtils.loadSizeAndPos(resourceUrl.getPath(), stage);
 		stage.show();
 	}
 
@@ -98,7 +98,7 @@ public class WindowManagerImpl implements WindowManager {
 		// When the stage closes store the current size and window location.
 		stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
 			URL location = loader.getLocation();
-			FxUtils.storeSizeAndPos(location.toString(), stage);
+			FxUtils.storeSizeAndPos(location.getPath(), stage);
 			this.stages.remove(location);
 
 			Controller controller = loader.getController();
