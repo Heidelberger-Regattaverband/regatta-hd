@@ -26,7 +26,7 @@ public class DBTask<V> extends Task<AsyncResult<V>> {
 
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, DBConnection db) {
+	public DBTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction, DBConnection db) {
 		this.callable = Objects.requireNonNull(callable, "callable must not be null");
 		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
 		this.inTransaction = inTransaction;
