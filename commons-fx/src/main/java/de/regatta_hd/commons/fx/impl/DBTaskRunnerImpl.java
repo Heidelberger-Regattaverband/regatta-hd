@@ -47,7 +47,7 @@ public class DBTaskRunnerImpl implements DBTaskRunner {
 	@Override
 	public <V> DBTask<V> createTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer,
 			boolean inTransaction) {
-		return new DBTask<>(callable, resultConsumer, inTransaction, this.db);
+		return new DBTaskImpl<>(callable, resultConsumer, inTransaction, this.db);
 	}
 
 	@Override
