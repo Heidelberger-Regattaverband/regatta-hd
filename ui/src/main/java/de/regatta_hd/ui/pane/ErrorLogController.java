@@ -67,7 +67,7 @@ public class ErrorLogController extends AbstractBaseController {
 	}
 
 	@Override
-	protected void shutdown() {
+	public void shutdown() {
 		// nothing to shutdown
 	}
 

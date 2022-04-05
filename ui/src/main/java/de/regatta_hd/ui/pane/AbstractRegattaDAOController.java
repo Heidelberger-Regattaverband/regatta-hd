@@ -36,7 +36,7 @@ abstract class AbstractRegattaDAOController extends AbstractBaseController {
 	}
 
 	@Override
-	protected void shutdown() {
+	public void shutdown() {
 		this.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
 				this.regattaChangedEventListener);
 	}
