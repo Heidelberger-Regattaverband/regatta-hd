@@ -84,8 +84,10 @@ public class FxUtils {
 	}
 
 	public static void loadSizeAndPos(String resource, Stage stage) {
-		logger.log(Level.INFO, "Load size/pos of resource {0}", resource);
-		Preferences pref = Preferences.userRoot().node(resource);
+		String node = resource.substring(resource.lastIndexOf('/') + 1);
+		logger.log(Level.INFO, "Load size/pos of resource {0}", node);
+
+		Preferences pref = Preferences.userRoot().node(node);
 		stage.setX(pref.getDouble(WINDOW_POSITION_X, DEFAULT_X));
 		stage.setY(pref.getDouble(WINDOW_POSITION_Y, DEFAULT_Y));
 		stage.setWidth(pref.getDouble(WINDOW_WIDTH, DEFAULT_WIDTH));
@@ -93,8 +95,10 @@ public class FxUtils {
 	}
 
 	public static void storeSizeAndPos(String resource, Stage stage) {
-		logger.log(Level.INFO, "Store size/pos of resource {0}", resource);
-		Preferences preferences = Preferences.userRoot().node(resource);
+		String node = resource.substring(resource.lastIndexOf('/') + 1);
+		logger.log(Level.INFO, "Store size/pos of resource {0}", node);
+
+		Preferences preferences = Preferences.userRoot().node(node);
 		preferences.putDouble(WINDOW_POSITION_X, stage.getX());
 		preferences.putDouble(WINDOW_POSITION_Y, stage.getY());
 		preferences.putDouble(WINDOW_WIDTH, stage.getWidth());
