@@ -2,11 +2,9 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 import org.controlsfx.dialog.ProgressDialog;
 
@@ -16,14 +14,12 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.db.DBTaskRunner;
 import de.regatta_hd.commons.fx.stage.Controller;
-import de.regatta_hd.commons.fx.stage.WindowManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 abstract class AbstractBaseController implements Initializable, Controller {
 
@@ -31,8 +27,6 @@ abstract class AbstractBaseController implements Initializable, Controller {
 
 	protected ResourceBundle resources;
 
-	@Inject
-	protected WindowManager windowManager;
 	@Inject
 	protected DBTaskRunner dbTaskRunner;
 	@Inject
@@ -45,10 +39,6 @@ abstract class AbstractBaseController implements Initializable, Controller {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.location = requireNonNull(location, "location must not be null");
 		this.resources = requireNonNull(resources, "resources must not be null");
-	}
-
-	protected Stage newWindow(String resource, String title, Consumer<WindowEvent> closeHandler) throws IOException {
-		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources, closeHandler);
 	}
 
 	protected String getText(String key, Object... args) {

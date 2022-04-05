@@ -23,6 +23,7 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.dialog.AboutDialog;
 import de.regatta_hd.commons.fx.dialog.DBConnectionDialog;
+import de.regatta_hd.commons.fx.stage.WindowManager;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -37,6 +38,8 @@ import javafx.util.Pair;
 public class PrimaryController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
+	@Inject
+	protected WindowManager windowManager;
 	@Inject
 	private DBConfigStore dbCfgStore;
 	@Inject
@@ -75,7 +78,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private Stage openStage(String resource, String title) {
 		Stage stage = this.openStages.computeIfAbsent(resource, key -> {
 			try {
-				return newWindow(resource, title, event -> this.openStages.remove(key));
+				return this.windowManager.newStage(getClass().getResource(resource), title, this.resources,
+						event -> this.openStages.remove(key));
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
