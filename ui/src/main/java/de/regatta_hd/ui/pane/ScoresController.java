@@ -2,14 +2,16 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.inject.Inject;
+
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Score;
+import de.regatta_hd.commons.fx.stage.WindowManager;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,9 +20,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 public class ScoresController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
+
+	@Inject
+	private WindowManager windowManager;
 
 	@FXML
 	private Button refreshBtn;
@@ -91,12 +97,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handlePrintOnAction() {
-		try {
-			newWindow("PrintView.fxml", getText("common.print"), null);
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			FxUtils.showErrorMessage(getWindow(), e);
-		}
+		openStage("PrintView.fxml", getText("common.print"));
 	}
 
 	private void loadScores(boolean refresh) {
@@ -122,6 +123,10 @@ public class ScoresController extends AbstractRegattaDAOController {
 				disableButtons(false);
 			}
 		});
+	}
+
+	private Stage openStage(String resource, String title) {
+		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources);
 	}
 
 	private void updatePlaceholder(String text) {

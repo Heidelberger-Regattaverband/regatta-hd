@@ -21,12 +21,14 @@ public class PrintViewController extends AbstractBaseController {
 	}
 
 	@Override
-	protected void shutdown() {
+	public void shutdown() {
 		// nothing to shutdown yet
 	}
 
 	private void loadPrinters() {
 		ObservableSet<Printer> allPrinters = Printer.getAllPrinters();
 		this.printersCbo.getItems().setAll(allPrinters);
+		Printer defaultPrinter = Printer.getDefaultPrinter();
+		this.printersCbo.getSelectionModel().select(defaultPrinter);
 	}
 }
