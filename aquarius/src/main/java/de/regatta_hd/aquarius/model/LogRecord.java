@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class LogRecord implements Serializable {
 	public LogRecord(String hostName, String hostAddr, java.util.logging.LogRecord logRecord) {
 		setInstant(logRecord.getInstant());
 		setLogger(logRecord.getLoggerName());
-		setMessage(logRecord.getMessage());
+		setMessage(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
 		setThreadID(logRecord.getThreadID());
 		setHostName(hostName);
 		setHostAddress(hostAddr);
