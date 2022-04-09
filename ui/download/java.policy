@@ -1,5 +1,10 @@
+// for further details about policy files see: https://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html
+
 // Grant everyone the following permission:
 grant {
+  // required to register additional log handler
   permission java.util.logging.LoggingPermission "control";
+
+  // required to get hostname
   permission java.net.SocketPermission "*", "resolve";
 };
