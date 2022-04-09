@@ -72,7 +72,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	private Stage openStage(String resource, String title) {
-		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources);
+		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources, null);
 	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {

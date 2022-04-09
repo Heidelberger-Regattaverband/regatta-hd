@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ScoresController extends AbstractRegattaDAOController {
@@ -126,7 +127,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 	}
 
 	private Stage openStage(String resource, String title) {
-		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources);
+		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources, Modality.APPLICATION_MODAL);
 	}
 
 	private void updatePlaceholder(String text) {
