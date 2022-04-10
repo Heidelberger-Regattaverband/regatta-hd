@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -17,6 +18,7 @@
         <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefreshOnAction" text="%common.refresh" />
         <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculateOnAction" text="%common.calculate" />
         <Button fx:id="printBtn" mnemonicParsing="false" onAction="#handlePrintOnAction" text="%common.print" />
+        <ComboBox fx:id="printersCbo" />
       </items>
     </ToolBar>
     <TableView fx:id="scoresTbl" VBox.vgrow="ALWAYS">

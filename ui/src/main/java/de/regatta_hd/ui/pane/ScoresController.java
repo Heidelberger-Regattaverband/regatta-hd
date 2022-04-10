@@ -15,8 +15,18 @@ import de.regatta_hd.commons.fx.stage.WindowManager;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
+import javafx.print.JobSettings;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.PageRange;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterAttributes;
+import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,6 +46,8 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	private Button printBtn;
 	@FXML
+	private ComboBox<Printer> printersCbo;
+	@FXML
 	private TableView<Score> scoresTbl;
 	@FXML
 	private TableColumn<Score, Integer> rankCol;
@@ -50,6 +62,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		this.scoresTbl.getSortOrder().add(this.rankCol);
 
 		loadScores(false);
+		loadPrinters();
 	}
 
 	@Override
@@ -71,6 +84,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	void handleRefreshOnAction() {
 		loadScores(true);
+		loadPrinters();
 	}
 
 	@FXML
@@ -98,7 +112,35 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handlePrintOnAction() {
-		openStage("PrintView.fxml", getText("common.print"));
+		Printer printer = this.printersCbo.getSelectionModel().getSelectedItem();
+
+		if (printer != null) {
+			// https://examples.javacodegeeks.com/desktop-java/javafx/javafx-print-api/
+			PrinterJob job = PrinterJob.createPrinterJob(printer);
+
+			boolean proceed = job.showPageSetupDialog(getWindow());
+
+			if (proceed) {
+				JobSettings settings = job.getJobSettings();
+//				PrinterAttributes printerAttribs = printer.getPrinterAttributes();
+//				if (printerAttribs.supportsPageRanges()) {
+//					job.getJobSettings().setPageRanges(new PageRange(1, Integer.MAX_VALUE));
+//				}
+				PageLayout pageLayout = printer.createPageLayout(Paper.A4, PageOrientation.PORTRAIT,
+						Printer.MarginType.HARDWARE_MINIMUM);
+				settings.setPageLayout(pageLayout);
+
+				boolean printed = job.printPage(this.scoresTbl);
+				// Print the node
+				if (printed) {
+					// End the printer job
+					job.endJob();
+				} else {
+					FxUtils.showErrorMessage(getWindow(), "Printing failed", "No further details");
+				}
+			}
+		}
+//		openStage("PrintView.fxml", getText("common.print"));
 	}
 
 	private void loadScores(boolean refresh) {
@@ -126,8 +168,16 @@ public class ScoresController extends AbstractRegattaDAOController {
 		});
 	}
 
+	private void loadPrinters() {
+		ObservableSet<Printer> allPrinters = Printer.getAllPrinters();
+		this.printersCbo.getItems().setAll(allPrinters);
+		Printer defaultPrinter = Printer.getDefaultPrinter();
+		this.printersCbo.getSelectionModel().select(defaultPrinter);
+	}
+
 	private Stage openStage(String resource, String title) {
-		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources, Modality.APPLICATION_MODAL);
+		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources,
+				Modality.APPLICATION_MODAL);
 	}
 
 	private void updatePlaceholder(String text) {

@@ -54,6 +54,15 @@ public class FxUtils {
 		alert.showAndWait();
 	}
 
+	public static void showErrorMessage(Window window, String errorHeader, String errorDetails) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.initOwner(window);
+		alert.setTitle(bundle.getString("error.title"));
+		alert.setHeaderText(errorHeader);
+		alert.setContentText(errorDetails);
+		alert.showAndWait();
+	}
+
 	public static void showInfoDialog(Window window, String msg) {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
 		alert.initOwner(window);
