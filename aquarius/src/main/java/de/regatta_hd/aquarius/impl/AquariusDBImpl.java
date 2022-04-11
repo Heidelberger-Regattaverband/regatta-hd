@@ -18,6 +18,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
+import de.regatta_hd.aquarius.AquariusDB;
+import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConnection;
@@ -25,6 +27,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TypedQuery;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -35,7 +38,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
-public class AqauriusDBImpl implements DBConnection {
+public class AquariusDBImpl implements AquariusDB {
 
 	// executes database operations concurrent to JavaFX operations.
 	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
@@ -47,16 +50,24 @@ public class AqauriusDBImpl implements DBConnection {
 
 	private Thread sessionThread;
 
+	private String version;
+
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
 			this.entityManager.close();
 			this.entityManager = null;
 			this.sessionThread = null;
+			this.version = null;
 
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		}
+	}
+
+	@Override
+	public String getVersion() {
+		return this.version;
 	}
 
 	@Override
@@ -84,9 +95,15 @@ public class AqauriusDBImpl implements DBConnection {
 			// store current thread to ensure further DB access is done in same thread
 			this.sessionThread = Thread.currentThread();
 
+			this.version = readVersion();
+
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
+			if (this.entityManager != null) {
+				this.entityManager.close();
+				this.entityManager = null;
+			}
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
 				throw (SQLServerException) rootCause;
@@ -135,6 +152,13 @@ public class AqauriusDBImpl implements DBConnection {
 
 	private boolean isOpenImpl() {
 		return this.entityManager != null && this.entityManager.isOpen();
+	}
+
+	private String readVersion() {
+		TypedQuery<MetaData> query = this.getEntityManager()
+				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class);
+		MetaData metaData = query.getSingleResult();
+		return metaData.getValue();
 	}
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
