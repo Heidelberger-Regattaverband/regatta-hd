@@ -226,7 +226,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	void handleAboutOnAction() {
 		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
 				this.resources.getString("about.header"),
-				MessageFormat.format(this.resources.getString("about.text"), this.version));
+				MessageFormat.format(this.resources.getString("about.text"), this.version, super.db.getVersion()));
 		aboutDlg.showAndWait();
 	}
 

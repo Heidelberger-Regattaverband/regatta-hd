@@ -18,6 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
+import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
@@ -37,7 +38,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
-public class AqauriusDBImpl implements DBConnection {
+public class AquariusDBImpl implements AquariusDB {
 
 	// executes database operations concurrent to JavaFX operations.
 	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
@@ -64,6 +65,7 @@ public class AqauriusDBImpl implements DBConnection {
 		}
 	}
 
+	@Override
 	public String getVersion() {
 		return this.version;
 	}
@@ -110,13 +112,6 @@ public class AqauriusDBImpl implements DBConnection {
 		}
 	}
 
-	private String readVersion() {
-		TypedQuery<MetaData> query = this.getEntityManager()
-				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class);
-		MetaData metaData = query.getSingleResult();
-		return metaData.getValue();
-	}
-
 	@SuppressWarnings("resource")
 	@Override
 	public void updateSchema() {
@@ -157,6 +152,13 @@ public class AqauriusDBImpl implements DBConnection {
 
 	private boolean isOpenImpl() {
 		return this.entityManager != null && this.entityManager.isOpen();
+	}
+
+	private String readVersion() {
+		TypedQuery<MetaData> query = this.getEntityManager()
+				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class);
+		MetaData metaData = query.getSingleResult();
+		return metaData.getValue();
 	}
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
