@@ -14,7 +14,6 @@
     <mainClass>de.regatta_hd.ui.Main</mainClass>
     <download.build.directory>${project.build.directory}/download</download.build.directory>
     <archives.directory>${download.build.directory}/libs</archives.directory>
-    <archive.name>${project.groupId}.${project.artifactId}-${project.version}</archive.name>
   </properties>
 
   <dependencies>
@@ -76,13 +75,11 @@
   </dependencies>
 
   <build>
-    <finalName>${archive.name}</finalName>
-
     <plugins>
+
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <outputDirectory>${archives.directory}</outputDirectory>
           <archive>
             <manifest>
               <mainClass>${mainClass}</mainClass>
@@ -131,35 +128,38 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <includeScope>runtime</includeScope>
-        </configuration>
-
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>webstart-maven-plugin</artifactId>
+        <version>1.0-beta-7</version>
         <executions>
           <execution>
-            <id>list-dependencies</id>
+            <id>build-jnlp</id>
+            <phase>package</phase>
             <goals>
-              <goal>list</goal>
-            </goals>
-            <phase>process-sources</phase>
-            <configuration>
-              <outputFile>${project.build.directory}/deps.txt</outputFile>
-              <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>copy-dependencies</id>
-            <goals>
-              <goal>copy-dependencies</goal>
+              <goal>jnlp</goal>
             </goals>
             <configuration>
-              <outputDirectory>${archives.directory}</outputDirectory>
-              <prependGroupId>true</prependGroupId>
+              <filenameMapping>full</filenameMapping>
+              <libPath>lib</libPath>
+              <outputJarVersions>true</outputJarVersions>
+              <makeArchive>false</makeArchive>
+              <jnlp>
+                <outputFile>regatta-hd.jnlp</outputFile>
+                <inputTemplate>template.vm</inputTemplate>
+                <mainClass>${mainClass}</mainClass>
+              </jnlp>
             </configuration>
           </execution>
         </executions>
+
+        <dependencies>
+          <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/keytool-api -->
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>keytool-api-1.7</artifactId>
+            <version>1.5</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- ======================= -->
@@ -190,7 +190,7 @@
         <artifactId>site-maven-plugin</artifactId>
         <version>0.1.0</version>
         <configuration>
-        <skip>true</skip>
+          <skip>true</skip>
           <server>github-upload</server>
           <message>Creating site for ${project.version}</message>
           <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
