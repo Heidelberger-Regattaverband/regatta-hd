@@ -96,7 +96,7 @@ public class FxUtils {
 
 	public static void storeSizeAndPos(String resource, Stage stage) {
 		String node = resource.substring(resource.lastIndexOf('/') + 1);
-		logger.log(Level.INFO, "Store size/pos of resource {0}", node);
+		logger.log(Level.FINE, "Store size/pos of resource {0}", node);
 
 		Preferences preferences = Preferences.userRoot().node(node);
 		preferences.putDouble(WINDOW_POSITION_X, stage.getX());
