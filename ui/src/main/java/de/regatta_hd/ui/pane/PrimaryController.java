@@ -224,9 +224,13 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleAboutOnAction() {
+		String aquariusVersion = super.db.getVersion();
+		if (aquariusVersion == null) {
+			aquariusVersion = getText("about.unknown");
+		}
 		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
 				this.resources.getString("about.header"),
-				MessageFormat.format(this.resources.getString("about.text"), this.version, super.db.getVersion()));
+				MessageFormat.format(this.resources.getString("about.text"), this.version, aquariusVersion));
 		aboutDlg.showAndWait();
 	}
 
