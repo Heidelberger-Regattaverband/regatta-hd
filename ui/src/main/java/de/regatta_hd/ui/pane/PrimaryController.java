@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConfigStore;
@@ -43,6 +44,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@Inject
 	@Named("version")
 	private String version;
+	@Inject
+	private MasterDataDAO masterData;
 
 	// menu and menu items
 	@FXML
@@ -224,7 +227,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleAboutOnAction() {
-		String aquariusVersion = super.db.getVersion();
+		String aquariusVersion = this.masterData.getAquariusVersion();
 		if (aquariusVersion == null) {
 			aquariusVersion = getText("about.unknown");
 		}

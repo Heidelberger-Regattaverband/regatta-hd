@@ -18,7 +18,6 @@ public class AquariusModule extends AbstractModule {
 		install(new CommonsDBModule());
 
 		bind(DBConnection.class).to(AquariusDBImpl.class);
-		bind(AquariusDB.class).to(AquariusDBImpl.class);
 		bind(RegattaDAO.class).to(RegattaDAOImpl.class);
 		bind(MasterDataDAO.class).to(MasterDataDAOImpl.class);
 		bind(DBLogHandler.class);

@@ -18,7 +18,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import de.regatta_hd.aquarius.AquariusDB;
 import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
@@ -38,7 +37,7 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
-public class AquariusDBImpl implements AquariusDB {
+public class AquariusDBImpl implements DBConnection {
 
 	// executes database operations concurrent to JavaFX operations.
 	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
@@ -65,8 +64,7 @@ public class AquariusDBImpl implements AquariusDB {
 		}
 	}
 
-	@Override
-	public String getVersion() {
+	String getVersion() {
 		return this.version;
 	}
 
