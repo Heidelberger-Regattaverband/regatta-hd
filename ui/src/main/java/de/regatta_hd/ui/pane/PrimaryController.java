@@ -136,6 +136,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				: getText("MainWindow.title");
 	}
 
+	// fxml event handlers
+
 	@FXML
 	void handleConnectOnAction() {
 		if (!super.db.isOpen()) {
@@ -149,40 +151,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				logger.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
-	}
-
-	private void openDbConnection(DBConfig connectionData) {
-		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
-			final int MAX = 3;
-			updateControls(true);
-
-			progress.update(1, MAX, getText("login.openingDb"));
-			super.db.open(connectionData);
-
-			if (connectionData.isUpdateSchema()) {
-				progress.update(2, MAX, getText("login.updatingDb"));
-				super.db.updateSchema();
-			}
-
-			progress.update(3, MAX, getText("login.settingActiveRegatta"));
-			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
-
-			return new Pair<>(connectionData, activeRegatta);
-		}, dbResult -> {
-			try {
-				Pair<DBConfig, Regatta> pair = dbResult.getResult();
-				this.dbCfgStore.setLastSuccessful(pair.getKey());
-			} catch (CancellationException e) {
-				logger.log(Level.FINEST, e.getMessage(), e);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				updateControls(false);
-			}
-		}, false);
-
-		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), true);
 	}
 
 	@FXML
@@ -251,6 +219,42 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	void handleExit() {
 		Platform.exit();
+	}
+
+	// private
+
+	private void openDbConnection(DBConfig connectionData) {
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
+			final int MAX = 3;
+			updateControls(true);
+
+			progress.update(1, MAX, getText("login.openingDb"));
+			super.db.open(connectionData);
+
+			if (connectionData.isUpdateSchema()) {
+				progress.update(2, MAX, getText("login.updatingDb"));
+				super.db.updateSchema();
+			}
+
+			progress.update(3, MAX, getText("login.settingActiveRegatta"));
+			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+
+			return new Pair<>(connectionData, activeRegatta);
+		}, dbResult -> {
+			try {
+				Pair<DBConfig, Regatta> pair = dbResult.getResult();
+				this.dbCfgStore.setLastSuccessful(pair.getKey());
+			} catch (CancellationException e) {
+				logger.log(Level.FINEST, e.getMessage(), e);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			} finally {
+				updateControls(false);
+			}
+		}, false);
+
+		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), true);
 	}
 
 	private void updateControls(boolean isConnecting) {

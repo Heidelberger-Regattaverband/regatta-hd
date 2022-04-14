@@ -65,12 +65,20 @@ class DBTaskImpl<V> extends DBTask<V> {
 
 			@Override
 			public void update(double workDone, double max, String message) {
+				checkCancelled();
 				updateProgress(workDone, max, message);
 			}
 
 			@Override
 			public boolean isCancelled() {
-				return isCancelled();
+				return DBTaskImpl.this.isCancelled();
+			}
+
+			@Override
+			public void checkCancelled() {
+				if (isCancelled()) {
+					throw new CancellationException("DBTask was cancelled.");
+				}
 			}
 		});
 
