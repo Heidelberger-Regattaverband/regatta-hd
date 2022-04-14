@@ -19,16 +19,17 @@ class DBTaskImpl<V> extends DBTask<V> {
 	private static final Logger logger = Logger.getLogger(DBTaskImpl.class.getName());
 
 	private final AsyncCallable<V> callable;
+	private final DBConnection db;
+	private final boolean inTransaction;
 	private final Consumer<AsyncResult<V>> resultConsumer;
 	private volatile Consumer<String> progressMessageConsumer;
-
-	private EntityTransaction transaction;
 
 	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {
 		this.callable = requireNonNull(callable, "callable must not be null");
+		this.db = requireNonNull(db, "db must not be null");
+		this.inTransaction = inTransaction;
 		this.resultConsumer = requireNonNull(resultConsumer, "resultConsumer must not be null");
-		this.transaction = inTransaction ? db.getEntityManager().getTransaction() : null;
 
 		setOnSucceeded(event -> {
 			@SuppressWarnings("unchecked")
@@ -53,9 +54,11 @@ class DBTaskImpl<V> extends DBTask<V> {
 
 	@Override
 	protected AsyncResult<V> call() throws Exception {
+		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
+
 		// begin transaction if required
-		if (this.transaction != null && !this.transaction.isActive()) {
-			this.transaction.begin();
+		if (transaction != null && !transaction.isActive()) {
+			transaction.begin();
 		}
 
 		V result = this.callable.call(new ProgressMonitor() {
@@ -72,8 +75,8 @@ class DBTaskImpl<V> extends DBTask<V> {
 		});
 
 		// if an active transaction exists it is committed
-		if (this.transaction != null && this.transaction.isActive()) {
-			this.transaction.commit();
+		if (transaction != null && transaction.isActive()) {
+			transaction.commit();
 		}
 
 		return new DBResultImpl<>(result);
