@@ -1,6 +1,8 @@
 package de.regatta_hd.commons.fx.impl;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
+
+import java.util.concurrent.CancellationException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,17 +19,17 @@ class DBTaskImpl<V> extends DBTask<V> {
 	private static final Logger logger = Logger.getLogger(DBTaskImpl.class.getName());
 
 	private final AsyncCallable<V> callable;
-	private final DBConnection db;
-	private final boolean inTransaction;
 	private final Consumer<AsyncResult<V>> resultConsumer;
 	private volatile Consumer<String> progressMessageConsumer;
 
+	private EntityTransaction transaction;
+
 	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {
-		this.callable = Objects.requireNonNull(callable, "callable must not be null");
-		this.db = Objects.requireNonNull(db, "db must not be null");
-		this.inTransaction = inTransaction;
-		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
+		this.callable = requireNonNull(callable, "callable must not be null");
+		this.transaction = inTransaction ? requireNonNull(db, "db must not be null").getEntityManager().getTransaction()
+				: null;
+		this.resultConsumer = requireNonNull(resultConsumer, "resultConsumer must not be null");
 
 		setOnSucceeded(event -> {
 			@SuppressWarnings("unchecked")
@@ -43,15 +45,18 @@ class DBTaskImpl<V> extends DBTask<V> {
 			logger.log(Level.SEVERE, exception.getMessage(), exception);
 			Platform.runLater(() -> this.resultConsumer.accept(new DBResultImpl<>(exception)));
 		});
+
+		setOnCancelled(event -> {
+			CancellationException exception = new CancellationException("DBTask is cancelled.");
+			Platform.runLater(() -> this.resultConsumer.accept(new DBResultImpl<>(exception)));
+		});
 	}
 
 	@Override
 	protected AsyncResult<V> call() throws Exception {
-		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
-
 		// begin transaction if required
-		if (transaction != null && !transaction.isActive()) {
-			transaction.begin();
+		if (this.transaction != null && !this.transaction.isActive()) {
+			this.transaction.begin();
 		}
 
 		V result = this.callable.call(new ProgressMonitor() {
@@ -68,11 +73,16 @@ class DBTaskImpl<V> extends DBTask<V> {
 		});
 
 		// if an active transaction exists it is committed
-		if (transaction != null && transaction.isActive()) {
-			transaction.commit();
+		if (this.transaction != null && this.transaction.isActive()) {
+			this.transaction.commit();
 		}
 
 		return new DBResultImpl<>(result);
+	}
+
+	@Override
+	public boolean cancel(boolean mayInterruptIfRunning) {
+		return super.cancel(mayInterruptIfRunning);
 	}
 
 	@Override
@@ -100,7 +110,7 @@ class DBTaskImpl<V> extends DBTask<V> {
 		}
 
 		private DBResultImpl(Exception exception) {
-			this.exception = Objects.requireNonNull(exception, "exception must not be null");
+			this.exception = requireNonNull(exception, "exception must not be null");
 			this.result = null;
 		}
 

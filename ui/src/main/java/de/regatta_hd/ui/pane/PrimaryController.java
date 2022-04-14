@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -171,19 +172,21 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			try {
 				Pair<DBConfig, Regatta> pair = dbResult.getResult();
 				this.dbCfgStore.setLastSuccessful(pair.getKey());
+			} catch (CancellationException e) {
+				logger.log(Level.FINEST, e.getMessage(), e);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				updateControls(false);
 			}
 		}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"));
+		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), true);
 	}
 
 	@FXML
-	private void handleDatabaseDisconnect() {
+	void handleDatabaseDisconnect() {
 		super.db.close();
 		final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
 		stage.setTitle(getText("MainWindow.title"));
@@ -191,22 +194,22 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void handleSetRaceOnAction() {
+	void handleSetRaceOnAction() {
 		openStage("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"));
 	}
 
 	@FXML
-	private void handleEvents() {
+	void handleEvents() {
 		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
 	}
 
 	@FXML
-	private void handleRacesOnAction() {
+	void handleRacesOnAction() {
 		openStage("OffersView.fxml", getText("PrimaryView.racesMitm.text"));
 	}
 
 	@FXML
-	private void handleScore() {
+	void handleScore() {
 		openStage("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"));
 	}
 
