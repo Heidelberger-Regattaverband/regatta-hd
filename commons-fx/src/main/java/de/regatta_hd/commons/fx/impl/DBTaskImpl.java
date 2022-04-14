@@ -27,9 +27,8 @@ class DBTaskImpl<V> extends DBTask<V> {
 	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {
 		this.callable = requireNonNull(callable, "callable must not be null");
-		this.transaction = inTransaction ? requireNonNull(db, "db must not be null").getEntityManager().getTransaction()
-				: null;
 		this.resultConsumer = requireNonNull(resultConsumer, "resultConsumer must not be null");
+		this.transaction = inTransaction ? db.getEntityManager().getTransaction() : null;
 
 		setOnSucceeded(event -> {
 			@SuppressWarnings("unchecked")
