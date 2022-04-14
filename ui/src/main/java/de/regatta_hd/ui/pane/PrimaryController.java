@@ -254,7 +254,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), true);
+		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), false);
 	}
 
 	private void updateControls(boolean isConnecting) {
