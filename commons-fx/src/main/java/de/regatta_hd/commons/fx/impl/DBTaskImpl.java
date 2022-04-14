@@ -81,11 +81,6 @@ class DBTaskImpl<V> extends DBTask<V> {
 	}
 
 	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
-		return super.cancel(mayInterruptIfRunning);
-	}
-
-	@Override
 	public void setProgressMessageConsumer(Consumer<String> progressMessageConsumer) {
 		this.progressMessageConsumer = progressMessageConsumer;
 	}
