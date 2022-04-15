@@ -51,4 +51,9 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 		return super.db.getEntityManager().createQuery("SELECT DISTINCT lr.hostName FROM LogRecord lr", String.class)
 				.getResultList();
 	}
+
+	@Override
+	public String getAquariusVersion() {
+		return super.db.getVersion();
+	}
 }

@@ -42,4 +42,9 @@ public interface MasterDataDAO {
 	List<LogRecord> getLogRecords(String hostName);
 
 	List<String> getHostNames();
+
+	/**
+	 * @return version of the Aquarius database or null if not available, e.g. DB connection closed.
+	 */
+	String getAquariusVersion();
 }

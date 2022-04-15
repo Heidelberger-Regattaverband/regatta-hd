@@ -8,12 +8,14 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConfigStore;
@@ -43,6 +45,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@Inject
 	@Named("version")
 	private String version;
+	@Inject
+	private MasterDataDAO masterData;
 
 	// menu and menu items
 	@FXML
@@ -132,6 +136,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				: getText("MainWindow.title");
 	}
 
+	// fxml event handlers
+
 	@FXML
 	void handleConnectOnAction() {
 		if (!super.db.isOpen()) {
@@ -146,6 +152,76 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			}
 		}
 	}
+
+	@FXML
+	void handleDatabaseDisconnect() {
+		super.db.close();
+		final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
+		stage.setTitle(getText("MainWindow.title"));
+		updateControls(false);
+	}
+
+	@FXML
+	void handleSetRaceOnAction() {
+		openStage("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"));
+	}
+
+	@FXML
+	void handleEvents() {
+		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
+	}
+
+	@FXML
+	void handleRacesOnAction() {
+		openStage("OffersView.fxml", getText("PrimaryView.racesMitm.text"));
+	}
+
+	@FXML
+	void handleScore() {
+		openStage("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"));
+	}
+
+	@FXML
+	void handleResultsOnAction() {
+		openStage("ResultsView.fxml", getText("common.results"));
+	}
+
+	@FXML
+	void handleLogRecordsOnAction() {
+		openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
+	}
+
+	@FXML
+	void handleHeatsOnAction() {
+		openStage("HeatsView.fxml", getText("heats.title"));
+	}
+
+	@FXML
+	void handleAboutOnAction() {
+		String aquariusVersion = this.masterData.getAquariusVersion();
+		if (aquariusVersion == null) {
+			aquariusVersion = getText("about.unknown");
+		}
+		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
+				this.resources.getString("about.header"),
+				MessageFormat.format(this.resources.getString("about.text"), this.version, aquariusVersion));
+		aboutDlg.showAndWait();
+	}
+
+	@FXML
+	void handleActiveRegattaOnAction() {
+		Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
+		if (regatta != null) {
+			super.regattaDAO.setActiveRegatta(regatta);
+		}
+	}
+
+	@FXML
+	void handleExit() {
+		Platform.exit();
+	}
+
+	// private
 
 	private void openDbConnection(DBConfig connectionData) {
 		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
@@ -168,79 +244,17 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			try {
 				Pair<DBConfig, Regatta> pair = dbResult.getResult();
 				this.dbCfgStore.setLastSuccessful(pair.getKey());
+			} catch (CancellationException e) {
+				logger.log(Level.FINEST, e.getMessage(), e);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(this.mainMbar.getScene().getWindow(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
 				updateControls(false);
 			}
 		}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"));
-	}
-
-	@FXML
-	private void handleDatabaseDisconnect() {
-		super.db.close();
-		final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
-		stage.setTitle(getText("MainWindow.title"));
-		updateControls(false);
-	}
-
-	@FXML
-	private void handleSetRaceOnAction() {
-		openStage("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"));
-	}
-
-	@FXML
-	private void handleEvents() {
-		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
-	}
-
-	@FXML
-	private void handleRacesOnAction() {
-		openStage("OffersView.fxml", getText("PrimaryView.racesMitm.text"));
-	}
-
-	@FXML
-	private void handleScore() {
-		openStage("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"));
-	}
-
-	@FXML
-	void handleResultsOnAction() {
-		openStage("ResultsView.fxml", getText("common.results"));
-	}
-
-	@FXML
-	void handleLogRecordsOnAction() {
-		openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
-	}
-
-	@FXML
-	void handleHeatsOnAction() {
-		openStage("HeatsView.fxml", getText("heats.title"));
-	}
-
-	@FXML
-	void handleAboutOnAction() {
-		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
-				this.resources.getString("about.header"),
-				MessageFormat.format(this.resources.getString("about.text"), this.version));
-		aboutDlg.showAndWait();
-	}
-
-	@FXML
-	void handleActiveRegattaOnAction() {
-		Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
-		if (regatta != null) {
-			super.regattaDAO.setActiveRegatta(regatta);
-		}
-	}
-
-	@FXML
-	void handleExit() {
-		Platform.exit();
+		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), false);
 	}
 
 	private void updateControls(boolean isConnecting) {
