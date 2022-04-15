@@ -5,6 +5,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 
+/**
+ * A factory for {@link CheckBoxTableCell} instances.
+ *
+ * @see https://riptutorial.com/javafx/example/16421/instance-creation-in-fxml
+ */
 public class CheckBoxTableCellFactory {
 
 	private CheckBoxTableCellFactory() {
