@@ -105,29 +105,6 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-download</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${download.build.directory}</outputDirectory>
-              <overwrite>true</overwrite>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/download</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>webstart-maven-plugin</artifactId>
         <executions>
@@ -189,7 +166,6 @@
         <artifactId>site-maven-plugin</artifactId>
         <version>0.1.0</version>
         <configuration>
-          <skip>true</skip>
           <server>github-upload</server>
           <message>Creating site for ${project.version}</message>
           <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
