@@ -9,6 +9,11 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
+/**
+ * A factory for {@link DateTableCell} instances.
+ *
+ * @see https://riptutorial.com/javafx/example/16421/instance-creation-in-fxml
+ */
 public class DateTableCellFactory {
 
 	private DateTableCellFactory() {
