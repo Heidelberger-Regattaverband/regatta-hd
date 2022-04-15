@@ -12,8 +12,8 @@
 
   <properties>
     <mainClass>de.regatta_hd.ui.Main</mainClass>
-    <download.build.directory>${project.build.directory}/download</download.build.directory>
-    <archives.directory>${download.build.directory}/libs</archives.directory>
+    <download.build.directory>${project.build.directory}/jnlp</download.build.directory>
+    <archives.directory>${download.build.directory}/lib</archives.directory>
   </properties>
 
   <dependencies>
@@ -130,7 +130,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>webstart-maven-plugin</artifactId>
-        <version>1.0-beta-7</version>
         <executions>
           <execution>
             <id>build-jnlp</id>
@@ -141,7 +140,7 @@
             <configuration>
               <filenameMapping>full</filenameMapping>
               <libPath>lib</libPath>
-              <outputJarVersions>true</outputJarVersions>
+              <outputJarVersions>false</outputJarVersions>
               <makeArchive>false</makeArchive>
               <jnlp>
                 <outputFile>regatta-hd.jnlp</outputFile>
