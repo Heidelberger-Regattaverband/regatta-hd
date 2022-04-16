@@ -1,7 +1,9 @@
 package de.regatta_hd.commons.core.concurrent;
 
+import java.util.concurrent.CancellationException;
+
 /**
- * Via this interface asynchronous tasks can update the current progress information.
+ * Asynchronously running tasks can update their progress information through this interface.
  */
 public interface ProgressMonitor {
 
@@ -11,11 +13,19 @@ public interface ProgressMonitor {
 	 *                 percentDone will be -1 (thus, indeterminate).
 	 * @param max      A value from Double.MIN_VALUE to Double.MAX_VALUE. Infinity and NaN are treated as -1.
 	 * @param message  a message about the current work to be done.
+	 * @throws CancellationException if an asynchronous task was cancelled.
 	 */
 	void update(double workDone, double max, String message);
 
 	/**
-	 * Indicates that the task is requested to cancel.
+	 * Indicates that the task was cancelled.
 	 */
 	boolean isCancelled();
+
+	/**
+	 * Checks if asynchronous task was cancelled and throws a {@link CancellationException} if in this case.
+	 *
+	 * @throws CancellationException if an asynchronous task was cancelled.
+	 */
+	void checkCancelled();
 }

@@ -99,7 +99,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"));
+		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
 	}
 
 	@FXML
@@ -123,7 +123,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			}
 		}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"));
+		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
 	}
 
 	@Override

@@ -1,10 +1,11 @@
 package de.regatta_hd.commons.fx.control;
 
+import static java.util.Objects.requireNonNull;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +20,7 @@ public class DateTableCell<B> extends TableCell<B, Instant> { // NOSONAR
 	private final DateTimeFormatter formatter;
 
 	public DateTableCell(DateTimeFormatter formatter) {
-		this.formatter = Objects.requireNonNull(formatter, "formatter must not be null");
+		this.formatter = requireNonNull(formatter, "formatter must not be null");
 	}
 
 	@Override

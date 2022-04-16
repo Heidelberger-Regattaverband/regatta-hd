@@ -1,6 +1,8 @@
 package de.regatta_hd.commons.fx.impl;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
+
+import java.util.concurrent.CancellationException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,10 +26,10 @@ class DBTaskImpl<V> extends DBTask<V> {
 
 	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {
-		this.callable = Objects.requireNonNull(callable, "callable must not be null");
-		this.db = Objects.requireNonNull(db, "db must not be null");
+		this.callable = requireNonNull(callable, "callable must not be null");
+		this.db = requireNonNull(db, "db must not be null");
 		this.inTransaction = inTransaction;
-		this.resultConsumer = Objects.requireNonNull(resultConsumer, "resultConsumer must not be null");
+		this.resultConsumer = requireNonNull(resultConsumer, "resultConsumer must not be null");
 
 		setOnSucceeded(event -> {
 			@SuppressWarnings("unchecked")
@@ -41,6 +43,11 @@ class DBTaskImpl<V> extends DBTask<V> {
 		setOnFailed(event -> {
 			Exception exception = (Exception) getException();
 			logger.log(Level.SEVERE, exception.getMessage(), exception);
+			Platform.runLater(() -> this.resultConsumer.accept(new DBResultImpl<>(exception)));
+		});
+
+		setOnCancelled(event -> {
+			CancellationException exception = new CancellationException("DBTask is cancelled.");
 			Platform.runLater(() -> this.resultConsumer.accept(new DBResultImpl<>(exception)));
 		});
 	}
@@ -58,12 +65,20 @@ class DBTaskImpl<V> extends DBTask<V> {
 
 			@Override
 			public void update(double workDone, double max, String message) {
+				checkCancelled();
 				updateProgress(workDone, max, message);
 			}
 
 			@Override
 			public boolean isCancelled() {
-				return isCancelled();
+				return DBTaskImpl.this.isCancelled();
+			}
+
+			@Override
+			public void checkCancelled() {
+				if (isCancelled()) {
+					throw new CancellationException("DBTask was cancelled.");
+				}
 			}
 		});
 
@@ -100,7 +115,7 @@ class DBTaskImpl<V> extends DBTask<V> {
 		}
 
 		private DBResultImpl(Exception exception) {
-			this.exception = Objects.requireNonNull(exception, "exception must not be null");
+			this.exception = requireNonNull(exception, "exception must not be null");
 			this.result = null;
 		}
 
