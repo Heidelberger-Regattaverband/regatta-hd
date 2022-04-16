@@ -12,8 +12,8 @@
 
   <properties>
     <mainClass>de.regatta_hd.ui.Main</mainClass>
-    <download.build.directory>${project.build.directory}/jnlp</download.build.directory>
-    <archives.directory>${download.build.directory}/lib</archives.directory>
+    <jnlp.build.directory>${project.build.directory}/jnlp</jnlp.build.directory>
+    <archives.directory>${jnlp.build.directory}/lib</archives.directory>
   </properties>
 
   <dependencies>
@@ -170,7 +170,7 @@
           <message>Creating site for ${project.version}</message>
           <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
           <repositoryName>download</repositoryName>
-          <outputDirectory>${download.build.directory}</outputDirectory>
+          <outputDirectory>${jnlp.build.directory}</outputDirectory>
         </configuration>
         <executions>
           <execution>
