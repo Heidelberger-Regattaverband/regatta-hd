@@ -3,7 +3,7 @@ package de.regatta_hd.commons.core.concurrent;
 import java.util.concurrent.CancellationException;
 
 /**
- * Via this interface asynchronous tasks can update the current progress information.
+ * Asynchronously running tasks can update their progress information through this interface.
  */
 public interface ProgressMonitor {
 
