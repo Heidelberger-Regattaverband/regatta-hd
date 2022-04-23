@@ -81,11 +81,10 @@ public class AquariusDBImpl implements DBConnection {
 
 	@Override
 	public synchronized void open(DBConfig dbCfg) throws SQLServerException {
-		requireNonNull(dbCfg, "dbCfg must not be null");
+		Map<String, String> props = getProperties(requireNonNull(dbCfg, "dbCfg must not be null"));
 
 		close();
 
-		Map<String, String> props = getProperties(dbCfg);
 		try {
 			EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
 			this.entityManager = factory.createEntityManager();
@@ -160,8 +159,7 @@ public class AquariusDBImpl implements DBConnection {
 	}
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
-		List<StateChangedEventListener> listeners = this.listenerManager
-				.getListeners(DBConnection.StateChangedEventListener.class);
+		List<StateChangedEventListener> listeners = this.listenerManager.getListeners(StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}

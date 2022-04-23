@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.RegattaDAO;
+import de.regatta_hd.aquarius.RegattaDAO.RegattaChangedEventListener;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.ListenerManager;
 import javafx.application.Platform;
@@ -18,7 +19,7 @@ abstract class AbstractRegattaDAOController extends AbstractBaseController {
 	@Inject
 	protected ListenerManager listenerManager;
 
-	private final RegattaDAO.RegattaChangedEventListener regattaChangedEventListener = event -> {
+	private final RegattaChangedEventListener regattaChangedEventListener = event -> {
 		setTitle(getTitle(event.getActiveRegatta()));
 		onActiveRegattaChanged(event.getActiveRegatta());
 	};
@@ -27,8 +28,7 @@ abstract class AbstractRegattaDAOController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.listenerManager.addListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
+		this.listenerManager.addListener(RegattaChangedEventListener.class, this.regattaChangedEventListener);
 
 		Platform.runLater(() -> {
 			setTitle(getTitle(this.db.isOpen() ? this.regattaDAO.getActiveRegatta() : null));
@@ -37,8 +37,7 @@ abstract class AbstractRegattaDAOController extends AbstractBaseController {
 
 	@Override
 	public void shutdown() {
-		this.listenerManager.removeListener(RegattaDAO.RegattaChangedEventListener.class,
-				this.regattaChangedEventListener);
+		this.listenerManager.removeListener(RegattaChangedEventListener.class, this.regattaChangedEventListener);
 	}
 
 	protected abstract String getTitle(Regatta activeRegatta);
