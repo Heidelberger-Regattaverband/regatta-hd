@@ -45,18 +45,17 @@ public class AquariusDBImpl implements DBConnection {
 	@Inject
 	private ListenerManager listenerManager;
 
-	private EntityManager entityManager;
-
-	private Thread sessionThread;
-
 	private String version;
+
+	private EntityManagerFactory factory;
 
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
-			this.entityManager.close();
-			this.entityManager = null;
-			this.sessionThread = null;
+			if (this.factory != null) {
+				this.factory.close();
+				this.factory = null;
+			}
 			this.version = null;
 
 			// notify listeners about changed AquariusDB state
@@ -71,7 +70,7 @@ public class AquariusDBImpl implements DBConnection {
 	@Override
 	public synchronized EntityManager getEntityManager() {
 		checkIsOpen();
-		return this.entityManager;
+		return this.factory.createEntityManager();
 	}
 
 	@Override
@@ -86,20 +85,16 @@ public class AquariusDBImpl implements DBConnection {
 		close();
 
 		try {
-			EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
-			this.entityManager = factory.createEntityManager();
-
-			// store current thread to ensure further DB access is done in same thread
-			this.sessionThread = Thread.currentThread();
+			this.factory = Persistence.createEntityManagerFactory("aquarius", props);
 
 			this.version = readVersion();
 
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
-			if (this.entityManager != null) {
-				this.entityManager.close();
-				this.entityManager = null;
+			if (this.factory != null) {
+				this.factory.close();
+				this.factory = null;
 			}
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
@@ -114,7 +109,7 @@ public class AquariusDBImpl implements DBConnection {
 	public void updateSchema() {
 		checkIsOpen();
 
-		Session session = this.entityManager.unwrap(Session.class);
+		Session session = getEntityManager().unwrap(Session.class);
 		session.doWork(connection -> {
 			try {
 				Database database = DatabaseFactory.getInstance()
@@ -126,8 +121,10 @@ public class AquariusDBImpl implements DBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
-				this.entityManager.close();
-				this.entityManager = null;
+				if (this.factory != null) {
+					this.factory.close();
+					this.factory = null;
+				}
 				throw new SQLException(e);
 			}
 		});
@@ -142,13 +139,13 @@ public class AquariusDBImpl implements DBConnection {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
 		}
-		if (Thread.currentThread() != this.sessionThread) {
+		if (!Thread.currentThread().getName().startsWith("Database-Connection")) {
 			throw new IllegalThreadStateException("Not DB session thread.");
 		}
 	}
 
 	private boolean isOpenImpl() {
-		return this.entityManager != null && this.entityManager.isOpen();
+		return this.factory != null && this.factory.isOpen();
 	}
 
 	private String readVersion() {
