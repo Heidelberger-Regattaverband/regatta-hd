@@ -6,9 +6,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -41,14 +45,17 @@ public class AquariusDBImpl implements DBConnection {
 
 	private static final String DB_THREAD_PREFIX = "Database-Connection-";
 
-	@Inject
-	private ListenerManager listenerManager;
+	private final ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
+	private final ListenerManager listenerManager;
 
-	// executes database operations concurrent to JavaFX operations.
 	private ExecutorService dbExecutor;
 	private String version;
 	private EntityManagerFactory emFactory;
-	private final ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
+
+	@Inject
+	public AquariusDBImpl(ListenerManager listenerManager) {
+		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
+	}
 
 	@Override
 	public synchronized ExecutorService getExecutor() {
@@ -174,11 +181,12 @@ public class AquariusDBImpl implements DBConnection {
 		}
 	}
 
-	// static helpers
-
-	private static ExecutorService createExecutor() {
-		return Executors.newFixedThreadPool(5, new DatabaseThreadFactory());
+	private ThreadPoolExecutor createExecutor() {
+		return new DBThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(),
+				new DatabaseThreadFactory());
 	}
+
+	// static helpers
 
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
 		Map<String, String> props = new HashMap<>();
@@ -193,6 +201,24 @@ public class AquariusDBImpl implements DBConnection {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
+	}
+
+	class DBThreadPoolExecutor extends ThreadPoolExecutor {
+
+		@Override
+		protected void beforeExecute(Thread t, Runnable r) {
+			super.beforeExecute(t, r);
+		}
+
+		@Override
+		protected void afterExecute(Runnable r, Throwable t) {
+			super.afterExecute(r, t);
+		}
+
+		public DBThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+				BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
+		}
 	}
 
 	private static class DatabaseThreadFactory implements ThreadFactory {
