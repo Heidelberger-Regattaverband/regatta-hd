@@ -220,8 +220,8 @@ public class AquariusDBImpl implements DBConnection {
 
 		@Override
 		protected void afterExecute(Runnable r, Throwable t) {
-			this.logger.log(Level.FINEST, "After executing runnable in DBThreadPoolExecutor.");
 			super.afterExecute(r, t);
+			this.logger.log(Level.FINEST, "After executing runnable in DBThreadPoolExecutor.");
 		}
 
 		@Override
