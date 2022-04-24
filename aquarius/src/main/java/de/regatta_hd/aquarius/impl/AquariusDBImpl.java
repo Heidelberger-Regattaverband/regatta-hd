@@ -41,36 +41,33 @@ public class AquariusDBImpl implements DBConnection {
 
 	private static final String DB_THREAD_PREFIX = "Database-Connection-";
 
-	// executes database operations concurrent to JavaFX operations.
-	private ExecutorService databaseExecutor;
-
 	@Inject
 	private ListenerManager listenerManager;
 
+	// executes database operations concurrent to JavaFX operations.
+	private ExecutorService dbExecutor;
 	private String version;
-
-	private EntityManagerFactory factory;
-
-	private ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
+	private EntityManagerFactory emFactory;
+	private final ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
 
 	@Override
 	public synchronized ExecutorService getExecutor() {
-		if (this.databaseExecutor == null) {
-			this.databaseExecutor = createExecutor();
+		if (this.dbExecutor == null) {
+			this.dbExecutor = createExecutor();
 		}
-		return this.databaseExecutor;
+		return this.dbExecutor;
 	}
 
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
-			if (this.factory != null) {
-				this.factory.close();
-				this.factory = null;
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
 			}
-			if (this.databaseExecutor != null) {
-				this.databaseExecutor.shutdownNow();
-				this.databaseExecutor = null;
+			if (this.dbExecutor != null) {
+				this.dbExecutor.shutdownNow();
+				this.dbExecutor = null;
 			}
 			this.version = null;
 
@@ -83,7 +80,7 @@ public class AquariusDBImpl implements DBConnection {
 	public synchronized EntityManager getEntityManager() {
 		checkIsOpen();
 		if (this.entityManager.get() == null) {
-			this.entityManager.set(this.factory.createEntityManager());
+			this.entityManager.set(this.emFactory.createEntityManager());
 		}
 		return this.entityManager.get();
 	}
@@ -100,16 +97,16 @@ public class AquariusDBImpl implements DBConnection {
 		close();
 
 		try {
-			this.factory = Persistence.createEntityManagerFactory("aquarius", props);
+			this.emFactory = Persistence.createEntityManagerFactory("aquarius", props);
 
 			this.version = readVersion();
 
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
-			if (this.factory != null) {
-				this.factory.close();
-				this.factory = null;
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
 			}
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
@@ -136,9 +133,9 @@ public class AquariusDBImpl implements DBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
-				if (this.factory != null) {
-					this.factory.close();
-					this.factory = null;
+				if (this.emFactory != null) {
+					this.emFactory.close();
+					this.emFactory = null;
 				}
 				throw new SQLException(e);
 			}
@@ -159,7 +156,7 @@ public class AquariusDBImpl implements DBConnection {
 	}
 
 	private boolean isOpenImpl() {
-		return this.factory != null && this.factory.isOpen();
+		return this.emFactory != null && this.emFactory.isOpen();
 	}
 
 	private String readVersion() {
