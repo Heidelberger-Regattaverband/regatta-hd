@@ -69,6 +69,7 @@ public class AquariusDBImpl implements DBConnection {
 				this.dbExecutor.shutdownNow();
 				this.dbExecutor = null;
 			}
+			this.entityManager.remove();
 			this.version = null;
 
 			// notify listeners about changed AquariusDB state
