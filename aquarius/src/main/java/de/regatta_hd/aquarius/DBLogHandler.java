@@ -13,10 +13,10 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.impl.AquariusDBImpl;
-import de.regatta_hd.aquarius.impl.DBThreadPoolExecutor;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.db.DBThreadPoolExecutor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceException;

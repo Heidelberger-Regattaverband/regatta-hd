@@ -1,4 +1,4 @@
-package de.regatta_hd.aquarius.impl;
+package de.regatta_hd.commons.db;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -15,7 +15,7 @@ public class DBThreadPoolExecutor extends ThreadPoolExecutor {
 
 	public DBThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit) {
 		super(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<>(),
-				new DatabaseThreadFactory());
+				new DBThreadPoolFactory());
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class DBThreadPoolExecutor extends ThreadPoolExecutor {
 		this.logger.log(Level.FINEST, "Terminated DBThreadPoolExecutor.");
 	}
 
-	private static class DatabaseThreadFactory implements ThreadFactory {
+	private static class DBThreadPoolFactory implements ThreadFactory {
 		private static final AtomicInteger poolNumber = new AtomicInteger(1);
 
 		@Override
