@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -203,20 +205,29 @@ public class AquariusDBImpl implements DBConnection {
 	}
 
 	class DBThreadPoolExecutor extends ThreadPoolExecutor {
+		private final Logger logger = Logger.getLogger(DBThreadPoolExecutor.class.getName());
+
+		public DBThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+				BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
+		}
 
 		@Override
 		protected void beforeExecute(Thread t, Runnable r) {
+			this.logger.log(Level.FINEST, "Before executing runnable in DBThreadPoolExecutor.");
 			super.beforeExecute(t, r);
 		}
 
 		@Override
 		protected void afterExecute(Runnable r, Throwable t) {
+			this.logger.log(Level.FINEST, "After executing runnable in DBThreadPoolExecutor.");
 			super.afterExecute(r, t);
 		}
 
-		public DBThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-				BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
-			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
+		@Override
+		protected void terminated() {
+			super.terminated();
+			this.logger.log(Level.FINEST, "Terminated DBThreadPoolExecutor.");
 		}
 	}
 
