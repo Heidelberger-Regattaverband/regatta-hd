@@ -39,8 +39,10 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl implements DBConnection {
 
+	private static final String DB_THREAD_PREFIX = "Database-Connection-";
+
 	// executes database operations concurrent to JavaFX operations.
-	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
+	private ExecutorService databaseExecutor;
 
 	@Inject
 	private ListenerManager listenerManager;
@@ -49,12 +51,26 @@ public class AquariusDBImpl implements DBConnection {
 
 	private EntityManagerFactory factory;
 
+	private ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
+
+	@Override
+	public synchronized ExecutorService getExecutor() {
+		if (this.databaseExecutor == null) {
+			this.databaseExecutor = createExecutor();
+		}
+		return this.databaseExecutor;
+	}
+
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
 			if (this.factory != null) {
 				this.factory.close();
 				this.factory = null;
+			}
+			if (this.databaseExecutor != null) {
+				this.databaseExecutor.shutdownNow();
+				this.databaseExecutor = null;
 			}
 			this.version = null;
 
@@ -63,14 +79,13 @@ public class AquariusDBImpl implements DBConnection {
 		}
 	}
 
-	String getVersion() {
-		return this.version;
-	}
-
 	@Override
 	public synchronized EntityManager getEntityManager() {
 		checkIsOpen();
-		return this.factory.createEntityManager();
+		if (this.entityManager.get() == null) {
+			this.entityManager.set(this.factory.createEntityManager());
+		}
+		return this.entityManager.get();
 	}
 
 	@Override
@@ -130,16 +145,15 @@ public class AquariusDBImpl implements DBConnection {
 		});
 	}
 
-	@Override
-	public ExecutorService getExecutor() {
-		return databaseExecutor;
+	String getVersion() {
+		return this.version;
 	}
 
 	private void checkIsOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
 		}
-		if (!Thread.currentThread().getName().startsWith("Database-Connection")) {
+		if (!Thread.currentThread().getName().startsWith(DB_THREAD_PREFIX)) {
 			throw new IllegalThreadStateException("Not DB session thread.");
 		}
 	}
@@ -162,6 +176,12 @@ public class AquariusDBImpl implements DBConnection {
 		}
 	}
 
+	// static helpers
+
+	private static ExecutorService createExecutor() {
+		return Executors.newFixedThreadPool(5, new DatabaseThreadFactory());
+	}
+
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
 		Map<String, String> props = new HashMap<>();
 		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbCfg.getDbHost(),
@@ -182,7 +202,7 @@ public class AquariusDBImpl implements DBConnection {
 
 		@Override
 		public Thread newThread(Runnable runnable) {
-			Thread thread = new Thread(runnable, "Database-Connection-" + poolNumber.getAndIncrement() + "-thread");
+			Thread thread = new Thread(runnable, DB_THREAD_PREFIX + poolNumber.getAndIncrement() + "-thread");
 			thread.setDaemon(true);
 			return thread;
 		}
