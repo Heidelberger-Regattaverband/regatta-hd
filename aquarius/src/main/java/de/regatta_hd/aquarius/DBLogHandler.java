@@ -1,5 +1,7 @@
 package de.regatta_hd.aquarius;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Handler;
@@ -10,6 +12,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.impl.AquariusDBImpl;
+import de.regatta_hd.aquarius.impl.AquariusDBImpl.DBThreadPoolExecutor;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
@@ -20,7 +24,8 @@ import jakarta.persistence.PersistenceException;
 @Singleton
 public class DBLogHandler extends Handler {
 
-	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName() };
+	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName(),
+			AquariusDBImpl.class.getName(), DBThreadPoolExecutor.class.getName() };
 
 	private final DBConnection db;
 
@@ -36,7 +41,7 @@ public class DBLogHandler extends Handler {
 
 	@Inject
 	DBLogHandler(DBConnection db, ListenerManager manager) {
-		this.db = db;
+		this.db = requireNonNull(db, "db must not be null");
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
 			return !contains;

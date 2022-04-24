@@ -204,7 +204,7 @@ public class AquariusDBImpl implements DBConnection {
 		return props;
 	}
 
-	class DBThreadPoolExecutor extends ThreadPoolExecutor {
+	public class DBThreadPoolExecutor extends ThreadPoolExecutor {
 		private final Logger logger = Logger.getLogger(DBThreadPoolExecutor.class.getName());
 
 		public DBThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
@@ -214,14 +214,15 @@ public class AquariusDBImpl implements DBConnection {
 
 		@Override
 		protected void beforeExecute(Thread t, Runnable r) {
-			this.logger.log(Level.FINEST, "Before executing runnable in DBThreadPoolExecutor.");
+			this.logger.log(Level.FINEST, "Before executing runnable {0} in thread {1}.",
+					new Object[] { r.getClass(), t.getName() });
 			super.beforeExecute(t, r);
 		}
 
 		@Override
 		protected void afterExecute(Runnable r, Throwable t) {
 			super.afterExecute(r, t);
-			this.logger.log(Level.FINEST, "After executing runnable in DBThreadPoolExecutor.");
+			this.logger.log(Level.FINEST, "After executing runnable {0}.", r.getClass());
 		}
 
 		@Override
