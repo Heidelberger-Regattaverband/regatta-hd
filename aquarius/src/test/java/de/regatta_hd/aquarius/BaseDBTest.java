@@ -1,8 +1,10 @@
 package de.regatta_hd.aquarius;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.sql.SQLException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -32,15 +34,27 @@ class BaseDBTest implements BeforeAllCallback {
 		connectionData = connStore.getLastSuccessful();
 
 		aquariusDb = injector.getInstance(DBConnection.class);
-		aquariusDb.open(connectionData);
 
-		aquariusDb.updateSchema();
+		aquariusDb.getExecutor().execute(() -> {
+			try {
+				aquariusDb.open(connectionData);
+				aquariusDb.updateSchema();
+			} catch (SQLException e) {
+				fail(e);
+			}
+		});
 	}
 
 	@Test
-	void testOpen() throws SQLException {
-		aquariusDb.open(connectionData);
-		Assertions.assertTrue(aquariusDb.isOpen());
+	void testOpen() {
+		aquariusDb.getExecutor().execute(() -> {
+			try {
+				aquariusDb.open(connectionData);
+				assertTrue(aquariusDb.isOpen());
+			} catch (SQLException e) {
+				fail(e);
+			}
+		});
 	}
 
 }
