@@ -64,9 +64,7 @@ class AquariusDBTests extends BaseDBTest {
 
 	@Test
 	void testIsOpen() {
-		aquariusDb.getExecutor().execute(() -> {
-			assertTrue(aquariusDb.isOpen());
-		});
+		assertTrue(aquariusDb.isOpen());
 	}
 
 	@Test
