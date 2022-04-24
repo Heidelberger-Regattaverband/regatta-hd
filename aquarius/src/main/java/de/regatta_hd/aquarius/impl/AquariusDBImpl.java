@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -22,6 +21,7 @@ import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.db.DBThreadPoolExecutor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -39,24 +39,38 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl implements DBConnection {
 
-	// executes database operations concurrent to JavaFX operations.
-	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
+	private final ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
+	private final ListenerManager listenerManager;
+
+	private ExecutorService dbExecutor;
+	private String version;
+	private EntityManagerFactory emFactory;
 
 	@Inject
-	private ListenerManager listenerManager;
+	public AquariusDBImpl(ListenerManager listenerManager) {
+		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
+	}
 
-	private EntityManager entityManager;
-
-	private Thread sessionThread;
-
-	private String version;
+	@Override
+	public synchronized ExecutorService getExecutor() {
+		if (this.dbExecutor == null) {
+			this.dbExecutor = createExecutor();
+		}
+		return this.dbExecutor;
+	}
 
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
-			this.entityManager.close();
-			this.entityManager = null;
-			this.sessionThread = null;
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
+			}
+			if (this.dbExecutor != null) {
+				this.dbExecutor.shutdownNow();
+				this.dbExecutor = null;
+			}
+			this.entityManager.remove();
 			this.version = null;
 
 			// notify listeners about changed AquariusDB state
@@ -64,14 +78,13 @@ public class AquariusDBImpl implements DBConnection {
 		}
 	}
 
-	String getVersion() {
-		return this.version;
-	}
-
 	@Override
 	public synchronized EntityManager getEntityManager() {
 		checkIsOpen();
-		return this.entityManager;
+		if (this.entityManager.get() == null) {
+			this.entityManager.set(this.emFactory.createEntityManager());
+		}
+		return this.entityManager.get();
 	}
 
 	@Override
@@ -86,20 +99,16 @@ public class AquariusDBImpl implements DBConnection {
 		close();
 
 		try {
-			EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
-			this.entityManager = factory.createEntityManager();
-
-			// store current thread to ensure further DB access is done in same thread
-			this.sessionThread = Thread.currentThread();
+			this.emFactory = Persistence.createEntityManagerFactory("aquarius", props);
 
 			this.version = readVersion();
 
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
-			if (this.entityManager != null) {
-				this.entityManager.close();
-				this.entityManager = null;
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
 			}
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
@@ -114,7 +123,7 @@ public class AquariusDBImpl implements DBConnection {
 	public void updateSchema() {
 		checkIsOpen();
 
-		Session session = this.entityManager.unwrap(Session.class);
+		Session session = getEntityManager().unwrap(Session.class);
 		session.doWork(connection -> {
 			try {
 				Database database = DatabaseFactory.getInstance()
@@ -126,29 +135,30 @@ public class AquariusDBImpl implements DBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
-				this.entityManager.close();
-				this.entityManager = null;
+				if (this.emFactory != null) {
+					this.emFactory.close();
+					this.emFactory = null;
+				}
 				throw new SQLException(e);
 			}
 		});
 	}
 
-	@Override
-	public ExecutorService getExecutor() {
-		return databaseExecutor;
+	String getVersion() {
+		return this.version;
 	}
 
 	private void checkIsOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
 		}
-		if (Thread.currentThread() != this.sessionThread) {
+		if (!Thread.currentThread().getName().startsWith(DBThreadPoolExecutor.DB_THREAD_PREFIX)) {
 			throw new IllegalThreadStateException("Not DB session thread.");
 		}
 	}
 
 	private boolean isOpenImpl() {
-		return this.entityManager != null && this.entityManager.isOpen();
+		return this.emFactory != null && this.emFactory.isOpen();
 	}
 
 	private String readVersion() {
@@ -165,6 +175,12 @@ public class AquariusDBImpl implements DBConnection {
 		}
 	}
 
+	// static helpers
+
+	private static ThreadPoolExecutor createExecutor() {
+		return new DBThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS);
+	}
+
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
 		Map<String, String> props = new HashMap<>();
 		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbCfg.getDbHost(),
@@ -178,16 +194,5 @@ public class AquariusDBImpl implements DBConnection {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
-	}
-
-	private static class DatabaseThreadFactory implements ThreadFactory {
-		private static final AtomicInteger poolNumber = new AtomicInteger(1);
-
-		@Override
-		public Thread newThread(Runnable runnable) {
-			Thread thread = new Thread(runnable, "Database-Connection-" + poolNumber.getAndIncrement() + "-thread");
-			thread.setDaemon(true);
-			return thread;
-		}
 	}
 }

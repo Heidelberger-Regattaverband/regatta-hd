@@ -2,13 +2,13 @@ package de.regatta_hd.aquarius;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,10 +38,12 @@ class AquariusDBTests extends BaseDBTest {
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
-		assertEquals(regattaId, regatta.getId());
-		Assertions.assertNotNull(regatta);
-		regattaDAO.setActiveRegatta(regatta);
+		aquariusDb.getExecutor().execute(() -> {
+			Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
+			assertEquals(regattaId, regatta.getId());
+			assertNotNull(regatta);
+			regattaDAO.setActiveRegatta(regatta);
+		});
 	}
 
 	@AfterAll
@@ -54,8 +56,10 @@ class AquariusDBTests extends BaseDBTest {
 
 	@Test
 	void testGetOfficialHeats() {
-		List<ResultEntry> results = regattaDAO.getOfficialResults();
-		assertFalse(results.isEmpty());
+		aquariusDb.getExecutor().execute(() -> {
+			List<ResultEntry> results = regattaDAO.getOfficialResults();
+			assertFalse(results.isEmpty());
+		});
 	}
 
 	@Test
@@ -65,37 +69,45 @@ class AquariusDBTests extends BaseDBTest {
 
 	@Test
 	void testGetEvents() {
-		List<Regatta> events = regattaDAO.getRegattas();
-		assertFalse(events.isEmpty());
+		aquariusDb.getExecutor().execute(() -> {
+			List<Regatta> events = regattaDAO.getRegattas();
+			assertFalse(events.isEmpty());
+		});
 	}
 
 	@Test
 	void testGetEventOK() {
-		Regatta regatta = regattaDAO.getActiveRegatta();
-		System.out.println(regatta.toString());
+		aquariusDb.getExecutor().execute(() -> {
+			Regatta regatta = regattaDAO.getActiveRegatta();
+			System.out.println(regatta.toString());
 
-		Race offer = regattaDAO.getRace("104");
-		assertEquals("104", offer.getNumber());
-		trace(offer, 1);
+			Race offer = regattaDAO.getRace("104");
+			assertEquals("104", offer.getNumber());
+			trace(offer, 1);
+		});
 	}
 
 	@Test
 	void testGetEventFailed() {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
-		assertThrows(EntityNotFoundException.class, () -> {
-			// as event with ID == 10 doesn't exist, calling any getter causes an
-			// EntityNotFoundException
-			regatta.getClub();
+		aquariusDb.getExecutor().execute(() -> {
+			Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
+			assertThrows(EntityNotFoundException.class, () -> {
+				// as event with ID == 10 doesn't exist, calling any getter causes an
+				// EntityNotFoundException
+				regatta.getClub();
+			});
 		});
 	}
 
 	@Test
 	void testGetAgeClasses() {
-		List<AgeClass> ageClasses = masterData.getAgeClasses();
-		assertFalse(ageClasses.isEmpty());
+		aquariusDb.getExecutor().execute(() -> {
+			List<AgeClass> ageClasses = masterData.getAgeClasses();
+			assertFalse(ageClasses.isEmpty());
 
-		AgeClass ageClass = ageClasses.get(0);
-		assertEquals(1500, ageClass.getDistance());
+			AgeClass ageClass = ageClasses.get(0);
+			assertEquals(1500, ageClass.getDistance());
+		});
 	}
 
 	// static helpers

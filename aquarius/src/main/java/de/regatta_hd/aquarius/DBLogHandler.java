@@ -1,5 +1,7 @@
 package de.regatta_hd.aquarius;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Handler;
@@ -10,9 +12,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.impl.AquariusDBImpl;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.db.DBThreadPoolExecutor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceException;
@@ -20,27 +24,27 @@ import jakarta.persistence.PersistenceException;
 @Singleton
 public class DBLogHandler extends Handler {
 
-	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName() };
-
-	private final DBConnection db;
+	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName(),
+			AquariusDBImpl.class.getName(), DBThreadPoolExecutor.class.getName() };
 
 	private final Deque<LogRecord> logRecords = new LinkedList<>();
 
-	@Inject
-	@Named("hostName")
-	private String hostName;
+	private final DBConnection db;
+	private final String hostName;
+	private final String hostAddress;
 
 	@Inject
-	@Named("hostAddress")
-	private String hostAddress;
+	DBLogHandler(DBConnection db, ListenerManager manager, @Named("hostName") String hostName,
+			@Named("hostAddress") String hostAddress) {
+		this.db = requireNonNull(db, "db must not be null");
+		this.hostName = hostName;
+		this.hostAddress = hostAddress;
 
-	@Inject
-	DBLogHandler(DBConnection db, ListenerManager manager) {
-		this.db = db;
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
 			return !contains;
 		});
+
 		manager.addListener(DBConnection.StateChangedEventListener.class, event -> {
 			if (event.getDBConnection().isOpen()) {
 				persist();
