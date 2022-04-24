@@ -27,25 +27,24 @@ public class DBLogHandler extends Handler {
 	private static final String[] FILTERED_CLASSES = { DBLogHandler.class.getName(), LogRecord.class.getName(),
 			AquariusDBImpl.class.getName(), DBThreadPoolExecutor.class.getName() };
 
-	private final DBConnection db;
-
 	private final Deque<LogRecord> logRecords = new LinkedList<>();
 
-	@Inject
-	@Named("hostName")
-	private String hostName;
+	private final DBConnection db;
+	private final String hostName;
+	private final String hostAddress;
 
 	@Inject
-	@Named("hostAddress")
-	private String hostAddress;
-
-	@Inject
-	DBLogHandler(DBConnection db, ListenerManager manager) {
+	DBLogHandler(DBConnection db, ListenerManager manager, @Named("hostName") String hostName,
+			@Named("hostAddress") String hostAddress) {
 		this.db = requireNonNull(db, "db must not be null");
+		this.hostName = hostName;
+		this.hostAddress = hostAddress;
+
 		setFilter(logRecord -> {
 			boolean contains = ArrayUtils.contains(FILTERED_CLASSES, logRecord.getSourceClassName());
 			return !contains;
 		});
+
 		manager.addListener(DBConnection.StateChangedEventListener.class, event -> {
 			if (event.getDBConnection().isOpen()) {
 				persist();
