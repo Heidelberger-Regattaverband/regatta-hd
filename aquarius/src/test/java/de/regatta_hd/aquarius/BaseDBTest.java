@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -35,26 +36,26 @@ class BaseDBTest implements BeforeAllCallback {
 
 		aquariusDb = injector.getInstance(DBConnection.class);
 
-		aquariusDb.getExecutor().execute(() -> {
+		aquariusDb.getExecutor().submit(() -> {
 			try {
 				aquariusDb.open(connectionData);
 				aquariusDb.updateSchema();
 			} catch (SQLException e) {
 				fail(e);
 			}
-		});
+		}).get();
 	}
 
 	@Test
-	void testOpen() {
-		aquariusDb.getExecutor().execute(() -> {
+	void testOpen() throws InterruptedException, ExecutionException {
+		aquariusDb.getExecutor().submit(() -> {
 			try {
 				aquariusDb.open(connectionData);
-				assertTrue(aquariusDb.isOpen());
 			} catch (SQLException e) {
 				fail(e);
 			}
-		});
+		}).get();
+		assertTrue(aquariusDb.isOpen());
 	}
 
 }

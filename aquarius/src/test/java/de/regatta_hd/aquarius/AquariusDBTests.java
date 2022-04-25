@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,11 +56,11 @@ class AquariusDBTests extends BaseDBTest {
 	}
 
 	@Test
-	void testGetOfficialHeats() {
-		aquariusDb.getExecutor().execute(() -> {
-			List<ResultEntry> results = regattaDAO.getOfficialResults();
-			assertFalse(results.isEmpty());
-		});
+	void testGetOfficialHeats() throws InterruptedException, ExecutionException {
+		List<ResultEntry> results = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getOfficialResults();
+		}).get();
+		assertFalse(results.isEmpty());
 	}
 
 	@Test
@@ -68,46 +69,51 @@ class AquariusDBTests extends BaseDBTest {
 	}
 
 	@Test
-	void testGetEvents() {
-		aquariusDb.getExecutor().execute(() -> {
-			List<Regatta> events = regattaDAO.getRegattas();
-			assertFalse(events.isEmpty());
+	void testGetEvents() throws InterruptedException, ExecutionException {
+		List<Regatta> events = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getRegattas();
+		}).get();
+		assertFalse(events.isEmpty());
+	}
+
+	@Test
+	void testGetEventOK() throws InterruptedException, ExecutionException {
+		Regatta regatta = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getActiveRegatta();
+		}).get();
+
+		System.out.println(regatta.toString());
+
+		Race offer = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getRace("104");
+		}).get();
+
+		assertEquals("104", offer.getNumber());
+		trace(offer, 1);
+	}
+
+	@Test
+	void testGetEventFailed() throws InterruptedException, ExecutionException {
+		Regatta regatta = aquariusDb.getExecutor().submit(() -> {
+			return aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
+		}).get();
+
+		assertThrows(EntityNotFoundException.class, () -> {
+			// as event with ID == 10 doesn't exist, calling any getter causes an
+			// EntityNotFoundException
+			regatta.getClub();
 		});
 	}
 
 	@Test
-	void testGetEventOK() {
-		aquariusDb.getExecutor().execute(() -> {
-			Regatta regatta = regattaDAO.getActiveRegatta();
-			System.out.println(regatta.toString());
-
-			Race offer = regattaDAO.getRace("104");
-			assertEquals("104", offer.getNumber());
-			trace(offer, 1);
-		});
-	}
-
-	@Test
-	void testGetEventFailed() {
-		aquariusDb.getExecutor().execute(() -> {
-			Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
-			assertThrows(EntityNotFoundException.class, () -> {
-				// as event with ID == 10 doesn't exist, calling any getter causes an
-				// EntityNotFoundException
-				regatta.getClub();
-			});
-		});
-	}
-
-	@Test
-	void testGetAgeClasses() {
-		aquariusDb.getExecutor().execute(() -> {
+	void testGetAgeClasses() throws InterruptedException, ExecutionException {
+		aquariusDb.getExecutor().submit(() -> {
 			List<AgeClass> ageClasses = masterData.getAgeClasses();
 			assertFalse(ageClasses.isEmpty());
 
 			AgeClass ageClass = ageClasses.get(0);
 			assertEquals(1500, ageClass.getDistance());
-		});
+		}).get();
 	}
 
 	// static helpers
