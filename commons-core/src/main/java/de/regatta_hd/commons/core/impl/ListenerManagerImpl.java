@@ -26,15 +26,15 @@ public class ListenerManagerImpl implements ListenerManager {
 	}
 
 	@Override
-	public <T extends EventListener> List<T> getListeners(Class<T> listenerClass) {
-		return Arrays
-				.asList(this.listeners.getListeners(requireNonNull(listenerClass, LISTENER_CLASS_MUST_NOT_BE_NULL)));
-	}
-
-	@Override
 	public <T extends EventListener> void removeListener(Class<T> listenerClass, T listener) {
 		this.listeners.remove(requireNonNull(listenerClass, LISTENER_CLASS_MUST_NOT_BE_NULL),
 				requireNonNull(listener, "listener must not be null"));
+	}
+
+	@Override
+	public <T extends EventListener> List<T> getListeners(Class<T> listenerClass) {
+		return Arrays
+				.asList(this.listeners.getListeners(requireNonNull(listenerClass, LISTENER_CLASS_MUST_NOT_BE_NULL)));
 	}
 
 }

@@ -110,4 +110,5 @@ public class ConfigServiceImpl implements ConfigService {
 		String userHome = System.getProperty("user.home");
 		return Paths.get(userHome, "RegattaHD.properties");
 	}
+
 }

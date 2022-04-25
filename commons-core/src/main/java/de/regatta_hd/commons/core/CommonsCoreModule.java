@@ -49,4 +49,5 @@ public class CommonsCoreModule extends AbstractModule {
 	public String getVersion() {
 		return this.properties.getProperty("version");
 	}
+
 }
