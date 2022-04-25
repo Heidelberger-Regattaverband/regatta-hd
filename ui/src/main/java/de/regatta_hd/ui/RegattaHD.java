@@ -15,6 +15,7 @@ import de.regatta_hd.aquarius.DBLogHandler;
 import de.regatta_hd.commons.fx.guice.GuiceContext;
 import de.regatta_hd.commons.fx.stage.WindowManager;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -47,6 +48,8 @@ public class RegattaHD extends Application {
 		this.windowManager.loadStage(primaryStage,
 				RegattaHD.class.getResource("/de/regatta_hd/ui/pane/PrimaryView.fxml"),
 				bundle.getString("MainWindow.title"), bundle);
+
+		primaryStage.setOnCloseRequest(event -> Platform.exit());
 	}
 
 	private void initLogging() {
