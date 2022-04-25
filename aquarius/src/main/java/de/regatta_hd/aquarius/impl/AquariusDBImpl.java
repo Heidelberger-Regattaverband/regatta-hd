@@ -26,7 +26,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
-import jakarta.persistence.TypedQuery;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -39,7 +38,8 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl implements DBConnection {
 
-	private final ThreadLocal<EntityManager> entityManager = new ThreadLocal<>();
+	private final ThreadLocal<EntityManager> entityManager = ThreadLocal
+			.withInitial(() -> this.emFactory.createEntityManager());
 	private final ListenerManager listenerManager;
 
 	private ExecutorService dbExecutor;
@@ -62,6 +62,7 @@ public class AquariusDBImpl implements DBConnection {
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
+			this.entityManager.remove();
 			if (this.emFactory != null) {
 				this.emFactory.close();
 				this.emFactory = null;
@@ -70,7 +71,6 @@ public class AquariusDBImpl implements DBConnection {
 				this.dbExecutor.shutdownNow();
 				this.dbExecutor = null;
 			}
-			this.entityManager.remove();
 			this.version = null;
 
 			// notify listeners about changed AquariusDB state
@@ -80,10 +80,7 @@ public class AquariusDBImpl implements DBConnection {
 
 	@Override
 	public synchronized EntityManager getEntityManager() {
-		checkIsOpen();
-		if (this.entityManager.get() == null) {
-			this.entityManager.set(this.emFactory.createEntityManager());
-		}
+		ensureOpen();
 		return this.entityManager.get();
 	}
 
@@ -121,7 +118,7 @@ public class AquariusDBImpl implements DBConnection {
 	@SuppressWarnings("resource")
 	@Override
 	public void updateSchema() {
-		checkIsOpen();
+		ensureOpen();
 
 		Session session = getEntityManager().unwrap(Session.class);
 		session.doWork(connection -> {
@@ -148,12 +145,12 @@ public class AquariusDBImpl implements DBConnection {
 		return this.version;
 	}
 
-	private void checkIsOpen() {
+	private void ensureOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
 		}
 		if (!Thread.currentThread().getName().startsWith(DBThreadPoolExecutor.DB_THREAD_PREFIX)) {
-			throw new IllegalThreadStateException("Not DB session thread.");
+			throw new IllegalThreadStateException("Not a Database connection thread.");
 		}
 	}
 
@@ -162,9 +159,8 @@ public class AquariusDBImpl implements DBConnection {
 	}
 
 	private String readVersion() {
-		TypedQuery<MetaData> query = this.getEntityManager()
-				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class);
-		MetaData metaData = query.getSingleResult();
+		MetaData metaData = this.getEntityManager()
+				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class).getSingleResult();
 		return metaData.getValue();
 	}
 
