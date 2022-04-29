@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.17</version>
+  <version>0.1.18</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -43,13 +43,13 @@
     <maven.compiler.release>11</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>18</openjfx.version>
+    <openjfx.version>18.0.1</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.1.1</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.22</lombok.version>
+    <lombok.version>1.18.24</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>5.1.0</guice.version>

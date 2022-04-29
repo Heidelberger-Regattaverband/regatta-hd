@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -22,11 +21,11 @@ import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConfig;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.db.DBThreadPoolExecutor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
-import jakarta.persistence.TypedQuery;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -39,24 +38,39 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl implements DBConnection {
 
-	// executes database operations concurrent to JavaFX operations.
-	private static ExecutorService databaseExecutor = Executors.newFixedThreadPool(1, new DatabaseThreadFactory());
+	private final ThreadLocal<EntityManager> entityManager = ThreadLocal
+			.withInitial(() -> this.emFactory.createEntityManager());
+	private final ListenerManager listenerManager;
+
+	private ExecutorService dbExecutor;
+	private String version;
+	private EntityManagerFactory emFactory;
 
 	@Inject
-	private ListenerManager listenerManager;
+	public AquariusDBImpl(ListenerManager listenerManager) {
+		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
+	}
 
-	private EntityManager entityManager;
-
-	private Thread sessionThread;
-
-	private String version;
+	@Override
+	public synchronized ExecutorService getExecutor() {
+		if (this.dbExecutor == null) {
+			this.dbExecutor = createExecutor();
+		}
+		return this.dbExecutor;
+	}
 
 	@Override
 	public synchronized void close() {
 		if (isOpenImpl()) {
-			this.entityManager.close();
-			this.entityManager = null;
-			this.sessionThread = null;
+			this.entityManager.remove();
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
+			}
+			if (this.dbExecutor != null) {
+				this.dbExecutor.shutdownNow();
+				this.dbExecutor = null;
+			}
 			this.version = null;
 
 			// notify listeners about changed AquariusDB state
@@ -64,14 +78,10 @@ public class AquariusDBImpl implements DBConnection {
 		}
 	}
 
-	String getVersion() {
-		return this.version;
-	}
-
 	@Override
 	public synchronized EntityManager getEntityManager() {
-		checkIsOpen();
-		return this.entityManager;
+		ensureOpen();
+		return this.entityManager.get();
 	}
 
 	@Override
@@ -81,26 +91,21 @@ public class AquariusDBImpl implements DBConnection {
 
 	@Override
 	public synchronized void open(DBConfig dbCfg) throws SQLServerException {
-		requireNonNull(dbCfg, "dbCfg must not be null");
+		Map<String, String> props = getProperties(requireNonNull(dbCfg, "dbCfg must not be null"));
 
 		close();
 
-		Map<String, String> props = getProperties(dbCfg);
 		try {
-			EntityManagerFactory factory = Persistence.createEntityManagerFactory("aquarius", props);
-			this.entityManager = factory.createEntityManager();
-
-			// store current thread to ensure further DB access is done in same thread
-			this.sessionThread = Thread.currentThread();
+			this.emFactory = Persistence.createEntityManagerFactory("aquarius", props);
 
 			this.version = readVersion();
 
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
-			if (this.entityManager != null) {
-				this.entityManager.close();
-				this.entityManager = null;
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
 			}
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
@@ -113,9 +118,9 @@ public class AquariusDBImpl implements DBConnection {
 	@SuppressWarnings("resource")
 	@Override
 	public void updateSchema() {
-		checkIsOpen();
+		ensureOpen();
 
-		Session session = this.entityManager.unwrap(Session.class);
+		Session session = getEntityManager().unwrap(Session.class);
 		session.doWork(connection -> {
 			try {
 				Database database = DatabaseFactory.getInstance()
@@ -127,44 +132,49 @@ public class AquariusDBImpl implements DBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
-				this.entityManager.close();
-				this.entityManager = null;
+				if (this.emFactory != null) {
+					this.emFactory.close();
+					this.emFactory = null;
+				}
 				throw new SQLException(e);
 			}
 		});
 	}
 
-	@Override
-	public ExecutorService getExecutor() {
-		return databaseExecutor;
+	String getVersion() {
+		return this.version;
 	}
 
-	private void checkIsOpen() {
+	private void ensureOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
 		}
-		if (Thread.currentThread() != this.sessionThread) {
-			throw new IllegalThreadStateException("Not DB session thread.");
+		if (!Thread.currentThread().getName().startsWith(DBThreadPoolExecutor.DB_THREAD_PREFIX)) {
+			throw new IllegalThreadStateException("Not a Database connection thread.");
 		}
 	}
 
 	private boolean isOpenImpl() {
-		return this.entityManager != null && this.entityManager.isOpen();
+		return this.emFactory != null && this.emFactory.isOpen();
 	}
 
 	private String readVersion() {
-		TypedQuery<MetaData> query = this.getEntityManager()
-				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class);
-		MetaData metaData = query.getSingleResult();
+		MetaData metaData = this.getEntityManager()
+				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class).getSingleResult();
 		return metaData.getValue();
 	}
 
 	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
-		List<StateChangedEventListener> listeners = this.listenerManager
-				.getListeners(DBConnection.StateChangedEventListener.class);
+		List<StateChangedEventListener> listeners = this.listenerManager.getListeners(StateChangedEventListener.class);
 		for (StateChangedEventListener listener : listeners) {
 			listener.stateChanged(event);
 		}
+	}
+
+	// static helpers
+
+	private static ThreadPoolExecutor createExecutor() {
+		return new DBThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS);
 	}
 
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
@@ -180,16 +190,5 @@ public class AquariusDBImpl implements DBConnection {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
-	}
-
-	private static class DatabaseThreadFactory implements ThreadFactory {
-		private static final AtomicInteger poolNumber = new AtomicInteger(1);
-
-		@Override
-		public Thread newThread(Runnable runnable) {
-			Thread thread = new Thread(runnable, "Database-Connection-" + poolNumber.getAndIncrement() + "-thread");
-			thread.setDaemon(true);
-			return thread;
-		}
 	}
 }

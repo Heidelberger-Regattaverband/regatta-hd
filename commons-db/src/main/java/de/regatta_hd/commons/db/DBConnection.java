@@ -3,6 +3,7 @@ package de.regatta_hd.commons.db;
 import java.sql.SQLException;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 import jakarta.persistence.EntityManager;
 
@@ -33,7 +34,7 @@ public interface DBConnection {
 	 *
 	 * @return an {@link Executor} for DB tasks.
 	 */
-	Executor getExecutor();
+	ExecutorService getExecutor();
 
 	interface StateChangedEvent {
 

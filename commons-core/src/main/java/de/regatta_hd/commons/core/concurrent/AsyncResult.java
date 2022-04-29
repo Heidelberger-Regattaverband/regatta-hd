@@ -15,4 +15,5 @@ public interface AsyncResult<R> {
 	 * @throws Exception if an error occurred during the execution of the asynchronously executed task
 	 */
 	R getResult() throws Exception; // NOSONAR
+
 }

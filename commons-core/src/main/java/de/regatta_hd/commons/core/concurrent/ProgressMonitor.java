@@ -28,4 +28,5 @@ public interface ProgressMonitor {
 	 * @throws CancellationException if an asynchronous task was cancelled.
 	 */
 	void checkCancelled();
+
 }
