@@ -35,16 +35,16 @@ class AquariusDBTests extends BaseDBTest {
 	private static MasterDataDAO masterData;
 
 	@BeforeAll
-	static void setUpBeforeClass() {
+	static void setUpBeforeClass() throws InterruptedException, ExecutionException {
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
 
-		aquariusDb.getExecutor().execute(() -> {
+		aquariusDb.getExecutor().submit(() -> {
 			Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
 			assertEquals(regattaId, regatta.getId());
 			assertNotNull(regatta);
 			regattaDAO.setActiveRegatta(regatta);
-		});
+		}).get();
 	}
 
 	@AfterAll
