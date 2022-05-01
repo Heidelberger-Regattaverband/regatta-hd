@@ -10,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.inject.Singleton;
 
@@ -19,21 +17,19 @@ import de.regatta_hd.commons.core.ConfigService;
 
 @Singleton
 public class ConfigServiceImpl implements ConfigService {
-	private static final Logger logger = Logger.getLogger(ConfigServiceImpl.class.getName());
-
 	private static final String KEY_MUST_NOT_BE_NULL = "key must not be null";
 
 	private final Properties properties = new Properties();
 
 	private final Path propertiesPath;
 
-	public ConfigServiceImpl() {
+	public ConfigServiceImpl() throws IOException {
 		String userHome = System.getProperty("user.home");
 		this.propertiesPath = Paths.get(userHome, "RegattaHD.properties");
 		loadProperties();
 	}
 
-	ConfigServiceImpl(Path path) {
+	ConfigServiceImpl(Path path) throws IOException {
 		this.propertiesPath = path;
 		loadProperties();
 	}
@@ -99,12 +95,10 @@ public class ConfigServiceImpl implements ConfigService {
 		storeProperties();
 	}
 
-	private void loadProperties() {
+	private void loadProperties() throws IOException {
 		if (Files.exists(this.propertiesPath)) {
 			try (BufferedReader reader = Files.newBufferedReader(this.propertiesPath)) {
 				this.properties.load(reader);
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}

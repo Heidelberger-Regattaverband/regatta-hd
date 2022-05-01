@@ -19,7 +19,7 @@ class ConfigServiceImplTest {
 	private static ConfigServiceImpl cfgService;
 
 	@BeforeAll
-	static void setUpBeforeClass() {
+	static void setUpBeforeClass() throws IOException {
 		ClassLoader classLoader = ConfigServiceImplTest.class.getClassLoader();
 		Path path = Paths.get(classLoader.getResource("config.properties").getFile());
 		cfgService = new ConfigServiceImpl(path);
@@ -74,5 +74,8 @@ class ConfigServiceImplTest {
 	void testSetPropertyStringInt() throws IOException {
 		cfgService.setProperty("newIntProperty", -119);
 		assertEquals(-119, cfgService.getIntegerProperty("newIntProperty"));
+
+		cfgService.removeProperty("newIntProperty");
+		assertNull(cfgService.getProperty("newIntProperty"));
 	}
 }
