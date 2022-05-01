@@ -97,7 +97,7 @@ public class ConfigServiceImpl implements ConfigService {
 
 	private void loadProperties() throws IOException {
 		if (Files.exists(this.propertiesPath)) {
-			try (BufferedReader reader = Files.newBufferedReader(this.propertiesPath)) {
+			try (BufferedReader reader = Files.newBufferedReader(this.propertiesPath, StandardCharsets.UTF_8)) {
 				this.properties.load(reader);
 			}
 		}
