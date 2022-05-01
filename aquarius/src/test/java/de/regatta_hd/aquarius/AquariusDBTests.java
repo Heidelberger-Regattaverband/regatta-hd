@@ -78,10 +78,10 @@ class AquariusDBTests extends BaseDBTest {
 
 	@Test
 	void testGetEventOK() throws InterruptedException, ExecutionException {
-		aquariusDb.getExecutor().submit(() -> {
-			System.out.println(regattaDAO.getActiveRegatta().toString());
+		Regatta regatta = aquariusDb.getExecutor().submit(() -> {
 			return regattaDAO.getActiveRegatta();
 		}).get();
+		System.out.println(regatta.toString());
 
 		Race offer = aquariusDb.getExecutor().submit(() -> {
 			return regattaDAO.getRace("104");
