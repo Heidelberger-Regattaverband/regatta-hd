@@ -22,6 +22,16 @@ public class ConfigServiceImpl implements ConfigService {
 
 	private Properties properties;
 
+	private Path path;
+
+	public ConfigServiceImpl() {
+		this(null);
+	}
+
+	ConfigServiceImpl(Path path) {
+		this.path = path;
+	}
+
 	// getter
 
 	@Override
@@ -92,7 +102,7 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
 	private void loadProperties() throws IOException {
-		Path settingsPath = getSettingsPath();
+		Path settingsPath = getPath();
 		if (Files.exists(settingsPath)) {
 			try (InputStream input = Files.newInputStream(settingsPath)) {
 				this.properties.load(input);
@@ -101,14 +111,17 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
 	private void storeProperties() throws IOException {
-		try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(getSettingsPath()))) {
+		try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(getPath()))) {
 			this.properties.store(output, "Last succesful database connection settings.");
 		}
 	}
 
-	private static Path getSettingsPath() {
-		String userHome = System.getProperty("user.home");
-		return Paths.get(userHome, "RegattaHD.properties");
+	private Path getPath() {
+		if (this.path == null) {
+			String userHome = System.getProperty("user.home");
+			this.path = Paths.get(userHome, "RegattaHD.properties");
+		}
+		return this.path;
 	}
 
 }
