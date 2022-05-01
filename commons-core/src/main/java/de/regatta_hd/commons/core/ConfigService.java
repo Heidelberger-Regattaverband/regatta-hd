@@ -6,11 +6,11 @@ public interface ConfigService {
 
 	// getter
 
-	String getProperty(String key) throws IOException;
+	String getProperty(String key);
 
-	boolean getBooleanProperty(String key) throws IOException;
+	boolean getBooleanProperty(String key);
 
-	Integer getIntegerProperty(String key) throws IOException, NumberFormatException;
+	Integer getIntegerProperty(String key) throws NumberFormatException;
 
 	// setter
 
