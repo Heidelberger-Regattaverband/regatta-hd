@@ -31,19 +31,19 @@ class ConfigServiceImplTest {
 	}
 
 	@Test
-	void testGetProperty() throws IOException {
+	void testGetProperty() {
 		assertEquals("my test string", cfgService.getProperty("stringProperty"));
 	}
 
 	@Test
-	void testGetBooleanProperty() throws IOException {
+	void testGetBooleanProperty() {
 		assertTrue(cfgService.getBooleanProperty("booleanPropertyTrue"));
 		assertFalse(cfgService.getBooleanProperty("booleanPropertyFalse"));
 		assertFalse(cfgService.getBooleanProperty("invalid_key"));
 	}
 
 	@Test
-	void testGetIntegerProperty() throws NumberFormatException, IOException {
+	void testGetIntegerProperty() throws NumberFormatException {
 		assertEquals(2, cfgService.getIntegerProperty("intProperty"));
 		assertNull(cfgService.getIntegerProperty("invalid_key"));
 
@@ -75,5 +75,4 @@ class ConfigServiceImplTest {
 		cfgService.setProperty("newIntProperty", -119);
 		assertEquals(-119, cfgService.getIntegerProperty("newIntProperty"));
 	}
-
 }

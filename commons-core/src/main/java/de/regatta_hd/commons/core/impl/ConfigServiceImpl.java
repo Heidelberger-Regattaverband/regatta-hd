@@ -2,14 +2,16 @@ package de.regatta_hd.commons.core.impl;
 
 import static java.util.Objects.requireNonNull;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.inject.Singleton;
 
@@ -17,36 +19,40 @@ import de.regatta_hd.commons.core.ConfigService;
 
 @Singleton
 public class ConfigServiceImpl implements ConfigService {
+	private static final Logger logger = Logger.getLogger(ConfigServiceImpl.class.getName());
 
 	private static final String KEY_MUST_NOT_BE_NULL = "key must not be null";
 
-	private Properties properties;
+	private final Properties properties = new Properties();
 
-	private Path path;
+	private final Path propertiesPath;
 
 	public ConfigServiceImpl() {
-		this(null);
+		String userHome = System.getProperty("user.home");
+		this.propertiesPath = Paths.get(userHome, "RegattaHD.properties");
+		loadProperties();
 	}
 
 	ConfigServiceImpl(Path path) {
-		this.path = path;
+		this.propertiesPath = path;
+		loadProperties();
 	}
 
 	// getter
 
 	@Override
-	public synchronized String getProperty(String key) throws IOException {
-		return getProperties().getProperty(requireNonNull(key, KEY_MUST_NOT_BE_NULL));
+	public synchronized String getProperty(String key) {
+		return this.properties.getProperty(requireNonNull(key, KEY_MUST_NOT_BE_NULL));
 	}
 
 	@Override
-	public boolean getBooleanProperty(String key) throws IOException {
+	public boolean getBooleanProperty(String key) {
 		String property = getProperty(key);
 		return property != null && Boolean.parseBoolean(property);
 	}
 
 	@Override
-	public Integer getIntegerProperty(String key) throws IOException, NumberFormatException {
+	public Integer getIntegerProperty(String key) throws NumberFormatException {
 		String property = getProperty(key);
 		return property != null ? Integer.valueOf(property) : null;
 	}
@@ -84,44 +90,28 @@ public class ConfigServiceImpl implements ConfigService {
 	// private
 
 	private void setPropertyImpl(String key, String value) throws IOException {
-		getProperties().setProperty(key, value);
+		this.properties.setProperty(key, value);
 		storeProperties();
 	}
 
 	private void removePropertyImpl(String key) throws IOException {
-		getProperties().remove(key);
+		this.properties.remove(key);
 		storeProperties();
 	}
 
-	private Properties getProperties() throws IOException {
-		if (this.properties == null) {
-			this.properties = new Properties();
-			loadProperties();
-		}
-		return this.properties;
-	}
-
-	private void loadProperties() throws IOException {
-		Path settingsPath = getPath();
-		if (Files.exists(settingsPath)) {
-			try (InputStream input = Files.newInputStream(settingsPath)) {
-				this.properties.load(input);
+	private void loadProperties() {
+		if (Files.exists(this.propertiesPath)) {
+			try (BufferedReader reader = Files.newBufferedReader(this.propertiesPath)) {
+				this.properties.load(reader);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}
 
 	private void storeProperties() throws IOException {
-		try (OutputStream output = new BufferedOutputStream(Files.newOutputStream(getPath()))) {
-			this.properties.store(output, "Last succesful database connection settings.");
+		try (BufferedWriter writer = Files.newBufferedWriter(this.propertiesPath, StandardCharsets.UTF_8)) {
+			this.properties.store(writer, "Last succesful database connection settings.");
 		}
 	}
-
-	private Path getPath() {
-		if (this.path == null) {
-			String userHome = System.getProperty("user.home");
-			this.path = Paths.get(userHome, "RegattaHD.properties");
-		}
-		return this.path;
-	}
-
 }
