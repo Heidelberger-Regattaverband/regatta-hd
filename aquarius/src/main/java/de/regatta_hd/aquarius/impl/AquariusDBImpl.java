@@ -150,7 +150,7 @@ public class AquariusDBImpl implements DBConnection {
 			throw new IllegalStateException("Not connected.");
 		}
 		if (!Thread.currentThread().getName().startsWith(DBThreadPoolExecutor.DB_THREAD_PREFIX)) {
-			throw new IllegalThreadStateException("Not a Database connection thread.");
+			throw new IllegalStateException("Not a Database connection thread.");
 		}
 	}
 
