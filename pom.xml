@@ -285,7 +285,6 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>--add-opens java.base/java.lang=com.google.guice</argLine>
           <includes>
             <include>**/*Tests</include>
           </includes>
