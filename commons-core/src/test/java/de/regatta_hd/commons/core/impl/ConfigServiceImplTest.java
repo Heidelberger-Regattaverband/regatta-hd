@@ -5,16 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ConfigServiceImplTest {
@@ -31,14 +28,6 @@ class ConfigServiceImplTest {
 	@AfterAll
 	static void tearDownAfterClass() {
 		cfgService = null;
-	}
-
-	@BeforeEach
-	void setUp() {
-	}
-
-	@AfterEach
-	void tearDown() {
 	}
 
 	@Test
@@ -66,26 +55,24 @@ class ConfigServiceImplTest {
 	@Test
 	void testSetPropertyStringString() throws IOException {
 		cfgService.setProperty("newStringProperty", "my new test value");
-
 		assertEquals("my new test value", cfgService.getProperty("newStringProperty"));
+
+		cfgService.setProperty("newStringProperty", null);
+		assertNull(cfgService.getProperty("newStringProperty"));
 	}
 
 	@Test
 	void testSetPropertyStringBoolean() throws IOException {
 		cfgService.setProperty("newBooleanProperty", true);
-
 		assertTrue(cfgService.getBooleanProperty("newBooleanProperty"));
 
 		cfgService.removeProperty("newBooleanProperty");
-
 		assertNull(cfgService.getProperty("newBooleanProperty"));
-
 	}
 
 	@Test
 	void testSetPropertyStringInt() throws IOException {
 		cfgService.setProperty("newIntProperty", -119);
-
 		assertEquals(-119, cfgService.getIntegerProperty("newIntProperty"));
 	}
 
