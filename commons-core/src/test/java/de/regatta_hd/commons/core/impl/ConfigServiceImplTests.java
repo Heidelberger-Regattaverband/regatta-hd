@@ -14,13 +14,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ConfigServiceImplTest {
+class ConfigServiceImplTests {
 
 	private static ConfigServiceImpl cfgService;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException {
-		ClassLoader classLoader = ConfigServiceImplTest.class.getClassLoader();
+		ClassLoader classLoader = ConfigServiceImplTests.class.getClassLoader();
 		Path path = Paths.get(classLoader.getResource("config.properties").getFile());
 		cfgService = new ConfigServiceImpl(path);
 	}

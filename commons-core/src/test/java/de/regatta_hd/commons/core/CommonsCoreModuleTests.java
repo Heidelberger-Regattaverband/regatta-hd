@@ -11,7 +11,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 
-class CommonsCoreModuleTest {
+class CommonsCoreModuleTests {
 
 	private static Injector injector;
 
