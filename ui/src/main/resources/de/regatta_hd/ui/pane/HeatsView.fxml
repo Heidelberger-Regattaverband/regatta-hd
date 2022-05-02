@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.regatta_hd.commons.fx.control.DateTimeTableCellFactory?>
+<?import de.regatta_hd.ui.util.SerialPortStringConverter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -24,6 +26,11 @@
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
         <Button fx:id="exportCsvBtn" onAction="#handleExportCsvOnAction" text="%heats.csv.export" />
         <Button fx:id="exportXslBtn" onAction="#handleExportXslOnAction" text="%heats.xsl.export" />
+        <ComboBox fx:id="serialPortsCBox" prefWidth="300">
+          <converter>
+            <SerialPortStringConverter />
+          </converter>
+        </ComboBox>
       </items>
     </ToolBar>
 

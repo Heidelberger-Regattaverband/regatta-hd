@@ -21,6 +21,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
@@ -31,6 +33,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,11 +50,14 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private Button exportXslBtn;
 	@FXML
+	private ComboBox<SerialPort> serialPortsCBox;
+	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, String> numberCol;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
+	private final ObservableList<SerialPort> commPortsList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -61,6 +67,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.heatsTbl.getSortOrder().add(this.numberCol);
 
 		loadHeats(false);
+		this.commPortsList.addAll(SerialPort.getCommPorts());
+		this.serialPortsCBox.setItems(this.commPortsList);
 	}
 
 	@Override
