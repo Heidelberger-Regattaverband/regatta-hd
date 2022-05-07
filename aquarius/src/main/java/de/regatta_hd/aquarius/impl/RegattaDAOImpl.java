@@ -164,22 +164,17 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public Regatta getActiveRegatta() {
-		try {
-			if (this.activeRegatta == null) {
-				Integer activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
-				if (activeRegattaId != null) {
-					this.activeRegatta = super.db.getEntityManager().find(Regatta.class, activeRegattaId);
-				}
-
-				if (this.activeRegatta == null) {
-					this.activeRegatta = getRegattas().stream().findFirst().orElse(null);
-				}
+		if (this.activeRegatta == null) {
+			Integer activeRegattaId = this.cfgService.getIntegerProperty(ACTIVE_REGATTA);
+			if (activeRegattaId != null) {
+				this.activeRegatta = super.db.getEntityManager().find(Regatta.class, activeRegattaId);
 			}
-			return this.activeRegatta;
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+
+			if (this.activeRegatta == null) {
+				this.activeRegatta = getRegattas().stream().findFirst().orElse(null);
+			}
 		}
-		return null;
+		return this.activeRegatta;
 	}
 
 	@Override

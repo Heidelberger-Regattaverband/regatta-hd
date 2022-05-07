@@ -1,6 +1,5 @@
 package de.regatta_hd.aquarius;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +15,7 @@ class TestConfigService implements ConfigService {
 	private ConfigServiceImpl cfgService;
 
 	@Override
-	public String getProperty(String key) throws IOException {
+	public String getProperty(String key) {
 		// 1. try to get it from config service
 		String property = this.cfgService.getProperty(key);
 
@@ -37,12 +36,12 @@ class TestConfigService implements ConfigService {
 	}
 
 	@Override
-	public boolean getBooleanProperty(String key) throws IOException {
+	public boolean getBooleanProperty(String key) {
 		return Boolean.parseBoolean(getProperty(key));
 	}
 
 	@Override
-	public Integer getIntegerProperty(String key) throws IOException {
+	public Integer getIntegerProperty(String key) {
 		String property = getProperty(key);
 		return property != null ? Integer.valueOf(property) : null;
 	}

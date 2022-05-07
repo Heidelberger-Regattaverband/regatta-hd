@@ -7,7 +7,23 @@ import javafx.stage.Stage;
 
 public interface WindowManager {
 
-	Stage newStage(URL resourceUrl, String title, ResourceBundle resources);
+	/**
+	 * Loads the given FXML resource into the primary stage.
+	 *
+	 * @param primaryStage    the primary stage
+	 * @param fxmlResourceUrl URL of FXML resource
+	 * @param title           the window title
+	 * @param bundle          the resource bundle
+	 */
+	void loadPrimaryStage(Stage primaryStage, URL fxmlResourceUrl, String title, ResourceBundle bundle);
 
-	void loadStage(Stage stage, URL resourceUrl, String title, ResourceBundle resources);
+	/**
+	 * Creates a new stage and loads given FXML resource into it.
+	 *
+	 * @param fxmlResourceUrl URL of FXML resource
+	 * @param title           the window title
+	 * @param bundle          the resource bundle
+	 * @return the newly created {@link Stage}
+	 */
+	Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle);
 }
