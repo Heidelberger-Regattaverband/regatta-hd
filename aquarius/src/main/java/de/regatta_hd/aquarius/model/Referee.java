@@ -64,9 +64,7 @@ public class Referee {
 
 	public BooleanProperty activeProperty() {
 		BooleanProperty property = new SimpleBooleanProperty(this.licenceState);
-		property.addListener((observable, oldValue, newValue) -> {
-			this.licenceState = newValue.booleanValue();
-		});
+		property.addListener((observable, oldValue, newValue) -> this.licenceState = newValue.booleanValue());
 		return property;
 	}
 }

@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -48,6 +49,23 @@ public class RefereesController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.activeCol.setCellValueFactory(cellData -> {
+			BooleanProperty property = cellData.getValue().activeProperty();
+			property.addListener((observable, newValue, oldValue) -> {
+				super.dbTaskRunner.runInTransaction(progress -> {
+					return super.db.getEntityManager().merge(cellData.getValue());
+				}, dbResult -> {
+					try {
+						dbResult.getResult();
+					} catch (Exception e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						FxUtils.showErrorMessage(getWindow(), e);
+					}
+				});
+			});
+			return property;
+		});
+
 		this.refereesTbl.getSortOrder().add(this.idCol);
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
@@ -78,7 +96,7 @@ public class RefereesController extends AbstractBaseController {
 		// 5. Add sorted (and filtered) data to the table.
 		this.refereesTbl.setItems(sortedData);
 
-		loadResults(false);
+		loadResults(true);
 	}
 
 	@Override
@@ -155,6 +173,7 @@ public class RefereesController extends AbstractBaseController {
 		this.refreshBtn.setDisable(disabled);
 		this.activateAllBtn.setDisable(disabled);
 		this.deactivateAllBtn.setDisable(disabled);
+		this.filterTxf.setDisable(disabled);
 	}
 
 }
