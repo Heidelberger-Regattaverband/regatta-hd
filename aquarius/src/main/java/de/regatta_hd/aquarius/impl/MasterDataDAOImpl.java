@@ -62,4 +62,10 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	public List<Referee> getReferees() {
 		return getEntities(Referee.class);
 	}
+
+	@Override
+	public int updateAllRefereesLicenceState(boolean licenceState) {
+		return super.db.getEntityManager().createQuery("UPDATE Referee SET licenceState = :licenceState")
+				.setParameter("licenceState", Boolean.valueOf(licenceState)).executeUpdate();
+	}
 }

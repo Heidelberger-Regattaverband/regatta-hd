@@ -49,8 +49,12 @@ public interface MasterDataDAO {
 	 */
 	String getAquariusVersion();
 
+	// referees
+
 	/**
 	 * @return a {@link List} with all available {@link Referee referees}.
 	 */
 	List<Referee> getReferees();
+
+	int updateAllRefereesLicenceState(boolean licenceState);
 }

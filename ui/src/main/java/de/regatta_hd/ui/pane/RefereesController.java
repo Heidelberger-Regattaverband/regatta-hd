@@ -27,6 +27,10 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	private Button refreshBtn;
 	@FXML
+	private Button deactivateAllBtn;
+	@FXML
+	private Button activateAllBtn;
+	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
@@ -41,6 +45,52 @@ public class RefereesController extends AbstractBaseController {
 		this.refereesTbl.getSortOrder().add(this.idCol);
 
 		loadResults(false);
+	}
+
+	@Override
+	public void shutdown() {
+		// nothing to shutdown yet
+	}
+
+	@FXML
+	void handleRefreshOnAction() {
+		disableButtons(true);
+
+		loadResults(true);
+
+		disableButtons(false);
+	}
+
+	@FXML
+	void handleDeactivateAllOnAction() {
+		updateLicenceState(false);
+	}
+
+	@FXML
+	void handleActivateAllOnAction() {
+		updateLicenceState(true);
+	}
+
+	private void updateLicenceState(boolean licenceState) {
+		disableButtons(true);
+
+		super.dbTaskRunner.runInTransaction(progress -> {
+			this.masterDAO.updateAllRefereesLicenceState(licenceState);
+			super.db.getEntityManager().clear();
+			return this.masterDAO.getReferees();
+		}, dbResult -> {
+			try {
+				this.refereesList.setAll(dbResult.getResult());
+				this.refereesTbl.sort();
+				FxUtils.autoResizeColumns(this.refereesTbl);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
+				disableButtons(false);
+			}
+		});
 	}
 
 	private void loadResults(boolean refresh) {
@@ -68,26 +118,14 @@ public class RefereesController extends AbstractBaseController {
 		});
 	}
 
-	@FXML
-	void handleRefreshOnAction() {
-		disableButtons(true);
-
-		loadResults(true);
-
-		disableButtons(false);
-	}
-
 	private void updatePlaceholder(String text) {
 		((Label) this.refereesTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
-	}
-
-	@Override
-	public void shutdown() {
-
+		this.activateAllBtn.setDisable(disabled);
+		this.deactivateAllBtn.setDisable(disabled);
 	}
 
 }

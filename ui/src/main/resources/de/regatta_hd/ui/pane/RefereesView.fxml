@@ -12,7 +12,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.RefereesController">
+<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="de.regatta_hd.ui.pane.RefereesController">
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" />
 	</padding>
@@ -21,6 +22,8 @@
 		<ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
 			<items>
 				<Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+				<Button fx:id="activateAllBtn" onAction="#handleActivateAllOnAction" text="%referees.activateAll" />
+				<Button fx:id="deactivateAllBtn" onAction="#handleDeactivateAllOnAction" text="%referees.deactivateAll" />
 			</items>
 		</ToolBar>
 		<TableView fx:id="refereesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
