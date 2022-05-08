@@ -1,0 +1,93 @@
+package de.regatta_hd.ui.pane;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.inject.Inject;
+
+import de.regatta_hd.aquarius.MasterDataDAO;
+import de.regatta_hd.aquarius.model.Referee;
+import de.regatta_hd.commons.fx.util.FxUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+public class RefereesController extends AbstractBaseController {
+	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
+
+	@Inject
+	private MasterDataDAO masterDAO;
+
+	@FXML
+	private Button refreshBtn;
+	@FXML
+	private TableView<Referee> refereesTbl;
+	@FXML
+	private TableColumn<Referee, String> idCol;
+
+	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		super.initialize(location, resources);
+
+		this.refereesTbl.setItems(this.refereesList);
+		this.refereesTbl.getSortOrder().add(this.idCol);
+
+		loadResults(false);
+	}
+
+	private void loadResults(boolean refresh) {
+		disableButtons(true);
+		updatePlaceholder(getText("common.loadData"));
+		this.refereesList.clear();
+
+		super.dbTaskRunner.run(progress -> {
+			if (refresh) {
+				super.db.getEntityManager().clear();
+			}
+			return this.masterDAO.getReferees();
+		}, dbResult -> {
+			try {
+				this.refereesList.setAll(dbResult.getResult());
+				this.refereesTbl.sort();
+				FxUtils.autoResizeColumns(this.refereesTbl);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
+				disableButtons(false);
+			}
+		});
+	}
+
+	@FXML
+	void handleRefreshOnAction() {
+		disableButtons(true);
+
+		loadResults(true);
+
+		disableButtons(false);
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.refereesTbl.getPlaceholder()).setText(text);
+	}
+
+	private void disableButtons(boolean disabled) {
+		this.refreshBtn.setDisable(disabled);
+	}
+
+	@Override
+	public void shutdown() {
+
+	}
+
+}

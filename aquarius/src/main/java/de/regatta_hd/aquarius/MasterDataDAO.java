@@ -6,6 +6,7 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
+import de.regatta_hd.aquarius.model.Referee;
 
 /**
  * Provides access to the master data of the Aquarius database.
@@ -47,4 +48,9 @@ public interface MasterDataDAO {
 	 * @return version of the Aquarius database or null if not available, e.g. DB connection closed.
 	 */
 	String getAquariusVersion();
+
+	/**
+	 * @return a {@link List} with all available {@link Referee referees}.
+	 */
+	List<Referee> getReferees();
 }

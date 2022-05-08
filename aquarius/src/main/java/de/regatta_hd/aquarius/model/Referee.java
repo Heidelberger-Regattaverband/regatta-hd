@@ -27,6 +27,10 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Referee {
+	@Id
+	@Column(name = "Referee_ID", columnDefinition = "int identity")
+	private int id;
+
 	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "referee", cascade = CascadeType.MERGE)
 	private List<HeatReferee> heatReferees;
 
@@ -40,11 +44,9 @@ public class Referee {
 	@JoinColumn(name = "Referee_Nation_ID_FK")
 	private Nation nation;
 
-	@Basic
 	@Column(name = "Referee_City", length = 32)
 	private String city;
 
-	@Basic
 	@Column(name = "Referee_ExternID")
 	private Integer externID;
 
@@ -52,15 +54,9 @@ public class Referee {
 	@Column(name = "Referee_FirstName", nullable = false, length = 32)
 	private String firstName;
 
-	@Id
-	@Column(name = "Referee_ID", columnDefinition = "int identity")
-	private int id;
-
-	@Basic
 	@Column(name = "Referee_LastName", nullable = false, length = 64)
 	private String lastName;
 
-	@Basic
 	@Column(name = "Referee_LicenceState")
 	private byte licenceState;
 }
