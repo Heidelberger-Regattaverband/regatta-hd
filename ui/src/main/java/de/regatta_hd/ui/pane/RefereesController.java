@@ -12,11 +12,14 @@ import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 public class RefereesController extends AbstractBaseController {
 	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
@@ -31,6 +34,8 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	private Button activateAllBtn;
 	@FXML
+	private TextField filterTxf;
+	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
@@ -41,8 +46,36 @@ public class RefereesController extends AbstractBaseController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.refereesTbl.setItems(this.refereesList);
 		this.refereesTbl.getSortOrder().add(this.idCol);
+
+		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
+		FilteredList<Referee> filteredData = new FilteredList<>(this.refereesList, r -> true);
+
+		// 2. Set the filter Predicate whenever the filter changes.
+		this.filterTxf.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(referee -> {
+				// If filter text is empty, display all persons.
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+
+				// Compare first name and last name of every person with filter text.
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				return referee.getFirstName().toLowerCase().contains(lowerCaseFilter)
+						|| referee.getLastName().toLowerCase().contains(lowerCaseFilter)
+						|| referee.getCity().toLowerCase().contains(lowerCaseFilter);
+			});
+		});
+
+		// 3. Wrap the FilteredList in a SortedList.
+		SortedList<Referee> sortedData = new SortedList<>(filteredData);
+
+		// 4. Bind the SortedList comparator to the TableView comparator.
+		sortedData.comparatorProperty().bind(this.refereesTbl.comparatorProperty());
+
+		// 5. Add sorted (and filtered) data to the table.
+		this.refereesTbl.setItems(sortedData);
 
 		loadResults(false);
 	}
@@ -54,11 +87,7 @@ public class RefereesController extends AbstractBaseController {
 
 	@FXML
 	void handleRefreshOnAction() {
-		disableButtons(true);
-
 		loadResults(true);
-
-		disableButtons(false);
 	}
 
 	@FXML
@@ -96,7 +125,6 @@ public class RefereesController extends AbstractBaseController {
 	private void loadResults(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.refereesList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
