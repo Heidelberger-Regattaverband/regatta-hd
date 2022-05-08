@@ -24,7 +24,7 @@
 				<Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
 				<Button fx:id="activateAllBtn" onAction="#handleActivateAllOnAction" text="%referees.activateAll" />
 				<Button fx:id="deactivateAllBtn" onAction="#handleDeactivateAllOnAction" text="%referees.deactivateAll" />
-            <TextField fx:id="filterTxf" />
+            <TextField fx:id="filterTxf" promptText="%common.filter" />
 			</items>
 		</ToolBar>
 		<TableView fx:id="refereesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
@@ -49,21 +49,21 @@
 						<CheckBoxTableCellFactory fx:factory="create" />
 					</cellFactory>
 				</TableColumn>
-				<TableColumn reorderable="false" sortable="false" text="%common.lastName">
+				<TableColumn reorderable="false" sortable="true" text="%common.lastName">
 					<cellValueFactory>
 						<PropertyValueFactory>
 							<property>lastName</property>
 						</PropertyValueFactory>
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn reorderable="false" sortable="false" text="%common.firstName">
+				<TableColumn reorderable="false" sortable="true" text="%common.firstName">
 					<cellValueFactory>
 						<PropertyValueFactory>
 							<property>firstName</property>
 						</PropertyValueFactory>
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn reorderable="false" sortable="false" text="%common.city">
+				<TableColumn reorderable="false" sortable="true" text="%common.city">
 					<cellValueFactory>
 						<PropertyValueFactory>
 							<property>city</property>
