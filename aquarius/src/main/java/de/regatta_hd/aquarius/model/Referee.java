@@ -11,6 +11,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,5 +61,9 @@ public class Referee {
 	private String lastName;
 
 	@Column(name = "Referee_LicenceState")
-	private byte licenceState;
+	private boolean licenceState;
+
+	public BooleanProperty activeProperty() {
+		return new SimpleBooleanProperty(this.licenceState);
+	}
 }
