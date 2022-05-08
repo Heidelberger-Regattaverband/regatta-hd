@@ -133,7 +133,7 @@
           <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>keytool-api-1.7</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
           </dependency>
         </dependencies>
       </plugin>
