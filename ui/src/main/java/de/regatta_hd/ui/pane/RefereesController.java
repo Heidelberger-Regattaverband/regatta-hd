@@ -39,6 +39,8 @@ public class RefereesController extends AbstractBaseController {
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
+	@FXML
+	private TableColumn<Referee, Boolean> activeCol;
 
 	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
 

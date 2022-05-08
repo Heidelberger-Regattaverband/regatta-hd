@@ -28,7 +28,7 @@
 				<TextField fx:id="filterTxf" promptText="%common.filter" />
 			</items>
 		</ToolBar>
-		<TableView fx:id="refereesTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+		<TableView fx:id="refereesTbl" editable="true" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
 			<placeholder>
 				<Label text="%common.noDataAvailable" />
 			</placeholder>
@@ -40,14 +40,14 @@
 						</PropertyValueFactory>
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.active">
+				<TableColumn fx:id="activeCol" editable="true" reorderable="false" style="-fx-alignment: CENTER;" text="%common.active">
 					<cellValueFactory>
 						<PropertyValueFactory>
 							<property>active</property>
 						</PropertyValueFactory>
 					</cellValueFactory>
 					<cellFactory>
-						<CheckBoxTableCellFactory fx:factory="readonly" />
+						<CheckBoxTableCellFactory fx:factory="editable" />
 					</cellFactory>
 				</TableColumn>
 				<TableColumn reorderable="false" sortable="true" text="%common.lastName">
