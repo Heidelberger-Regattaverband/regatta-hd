@@ -52,21 +52,20 @@ public class RefereesController extends AbstractBaseController {
 		FilteredList<Referee> filteredData = new FilteredList<>(this.refereesList, r -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
-		this.filterTxf.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredData.setPredicate(referee -> {
-				// If filter text is empty, display all persons.
-				if (newValue == null || newValue.isEmpty()) {
-					return true;
-				}
+		this.filterTxf.textProperty()
+				.addListener((observable, oldValue, newValue) -> filteredData.setPredicate(referee -> {
+					// If filter text is empty, display all persons.
+					if (newValue == null || newValue.isEmpty()) {
+						return true;
+					}
 
-				// Compare first name and last name of every person with filter text.
-				String lowerCaseFilter = newValue.toLowerCase();
+					// Compare first name and last name of every person with filter text.
+					String lowerCaseFilter = newValue.toLowerCase();
 
-				return referee.getFirstName().toLowerCase().contains(lowerCaseFilter)
-						|| referee.getLastName().toLowerCase().contains(lowerCaseFilter)
-						|| referee.getCity().toLowerCase().contains(lowerCaseFilter);
-			});
-		});
+					return referee.getFirstName().toLowerCase().contains(lowerCaseFilter)
+							|| referee.getLastName().toLowerCase().contains(lowerCaseFilter)
+							|| referee.getCity().toLowerCase().contains(lowerCaseFilter);
+				}));
 
 		// 3. Wrap the FilteredList in a SortedList.
 		SortedList<Referee> sortedData = new SortedList<>(filteredData);
