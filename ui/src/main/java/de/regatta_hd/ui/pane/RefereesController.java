@@ -68,6 +68,8 @@ public class RefereesController extends AbstractBaseController {
 
 		this.refereesTbl.getSortOrder().add(this.idCol);
 
+		// table sorting and filtering: https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
+
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data).
 		FilteredList<Referee> filteredData = new FilteredList<>(this.refereesList, r -> true);
 
