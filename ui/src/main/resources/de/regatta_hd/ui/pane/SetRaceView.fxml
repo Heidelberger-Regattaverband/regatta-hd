@@ -112,7 +112,7 @@
                           </PropertyValueFactory>
                         </cellValueFactory>
                         <cellFactory>
-                          <CheckBoxTableCellFactory fx:factory="create" />
+                          <CheckBoxTableCellFactory fx:factory="readonly" />
                         </cellFactory>
                       </TableColumn>
                       <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
@@ -144,7 +144,7 @@
                           </PropertyValueFactory>
                         </cellValueFactory>
                         <cellFactory>
-                          <CheckBoxTableCellFactory fx:factory="create" />
+                          <CheckBoxTableCellFactory fx:factory="readonly" />
                         </cellFactory>
                       </TableColumn>
                       <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">

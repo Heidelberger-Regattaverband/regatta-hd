@@ -16,7 +16,15 @@ public class CheckBoxTableCellFactory {
 		// avoid instances
 	}
 
-	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> create() {
+	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> readonly() {
 		return column -> new CheckBoxTableCell<>();
+	}
+
+	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> editable() {
+		return column -> {
+			CheckBoxTableCell<S, T> checkBoxTableCell = new CheckBoxTableCell<>();
+			checkBoxTableCell.setEditable(true);
+			return checkBoxTableCell;
+		};
 	}
 }

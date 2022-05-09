@@ -174,7 +174,8 @@ public class AquariusDBImpl implements DBConnection {
 	// static helpers
 
 	private static ThreadPoolExecutor createExecutor() {
-		return new DBThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS);
+		final int poolSize = 1;
+		return new DBThreadPoolExecutor(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS);
 	}
 
 	private static Map<String, String> getProperties(DBConfig dbCfg) {
