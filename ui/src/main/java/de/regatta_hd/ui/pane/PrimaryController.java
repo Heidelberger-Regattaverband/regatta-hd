@@ -292,6 +292,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
+		this.refereesMitm.setDisable(!isOpen);
 		this.errorLogMitm.setDisable(!isOpen);
 	}
 
