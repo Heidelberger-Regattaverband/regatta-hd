@@ -11,6 +11,7 @@ import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
@@ -49,19 +50,21 @@ public class RefereesController extends AbstractBaseController {
 
 	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
 
+	private final StateChangedEventListener stateChangedEventListener = event -> {
+		if (event.getDBConnection().isOpen()) {
+			loadResults(true);
+			disableButtons(false);
+		} else {
+			disableButtons(true);
+			this.refereesList.clear();
+		}
+	};
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class, event -> {
-			if (event.getDBConnection().isOpen()) {
-				loadResults(true);
-				disableButtons(false);
-			} else {
-				disableButtons(true);
-				this.refereesList.clear();
-			}
-		});
+		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class, this.stateChangedEventListener);
 
 		this.activeCol.setCellValueFactory(cellData -> {
 			BooleanProperty property = cellData.getValue().activeProperty();
@@ -117,7 +120,7 @@ public class RefereesController extends AbstractBaseController {
 
 	@Override
 	public void shutdown() {
-		// nothing to shutdown yet
+		this.listenerManager.removeListener(StateChangedEventListener.class, this.stateChangedEventListener);
 	}
 
 	@FXML
@@ -191,5 +194,4 @@ public class RefereesController extends AbstractBaseController {
 		this.deactivateAllBtn.setDisable(disabled);
 		this.filterTxf.setDisable(disabled);
 	}
-
 }
