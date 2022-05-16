@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -191,5 +192,12 @@ public class AquariusDBImpl implements DBConnection {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
+	}
+
+	@Override
+	public <R> Future<R> execute(DBCallable<R> callable) {
+		return getExecutor().submit(() -> {
+			return callable.execute(getEntityManager());
+		});
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.EventListener;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import jakarta.persistence.EntityManager;
 
@@ -29,11 +30,15 @@ public interface DBConnection {
 	 */
 	void open(DBConfig connectionData) throws SQLException;
 
+	<R> Future<R> execute(DBCallable<R> callable);
+
 	/**
 	 * Returns the executor for DB tasks.
 	 *
 	 * @return an {@link Executor} for DB tasks.
+	 * @deprecated Use {@link #execute(DBCallable)} instead
 	 */
+	@Deprecated(since = "0.1.21")
 	ExecutorService getExecutor();
 
 	interface StateChangedEvent {
@@ -54,7 +59,14 @@ public interface DBConnection {
 
 	/**
 	 * @return {@link EntityManager} instance
+	 * @deprecated Use {@link #execute(DBCallable)} instead
 	 */
+	@Deprecated(since = "0.1.21")
 	EntityManager getEntityManager();
 
+	@FunctionalInterface
+	interface DBCallable<R> {
+
+		R execute(EntityManager entityManager) throws Exception; // NOSONAR
+	}
 }
