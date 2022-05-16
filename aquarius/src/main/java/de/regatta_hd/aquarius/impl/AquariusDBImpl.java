@@ -43,9 +43,9 @@ public class AquariusDBImpl implements DBConnection {
 			.withInitial(() -> this.emFactory.createEntityManager());
 	private final ListenerManager listenerManager;
 
-	private ExecutorService dbExecutor;
+	private volatile ExecutorService dbExecutor;
 	private String version;
-	private EntityManagerFactory emFactory;
+	private volatile EntityManagerFactory emFactory;
 
 	@Inject
 	public AquariusDBImpl(ListenerManager listenerManager) {
@@ -53,9 +53,13 @@ public class AquariusDBImpl implements DBConnection {
 	}
 
 	@Override
-	public synchronized ExecutorService getExecutor() {
+	public ExecutorService getExecutor() {
 		if (this.dbExecutor == null) {
-			this.dbExecutor = createExecutor();
+			synchronized (this) {
+				if (this.dbExecutor == null) {
+					this.dbExecutor = createExecutor();
+				}
+			}
 		}
 		return this.dbExecutor;
 	}
@@ -91,7 +95,7 @@ public class AquariusDBImpl implements DBConnection {
 	}
 
 	@Override
-	public synchronized void open(DBConfig dbCfg) throws SQLServerException {
+	public synchronized void open(DBConfig dbCfg) throws SQLException {
 		Map<String, String> props = getProperties(requireNonNull(dbCfg, "dbCfg must not be null"));
 
 		close();
