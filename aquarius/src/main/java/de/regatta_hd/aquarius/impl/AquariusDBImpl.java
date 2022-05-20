@@ -52,10 +52,8 @@ public class AquariusDBImpl extends AbstractDBConnection {
 			// notify listeners about changed AquariusDB state
 			notifyListeners(new AquariusDBStateChangedEventImpl(this));
 		} catch (PersistenceException e) {
-			if (this.emFactory != null) {
-				this.emFactory.close();
-				this.emFactory = null;
-			}
+			close();
+
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			if (rootCause instanceof SQLServerException) {
 				throw (SQLServerException) rootCause;

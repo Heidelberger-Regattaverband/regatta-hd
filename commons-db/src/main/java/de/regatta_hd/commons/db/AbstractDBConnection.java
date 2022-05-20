@@ -29,21 +29,22 @@ public abstract class AbstractDBConnection implements DBConnection {
 
 	@Override
 	public synchronized void close() {
-		if (isOpenImpl()) {
-			this.entityManager.remove();
-			if (this.emFactory != null) {
-				this.emFactory.close();
-				this.emFactory = null;
-			}
-
-			if (this.executor != null) {
-				this.executor.shutdownNow();
-				this.executor = null;
-			}
-
-			// notify listeners about changed AquariusDB state
-			notifyListeners(new StateChangedEventImplementation());
+		if (this.executor != null) {
+			this.executor.shutdown();
+			this.executor = null;
 		}
+
+		if (this.emFactory != null) {
+			this.emFactory.close();
+			this.emFactory = null;
+		}
+
+		if (this.entityManager != null) {
+			this.entityManager.remove();
+		}
+
+		// notify listeners about changed AquariusDB state
+		notifyListeners(new StateChangedEventImplementation());
 	}
 
 	@Override
