@@ -2,6 +2,7 @@ package de.regatta_hd.commons.db;
 
 import static java.util.Objects.requireNonNull;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 import de.regatta_hd.commons.core.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.PersistenceException;
 
 public abstract class AbstractDBConnection implements DBConnection {
 
@@ -19,12 +22,34 @@ public abstract class AbstractDBConnection implements DBConnection {
 
 	private final ListenerManager listenerManager;
 
+	private final String persistenceUnitName;
+
 	private volatile ExecutorService executor; // NOSONAR
 
-	protected volatile EntityManagerFactory emFactory;
+	private volatile EntityManagerFactory emFactory; // NOSONAR
 
-	protected AbstractDBConnection(ListenerManager listenerManager) {
+	protected AbstractDBConnection(String persistenceUnitName, ListenerManager listenerManager) {
+		this.persistenceUnitName = requireNonNull(persistenceUnitName, "persistenceUnitName must not be null");
 		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
+	}
+
+	@Override
+	public final synchronized void open(DBConfig dbConfig) throws SQLException {
+		close();
+
+		Map<String, String> props = getProperties(requireNonNull(dbConfig, "dbConfig must not be null"));
+
+		try {
+			this.emFactory = Persistence.createEntityManagerFactory(this.persistenceUnitName, props);
+
+			openImpl();
+
+			// notify listeners about changed DB connection state
+			notifyListeners(new StateChangedEventImplementation());
+		} catch (PersistenceException pex) {
+			close();
+			convertException(pex);
+		}
 	}
 
 	@Override
@@ -37,14 +62,14 @@ public abstract class AbstractDBConnection implements DBConnection {
 		if (this.emFactory != null) {
 			this.emFactory.close();
 			this.emFactory = null;
+
+			// notify listeners about changed DB connection state
+			notifyListeners(new StateChangedEventImplementation());
 		}
 
 		if (this.entityManager != null) {
 			this.entityManager.remove();
 		}
-
-		// notify listeners about changed AquariusDB state
-		notifyListeners(new StateChangedEventImplementation());
 	}
 
 	@Override
@@ -80,6 +105,10 @@ public abstract class AbstractDBConnection implements DBConnection {
 	}
 
 	protected abstract Map<String, String> getProperties(DBConfig dbConfig);
+
+	protected abstract void openImpl();
+
+	protected abstract void convertException(PersistenceException ex) throws SQLException;
 
 	protected void notifyListeners(StateChangedEvent event) {
 		List<StateChangedEventListener> listeners = this.listenerManager.getListeners(StateChangedEventListener.class);

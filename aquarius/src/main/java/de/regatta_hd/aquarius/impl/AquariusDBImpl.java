@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius.impl;
 
-import static java.util.Objects.requireNonNull;
-
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +15,6 @@ import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.AbstractDBConnection;
 import de.regatta_hd.commons.db.DBConfig;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -35,31 +32,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 
 	@Inject
 	public AquariusDBImpl(ListenerManager listenerManager) {
-		super(listenerManager);
-	}
-
-	@Override
-	public synchronized void open(DBConfig dbCfg) throws SQLException {
-		Map<String, String> props = getProperties(requireNonNull(dbCfg, "dbCfg must not be null"));
-
-		close();
-
-		try {
-			this.emFactory = Persistence.createEntityManagerFactory("aquarius", props);
-
-			this.version = readVersion();
-
-			// notify listeners about changed AquariusDB state
-			notifyListeners(new AquariusDBStateChangedEventImpl(this));
-		} catch (PersistenceException e) {
-			close();
-
-			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			if (rootCause instanceof SQLServerException) {
-				throw (SQLServerException) rootCause;
-			}
-			throw e;
-		}
+		super("aquarius", listenerManager);
 	}
 
 	@SuppressWarnings("resource")
@@ -89,21 +62,35 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		return this.version;
 	}
 
-
 	@Override
-	protected Map<String, String> getProperties(DBConfig dbCfg) {
-		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbCfg.getDbHost(),
-				dbCfg.getDbName(), Boolean.toString(dbCfg.isEncrypt()));
+	protected Map<String, String> getProperties(DBConfig dbConfig) {
+		Map<String, String> properties = new HashMap<>();
 
-		if (dbCfg.isEncrypt() && dbCfg.isTrustServerCertificate()) {
+		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getDbHost(),
+				dbConfig.getDbName(), Boolean.toString(dbConfig.isEncrypt()));
+
+		if (dbConfig.isEncrypt() && dbConfig.isTrustServerCertificate()) {
 			url += ";trustServerCertificate=true";
 		}
 
-		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
-		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
-		return props;
+		properties.put("javax.persistence.jdbc.url", url);
+		properties.put("javax.persistence.jdbc.user", dbConfig.getUsername());
+		properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
+		return properties;
+	}
+
+	@Override
+	protected void openImpl() {
+		this.version = readVersion();
+	}
+
+	@Override
+	protected void convertException(PersistenceException ex) throws SQLException {
+		Throwable rootCause = ExceptionUtils.getRootCause(ex);
+		if (rootCause instanceof SQLServerException) {
+			throw (SQLServerException) rootCause;
+		}
+		throw ex;
 	}
 
 	private String readVersion() {
