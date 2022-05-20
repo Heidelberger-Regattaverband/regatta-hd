@@ -81,10 +81,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
-				if (this.emFactory != null) {
-					this.emFactory.close();
-					this.emFactory = null;
-				}
+				close();
 				throw new SQLException(e);
 			}
 		});
