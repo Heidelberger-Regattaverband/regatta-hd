@@ -58,7 +58,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		});
 	}
 
-	String getVersion() {
+	public String getVersion() {
 		return this.version;
 	}
 
