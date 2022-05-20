@@ -17,8 +17,6 @@ import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.AbstractDBConnection;
 import de.regatta_hd.commons.db.DBConfig;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
 import liquibase.Contexts;
@@ -33,39 +31,11 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl extends AbstractDBConnection {
 
-	private final ThreadLocal<EntityManager> entityManager = ThreadLocal
-			.withInitial(() -> this.emFactory.createEntityManager());
-
 	private String version;
-
-	private volatile EntityManagerFactory emFactory;
 
 	@Inject
 	public AquariusDBImpl(ListenerManager listenerManager) {
 		super(listenerManager);
-	}
-
-	@Override
-	public synchronized void close() {
-		if (isOpenImpl()) {
-			this.entityManager.remove();
-			if (this.emFactory != null) {
-				this.emFactory.close();
-				this.emFactory = null;
-			}
-			this.version = null;
-
-			// notify listeners about changed AquariusDB state
-			notifyListeners(new AquariusDBStateChangedEventImpl(this));
-		}
-
-		super.close();
-	}
-
-	@Override
-	public synchronized EntityManager getEntityManager() {
-		ensureOpen();
-		return this.entityManager.get();
 	}
 
 	@Override
@@ -124,10 +94,6 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		return this.version;
 	}
 
-	@Override
-	protected boolean isOpenImpl() {
-		return this.emFactory != null && this.emFactory.isOpen();
-	}
 
 	@Override
 	protected Map<String, String> getProperties(DBConfig dbCfg) {

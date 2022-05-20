@@ -9,17 +9,48 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import de.regatta_hd.commons.core.ListenerManager;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 public abstract class AbstractDBConnection implements DBConnection {
 
-	private volatile ExecutorService executor; // NOSONAR
+	private final ThreadLocal<EntityManager> entityManager = ThreadLocal
+			.withInitial(() -> this.emFactory.createEntityManager());
 
 	private final ListenerManager listenerManager;
+
+	private volatile ExecutorService executor; // NOSONAR
+
+	protected volatile EntityManagerFactory emFactory;
 
 	protected AbstractDBConnection(ListenerManager listenerManager) {
 		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
 	}
 
+	@Override
+	public synchronized void close() {
+		if (isOpenImpl()) {
+			this.entityManager.remove();
+			if (this.emFactory != null) {
+				this.emFactory.close();
+				this.emFactory = null;
+			}
+
+			if (this.executor != null) {
+				this.executor.shutdownNow();
+				this.executor = null;
+			}
+
+			// notify listeners about changed AquariusDB state
+			notifyListeners(new StateChangedEventImplementation());
+		}
+	}
+
+	@Override
+	public synchronized EntityManager getEntityManager() {
+		ensureOpen();
+		return this.entityManager.get();
+	}
 
 	@Override
 	public synchronized boolean isOpen() {
@@ -38,14 +69,6 @@ public abstract class AbstractDBConnection implements DBConnection {
 		return this.executor;
 	}
 
-	@Override
-	public synchronized void close() {
-		if (this.executor != null) {
-			this.executor.shutdownNow();
-			this.executor = null;
-		}
-	}
-
 	protected void ensureOpen() {
 		if (!isOpenImpl()) {
 			throw new IllegalStateException("Not connected.");
@@ -54,8 +77,6 @@ public abstract class AbstractDBConnection implements DBConnection {
 			throw new IllegalStateException("Not a Database connection thread.");
 		}
 	}
-
-	protected abstract boolean isOpenImpl();
 
 	protected abstract Map<String, String> getProperties(DBConfig dbConfig);
 
@@ -66,11 +87,24 @@ public abstract class AbstractDBConnection implements DBConnection {
 		}
 	}
 
+	private boolean isOpenImpl() {
+		return this.emFactory != null && this.emFactory.isOpen();
+	}
+
 	// static helpers
 
 	private static ThreadPoolExecutor createExecutor() {
 		final int poolSize = 1;
 		return new DBThreadPoolExecutor(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS);
+	}
+
+	// internal classes
+
+	private final class StateChangedEventImplementation implements StateChangedEvent {
+		@Override
+		public DBConnection getDBConnection() {
+			return AbstractDBConnection.this;
+		}
 	}
 
 }
