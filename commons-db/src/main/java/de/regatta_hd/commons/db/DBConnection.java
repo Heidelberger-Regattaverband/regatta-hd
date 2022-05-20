@@ -36,6 +36,13 @@ public interface DBConnection {
 	 */
 	ExecutorService getExecutor();
 
+	void updateSchema();
+
+	/**
+	 * @return {@link EntityManager} instance
+	 */
+	EntityManager getEntityManager();
+
 	interface StateChangedEvent {
 
 		DBConnection getDBConnection();
@@ -49,12 +56,5 @@ public interface DBConnection {
 
 		void stateChanged(StateChangedEvent event);
 	}
-
-	void updateSchema();
-
-	/**
-	 * @return {@link EntityManager} instance
-	 */
-	EntityManager getEntityManager();
 
 }
