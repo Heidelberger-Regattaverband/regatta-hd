@@ -79,6 +79,7 @@
     <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
+    <module>schemas</module>
   </modules>
 
   <prerequisites>
@@ -206,6 +207,12 @@
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
         <version>${poi.version}</version>
+      </dependency>
+      <!-- https://search.maven.org/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>4.0.0</version>
       </dependency>
 
       <!-- ========== -->
