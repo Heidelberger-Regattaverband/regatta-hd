@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius;
 
+import java.io.Reader;
 import java.util.List;
 
 import de.regatta_hd.aquarius.model.AgeClass;
@@ -57,4 +58,6 @@ public interface MasterDataDAO {
 	List<Referee> getReferees();
 
 	int updateAllRefereesLicenceState(boolean licenceState);
+
+	void importReferees(Reader reader);
 }

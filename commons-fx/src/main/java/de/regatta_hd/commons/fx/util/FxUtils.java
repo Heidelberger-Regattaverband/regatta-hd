@@ -45,6 +45,16 @@ public class FxUtils {
 		return fileChooser.showSaveDialog(window);
 	}
 
+	public static File showOpenDialog(Window window, String fileName, String description, final String... extensions) {
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter for text files
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description, extensions));
+		fileChooser.setInitialFileName(fileName);
+		// Show save file dialog
+		return fileChooser.showOpenDialog(window);
+	}
+
 	public static void showErrorMessage(Window window, Throwable exception) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.initOwner(window);

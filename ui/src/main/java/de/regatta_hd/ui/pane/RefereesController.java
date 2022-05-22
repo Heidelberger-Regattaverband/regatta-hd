@@ -1,6 +1,11 @@
 package de.regatta_hd.ui.pane;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -136,6 +141,20 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	void handleActivateAllOnAction() {
 		updateLicenceState(true);
+	}
+
+	@FXML
+	void handleImportOnAction() {
+		File importFile = FxUtils.showOpenDialog(getWindow(), null, "Wettkampfrichter XML Datei", "*.xml");
+
+		if (importFile != null) {
+			try (Reader reader = Files.newBufferedReader(importFile.toPath(), StandardCharsets.UTF_8)) {
+				this.masterDAO.importReferees(reader);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			}
+		}
 	}
 
 	private void updateLicenceState(boolean licenceState) {

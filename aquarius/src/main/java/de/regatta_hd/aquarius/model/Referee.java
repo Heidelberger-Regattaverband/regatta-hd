@@ -15,7 +15,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -25,6 +28,9 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Referee")
 //lombok
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
@@ -50,7 +56,7 @@ public class Referee {
 	private String city;
 
 	@Column(name = "Referee_ExternID")
-	private Integer externID;
+	private Long externID;
 
 	@Basic
 	@Column(name = "Referee_FirstName", nullable = false, length = 32)
