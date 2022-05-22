@@ -10,7 +10,7 @@
 
   <artifactId>schemas</artifactId>
   <packaging>jar</packaging>
-  <name>Regatta - XML Schema Models</name>
+  <name>Regatta HD - XML Schema Models</name>
 
   <dependencies>
     <dependency>
