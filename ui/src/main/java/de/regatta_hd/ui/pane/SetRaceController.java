@@ -141,7 +141,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
 						Race race2 = srcRaces.get(getSrcRaceNumber(race));
-						return race2 != null && race2.isOfficial();
+						// the source race needs to be driven with an official result
+						return race2 != null && race2.isOfficial() && race2.isDriven();
 					}).collect(Collectors.toList());
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
@@ -443,8 +444,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		bibCol.setStyle(FX_ALIGNMENT_CENTER);
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
-			if (entry != null && entry.getBib() != 0) {
-				return new SimpleIntegerProperty(entry.getBib());
+			if (entry != null && entry.getBib() != null) {
+				return new SimpleIntegerProperty(entry.getBib().intValue());
 			}
 			return null;
 		});

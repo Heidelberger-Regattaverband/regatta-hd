@@ -194,7 +194,10 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 			// add bibs
 			for (HeatRegistration heatReg : heatRegs) {
-				row.createCell(cellIdx++).setCellValue(heatReg.getRegistration().getBib());
+				row.createCell(cellIdx++)
+						.setCellValue(heatReg.getRegistration().getBib() != null
+								? heatReg.getRegistration().getBib().doubleValue()
+								: 0);
 			}
 			for (int i = 0; i < diff; i++) {
 				row.createCell(cellIdx++).setCellValue(0);
