@@ -32,7 +32,7 @@ public class SetListEntry {
 	}
 
 	public short getBib() {
-		return this.registration.getBib();
+		return this.registration.getBib() != null ? this.registration.getBib().shortValue() : 0;
 	}
 
 	public String getBoat() {
@@ -45,7 +45,8 @@ public class SetListEntry {
 	}
 
 	public Short getDevisionNumber() {
-		return this.srcHeatRregistration != null ? Short.valueOf(this.srcHeatRregistration.getHeat().getDevisionNumber())
+		return this.srcHeatRregistration != null
+				? Short.valueOf(this.srcHeatRregistration.getHeat().getDevisionNumber())
 				: null;
 	}
 

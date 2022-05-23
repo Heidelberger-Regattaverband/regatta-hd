@@ -58,6 +58,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private MenuItem eventsMitm;
 	@FXML
+	private MenuItem refereesMitm;
+	@FXML
 	private MenuItem racesMitm;
 	@FXML
 	private MenuItem setRaceMitm;
@@ -169,6 +171,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	void handleEvents() {
 		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
+	}
+
+	@FXML
+	void handleRefereesOnAction() {
+		openStage("RefereesView.fxml", getText("common.referees"));
 	}
 
 	@FXML
@@ -285,6 +292,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
+		this.refereesMitm.setDisable(!isOpen);
 		this.errorLogMitm.setDisable(!isOpen);
 	}
 

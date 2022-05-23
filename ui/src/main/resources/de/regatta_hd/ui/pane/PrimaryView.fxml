@@ -29,6 +29,7 @@
             <Menu text="%PrimaryView.adminMenu.text">
               <items>
                 <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.regattasMitm.text" />
+                <MenuItem fx:id="refereesMitm" onAction="#handleRefereesOnAction" text="%common.referees" />
               </items>
             </Menu>
             <Menu text="%common.regatta">

@@ -86,7 +86,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <CheckBoxTableCellFactory fx:factory="create" />
+            <CheckBoxTableCellFactory fx:factory="readonly" />
           </cellFactory>
         </TableColumn>
         <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%OffersView.setCol.text">
@@ -96,7 +96,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <CheckBoxTableCellFactory fx:factory="create" />
+            <CheckBoxTableCellFactory fx:factory="readonly" />
           </cellFactory>
         </TableColumn>
       </columns>

@@ -9,6 +9,7 @@ import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
+import de.regatta_hd.aquarius.model.Referee;
 
 @Singleton
 public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO {
@@ -55,5 +56,16 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	@Override
 	public String getAquariusVersion() {
 		return super.db.getVersion();
+	}
+
+	@Override
+	public List<Referee> getReferees() {
+		return getEntities(Referee.class);
+	}
+
+	@Override
+	public int updateAllRefereesLicenceState(boolean licenceState) {
+		return super.db.getEntityManager().createQuery("UPDATE Referee SET licenceState = :licenceState")
+				.setParameter("licenceState", Boolean.valueOf(licenceState)).executeUpdate();
 	}
 }
