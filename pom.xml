@@ -216,6 +216,12 @@
         <artifactId>jakarta.xml.bind-api</artifactId>
         <version>4.0.0</version>
       </dependency>
+      <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>4.0.0-M4</version>
+      </dependency>
 
       <!-- ========== -->
       <!-- Test tools -->
