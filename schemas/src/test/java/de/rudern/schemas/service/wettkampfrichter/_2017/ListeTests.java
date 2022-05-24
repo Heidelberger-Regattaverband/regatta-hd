@@ -17,6 +17,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import de.regatta_hd.schemas.xml.NamespaceFilter;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -35,7 +36,13 @@ class ListeTests {
 			saxFactory.setNamespaceAware(true);
 			saxFactory.setValidating(false);
 			XMLReader xmlReader = saxFactory.newSAXParser().getXMLReader();
-			Source source = new SAXSource(xmlReader, new InputSource(input));
+
+			// Create the filter (to add namespace) and set the xmlReader as its parent.
+			NamespaceFilter inFilter = new NamespaceFilter("http://schemas.rudern.de/service/wettkampfrichter/2017",
+					true);
+			inFilter.setParent(xmlReader);
+
+			Source source = new SAXSource(inFilter, new InputSource(input));
 
 			liste = (Liste) unmarshaller.unmarshal(source);
 		}
