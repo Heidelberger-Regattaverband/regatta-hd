@@ -1,16 +1,7 @@
 package de.regatta_hd.aquarius.impl;
 
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 import com.google.inject.Singleton;
 
@@ -20,10 +11,9 @@ import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.aquarius.model.Referee;
+import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.rudern.schemas.service.wettkampfrichter._2017.Liste;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 
 @Singleton
 public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO {
@@ -84,28 +74,14 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	}
 
 	@Override
-	public void importReferees(Reader reader) {
-		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(Liste.class);
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-			SAXParserFactory saxFactory = SAXParserFactory.newInstance();
-			saxFactory.setNamespaceAware(true);
-			saxFactory.setValidating(false);
-			XMLReader xmlReader = saxFactory.newSAXParser().getXMLReader();
-			Source source = new SAXSource(xmlReader, new InputSource(reader));
-
-			Liste referees = (Liste) unmarshaller.unmarshal(source);
-
-			if (referees != null) {
-				referees.getWettkampfrichter().forEach(referee -> {
-					Referee ref = Referee.builder().city(referee.getOrt()).externID(referee.getLizenznummer())
-							.firstName(referee.getVorname()).lastName(referee.getVorname()).build();
-					super.db.getEntityManager().merge(ref);
-				});
-			}
-		} catch (SAXException | ParserConfigurationException | JAXBException e) {
-			e.printStackTrace();
+	public void importReferees(InputStream input) throws JAXBException {
+		Liste referees = XMLDataLoader.loadWkrListe(input);
+		if (referees != null) {
+			referees.getWettkampfrichter().forEach(referee -> {
+				Referee ref = Referee.builder().city(referee.getOrt()).externID(referee.getLizenznummer())
+						.firstName(referee.getVorname()).lastName(referee.getVorname()).build();
+				super.db.getEntityManager().merge(ref);
+			});
 		}
 	}
 }

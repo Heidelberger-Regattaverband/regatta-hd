@@ -614,7 +614,7 @@
 		<Region>W</Region>
 	</Wettkampfrichter>
 
-	<Wettkampfrichter Lizenznummer="0" Status="N">
+	<Wettkampfrichter Lizenznummer="" Status="N">
 		<Vorname>Kerstin</Vorname>
 		<Nachname>Kemle</Nachname>
 		<Ort>Rüsselsheim</Ort>

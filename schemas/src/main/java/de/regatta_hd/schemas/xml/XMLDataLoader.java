@@ -22,21 +22,30 @@ public class XMLDataLoader {
 		// avoid instances
 	}
 
-	public static Liste loadWkrListe(InputStream input) throws JAXBException, SAXException, ParserConfigurationException {
+	public static Liste loadWkrListe(InputStream input) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(Liste.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
 		SAXParserFactory saxFactory = SAXParserFactory.newInstance();
 		saxFactory.setNamespaceAware(true);
 		saxFactory.setValidating(false);
-		XMLReader xmlReader = saxFactory.newSAXParser().getXMLReader();
+		XMLReader xmlReader;
+		try {
+			xmlReader = saxFactory.newSAXParser().getXMLReader();
 
-		// Create the filter (to add namespace) and set the xmlReader as its parent.
-		NamespaceFilter inFilter = new NamespaceFilter("http://schemas.rudern.de/service/wettkampfrichter/2017", true);
-		inFilter.setParent(xmlReader);
+			// Create the filter (to add namespace) and set the xmlReader as its parent.
+			NamespaceFilter inFilter = new NamespaceFilter("http://schemas.rudern.de/service/wettkampfrichter/2017",
+					true);
+			inFilter.setParent(xmlReader);
 
-		Source source = new SAXSource(inFilter, new InputSource(input));
+			InvalidNumberFilter numberFilter = new InvalidNumberFilter("Wettkampfrichter", "Lizenznummer");
+			numberFilter.setParent(inFilter);
 
-		return (Liste) unmarshaller.unmarshal(source);
+			Source source = new SAXSource(numberFilter, new InputSource(input));
+
+			return (Liste) unmarshaller.unmarshal(source);
+		} catch (SAXException | ParserConfigurationException e) {
+			throw new JAXBException(e);
+		}
 	}
 }
