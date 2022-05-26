@@ -146,7 +146,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 		}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("scores.xsl.export"), false);
-
 	}
 
 	private Workbook createWorkbook(ProgressMonitor progress) {
