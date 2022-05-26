@@ -29,7 +29,7 @@
             <PropertyValueFactory property="rank" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
+        <TableColumn fx:id="pointsCol" reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>

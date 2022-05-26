@@ -26,6 +26,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -42,7 +43,8 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private TableView<Score> scoresTbl;
 	@FXML
 	private TableColumn<Score, Integer> rankCol;
-
+	@FXML
+	private TableColumn<Score, Float> pointsCol;
 	private final ObservableList<Score> scoresList = FXCollections.observableArrayList();
 
 	@Override
@@ -51,6 +53,18 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 		this.scoresTbl.setItems(this.scoresList);
 		this.scoresTbl.getSortOrder().add(this.rankCol);
+
+		this.pointsCol.setCellFactory(tc -> new TableCell<>() {
+			@Override
+			protected void updateItem(Float value, boolean empty) {
+				super.updateItem(value, empty);
+				if (empty) {
+					setText(null);
+				} else {
+					setText(String.format("%.2f", value));
+				}
+			}
+		});
 
 		loadScores(false);
 	}
