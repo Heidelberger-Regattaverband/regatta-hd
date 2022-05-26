@@ -77,6 +77,16 @@ public class Heat {
 	@Column(name = "Comp_ID")
 	private int id;
 
+	/**
+	 * The consecutive heat number within the regatta, e.g. 1, 2, 3 ... 100, 101, 102
+	 */
+	@Column(name = "Comp_Number")
+	@ToString.Include(rank = 8)
+	private short number;
+
+	/**
+	 * The consecutive heat (devision) number within the race, e.g Abteilung 1, Abteilung 2 ...
+	 */
 	@Column(name = "Comp_HeatNumber")
 	@ToString.Include(rank = 10)
 	private short devisionNumber;
@@ -103,10 +113,6 @@ public class Heat {
 
 	@Column(name = "Comp_Locked")
 	private boolean locked;
-
-	@Column(name = "Comp_Number")
-	@ToString.Include(rank = 8)
-	private short number;
 
 	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "heat")
 	private List<HeatReferee> heatReferees;

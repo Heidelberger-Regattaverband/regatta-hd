@@ -177,8 +177,7 @@ public class Race {
 	}
 
 	public ObservableBooleanValue setProperty() {
-		boolean isSet = this.set != null && this.set.booleanValue();
-		return new SimpleBooleanProperty(isSet);
+		return new SimpleBooleanProperty(isSet());
 	}
 
 	public List<Heat> getHeatsSortedByDevisionNumber() {
@@ -192,6 +191,15 @@ public class Race {
 	 */
 	public boolean isOfficial() {
 		return getHeats().stream().allMatch(heat -> heat.isStateOfficial());
+	}
+
+	/**
+	 * Indicates whether this race was set or not.
+	 *
+	 * @return {@code true} if race was set, otherwise {@code false}
+	 */
+	public boolean isSet() {
+		return this.set != null && this.set.booleanValue();
 	}
 
 	public enum GroupMode {
