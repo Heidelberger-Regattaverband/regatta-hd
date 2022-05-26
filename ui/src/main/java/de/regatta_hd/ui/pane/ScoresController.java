@@ -3,8 +3,6 @@ package de.regatta_hd.ui.pane;
 import static java.util.Objects.nonNull;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -13,8 +11,6 @@ import java.util.logging.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,6 +20,7 @@ import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.util.ExcelUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -131,12 +128,12 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createXsl, dbResult -> {
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
 			File file = FxUtils.showSaveDialog(getWindow(), getText("scores.xsl.fileName"),
 					getText("scores.xsl.description"), "*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
-					saveXslFile(workbook, file);
+					ExcelUtils.saveWorkbook(workbook, file);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -152,20 +149,14 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	}
 
-	private Workbook createXsl(ProgressMonitor progress) {
+	private Workbook createWorkbook(ProgressMonitor progress) {
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Punktwertung");
 
 		int rowIdx = 0;
 		int cellIdx = 0;
 
-		Font headerFont = workbook.createFont();
-		headerFont.setBold(true);
-
-		CellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFont(headerFont);
-		headerStyle.setAlignment(HorizontalAlignment.CENTER);
-		headerStyle.setFont(headerFont);
+		CellStyle headerStyle = ExcelUtils.createHeaderCellStyle(workbook);
 
 		CellStyle pointsStyle = workbook.createCellStyle();
 		pointsStyle.setDataFormat((short) 2);
@@ -198,15 +189,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 			progress.update(j, this.scoresList.size(), getText("scores.xsl.progress", Short.valueOf(heat.getRank())));
 		}
 		return workbook;
-	}
-
-	private void saveXslFile(Workbook workbook, File file) {
-		try (FileOutputStream fileOut = new FileOutputStream(file)) {
-			workbook.write(fileOut);
-		} catch (IOException ex) {
-			logger.log(Level.SEVERE, ex.getMessage(), ex);
-			FxUtils.showErrorMessage(getWindow(), ex);
-		}
 	}
 
 	private void updatePlaceholder(String text) {

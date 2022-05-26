@@ -3,7 +3,6 @@ package de.regatta_hd.ui.pane;
 import static java.util.Objects.nonNull;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -17,6 +16,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -27,6 +28,7 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.util.ExcelUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,6 +39,19 @@ import javafx.scene.control.TableView;
 
 public class HeatsController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
+
+	private static final String HEADER_INDEX = "Index";
+	private static final String HEADER_RENN_NR = "RennNr";
+	private static final String HEADER_ABTEILUNG = "Abtlg";
+	private static final String HEADER_STATUS = "Status";
+	private static final String HEADER_BOOT_BAHN_4 = "Boot Bahn 4";
+	private static final String HEADER_BOOT_BAHN_3 = "Boot Bahn 3";
+	private static final String HEADER_BOOT_BAHN_2 = "Boot Bahn 2";
+	private static final String HEADER_BOOT_BAHN_1 = "Boot Bahn 1";
+	private static final String HEADER_DELAY_BAHN_4 = "Delay Bahn 4";
+	private static final String HEADER_DELAY_BAHN_3 = "Delay Bahn 3";
+	private static final String HEADER_DELAY_BAHN_2 = "Delay Bahn 2";
+	private static final String HEADER_DELAY_BAHN_1 = "Delay Bahn 1";
 	private static final String DELIMITER = ";";
 	private static final Pattern delayPattern = Pattern.compile("\\d*[\\.,]?\\d+");
 
@@ -106,12 +121,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createXsl, dbResult -> {
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
 			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"),
 					"*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
-					saveXslFile(workbook, file);
+					ExcelUtils.saveWorkbook(workbook, file);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -157,12 +172,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 		});
 	}
 
-	private Workbook createXsl(ProgressMonitor progress) {
+	private Workbook createWorkbook(ProgressMonitor progress) {
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Startliste");
 
 		Row row = sheet.createRow(0);
-		addXslHeader(row);
+		addHeader(workbook, row);
 
 		for (int j = 0; j < this.heatsList.size(); j++) {
 			int cellIdx = 0;
@@ -268,15 +283,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 		}
 	}
 
-	private void saveXslFile(Workbook workbook, File file) {
-		try (FileOutputStream fileOut = new FileOutputStream(file)) {
-			workbook.write(fileOut);
-		} catch (IOException ex) {
-			logger.log(Level.SEVERE, ex.getMessage(), ex);
-			FxUtils.showErrorMessage(getWindow(), ex);
-		}
-	}
-
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.exportCsvBtn.setDisable(disabled);
@@ -306,28 +312,55 @@ public class HeatsController extends AbstractRegattaDAOController {
 		return delay;
 	}
 
-	private static void addXslHeader(Row row) {
+	private static void addHeader(Workbook workbook, Row row) {
 		int idx = 0;
-		row.createCell(idx++).setCellValue("Index");
-		row.createCell(idx++).setCellValue("RennNr");
-		row.createCell(idx++).setCellValue("Abtlg");
-		row.createCell(idx++).setCellValue("Delay Bahn 1");
-		row.createCell(idx++).setCellValue("Delay Bahn 2");
-		row.createCell(idx++).setCellValue("Delay Bahn 3");
-		row.createCell(idx++).setCellValue("Delay Bahn 4");
-		row.createCell(idx++).setCellValue("Boot Bahn 1");
-		row.createCell(idx++).setCellValue("Boot Bahn 2");
-		row.createCell(idx++).setCellValue("Boot Bahn 3");
-		row.createCell(idx++).setCellValue("Boot Bahn 4");
-		row.createCell(idx).setCellValue("Status");
+		CellStyle headerCellStyle = ExcelUtils.createHeaderCellStyle(workbook);
+
+		Cell headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_INDEX);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_RENN_NR);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_ABTEILUNG);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_DELAY_BAHN_1);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_DELAY_BAHN_2);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_DELAY_BAHN_3);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_DELAY_BAHN_4);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_BOOT_BAHN_1);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_BOOT_BAHN_2);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_BOOT_BAHN_3);
+		headerCell = row.createCell(idx++);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_BOOT_BAHN_4);
+		headerCell = row.createCell(idx);
+		headerCell.setCellStyle(headerCellStyle);
+		headerCell.setCellValue(HEADER_STATUS);
 	}
 
 	private static void addCsvHeader(StringBuilder builder) {
-		builder.append("Index").append(DELIMITER).append("RennNr").append(DELIMITER).append("Abtlg").append(DELIMITER)
-				.append("Delay Bahn 1").append(DELIMITER).append("Delay Bahn 2").append(DELIMITER)
-				.append("Delay Bahn 3").append(DELIMITER).append("Delay Bahn 4").append(DELIMITER).append("Boot Bahn 1")
-				.append(DELIMITER).append("Boot Bahn 2").append(DELIMITER).append("Boot Bahn 3").append(DELIMITER)
-				.append("Boot Bahn 4").append(DELIMITER).append("Status").append(StringUtils.LF);
+		builder.append(HEADER_INDEX).append(DELIMITER).append(HEADER_RENN_NR).append(DELIMITER).append(HEADER_ABTEILUNG)
+				.append(DELIMITER).append(HEADER_DELAY_BAHN_1).append(DELIMITER).append(HEADER_DELAY_BAHN_2)
+				.append(DELIMITER).append(HEADER_DELAY_BAHN_3).append(DELIMITER).append(HEADER_DELAY_BAHN_4)
+				.append(DELIMITER).append(HEADER_BOOT_BAHN_1).append(DELIMITER).append(HEADER_BOOT_BAHN_2)
+				.append(DELIMITER).append(HEADER_BOOT_BAHN_3).append(DELIMITER).append(HEADER_BOOT_BAHN_4)
+				.append(DELIMITER).append(HEADER_STATUS).append(StringUtils.LF);
 	}
 
 }
