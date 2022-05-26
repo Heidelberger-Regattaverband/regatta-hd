@@ -410,7 +410,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	private void enableButtons(Race race) {
 		if (race != null) {
-			boolean isSet = race.getSet() != null && race.getSet().booleanValue();
+			boolean isSet = race.isSet();
 			// disable setRace button if race is already set or set list is empty
 			this.setRaceBtn.setDisable(isSet || this.setListTbl.getItems().isEmpty());
 			this.deleteBtn.setDisable(!isSet);

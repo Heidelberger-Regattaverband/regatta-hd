@@ -194,6 +194,15 @@ public class Race {
 		return getHeats().stream().allMatch(heat -> heat.isStateOfficial());
 	}
 
+	/**
+	 * Indicates whether this race was set or not.
+	 *
+	 * @return {@code true} if race was set, otherwise {@code false}
+	 */
+	public boolean isSet() {
+		return this.set != null && this.set.booleanValue();
+	}
+
 	public enum GroupMode {
 		NONE, PERFORMANCE, AGE, PERFORMANCE_AGE
 	}
