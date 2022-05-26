@@ -262,12 +262,12 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
 				Integer pointsBoat = heatReg.getFinalResult().getPoints();
 
-				// duplicate points if it's the first heat of a set race
-				if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
-					pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
-				}
-
 				if (pointsBoat != null) {
+					// duplicate points if it's the first heat of a set race
+					if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
+						pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
+					}
+
 					float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
 
 					// ignore cox of boat
