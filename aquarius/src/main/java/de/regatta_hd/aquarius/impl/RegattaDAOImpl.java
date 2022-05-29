@@ -255,30 +255,29 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			boolean raceIsSet = race.isSet();
 			// gets the number of rowers without the cox
 			byte numRowers = race.getBoatClass().getNumRowers();
-//			if (race.getBoatClass().isCoxed()) {
-//				numRowers++;
-//			}
 
 			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
-				Integer pointsBoat = heatReg.getFinalResult().getPoints();
+				if (heatReg.getFinalResult() != null) {
+					Integer pointsBoat = heatReg.getFinalResult().getPoints();
 
-				if (pointsBoat != null) {
-					// duplicate points if it's the first heat of a set race
-					if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
-						pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
-					}
+					if (pointsBoat != null) {
+						// duplicate points if it's the first heat of a set race
+						if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
+							pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
+						}
 
-					float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
+						float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
 
-					// ignore cox of boat
-					heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
-						Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
-								key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
-						score.addPoints(pointsPerCrew);
+						// ignore cox of boat
+						heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
+							Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
+									key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
+							score.addPoints(pointsPerCrew);
 
 //						System.out.println("Heat=" + heatReg.getHeat().getNumber() + "', Club=" + score.getClubName()
 //								+ ", points=" + pointsPerCrew);
-					});
+						});
+					}
 				}
 			}
 		}
