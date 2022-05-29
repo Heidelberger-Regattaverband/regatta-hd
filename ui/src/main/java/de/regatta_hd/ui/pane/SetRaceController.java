@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -166,7 +165,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			// then load new crew lists from DB
 			super.dbTaskRunner.run(progress -> {
-				Set<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getCrews() : null;
+				List<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getFinalCrews() : null;
 				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
 				if (srcCrew != null) {
 					srcCrew.forEach(Crew::getAthlet);
@@ -177,7 +176,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				return new Pair<>(srcCrew, crews);
 			}, (dbResult -> {
 				try {
-					Pair<Set<Crew>, List<Crew>> result = dbResult.getResult();
+					Pair<List<Crew>, List<Crew>> result = dbResult.getResult();
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
