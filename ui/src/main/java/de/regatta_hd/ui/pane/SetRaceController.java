@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -140,9 +139,9 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
-						Race race2 = srcRaces.get(getSrcRaceNumber(race));
+						Race srcRace = srcRaces.get(getSrcRaceNumber(race));
 						// the source race needs to be driven with an official result
-						return race2 != null && race2.isOfficial() && race2.isDriven();
+						return srcRace != null && srcRace.isOfficial() && srcRace.isDriven();
 					}).collect(Collectors.toList());
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
@@ -166,7 +165,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			// then load new crew lists from DB
 			super.dbTaskRunner.run(progress -> {
-				Set<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getCrews() : null;
+				List<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getFinalCrews() : null;
 				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
 				if (srcCrew != null) {
 					srcCrew.forEach(Crew::getAthlet);
@@ -177,7 +176,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				return new Pair<>(srcCrew, crews);
 			}, (dbResult -> {
 				try {
-					Pair<Set<Crew>, List<Crew>> result = dbResult.getResult();
+					Pair<List<Crew>, List<Crew>> result = dbResult.getResult();
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());

@@ -187,10 +187,10 @@ public class Race {
 	}
 
 	/**
-	 * @return {@code true} if the result of all {@link Heat heats} is official, otherwise {@code false}.
+	 * @return {@code true} if the result of all {@link Heat heats} is official or cancelled, otherwise {@code false}.
 	 */
 	public boolean isOfficial() {
-		return getHeats().stream().allMatch(heat -> heat.isStateOfficial());
+		return getHeats().stream().allMatch(heat -> heat.isStateOfficial() || heat.isCancelled());
 	}
 
 	/**
