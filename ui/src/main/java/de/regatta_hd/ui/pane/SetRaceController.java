@@ -396,11 +396,14 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		vbox.getChildren().add(new Label(labelText));
 
 		// loops over all heats of race and reads required data from DB
-		race.getHeats().forEach(heat -> {
+		race.getDrivenHeats().forEach(heat -> {
 			Label heatNrLabel = new Label(
 					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-			compEntriesTable.setItems(FXCollections.observableArrayList(heat.getEntries()));
+
+			ObservableList<HeatRegistration> items = FXCollections
+					.observableArrayList(withResult ? heat.getEntriesSortedByRank() : heat.getEntriesSortedByLane());
+			compEntriesTable.setItems(items);
 			compEntriesTable.sort();
 			FxUtils.autoResizeColumns(compEntriesTable);
 

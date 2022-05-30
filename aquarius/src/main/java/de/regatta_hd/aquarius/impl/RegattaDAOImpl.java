@@ -116,7 +116,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		final EntityManager entityManager = super.db.getEntityManager();
 
 		// get all planed heats ordered by the heat number
-		race.getSortedHeats().forEach(heat -> {
+		race.getDrivenHeats().forEach(heat -> {
 			// first clean existing heat assignments
 			heat.getEntries().forEach(entityManager::remove);
 
@@ -198,7 +198,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Map<Integer, SetListEntry> diffCrews = new HashMap<>();
 
 		Set<Registration> srcRegistrations = ConcurrentHashMap.newKeySet();
-		srcRegistrations.addAll(srcRace.getRegistrations());
+		srcRegistrations.addAll(srcRace.getActiveRegistrations().collect(Collectors.toSet()));
 
 		Map<Integer, SetListEntry> equalCrews = new HashMap<>();
 
@@ -467,7 +467,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		// loop over source race heats and get all heat registrations sorted by time
-		srcRace.getHeats().forEach(heat -> {
+		srcRace.getDrivenHeats().forEach(heat -> {
 			List<HeatRegistration> byRank = heat.getEntriesSortedByRank();
 			for (int j = 0; j < byRank.size(); j++) {
 				srcHeatRegs.get(j).add(byRank.get(j));

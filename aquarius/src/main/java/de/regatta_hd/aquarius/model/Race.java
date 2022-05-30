@@ -1,8 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.persistence.Column;
@@ -195,11 +193,11 @@ public class Race {
 	 *
 	 * @return a list of driven heats
 	 */
-	public List<Heat> getDrivenHeats() {
-		return getSortedHeats().filter(heat -> !heat.isCancelled()).collect(Collectors.toList());
+	public Stream<Heat> getDrivenHeats() {
+		return getSortedHeats().filter(heat -> !heat.isCancelled());
 	}
 
-	public Stream<Heat> getSortedHeats() {
+	private Stream<Heat> getSortedHeats() {
 		return getHeats().stream()
 				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
 	}
