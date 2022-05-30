@@ -194,7 +194,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<SeedingListEntry> createSetList(Race race, Race srcRace) {
+	public List<SeedingListEntry> createSeedingList(Race race, Race srcRace) {
 		Map<Integer, SeedingListEntry> diffCrews = new HashMap<>();
 
 		Set<Registration> srcRegistrations = ConcurrentHashMap.newKeySet();
@@ -225,19 +225,19 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 		});
 
-		List<SeedingListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
+		List<SeedingListEntry> seedingList = createSetListWithEqualCrews(equalCrews, srcRace);
 
 		// add not added registrations with equal crews, e.g. boat did not finish
 		equalCrews.values().forEach(entry -> diffCrews.put(entry.getId(), entry));
 
-		// sort the remaining registrations according their number
+		// sort the remaining registrations according their bib
 		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1).forEach(entry -> {
-			entry.setRank(setList.size() + 1);
+			entry.setRank(seedingList.size() + 1);
 			findBestMatch(entry, srcRegistrations);
-			setList.add(entry);
+			seedingList.add(entry);
 		});
 
-		return setList;
+		return seedingList;
 	}
 
 	@Override
@@ -425,7 +425,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 	}
 
-	private static List<SeedingListEntry> createSetListWithEqualCrews(Map<Integer, SeedingListEntry> equalCrews, Race srcRace) {
+	private static List<SeedingListEntry> createSetListWithEqualCrews(Map<Integer, SeedingListEntry> equalCrews,
+			Race srcRace) {
 		List<SeedingListEntry> setList = new ArrayList<>();
 
 		List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
