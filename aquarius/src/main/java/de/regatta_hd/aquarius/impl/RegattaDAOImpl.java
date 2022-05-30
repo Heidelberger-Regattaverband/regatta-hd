@@ -116,7 +116,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		final EntityManager entityManager = super.db.getEntityManager();
 
 		// get all planed heats ordered by the heat number
-		race.getHeatsSortedByDevisionNumber().forEach(heat -> {
+		race.getSortedHeats().forEach(heat -> {
 			// first clean existing heat assignments
 			heat.getEntries().forEach(entityManager::remove);
 
@@ -203,7 +203,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		Map<Integer, SetListEntry> equalCrews = new HashMap<>();
 
 		// remove cancelled registrations
-		race.getRegistrations().stream().filter(Registration::isCancelled).forEach(registration -> {
+		race.getActiveRegistrations().forEach(registration -> {
 			SetListEntry entry = SetListEntry.builder().registration(registration).equalCrew(false).build();
 			diffCrews.put(entry.getId(), entry);
 

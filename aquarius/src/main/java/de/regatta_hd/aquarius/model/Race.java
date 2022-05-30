@@ -1,8 +1,9 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -180,10 +181,27 @@ public class Race {
 		return new SimpleBooleanProperty(isSet());
 	}
 
-	public List<Heat> getHeatsSortedByDevisionNumber() {
-		List<Heat> sorted = new ArrayList<>(getHeats());
-		sorted.sort((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
-		return sorted;
+	/**
+	 * Returns a stream with active registrations, cancelled registrations are removed.
+	 *
+	 * @return a {@link Stream} with active registrations.
+	 */
+	public Stream<Registration> getActiveRegistrations() {
+		return getRegistrations().stream().filter(registration -> !registration.isCancelled());
+	}
+
+	/**
+	 * Returns a list of all driven heats, cancelled or empty heats are excluded.
+	 *
+	 * @return a list of driven heats
+	 */
+	public List<Heat> getDrivenHeats() {
+		return getSortedHeats().filter(heat -> !heat.isCancelled()).collect(Collectors.toList());
+	}
+
+	public Stream<Heat> getSortedHeats() {
+		return getHeats().stream()
+				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
 	}
 
 	/**

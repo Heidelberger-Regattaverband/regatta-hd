@@ -132,10 +132,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			});
 
 			List<Race> filteredRaces = races.stream()
-					// remove master races, open age class and races with one heat, as they will not
-					// be set
+					// remove master races, open age class and races with registrations for one heat only, as they will
+					// not be set
 					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters()
-							&& race.getHeats().size() > 1)
+							&& race.getActiveRegistrations().count() > race.getRaceMode().getLaneCount())
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
@@ -165,7 +165,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			// then load new crew lists from DB
 			super.dbTaskRunner.run(progress -> {
-				List<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getFinalCrews() : null;
+				List<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getFinalCrews()
+						: null;
 				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
 				if (srcCrew != null) {
 					srcCrew.forEach(Crew::getAthlet);

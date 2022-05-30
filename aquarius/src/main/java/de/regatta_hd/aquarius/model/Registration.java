@@ -98,6 +98,6 @@ public class Registration {
 	 * @return <code>true</code> if registration is cancelled, otherwise <code>false</code>.
 	 */
 	public boolean isCancelled() {
-		return getCancelValue() == 0;
+		return getCancelValue() > 0;
 	}
 }
