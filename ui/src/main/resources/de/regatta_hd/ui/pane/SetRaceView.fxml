@@ -54,37 +54,37 @@
                   <Label text="%SetRaceView.noSetList" />
                 </placeholder>
                 <columns>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
+                  <TableColumn fx:id="setListPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="rank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.bibAbr">
+                  <TableColumn fx:id="setListBibCol" style="-fx-alignment: CENTER;" text="%common.bibAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="bib" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn text="%common.boat">
+                  <TableColumn fx:id="setListBoatCol" text="%common.boat" sortable="false" resizable="false" reorderable="false">
                     <cellValueFactory>
                       <PropertyValueFactory property="boat" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.rank">
+                  <TableColumn fx:id="setListRankCol" style="-fx-alignment: CENTER;" text="%common.rank" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="heatRank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.heatAbr">
+                  <TableColumn fx:id="setListDevisionNumberCol" style="-fx-alignment: CENTER;" text="%common.heatAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="devisionNumber" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%common.result">
+                  <TableColumn fx:id="setListResultCol" style="-fx-alignment: CENTER_RIGHT;" text="%common.result" sortable="false" resizable="false" reorderable="false" maxWidth="60">
                     <cellValueFactory>
                       <PropertyValueFactory property="result" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.equalCrew">
+                  <TableColumn fx:id="setListEqualCrewCol" style="-fx-alignment: CENTER;" text="%SetRaceView.equalCrew" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="equalCrew" />
                     </cellValueFactory>

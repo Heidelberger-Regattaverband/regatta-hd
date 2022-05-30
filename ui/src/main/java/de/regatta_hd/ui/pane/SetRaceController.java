@@ -55,8 +55,26 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private SearchableComboBox<Race> racesCbo;
 	@FXML
 	private VBox srcRaceVBox;
+
+	// seeding list table
 	@FXML
 	private TableView<SetListEntry> setListTbl;
+	@FXML
+	private TableColumn<SetListEntry, Integer> setListPosCol;
+	@FXML
+	private TableColumn<SetListEntry, Integer> setListBibCol;
+	@FXML
+	private TableColumn<SetListEntry, String> setListBoatCol;
+	@FXML
+	private TableColumn<SetListEntry, Integer> setListRankCol;
+	@FXML
+	private TableColumn<SetListEntry, Integer> setListDevisionNumberCol;
+	@FXML
+	private TableColumn<SetListEntry, String> setListResultCol;
+	@FXML
+	private TableColumn<SetListEntry, Boolean> setListEqualCrewCol;
+
+	// source crew table
 	@FXML
 	private Label srcCrewLbl;
 	@FXML
@@ -67,6 +85,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private TableColumn<Crew, Boolean> srcCrewCoxCol;
 	@FXML
 	private TableColumn<Crew, String> srcCrewNameCol;
+
+	// crew table
 	@FXML
 	private Label crewLbl;
 	@FXML
@@ -77,6 +97,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private TableColumn<Crew, Boolean> crewCoxCol;
 	@FXML
 	private TableColumn<Crew, String> crewNameCol;
+
 	@FXML
 	private VBox raceVBox;
 
@@ -113,6 +134,12 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		usedWidth = this.crewPosCol.widthProperty().add(this.crewCoxCol.widthProperty());
 		this.crewNameCol.prefWidthProperty()
 				.bind(this.crewTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+
+		usedWidth = this.setListPosCol.widthProperty().add(this.setListBibCol.widthProperty())
+				.add(this.setListRankCol.widthProperty()).add(this.setListDevisionNumberCol.widthProperty()
+						.add(this.setListResultCol.widthProperty()).add(this.setListEqualCrewCol.widthProperty()));
+		this.setListBoatCol.prefWidthProperty()
+				.bind(this.setListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
 
 		loadRaces();
 	}
@@ -308,7 +335,6 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			}, dbResult -> {
 				try {
 					this.setListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
-					FxUtils.autoResizeColumns(this.setListTbl);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
