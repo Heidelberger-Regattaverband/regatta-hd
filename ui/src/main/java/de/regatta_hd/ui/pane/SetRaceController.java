@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.SearchableComboBox;
 
-import de.regatta_hd.aquarius.SetListEntry;
+import de.regatta_hd.aquarius.SeedingListEntry;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
@@ -58,21 +58,21 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	// seeding list table
 	@FXML
-	private TableView<SetListEntry> setListTbl;
+	private TableView<SeedingListEntry> seedingListTbl;
 	@FXML
-	private TableColumn<SetListEntry, Integer> setListPosCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListPosCol;
 	@FXML
-	private TableColumn<SetListEntry, Integer> setListBibCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListBibCol;
 	@FXML
-	private TableColumn<SetListEntry, String> setListBoatCol;
+	private TableColumn<SeedingListEntry, String> seedingListBoatCol;
 	@FXML
-	private TableColumn<SetListEntry, Integer> setListRankCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListRankCol;
 	@FXML
-	private TableColumn<SetListEntry, Integer> setListDevisionNumberCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListDevisionNumberCol;
 	@FXML
-	private TableColumn<SetListEntry, String> setListResultCol;
+	private TableColumn<SeedingListEntry, String> seedingListResultCol;
 	@FXML
-	private TableColumn<SetListEntry, Boolean> setListEqualCrewCol;
+	private TableColumn<SeedingListEntry, Boolean> seedingListEqualCrewCol;
 
 	// source crew table
 	@FXML
@@ -121,10 +121,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		this.racesCbo.setItems(this.racesList);
 		this.racesCbo.setDisable(true);
-		this.setListTbl.setDisable(true);
+		this.seedingListTbl.setDisable(true);
 		disableButtons();
 
-		this.setListTbl.getSelectionModel().selectedItemProperty().addListener(
+		this.seedingListTbl.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldSelection, newSelection) -> handleSetListSelectedItemChanged(newSelection));
 
 		DoubleBinding usedWidth = this.srcCrewPosCol.widthProperty().add(this.srcCrewCoxCol.widthProperty());
@@ -135,11 +135,12 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		this.crewNameCol.prefWidthProperty()
 				.bind(this.crewTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
 
-		usedWidth = this.setListPosCol.widthProperty().add(this.setListBibCol.widthProperty())
-				.add(this.setListRankCol.widthProperty()).add(this.setListDevisionNumberCol.widthProperty()
-						.add(this.setListResultCol.widthProperty()).add(this.setListEqualCrewCol.widthProperty()));
-		this.setListBoatCol.prefWidthProperty()
-				.bind(this.setListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+		usedWidth = this.seedingListPosCol.widthProperty().add(this.seedingListBibCol.widthProperty())
+				.add(this.seedingListRankCol.widthProperty())
+				.add(this.seedingListDevisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
+						.add(this.seedingListEqualCrewCol.widthProperty()));
+		this.seedingListBoatCol.prefWidthProperty()
+				.bind(this.seedingListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
 
 		loadRaces();
 	}
@@ -197,7 +198,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			try {
 				this.racesList.addAll(dbResult.getResult());
 				this.racesCbo.setDisable(false);
-				this.setListTbl.setDisable(false);
+				this.seedingListTbl.setDisable(false);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -205,9 +206,9 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		});
 	}
 
-	private void handleSetListSelectedItemChanged(SetListEntry newSelection) {
+	private void handleSetListSelectedItemChanged(SeedingListEntry newSelection) {
 		if (newSelection != null) {
-			final SetListEntry entry = this.setListTbl.getSelectionModel().getSelectedItem();
+			final SeedingListEntry entry = this.seedingListTbl.getSelectionModel().getSelectedItem();
 			// clear tables
 			this.srcCrewTbl.getItems().clear();
 			this.crewTbl.getItems().clear();
@@ -259,7 +260,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			this.raceVBox.getChildren().clear();
 			this.srcRaceVBox.getChildren().clear();
-			this.setListTbl.getItems().clear();
+			this.seedingListTbl.getItems().clear();
 
 			Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 			if (selectedRace != null) {
@@ -334,7 +335,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				return this.regattaDAO.createSetList(race, srcRace);
 			}, dbResult -> {
 				try {
-					this.setListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
+					this.seedingListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -351,7 +352,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		if (selectedRace != null) {
 			disableButtons();
-			this.setListTbl.getItems().clear();
+			this.seedingListTbl.getItems().clear();
 
 			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH),
 					dbResult -> {
@@ -372,12 +373,12 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private void handleSetRaceOnAction() {
 		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
+		if (selectedRace != null && !this.seedingListTbl.getItems().isEmpty()) {
 			disableButtons();
 
 			super.dbTaskRunner.runInTransaction(progress -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
+				this.regattaDAO.setRaceHeats(race, this.seedingListTbl.getItems());
 
 				this.db.getEntityManager().clear();
 				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
@@ -460,16 +461,16 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (race != null) {
 			boolean isSet = race.isSet();
 			// disable setRace button if race is already set or set list is empty
-			this.setRaceBtn.setDisable(isSet || this.setListTbl.getItems().isEmpty());
+			this.setRaceBtn.setDisable(isSet || this.seedingListTbl.getItems().isEmpty());
 			this.deleteBtn.setDisable(!isSet);
-			this.createSetListBtn.setDisable(!this.setListTbl.getItems().isEmpty());
+			this.createSetListBtn.setDisable(!this.seedingListTbl.getItems().isEmpty());
 		} else {
 			this.setRaceBtn.setDisable(true);
 			this.deleteBtn.setDisable(true);
 			this.createSetListBtn.setDisable(true);
 		}
 
-		this.deleteSetListBtn.setDisable(this.setListTbl.getItems().isEmpty());
+		this.deleteSetListBtn.setDisable(this.seedingListTbl.getItems().isEmpty());
 		this.refreshBtn.setDisable(false);
 	}
 
@@ -673,7 +674,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	// static helpers
 
-	private static String createCrewsLabel(SetListEntry entry, Registration registration) {
+	private static String createCrewsLabel(SeedingListEntry entry, Registration registration) {
 		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
 	}
 

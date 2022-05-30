@@ -18,7 +18,7 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
-import de.regatta_hd.aquarius.SetListEntry;
+import de.regatta_hd.aquarius.SeedingListEntry;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Crew;
@@ -109,10 +109,10 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void setRaceHeats(Race race, List<SetListEntry> setList) {
+	public void setRaceHeats(Race race, List<SeedingListEntry> setList) {
 		short laneCount = race.getRaceMode().getLaneCount();
 
-		LinkedList<SetListEntry> stack = new LinkedList<>(setList);
+		LinkedList<SeedingListEntry> stack = new LinkedList<>(setList);
 		final EntityManager entityManager = super.db.getEntityManager();
 
 		// get all planed heats ordered by the heat number
@@ -194,24 +194,24 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<SetListEntry> createSetList(Race race, Race srcRace) {
-		Map<Integer, SetListEntry> diffCrews = new HashMap<>();
+	public List<SeedingListEntry> createSetList(Race race, Race srcRace) {
+		Map<Integer, SeedingListEntry> diffCrews = new HashMap<>();
 
 		Set<Registration> srcRegistrations = ConcurrentHashMap.newKeySet();
 		srcRegistrations.addAll(srcRace.getActiveRegistrations().collect(Collectors.toSet()));
 
-		Map<Integer, SetListEntry> equalCrews = new HashMap<>();
+		Map<Integer, SeedingListEntry> equalCrews = new HashMap<>();
 
 		// remove cancelled registrations
 		race.getActiveRegistrations().forEach(registration -> {
-			SetListEntry entry = SetListEntry.builder().registration(registration).equalCrew(false).build();
+			SeedingListEntry entry = SeedingListEntry.builder().registration(registration).equalCrew(false).build();
 			diffCrews.put(entry.getId(), entry);
 
 			for (Registration srcRegistration : srcRegistrations) {
 
 				// look for equal crew in the source registration
 				if (isEqualCrews(srcRegistration, registration)) {
-					SetListEntry equalCrewEntry = diffCrews.remove(registration.getId());
+					SeedingListEntry equalCrewEntry = diffCrews.remove(registration.getId());
 					// mark crews as equal
 					equalCrewEntry.setEqualCrew(true);
 					// put entry into map of equal crews
@@ -225,7 +225,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 		});
 
-		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
+		List<SeedingListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
 
 		// add not added registrations with equal crews, e.g. boat did not finish
 		equalCrews.values().forEach(entry -> diffCrews.put(entry.getId(), entry));
@@ -414,7 +414,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return crew1.getAthlet().getId() > crew2.getAthlet().getId() ? 1 : -1;
 	}
 
-	private static void findBestMatch(SetListEntry entry, Set<Registration> srcRegistrations) {
+	private static void findBestMatch(SeedingListEntry entry, Set<Registration> srcRegistrations) {
 		Registration registration = entry.getRegistration();
 
 		for (Registration srcRegistration : srcRegistrations) {
@@ -425,8 +425,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 	}
 
-	private static List<SetListEntry> createSetListWithEqualCrews(Map<Integer, SetListEntry> equalCrews, Race srcRace) {
-		List<SetListEntry> setList = new ArrayList<>();
+	private static List<SeedingListEntry> createSetListWithEqualCrews(Map<Integer, SeedingListEntry> equalCrews, Race srcRace) {
+		List<SeedingListEntry> setList = new ArrayList<>();
 
 		List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
 
@@ -438,7 +438,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime()
 						.intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
-				SetListEntry entry;
+				SeedingListEntry entry;
 				// ensure the result contains a valid rank, if rank == 0 the boat did not finish
 				if (srcHeatReg.getFinalResult().getRank() > 0) {
 					entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
