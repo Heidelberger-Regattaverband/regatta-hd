@@ -49,9 +49,9 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "labels", subgraph = "labels.label") //
 				}), //
 		@NamedSubgraph(name = "labels.label", //
-		attributeNodes = { //
-				@NamedAttributeNode(value = "label") //
-		}), //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "label") //
+				}), //
 		@NamedSubgraph(name = "crew.athlet", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "athlet") //
@@ -78,6 +78,13 @@ public class Heat {
 	private int id;
 
 	/**
+	 * The {@link Race} this {@link Heat} belongs to.
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Comp_Race_ID_FK")
+	private Race race;
+
+	/**
 	 * The consecutive heat number within the regatta, e.g. 1, 2, 3 ... 100, 101, 102
 	 */
 	@Column(name = "Comp_Number")
@@ -91,6 +98,9 @@ public class Heat {
 	@ToString.Include(rank = 10)
 	private short devisionNumber;
 
+	/**
+	 * Indicates whether this heat is cancelled or not.
+	 */
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
 
@@ -131,10 +141,6 @@ public class Heat {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Comp_Event_ID_FK", nullable = false)
 	private Regatta regatta;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Comp_Race_ID_FK")
-	private Race race;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Comp_RMDetail_ID_FK")

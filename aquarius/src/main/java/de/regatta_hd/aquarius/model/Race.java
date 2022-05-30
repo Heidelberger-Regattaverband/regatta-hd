@@ -124,7 +124,7 @@ public class Race {
 	private String comment;
 
 	/**
-	 * Indicates whether this race is driven or not. It depends on the number of registrations for this offer.
+	 * Indicates whether this {@link Race} is driven or not. It depends on the number of registrations for race.
 	 */
 	@Column(name = "Offer_Driven")
 	private boolean driven;
@@ -197,16 +197,11 @@ public class Race {
 		return getSortedHeats().filter(heat -> !heat.isCancelled());
 	}
 
-	private Stream<Heat> getSortedHeats() {
-		return getHeats().stream()
-				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
-	}
-
 	/**
 	 * @return {@code true} if the result of all {@link Heat heats} is official or cancelled, otherwise {@code false}.
 	 */
 	public boolean isOfficial() {
-		return getHeats().stream().allMatch(heat -> heat.isStateOfficial() || heat.isCancelled());
+		return getDrivenHeats().allMatch(Heat::isStateOfficial);
 	}
 
 	/**
@@ -216,6 +211,11 @@ public class Race {
 	 */
 	public boolean isSet() {
 		return this.set != null && this.set.booleanValue();
+	}
+
+	private Stream<Heat> getSortedHeats() {
+		return getHeats().stream()
+				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
 	}
 
 	public enum GroupMode {

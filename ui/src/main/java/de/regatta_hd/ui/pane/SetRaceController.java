@@ -141,7 +141,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 						// create race number of source race -> replace 2 with 1
 						Race srcRace = srcRaces.get(getSrcRaceNumber(race));
 						// the source race needs to be driven with an official result
-						return srcRace != null && srcRace.isOfficial() && srcRace.isDriven();
+						return srcRace != null && srcRace.isOfficial() && !srcRace.isCancelled();
 					}).collect(Collectors.toList());
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
