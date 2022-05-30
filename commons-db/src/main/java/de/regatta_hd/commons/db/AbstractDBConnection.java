@@ -28,9 +28,16 @@ public abstract class AbstractDBConnection implements DBConnection {
 
 	private volatile EntityManagerFactory emFactory; // NOSONAR
 
+	private String name;
+
 	protected AbstractDBConnection(String persistenceUnitName, ListenerManager listenerManager) {
 		this.persistenceUnitName = requireNonNull(persistenceUnitName, "persistenceUnitName must not be null");
 		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 	@Override
@@ -44,6 +51,8 @@ public abstract class AbstractDBConnection implements DBConnection {
 
 			openImpl();
 
+			this.name = dbConfig.getDbName();
+
 			// notify listeners about changed DB connection state
 			notifyListeners(new StateChangedEventImplementation());
 		} catch (PersistenceException pex) {
@@ -54,6 +63,8 @@ public abstract class AbstractDBConnection implements DBConnection {
 
 	@Override
 	public synchronized void close() {
+		this.name = null;
+
 		if (this.executor != null) {
 			this.executor.shutdown();
 			this.executor = null;

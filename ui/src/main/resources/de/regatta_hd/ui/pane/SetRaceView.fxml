@@ -49,42 +49,48 @@
                 <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
                 <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction" text="%SetRaceView.deleteSetListBtn.text" />
               </ToolBar>
-              <TableView fx:id="setListTbl" VBox.vgrow="ALWAYS">
+              <TableView fx:id="seedingListTbl" VBox.vgrow="ALWAYS">
                 <placeholder>
                   <Label text="%SetRaceView.noSetList" />
                 </placeholder>
                 <columns>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
+                  <TableColumn fx:id="seedingListPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="rank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.bibAbr">
+                  <TableColumn fx:id="seedingListBibCol" style="-fx-alignment: CENTER;" text="%common.bibAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="bib" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn text="%common.boat">
+                  <TableColumn fx:id="seedingListBoatCol" text="%common.boat" sortable="false" resizable="false" reorderable="false">
                     <cellValueFactory>
                       <PropertyValueFactory property="boat" />
                     </cellValueFactory>
                   </TableColumn>
-                  <!-- TableColumn style="-fx-alignment: CENTER;" text="%SetRaceView.setListTbl.equalCrewCol.text"> <cellValueFactory> <PropertyValueFactory
-                    property="equalCrew" /> </cellValueFactory> <cellFactory> <CheckBoxTableCellFactory /> </cellFactory> </TableColumn -->
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.heatAbr">
-                    <cellValueFactory>
-                      <PropertyValueFactory property="devisionNumber" />
-                    </cellValueFactory>
-                  </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER;" text="%common.rank">
+                  <TableColumn fx:id="seedingListRankCol" style="-fx-alignment: CENTER;" text="%common.rank" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="heatRank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn style="-fx-alignment: CENTER_RIGHT;" text="%common.result">
+                  <TableColumn fx:id="seedingListDevisionNumberCol" style="-fx-alignment: CENTER;" text="%common.heatAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="devisionNumber" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListResultCol" style="-fx-alignment: CENTER_RIGHT;" text="%common.result" sortable="false" resizable="false" reorderable="false" maxWidth="60">
                     <cellValueFactory>
                       <PropertyValueFactory property="result" />
                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListEqualCrewCol" style="-fx-alignment: CENTER;" text="%SetRaceView.equalCrew" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="equalCrew" />
+                    </cellValueFactory>
+                    <cellFactory>
+                      <CheckBoxTableCellFactory fx:factory="readonly" />
+                    </cellFactory>
                   </TableColumn>
                 </columns>
               </TableView>
@@ -100,12 +106,12 @@
                       <Label text="%SetRaceView.noCrew" />
                     </placeholder>
                     <columns>
-                      <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
+                      <TableColumn fx:id="srcCrewPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                         <cellValueFactory>
                           <PropertyValueFactory property="pos" />
                         </cellValueFactory>
                       </TableColumn>
-                      <TableColumn style="-fx-alignment: CENTER;" text="%common.coxAbr">
+                      <TableColumn fx:id="srcCrewCoxCol" style="-fx-alignment: CENTER;" text="%common.coxAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                         <cellValueFactory>
                           <PropertyValueFactory>
                             <property>cox</property>
@@ -115,7 +121,7 @@
                           <CheckBoxTableCellFactory fx:factory="readonly" />
                         </cellFactory>
                       </TableColumn>
-                      <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
+                      <TableColumn fx:id="srcCrewNameCol" text="%SetRaceView.crewsTbl.nameCol.text" sortable="false" reorderable="false">
                         <cellValueFactory>
                           <PropertyValueFactory property="name" />
                         </cellValueFactory>
@@ -132,12 +138,12 @@
                       <Label text="%SetRaceView.noCrew" />
                     </placeholder>
                     <columns>
-                      <TableColumn style="-fx-alignment: CENTER;" text="%common.posAbr">
+                      <TableColumn fx:id="crewPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                         <cellValueFactory>
                           <PropertyValueFactory property="pos" />
                         </cellValueFactory>
                       </TableColumn>
-                      <TableColumn style="-fx-alignment: CENTER;" text="%common.coxAbr">
+                      <TableColumn fx:id="crewCoxCol" style="-fx-alignment: CENTER;" text="%common.coxAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                         <cellValueFactory>
                           <PropertyValueFactory>
                             <property>cox</property>
@@ -147,7 +153,7 @@
                           <CheckBoxTableCellFactory fx:factory="readonly" />
                         </cellFactory>
                       </TableColumn>
-                      <TableColumn text="%SetRaceView.crewsTbl.nameCol.text">
+                      <TableColumn fx:id="crewNameCol" text="%SetRaceView.crewsTbl.nameCol.text" sortable="false" reorderable="false">
                         <cellValueFactory>
                           <PropertyValueFactory property="name" />
                         </cellValueFactory>

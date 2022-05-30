@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString(onlyExplicitlyIncluded = true)
-public class SetListEntry {
+public class SeedingListEntry {
 
 	private int rank;
 	private boolean equalCrew;
