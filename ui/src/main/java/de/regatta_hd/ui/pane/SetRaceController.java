@@ -332,7 +332,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
 				raceRef.set(race);
-				return this.regattaDAO.createSetList(race, srcRace);
+				return this.regattaDAO.createSeedingList(race, srcRace);
 			}, dbResult -> {
 				try {
 					this.seedingListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
