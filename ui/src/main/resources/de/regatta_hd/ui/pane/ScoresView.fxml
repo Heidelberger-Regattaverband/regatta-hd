@@ -16,6 +16,7 @@
       <items>
         <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%common.refresh" />
         <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%common.calculate" />
+        <Button fx:id="exportXslBtn" onAction="#handleExportXslOnAction" text="%scores.xsl.export" />
       </items>
     </ToolBar>
     <TableView fx:id="scoresTbl" VBox.vgrow="ALWAYS">
@@ -28,12 +29,12 @@
             <PropertyValueFactory property="rank" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
+        <TableColumn fx:id="pointsCol" reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%ScoreView.clubCol.text">
+        <TableColumn reorderable="false" text="%common.club">
           <cellValueFactory>
             <PropertyValueFactory property="clubName" />
           </cellValueFactory>

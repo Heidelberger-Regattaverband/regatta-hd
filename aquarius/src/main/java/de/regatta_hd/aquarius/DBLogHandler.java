@@ -19,7 +19,6 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBThreadPoolExecutor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceException;
 
 @Singleton
 public class DBLogHandler extends Handler {
@@ -84,7 +83,7 @@ public class DBLogHandler extends Handler {
 				this.db.getEntityManager().persist(logRecord);
 				entityManager.flush();
 				transaction.commit();
-			} catch (PersistenceException e) {
+			} catch (Exception e) {
 				transaction.rollback();
 				e.printStackTrace();
 			}
@@ -102,7 +101,7 @@ public class DBLogHandler extends Handler {
 				}
 				entityManager.flush();
 				transaction.commit();
-			} catch (PersistenceException e) {
+			} catch (Exception e) {
 				transaction.rollback();
 				e.printStackTrace();
 			}

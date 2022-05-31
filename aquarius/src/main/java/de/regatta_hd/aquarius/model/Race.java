@@ -1,8 +1,7 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -125,7 +124,7 @@ public class Race {
 	private String comment;
 
 	/**
-	 * Indicates whether this race is driven or not. It depends on the number of registrations for this offer.
+	 * Indicates whether this {@link Race} is driven or not. It depends on the number of registrations for race.
 	 */
 	@Column(name = "Offer_Driven")
 	private boolean driven;
@@ -177,21 +176,46 @@ public class Race {
 	}
 
 	public ObservableBooleanValue setProperty() {
-		boolean isSet = this.set != null && this.set.booleanValue();
-		return new SimpleBooleanProperty(isSet);
-	}
-
-	public List<Heat> getHeatsSortedByDevisionNumber() {
-		List<Heat> sorted = new ArrayList<>(getHeats());
-		sorted.sort((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
-		return sorted;
+		return new SimpleBooleanProperty(isSet());
 	}
 
 	/**
-	 * @return {@code true} if the result of all {@link Heat heats} is official, otherwise {@code false}.
+	 * Returns a stream with active registrations, cancelled registrations are removed.
+	 *
+	 * @return a {@link Stream} with active registrations.
+	 */
+	public Stream<Registration> getActiveRegistrations() {
+		return getRegistrations().stream().filter(registration -> !registration.isCancelled());
+	}
+
+	/**
+	 * Returns a list of all driven heats, cancelled or empty heats are excluded.
+	 *
+	 * @return a list of driven heats
+	 */
+	public Stream<Heat> getDrivenHeats() {
+		return getSortedHeats().filter(heat -> !heat.isCancelled());
+	}
+
+	/**
+	 * @return {@code true} if the result of all {@link Heat heats} is official or cancelled, otherwise {@code false}.
 	 */
 	public boolean isOfficial() {
-		return getHeats().stream().allMatch(heat -> heat.isStateOfficial());
+		return getDrivenHeats().allMatch(Heat::isStateOfficial);
+	}
+
+	/**
+	 * Indicates whether this race was set or not.
+	 *
+	 * @return {@code true} if race was set, otherwise {@code false}
+	 */
+	public boolean isSet() {
+		return this.set != null && this.set.booleanValue();
+	}
+
+	private Stream<Heat> getSortedHeats() {
+		return getHeats().stream()
+				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
 	}
 
 	public enum GroupMode {
