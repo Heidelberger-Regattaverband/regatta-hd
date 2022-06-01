@@ -49,7 +49,7 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.racesTbl.getSortOrder().add(this.idCol);
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 
-		loadRaces(false);
+		loadRaces(true);
 	}
 
 	@Override
@@ -122,7 +122,6 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.racesList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -132,8 +131,8 @@ public class OffersController extends AbstractRegattaDAOController {
 		}, dbResult -> {
 			try {
 				this.racesList.setAll(dbResult.getResult());
-				FxUtils.autoResizeColumns(this.racesTbl);
 				this.racesTbl.sort();
+				FxUtils.autoResizeColumns(this.racesTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);

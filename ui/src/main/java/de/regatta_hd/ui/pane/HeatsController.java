@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -65,6 +66,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, String> numberCol;
+	@FXML
+	private TableColumn<Heat, Instant> timeCol;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
 
@@ -73,7 +76,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		super.initialize(location, resources);
 
 		this.heatsTbl.setItems(this.heatsList);
-		this.heatsTbl.getSortOrder().add(this.numberCol);
+		this.heatsTbl.getSortOrder().add(this.timeCol);
 
 		loadHeats(false);
 	}
