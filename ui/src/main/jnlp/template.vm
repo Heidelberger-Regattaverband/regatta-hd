@@ -25,7 +25,7 @@
   </security>
 
   <resources>
-    <java version="11*" href="jvms.json" />
+    <java version="17*" href="jvms.json" />
     $dependencies
   </resources>
 
