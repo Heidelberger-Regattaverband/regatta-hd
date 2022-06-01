@@ -20,7 +20,7 @@ import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.ExcelUtils;
+import de.regatta_hd.ui.util.WorkbookUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -124,7 +124,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 					getText("scores.xsl.description"), "*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
-					ExcelUtils.saveWorkbook(workbook, file);
+					WorkbookUtils.saveWorkbook(workbook, file);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -170,7 +170,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		int rowIdx = 0;
 		int cellIdx = 0;
 
-		CellStyle headerStyle = ExcelUtils.createHeaderCellStyle(workbook);
+		CellStyle headerStyle = WorkbookUtils.createHeaderCellStyle(workbook);
 
 		CellStyle pointsStyle = workbook.createCellStyle();
 		pointsStyle.setDataFormat((short) 2);

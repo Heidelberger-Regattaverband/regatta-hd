@@ -9,9 +9,9 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 
-public class ExcelUtils {
+public class WorkbookUtils {
 
-	private ExcelUtils() {
+	private WorkbookUtils() {
 		// avoid instances
 	}
 
