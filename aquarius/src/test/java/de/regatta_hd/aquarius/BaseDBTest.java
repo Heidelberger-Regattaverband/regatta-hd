@@ -37,13 +37,10 @@ class BaseDBTest implements BeforeAllCallback {
 
 		aquariusDb = (AquariusDBImpl) injector.getInstance(DBConnection.class);
 
+		aquariusDb.open(connectionData);
+
 		aquariusDb.execute((entityManager) -> {
-			try {
-				aquariusDb.open(connectionData);
-				aquariusDb.updateSchema();
-			} catch (SQLException e) {
-				fail(e);
-			}
+			aquariusDb.updateSchema();
 			return null;
 		}).get();
 	}

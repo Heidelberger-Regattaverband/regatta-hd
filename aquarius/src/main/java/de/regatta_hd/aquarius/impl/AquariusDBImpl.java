@@ -95,7 +95,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	}
 
 	private String readVersion() {
-		MetaData metaData = this.getEntityManager()
+		MetaData metaData = getEntityManagerImpl()
 				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class).getSingleResult();
 		return metaData.getValue();
 	}
