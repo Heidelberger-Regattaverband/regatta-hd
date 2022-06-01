@@ -52,6 +52,14 @@ public class AquariusDBImpl implements DBConnection {
 		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
 	}
 
+
+	@Override
+	public <R> Future<R> execute(DBCallable<R> callable) {
+		return getExecutor().submit(() -> {
+			return callable.execute(getEntityManager());
+		});
+	}
+
 	@Override
 	public ExecutorService getExecutor() {
 		if (this.dbExecutor == null) {
@@ -196,12 +204,5 @@ public class AquariusDBImpl implements DBConnection {
 		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
 		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
 		return props;
-	}
-
-	@Override
-	public <R> Future<R> execute(DBCallable<R> callable) {
-		return getExecutor().submit(() -> {
-			return callable.execute(getEntityManager());
-		});
 	}
 }
