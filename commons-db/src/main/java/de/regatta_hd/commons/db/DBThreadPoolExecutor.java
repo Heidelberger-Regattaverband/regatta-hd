@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class DBThreadPoolExecutor extends ThreadPoolExecutor {
 	private final Logger logger = Logger.getLogger(DBThreadPoolExecutor.class.getName());
 
-	public static final String DB_THREAD_PREFIX = "Database-Connection-";
+	static final String DB_THREAD_PREFIX = "Database-Connection-";
 
 	public DBThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit) {
 		super(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<>(),
@@ -19,15 +19,15 @@ public class DBThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	@Override
-	protected void beforeExecute(Thread t, Runnable r) {
+	protected void beforeExecute(Thread thread, Runnable r) {
 		this.logger.log(Level.FINEST, "Before executing runnable {0} in thread {1}.",
-				new Object[] { r.getClass(), t.getName() });
-		super.beforeExecute(t, r);
+				new Object[] { r.getClass(), thread.getName() });
+		super.beforeExecute(thread, r);
 	}
 
 	@Override
-	protected void afterExecute(Runnable r, Throwable t) {
-		super.afterExecute(r, t);
+	protected void afterExecute(Runnable r, Throwable thread) {
+		super.afterExecute(r, thread);
 		this.logger.log(Level.FINEST, "After executing runnable {0}.", r.getClass());
 	}
 

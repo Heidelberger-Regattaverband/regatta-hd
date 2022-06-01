@@ -1,15 +1,9 @@
 package de.regatta_hd.aquarius.impl;
 
-import static java.util.Objects.requireNonNull;
-
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -20,12 +14,8 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
+import de.regatta_hd.commons.db.AbstractDBConnection;
 import de.regatta_hd.commons.db.DBConfig;
-import de.regatta_hd.commons.db.DBConnection;
-import de.regatta_hd.commons.db.DBThreadPoolExecutor;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -37,95 +27,13 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 @Singleton
-public class AquariusDBImpl implements DBConnection {
+public class AquariusDBImpl extends AbstractDBConnection {
 
-	private final ThreadLocal<EntityManager> entityManager = ThreadLocal
-			.withInitial(() -> this.emFactory.createEntityManager());
-	private final ListenerManager listenerManager;
-
-	private volatile ExecutorService dbExecutor;
 	private String version;
-	private volatile EntityManagerFactory emFactory;
 
 	@Inject
 	public AquariusDBImpl(ListenerManager listenerManager) {
-		this.listenerManager = requireNonNull(listenerManager, "listenerManager must not be null");
-	}
-
-
-	@Override
-	public <R> Future<R> execute(DBCallable<R> callable) {
-		return getExecutor().submit(() -> {
-			return callable.execute(getEntityManager());
-		});
-	}
-
-	@Override
-	public ExecutorService getExecutor() {
-		if (this.dbExecutor == null) {
-			synchronized (this) {
-				if (this.dbExecutor == null) {
-					this.dbExecutor = createExecutor();
-				}
-			}
-		}
-		return this.dbExecutor;
-	}
-
-	@Override
-	public synchronized void close() {
-		if (isOpenImpl()) {
-			this.entityManager.remove();
-			if (this.emFactory != null) {
-				this.emFactory.close();
-				this.emFactory = null;
-			}
-			if (this.dbExecutor != null) {
-				this.dbExecutor.shutdownNow();
-				this.dbExecutor = null;
-			}
-			this.version = null;
-
-			// notify listeners about changed AquariusDB state
-			notifyListeners(new AquariusDBStateChangedEventImpl(this));
-		}
-	}
-
-	@Override
-	public synchronized EntityManager getEntityManager() {
-		ensureOpen();
-		return this.entityManager.get();
-	}
-
-	@Override
-	public synchronized boolean isOpen() {
-		return isOpenImpl();
-	}
-
-	@Override
-	public synchronized void open(DBConfig dbCfg) throws SQLException {
-		Map<String, String> props = getProperties(requireNonNull(dbCfg, "dbCfg must not be null"));
-
-		close();
-
-		try {
-			this.emFactory = Persistence.createEntityManagerFactory("aquarius", props);
-
-			this.version = readVersion();
-
-			// notify listeners about changed AquariusDB state
-			notifyListeners(new AquariusDBStateChangedEventImpl(this));
-		} catch (PersistenceException e) {
-			if (this.emFactory != null) {
-				this.emFactory.close();
-				this.emFactory = null;
-			}
-			Throwable rootCause = ExceptionUtils.getRootCause(e);
-			if (rootCause instanceof SQLServerException) {
-				throw (SQLServerException) rootCause;
-			}
-			throw e;
-		}
+		super("aquarius", listenerManager);
 	}
 
 	@SuppressWarnings("resource")
@@ -145,30 +53,45 @@ public class AquariusDBImpl implements DBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
-				if (this.emFactory != null) {
-					this.emFactory.close();
-					this.emFactory = null;
-				}
+				close();
 				throw new SQLException(e);
 			}
 		});
 	}
 
-	String getVersion() {
+	public String getVersion() {
 		return this.version;
 	}
 
-	private void ensureOpen() {
-		if (!isOpenImpl()) {
-			throw new IllegalStateException("Not connected.");
+	@Override
+	protected Map<String, String> getProperties(DBConfig dbConfig) {
+		Map<String, String> properties = new HashMap<>();
+
+		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getDbHost(),
+				dbConfig.getDbName(), Boolean.toString(dbConfig.isEncrypt()));
+
+		if (dbConfig.isEncrypt() && dbConfig.isTrustServerCertificate()) {
+			url += ";trustServerCertificate=true";
 		}
-		if (!Thread.currentThread().getName().startsWith(DBThreadPoolExecutor.DB_THREAD_PREFIX)) {
-			throw new IllegalStateException("Not a Database connection thread.");
-		}
+
+		properties.put("javax.persistence.jdbc.url", url);
+		properties.put("javax.persistence.jdbc.user", dbConfig.getUsername());
+		properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
+		return properties;
 	}
 
-	private boolean isOpenImpl() {
-		return this.emFactory != null && this.emFactory.isOpen();
+	@Override
+	protected void openImpl() {
+		this.version = readVersion();
+	}
+
+	@Override
+	protected void convertException(PersistenceException ex) throws SQLException {
+		Throwable rootCause = ExceptionUtils.getRootCause(ex);
+		if (rootCause instanceof SQLServerException) {
+			throw (SQLServerException) rootCause;
+		}
+		throw ex;
 	}
 
 	private String readVersion() {
@@ -177,32 +100,11 @@ public class AquariusDBImpl implements DBConnection {
 		return metaData.getValue();
 	}
 
-	private void notifyListeners(AquariusDBStateChangedEventImpl event) {
-		List<StateChangedEventListener> listeners = this.listenerManager.getListeners(StateChangedEventListener.class);
-		for (StateChangedEventListener listener : listeners) {
-			listener.stateChanged(event);
-		}
+	@Override
+	public <R> Future<R> execute(DBCallable<R> callable) {
+		return getExecutor().submit(() -> {
+			return callable.execute(getEntityManager());
+		});
 	}
 
-	// static helpers
-
-	private static ThreadPoolExecutor createExecutor() {
-		final int poolSize = 1;
-		return new DBThreadPoolExecutor(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS);
-	}
-
-	private static Map<String, String> getProperties(DBConfig dbCfg) {
-		Map<String, String> props = new HashMap<>();
-		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbCfg.getDbHost(),
-				dbCfg.getDbName(), Boolean.toString(dbCfg.isEncrypt()));
-
-		if (dbCfg.isEncrypt() && dbCfg.isTrustServerCertificate()) {
-			url += ";trustServerCertificate=true";
-		}
-
-		props.put("javax.persistence.jdbc.url", url);
-		props.put("javax.persistence.jdbc.user", dbCfg.getUsername());
-		props.put("javax.persistence.jdbc.password", dbCfg.getPassword());
-		return props;
-	}
 }

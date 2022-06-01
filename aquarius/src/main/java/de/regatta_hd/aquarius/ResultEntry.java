@@ -19,6 +19,7 @@ import lombok.ToString;
 public class ResultEntry {
 
 	private Heat heat;
+	private List<HeatRegistration> result;
 
 	public int getId() {
 		return this.heat.getId();
@@ -45,67 +46,35 @@ public class ResultEntry {
 	}
 
 	public String getFirst() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (!result.isEmpty()) {
-			return getRegistrationLabel(result.get(0).getRegistration());
-		}
-		return null;
+		return getRegistrationName(0);
 	}
 
 	public Integer getFirstPoints() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (!result.isEmpty()) {
-			return result.get(0).getFinalResult().getPoints();
-		}
-		return null;
+		return getPoints(0);
 	}
 
 	public String getSecond() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (result.size() > 1) {
-			return getRegistrationLabel(result.get(1).getRegistration());
-		}
-		return null;
+		return getRegistrationName(1);
 	}
 
 	public Integer getSecondPoints() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (result.size() > 1) {
-			return result.get(1).getFinalResult().getPoints();
-		}
-		return null;
+		return getPoints(1);
 	}
 
 	public String getThird() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (result.size() > 2) {
-			return getRegistrationLabel(result.get(2).getRegistration());
-		}
-		return null;
+		return getRegistrationName(2);
 	}
 
 	public Integer getThirdPoints() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (result.size() > 2) {
-			return result.get(2).getFinalResult().getPoints();
-		}
-		return null;
+		return getPoints(2);
 	}
 
 	public String getFourth() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (result.size() > 3) {
-			return getRegistrationLabel(result.get(3).getRegistration());
-		}
-		return null;
+		return getRegistrationName(3);
 	}
 
 	public Integer getFourthPoints() {
-		List<HeatRegistration> result = this.heat.getEntriesSortedByRank();
-		if (result.size() > 3) {
-			return result.get(3).getFinalResult().getPoints();
-		}
-		return null;
+		return getPoints(3);
 	}
 
 	public String getState() {
@@ -117,6 +86,29 @@ public class ResultEntry {
 		default:
 			return "-";
 		}
+	}
+
+	private String getRegistrationName(final int index) {
+		List<HeatRegistration> heatResult = getEntriesSortedByRank();
+		if (heatResult.size() > index && heatResult.get(index).getRegistration() != null) {
+			return getRegistrationLabel(heatResult.get(index).getRegistration());
+		}
+		return null;
+	}
+
+	private Integer getPoints(final int index) {
+		List<HeatRegistration> heatResult = getEntriesSortedByRank();
+		if (heatResult.size() > index && heatResult.get(index).getFinalResult() != null) {
+			return heatResult.get(index).getFinalResult().getPoints();
+		}
+		return null;
+	}
+
+	private List<HeatRegistration> getEntriesSortedByRank() {
+		if (this.result == null) {
+			this.result = this.heat.getEntriesSortedByRank();
+		}
+		return this.result;
 	}
 
 	// static helpers

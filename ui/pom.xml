@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.20</version>
+    <version>0.1.22</version>
   </parent>
 
   <artifactId>ui</artifactId>
@@ -123,6 +123,7 @@
                 <outputFile>regatta-hd.jnlp</outputFile>
                 <inputTemplate>template.vm</inputTemplate>
                 <mainClass>${mainClass}</mainClass>
+                <j2seVersion>${maven.compiler.release}</j2seVersion>
               </jnlp>
             </configuration>
           </execution>

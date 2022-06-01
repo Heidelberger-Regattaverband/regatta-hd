@@ -30,6 +30,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
@@ -73,6 +74,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private MenuItem heatsMitm;
 	@FXML
 	private ComboBox<Regatta> activeRegattaCBox;
+	@FXML
+	private Label dbNameLbl;
 
 	// fields
 	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
@@ -90,6 +93,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 				return new Pair<>(regattas, activeRegatta);
 			}, dbResult -> {
+				this.dbNameLbl.setText(event.getDBConnection().getName());
+
 				try {
 					this.regattasList.setAll(dbResult.getResult().getKey());
 					this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
@@ -102,6 +107,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			});
 		} else {
 			this.regattasList.clear();
+			this.dbNameLbl.setText("");
 		}
 	};
 
