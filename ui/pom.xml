@@ -123,6 +123,7 @@
                 <outputFile>regatta-hd.jnlp</outputFile>
                 <inputTemplate>template.vm</inputTemplate>
                 <mainClass>${mainClass}</mainClass>
+                <j2seVersion>${maven.compiler.release}</j2seVersion>
               </jnlp>
             </configuration>
           </execution>
