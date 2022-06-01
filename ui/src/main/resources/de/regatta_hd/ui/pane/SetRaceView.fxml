@@ -74,7 +74,7 @@
                       <PropertyValueFactory property="heatRank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="seedingListDevisionNumberCol" style="-fx-alignment: CENTER;" text="%common.heatAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                  <TableColumn fx:id="seedingListDevisionNumberCol" style="-fx-alignment: CENTER;" text="%common.devisionAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
                       <PropertyValueFactory property="devisionNumber" />
                     </cellValueFactory>

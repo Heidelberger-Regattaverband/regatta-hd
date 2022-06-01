@@ -20,7 +20,7 @@ import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.ExcelUtils;
+import de.regatta_hd.ui.util.WorkbookUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,6 +33,7 @@ import javafx.scene.control.TableView;
 public class ScoresController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
 
+	// UI controls
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -45,6 +46,8 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private TableColumn<Score, Integer> rankCol;
 	@FXML
 	private TableColumn<Score, Float> pointsCol;
+
+	// fields
 	private final ObservableList<Score> scoresList = FXCollections.observableArrayList();
 
 	@Override
@@ -86,15 +89,14 @@ public class ScoresController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	void handleRefresh() {
+	void handleRefreshOnAction() {
 		loadScores(true);
 	}
 
 	@FXML
-	void handleCalculate() {
+	void handleCalculateOnAction() {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.scoresList.clear();
 
 		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
 			try {
@@ -113,10 +115,33 @@ public class ScoresController extends AbstractRegattaDAOController {
 		});
 	}
 
+	@FXML
+	private void handleExportXslOnAction() {
+		disableButtons(true);
+
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
+			File file = FxUtils.showSaveDialog(getWindow(), getText("scores.xsl.fileName"),
+					getText("scores.xsl.description"), "*.xls");
+			if (file != null) {
+				try (Workbook workbook = dbResult.getResult()) {
+					WorkbookUtils.saveWorkbook(workbook, file);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			} else {
+				disableButtons(false);
+			}
+		}, false);
+
+		runTaskWithProgressDialog(dbTask, getText("scores.xsl.export"), false);
+	}
+
 	private void loadScores(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.scoresList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -138,30 +163,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 		});
 	}
 
-	@FXML
-	private void handleExportXslOnAction() {
-		disableButtons(true);
-
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), getText("scores.xsl.fileName"),
-					getText("scores.xsl.description"), "*.xls");
-			if (file != null) {
-				try (Workbook workbook = dbResult.getResult()) {
-					ExcelUtils.saveWorkbook(workbook, file);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
-
-		runTaskWithProgressDialog(dbTask, getText("scores.xsl.export"), false);
-	}
-
 	private Workbook createWorkbook(ProgressMonitor progress) {
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Punktwertung");
@@ -169,7 +170,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		int rowIdx = 0;
 		int cellIdx = 0;
 
-		CellStyle headerStyle = ExcelUtils.createHeaderCellStyle(workbook);
+		CellStyle headerStyle = WorkbookUtils.createHeaderCellStyle(workbook);
 
 		CellStyle pointsStyle = workbook.createCellStyle();
 		pointsStyle.setDataFormat((short) 2);

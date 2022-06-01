@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -28,7 +29,7 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.ExcelUtils;
+import de.regatta_hd.ui.util.WorkbookUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -65,6 +66,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, String> numberCol;
+	@FXML
+	private TableColumn<Heat, Instant> timeCol;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
 
@@ -73,7 +76,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		super.initialize(location, resources);
 
 		this.heatsTbl.setItems(this.heatsList);
-		this.heatsTbl.getSortOrder().add(this.numberCol);
+		this.heatsTbl.getSortOrder().add(this.timeCol);
 
 		loadHeats(false);
 	}
@@ -126,7 +129,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 					"*.xls");
 			if (file != null) {
 				try (Workbook workbook = dbResult.getResult()) {
-					ExcelUtils.saveWorkbook(workbook, file);
+					WorkbookUtils.saveWorkbook(workbook, file);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -314,7 +317,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private static void addHeader(Workbook workbook, Row row) {
 		int idx = 0;
-		CellStyle headerCellStyle = ExcelUtils.createHeaderCellStyle(workbook);
+		CellStyle headerCellStyle = WorkbookUtils.createHeaderCellStyle(workbook);
 
 		Cell headerCell = row.createCell(idx++);
 		headerCell.setCellStyle(headerCellStyle);

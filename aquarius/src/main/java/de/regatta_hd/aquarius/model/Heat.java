@@ -99,20 +99,26 @@ public class Heat {
 	private short devisionNumber;
 
 	/**
-	 * Indicates whether this heat is cancelled or not.
+	 * The time when this {@link Heat heat} is started.
+	 */
+	@Column(name = "Comp_DateTime")
+	private Instant time;
+
+	/**
+	 * Indicates whether this {@link Heat heat} is cancelled or not.
 	 */
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
 
-	@Column(name = "Comp_DateTime")
-	private Instant instant;
-
-	@Column(name = "Comp_Dummy")
-	private boolean dummy;
-
+	/**
+	 * All assigned registrations to this heat.
+	 */
 	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "heat")
 	@OrderBy("lane")
 	private Set<HeatRegistration> entries;
+
+	@Column(name = "Comp_Dummy")
+	private boolean dummy;
 
 	@Column(name = "Comp_GroupValue")
 	private short groupValue;
