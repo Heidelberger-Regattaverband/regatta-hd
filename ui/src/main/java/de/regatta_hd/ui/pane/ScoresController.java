@@ -33,6 +33,7 @@ import javafx.scene.control.TableView;
 public class ScoresController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
 
+	// UI controls
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -45,6 +46,8 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private TableColumn<Score, Integer> rankCol;
 	@FXML
 	private TableColumn<Score, Float> pointsCol;
+
+	// fields
 	private final ObservableList<Score> scoresList = FXCollections.observableArrayList();
 
 	@Override
@@ -86,15 +89,14 @@ public class ScoresController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	void handleRefresh() {
+	void handleRefreshOnAction() {
 		loadScores(true);
 	}
 
 	@FXML
-	void handleCalculate() {
+	void handleCalculateOnAction() {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.scoresList.clear();
 
 		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
 			try {
@@ -108,31 +110,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 				if (this.scoresList.isEmpty()) {
 					updatePlaceholder(getText("common.noDataAvailable"));
 				}
-				disableButtons(false);
-			}
-		});
-	}
-
-	private void loadScores(boolean refresh) {
-		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
-		this.scoresList.clear();
-
-		super.dbTaskRunner.run(progress -> {
-			if (refresh) {
-				super.db.getEntityManager().clear();
-			}
-			return this.regattaDAO.getScores();
-		}, scores -> {
-			try {
-				this.scoresList.setAll(scores.getResult());
-				this.scoresTbl.sort();
-				FxUtils.autoResizeColumns(this.scoresTbl);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -160,6 +137,30 @@ public class ScoresController extends AbstractRegattaDAOController {
 		}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("scores.xsl.export"), false);
+	}
+
+	private void loadScores(boolean refresh) {
+		disableButtons(true);
+		updatePlaceholder(getText("common.loadData"));
+
+		super.dbTaskRunner.run(progress -> {
+			if (refresh) {
+				super.db.getEntityManager().clear();
+			}
+			return this.regattaDAO.getScores();
+		}, scores -> {
+			try {
+				this.scoresList.setAll(scores.getResult());
+				this.scoresTbl.sort();
+				FxUtils.autoResizeColumns(this.scoresTbl);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
+				disableButtons(false);
+			}
+		});
 	}
 
 	private Workbook createWorkbook(ProgressMonitor progress) {

@@ -11,11 +11,16 @@
 
 <VBox fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="de.regatta_hd.ui.pane.ScoresController">
+
+  <padding>
+    <Insets bottom="10.0" left="10.0" right="10.0" />
+  </padding>
+
   <children>
     <ToolBar>
       <items>
-        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" text="%common.refresh" />
-        <Button fx:id="calculateBtn" mnemonicParsing="false" onAction="#handleCalculate" text="%common.calculate" />
+        <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+        <Button fx:id="calculateBtn" onAction="#handleCalculateOnAction" text="%common.calculate" />
         <Button fx:id="exportXslBtn" onAction="#handleExportXslOnAction" text="%scores.xsl.export" />
       </items>
     </ToolBar>
@@ -42,7 +47,4 @@
       </columns>
     </TableView>
   </children>
-  <padding>
-    <Insets bottom="10.0" left="10.0" right="10.0" />
-  </padding>
 </VBox>
