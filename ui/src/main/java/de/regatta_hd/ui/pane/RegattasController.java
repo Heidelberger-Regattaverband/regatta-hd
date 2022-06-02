@@ -64,9 +64,9 @@ public class RegattasController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			if (refresh) {
-				super.db.getEntityManager().clear();
+				entityManager.clear();
 			}
 			return this.regattaDAO.getRegattas();
 		}, dbResult -> {

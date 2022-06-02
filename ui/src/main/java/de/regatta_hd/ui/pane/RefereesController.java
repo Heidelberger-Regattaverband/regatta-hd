@@ -69,8 +69,8 @@ public class RefereesController extends AbstractBaseController {
 		this.activeCol.setCellValueFactory(cellData -> {
 			BooleanProperty property = cellData.getValue().activeProperty();
 			property.addListener((observable, newValue, oldValue) -> {
-				super.dbTaskRunner.runInTransaction(progress -> {
-					return super.db.getEntityManager().merge(cellData.getValue());
+				super.dbTaskRunner.runInTransaction((entityManager, progress) -> {
+					return entityManager.merge(cellData.getValue());
 				}, dbResult -> {
 					try {
 						dbResult.getResult();
@@ -141,9 +141,9 @@ public class RefereesController extends AbstractBaseController {
 	private void updateLicenceState(boolean licenceState) {
 		disableButtons(true);
 
-		super.dbTaskRunner.runInTransaction(progress -> {
+		super.dbTaskRunner.runInTransaction((entityManager, progress) -> {
 			this.masterDAO.updateAllRefereesLicenceState(licenceState);
-			super.db.getEntityManager().clear();
+			entityManager.clear();
 			return this.masterDAO.getReferees();
 		}, dbResult -> {
 			try {
@@ -164,9 +164,9 @@ public class RefereesController extends AbstractBaseController {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			if (refresh) {
-				super.db.getEntityManager().clear();
+				entityManager.clear();
 			}
 			return this.masterDAO.getReferees();
 		}, dbResult -> {

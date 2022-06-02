@@ -8,11 +8,11 @@ import javafx.concurrent.Task;
 
 public interface DBTaskRunner {
 
-	<V> DBTask<V> createTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction);
+	<V> DBTask<V> createTask(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction);
 
 	<V> DBTask<V> runTask(DBTask<V> task);
 
-	<V> DBTask<V> run(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultHandler);
+	<V> DBTask<V> run(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultHandler);
 
 	/**
 	 * Executes the given {@link AsyncCallable} in a DB task within a transaction.
@@ -22,5 +22,5 @@ public interface DBTaskRunner {
 	 *                       SUCCEEDED state.
 	 * @return the {@link Task} executing the given {@link AsyncCallable}
 	 */
-	<V> DBTask<V> runInTransaction(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer);
+	<V> DBTask<V> runInTransaction(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer);
 }

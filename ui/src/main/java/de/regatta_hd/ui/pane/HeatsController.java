@@ -100,22 +100,23 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportCsvOnAction() {
 		disableButtons(true);
 
-		DBTask<String> dbTask = super.dbTaskRunner.createTask(this::createCsv, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"),
-					"*.csv");
-			if (file != null) {
-				try {
-					saveCsvFile(dbResult.getResult(), file);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+		DBTask<String> dbTask = super.dbTaskRunner.createTask((entityManager, progress) -> createCsv(progress),
+				dbResult -> {
+					File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"),
+							"*.csv");
+					if (file != null) {
+						try {
+							saveCsvFile(dbResult.getResult(), file);
+						} catch (Exception e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+							FxUtils.showErrorMessage(getWindow(), e);
+						} finally {
+							disableButtons(false);
+						}
+					} else {
+						disableButtons(false);
+					}
+				}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
 	}
@@ -124,22 +125,23 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"),
-					"*.xls");
-			if (file != null) {
-				try (Workbook workbook = dbResult.getResult()) {
-					WorkbookUtils.saveWorkbook(workbook, file);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask((entityManager, progress) -> createWorkbook(progress),
+				dbResult -> {
+					File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"),
+							"*.xls");
+					if (file != null) {
+						try (Workbook workbook = dbResult.getResult()) {
+							WorkbookUtils.saveWorkbook(workbook, file);
+						} catch (Exception e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+							FxUtils.showErrorMessage(getWindow(), e);
+						} finally {
+							disableButtons(false);
+						}
+					} else {
+						disableButtons(false);
+					}
+				}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
 	}
@@ -155,9 +157,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 		updatePlaceholder(getText("common.loadData"));
 		this.heatsList.clear();
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			if (refresh) {
-				super.db.getEntityManager().clear();
+				entityManager.clear();
 			}
 			return this.regattaDAO.getHeats();
 		}, dbResult -> {

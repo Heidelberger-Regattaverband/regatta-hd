@@ -88,7 +88,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		if (event.getDBConnection().isOpen()) {
 			this.activeRegattaCBox.setDisable(true);
 
-			super.dbTaskRunner.run(progress -> {
+			super.dbTaskRunner.run((entityManager, progress) -> {
 				List<Regatta> regattas = super.regattaDAO.getRegattas();
 				Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 				return new Pair<>(regattas, activeRegatta);
@@ -237,7 +237,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	// private
 
 	private void openDbConnection(DBConfig connectionData) {
-		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
+		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask((entityManager, progress) -> {
 			final int MAX = 3;
 			updateControls(true);
 
@@ -274,7 +274,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		boolean isOpen = super.db.isOpen();
 
 		if (isOpen) {
-			super.dbTaskRunner.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
+			super.dbTaskRunner.run((entityManager, progress) -> super.regattaDAO.getActiveRegatta(), dbResult -> {
 				try {
 					boolean hasActiveRegatta = dbResult.getResult() != null;
 

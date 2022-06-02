@@ -77,7 +77,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void setDistances() {
 		disableButtons(true);
 
-		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.setDistances(), dbResult -> {
+		super.dbTaskRunner.runInTransaction((entityManager, progress) -> this.regattaDAO.setDistances(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
@@ -100,32 +100,33 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void setMastersAgeClasses() {
 		disableButtons(true);
 
-		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
-			try {
-				List<Race> races = dbResult.getResult();
-				if (races.isEmpty()) {
-					FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
-				} else {
-					refresh();
-					FxUtils.showInfoDialog(getWindow(),
-							String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
-			}
-		});
+		super.dbTaskRunner.runInTransaction((entityManager, progress) -> this.regattaDAO.enableMastersAgeClasses(),
+				dbResult -> {
+					try {
+						List<Race> races = dbResult.getResult();
+						if (races.isEmpty()) {
+							FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
+						} else {
+							refresh();
+							FxUtils.showInfoDialog(getWindow(),
+									String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+						}
+					} catch (Exception e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						FxUtils.showErrorMessage(getWindow(), e);
+					} finally {
+						disableButtons(false);
+					}
+				});
 	}
 
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			if (refresh) {
-				this.db.getEntityManager().clear();
+				entityManager.clear();
 			}
 			return this.regattaDAO.getRaces();
 		}, dbResult -> {

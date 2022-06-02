@@ -3,14 +3,15 @@ package de.regatta_hd.commons.fx.impl;
 import static java.util.Objects.requireNonNull;
 
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.commons.core.concurrent.AsyncCallable;
 import de.regatta_hd.commons.core.concurrent.AsyncResult;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.fx.db.DBAsyncCallable;
 import de.regatta_hd.commons.fx.db.DBTask;
 import jakarta.persistence.EntityTransaction;
 import javafx.application.Platform;
@@ -18,13 +19,13 @@ import javafx.application.Platform;
 class DBTaskImpl<V> extends DBTask<V> {
 	private static final Logger logger = Logger.getLogger(DBTaskImpl.class.getName());
 
-	private final AsyncCallable<V> callable;
+	private final DBAsyncCallable<V> callable;
 	private final DBConnection db;
 	private final boolean inTransaction;
 	private final Consumer<AsyncResult<V>> resultConsumer;
 	private volatile Consumer<String> progressMessageConsumer;
 
-	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
+	DBTaskImpl(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {
 		this.callable = requireNonNull(callable, "callable must not be null");
 		this.db = requireNonNull(db, "db must not be null");
@@ -54,40 +55,44 @@ class DBTaskImpl<V> extends DBTask<V> {
 
 	@Override
 	protected AsyncResult<V> call() throws Exception {
-		EntityTransaction transaction = this.inTransaction ? this.db.getEntityManager().getTransaction() : null;
+		Future<V> future = this.db.execute(entityManager -> {
+			EntityTransaction transaction = this.inTransaction ? entityManager.getTransaction() : null;
 
-		// begin transaction if required
-		if (transaction != null && !transaction.isActive()) {
-			transaction.begin();
-		}
-
-		V result = this.callable.call(new ProgressMonitor() {
-
-			@Override
-			public void update(double workDone, double max, String message) {
-				checkCancelled();
-				updateProgress(workDone, max, message);
+			// begin transaction if required
+			if (transaction != null && !transaction.isActive()) {
+				transaction.begin();
 			}
 
-			@Override
-			public boolean isCancelled() {
-				return DBTaskImpl.this.isCancelled();
-			}
+			V result = this.callable.call(entityManager, new ProgressMonitor() {
 
-			@Override
-			public void checkCancelled() {
-				if (isCancelled()) {
-					throw new CancellationException("DBTask was cancelled.");
+				@Override
+				public void update(double workDone, double max, String message) {
+					checkCancelled();
+					updateProgress(workDone, max, message);
 				}
+
+				@Override
+				public boolean isCancelled() {
+					return DBTaskImpl.this.isCancelled();
+				}
+
+				@Override
+				public void checkCancelled() {
+					if (isCancelled()) {
+						throw new CancellationException("DBTask was cancelled.");
+					}
+				}
+			});
+
+			// if an active transaction exists it is committed
+			if (transaction != null && transaction.isActive()) {
+				transaction.commit();
 			}
+
+			return result;
 		});
 
-		// if an active transaction exists it is committed
-		if (transaction != null && transaction.isActive()) {
-			transaction.commit();
-		}
-
-		return new DBResultImpl<>(result);
+		return new DBResultImpl<>(future);
 	}
 
 	@Override
@@ -105,11 +110,11 @@ class DBTaskImpl<V> extends DBTask<V> {
 
 	private class DBResultImpl<R> implements AsyncResult<R> {
 
-		private final R result;
+		private final Future<R> result;
 
 		private final Exception exception;
 
-		private DBResultImpl(R result) {
+		private DBResultImpl(Future<R> result) {
 			this.result = result;
 			this.exception = null;
 		}
@@ -124,7 +129,7 @@ class DBTaskImpl<V> extends DBTask<V> {
 			if (this.exception != null) {
 				throw this.exception;
 			}
-			return this.result;
+			return this.result.get();
 		}
 	}
 

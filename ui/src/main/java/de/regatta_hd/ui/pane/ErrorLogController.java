@@ -11,7 +11,6 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -85,7 +84,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.hostNamesList.clear();
 
-		super.dbTaskRunner.run(progress -> this.dao.getHostNames(), dbResult -> {
+		super.dbTaskRunner.run((em, progress) -> this.dao.getHostNames(), dbResult -> {
 			try {
 				this.hostNamesList.setAll(dbResult.getResult());
 				this.hostNameCbx.getSelectionModel().select(this.hostName);
@@ -102,8 +101,7 @@ public class ErrorLogController extends AbstractBaseController {
 		disableButtons(true);
 		this.logRecordsList.clear();
 
-		super.dbTaskRunner.run(progress -> {
-			EntityManager entityManager = super.db.getEntityManager();
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			if (refresh) {
 				entityManager.clear();
 			}

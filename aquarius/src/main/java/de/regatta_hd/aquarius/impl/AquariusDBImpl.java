@@ -103,7 +103,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	@Override
 	public <R> Future<R> execute(DBCallable<R> callable) {
 		return getExecutor().submit(() -> {
-			return callable.execute(getEntityManager());
+			return callable.execute(getEntityManagerImpl());
 		});
 	}
 
