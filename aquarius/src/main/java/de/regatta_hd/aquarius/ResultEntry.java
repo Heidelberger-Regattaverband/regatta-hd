@@ -114,7 +114,7 @@ public class ResultEntry {
 	// static helpers
 
 	private static String getRegistrationLabel(Registration registration) {
-		Optional<RegistrationLabel> label = registration.getLabels().stream().findAny();
+		Optional<RegistrationLabel> label = registration.getFinalLabels().findFirst();
 		return label.isPresent() ? label.get().getLabel().getLabelShort() : null;
 	}
 }
