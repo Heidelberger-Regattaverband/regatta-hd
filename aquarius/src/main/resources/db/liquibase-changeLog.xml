@@ -89,4 +89,15 @@
     </createTable>
   </changeSet>
 
+  <changeSet id="6" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <columnExists tableName="HRV_LogRecord" columnName="threadName" />
+      </not>
+    </preConditions>
+    <addColumn tableName="HRV_LogRecord">
+      <column name="threadName" type="VARCHAR(256)" afterColumn="threadId" />
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
