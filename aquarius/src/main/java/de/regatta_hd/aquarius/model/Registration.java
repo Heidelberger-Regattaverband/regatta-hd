@@ -117,13 +117,14 @@ public class Registration {
 	}
 
 	/**
-	 * Returns the final labels assigned to this registration, previous changes are filtered out.
+	 * Returns the labels for the given round which are assigned to this registration.
 	 *
+	 * @param the round
 	 * @return a stream with final labels
 	 */
-	public Stream<RegistrationLabel> getFinalLabels() {
+	public Stream<RegistrationLabel> getLabels(short round) {
 		return getLabels().stream()
-				.filter(regLabel -> regLabel.getRoundFrom() <= Result.FINAL && Result.FINAL <= regLabel.getRoundTo());
+				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo());
 	}
 
 	/**
