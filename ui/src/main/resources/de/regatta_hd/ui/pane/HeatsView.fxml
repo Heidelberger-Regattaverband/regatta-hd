@@ -39,22 +39,22 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="Lauf">
+        <TableColumn fx:id="timeCol" reorderable="false" sortable="true" text="%common.time">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>number</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.instant">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>instant</property>
+              <property>time</property>
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
             <DateTimeTableCellFactory fx:factory="createMedium" />
           </cellFactory>
+        </TableColumn>
+        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>number</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
         </TableColumn>
         <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr">
           <cellValueFactory>
@@ -70,7 +70,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.heatAbr">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>devisionLabel</property>

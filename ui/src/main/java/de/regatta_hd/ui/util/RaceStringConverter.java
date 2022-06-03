@@ -15,8 +15,9 @@ public class RaceStringConverter extends StringConverter<Race> {
 		if (race == null) {
 			return null;
 		}
-		String toString = String.format("%s - %s - %s - %d Anmeldungen - %d Abteilungen", race.getNumber(), race.getShortLabel(),
-				race.getLongLabel(), Integer.valueOf(race.getRegistrations().size()), Integer.valueOf(race.getHeats().size()));
+		String toString = String.format("%s - %s - %s - %d Anmeldungen - %d Abteilungen", race.getNumber(),
+				race.getShortLabel(), race.getLongLabel(), Long.valueOf(race.getActiveRegistrations().count()),
+				Long.valueOf(race.getDrivenHeats().count()));
 		this.raceToString.put(toString, race);
 		return toString;
 	}

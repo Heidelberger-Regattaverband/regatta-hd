@@ -25,10 +25,10 @@
   </security>
 
   <resources>
-    <java version="11*" href="jvms.json" />
+    <java version="$j2seVersion*" href="jvms.json" />
     $dependencies
   </resources>
 
-  <application-desc main-class="${mainClass}" />
+  <application-desc main-class="$mainClass" />
 
 </jnlp>

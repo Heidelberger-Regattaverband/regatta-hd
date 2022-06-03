@@ -10,6 +10,13 @@ import jakarta.persistence.EntityManager;
 public interface DBConnection {
 
 	/**
+	 * Returns the name of the database.
+	 *
+	 * @return the database name or {@code null} if not connected.
+	 */
+	String getName();
+
+	/**
 	 * Closes connection to aquarius database.
 	 */
 	void close();

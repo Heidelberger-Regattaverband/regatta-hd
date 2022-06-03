@@ -49,9 +49,9 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "labels", subgraph = "labels.label") //
 				}), //
 		@NamedSubgraph(name = "labels.label", //
-		attributeNodes = { //
-				@NamedAttributeNode(value = "label") //
-		}), //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "label") //
+				}), //
 		@NamedSubgraph(name = "crew.athlet", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "athlet") //
@@ -77,22 +77,48 @@ public class Heat {
 	@Column(name = "Comp_ID")
 	private int id;
 
+	/**
+	 * The {@link Race} this {@link Heat} belongs to.
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Comp_Race_ID_FK")
+	private Race race;
+
+	/**
+	 * The consecutive heat number within the regatta, e.g. 1, 2, 3 ... 100, 101, 102
+	 */
+	@Column(name = "Comp_Number")
+	@ToString.Include(rank = 8)
+	private short number;
+
+	/**
+	 * The consecutive heat (devision) number within the race, e.g Abteilung 1, Abteilung 2 ...
+	 */
 	@Column(name = "Comp_HeatNumber")
 	@ToString.Include(rank = 10)
 	private short devisionNumber;
 
+	/**
+	 * The time when this {@link Heat heat} is started.
+	 */
+	@Column(name = "Comp_DateTime")
+	private Instant time;
+
+	/**
+	 * Indicates whether this {@link Heat heat} is cancelled or not.
+	 */
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
 
-	@Column(name = "Comp_DateTime")
-	private Instant instant;
-
-	@Column(name = "Comp_Dummy")
-	private boolean dummy;
-
+	/**
+	 * All assigned registrations to this heat.
+	 */
 	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "heat")
 	@OrderBy("lane")
 	private Set<HeatRegistration> entries;
+
+	@Column(name = "Comp_Dummy")
+	private boolean dummy;
 
 	@Column(name = "Comp_GroupValue")
 	private short groupValue;
@@ -104,16 +130,12 @@ public class Heat {
 	@Column(name = "Comp_Locked")
 	private boolean locked;
 
-	@Column(name = "Comp_Number")
-	@ToString.Include(rank = 8)
-	private short number;
-
 	@OneToMany(targetEntity = HeatReferee.class, mappedBy = "heat")
 	private List<HeatReferee> heatReferees;
 
 	@Column(name = "Comp_Round")
 	@ToString.Include(rank = 7)
-	private Short round;
+	private short round;
 
 	@Column(name = "Comp_RoundCode", length = 8)
 	@ToString.Include(rank = 6)
@@ -125,10 +147,6 @@ public class Heat {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Comp_Event_ID_FK", nullable = false)
 	private Regatta regatta;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Comp_Race_ID_FK")
-	private Race race;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Comp_RMDetail_ID_FK")

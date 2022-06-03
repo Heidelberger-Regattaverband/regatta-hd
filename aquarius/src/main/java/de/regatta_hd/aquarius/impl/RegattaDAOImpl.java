@@ -18,7 +18,7 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
-import de.regatta_hd.aquarius.SetListEntry;
+import de.regatta_hd.aquarius.SeedingListEntry;
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Crew;
@@ -109,14 +109,14 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public void setRaceHeats(Race race, List<SetListEntry> setList) {
+	public void setRaceHeats(Race race, List<SeedingListEntry> setList) {
 		short laneCount = race.getRaceMode().getLaneCount();
 
-		LinkedList<SetListEntry> stack = new LinkedList<>(setList);
+		LinkedList<SeedingListEntry> stack = new LinkedList<>(setList);
 		final EntityManager entityManager = super.db.getEntityManager();
 
 		// get all planed heats ordered by the heat number
-		race.getHeatsSortedByDevisionNumber().forEach(heat -> {
+		race.getDrivenHeats().forEach(heat -> {
 			// first clean existing heat assignments
 			heat.getEntries().forEach(entityManager::remove);
 
@@ -194,24 +194,24 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<SetListEntry> createSetList(Race race, Race srcRace) {
-		Map<Integer, SetListEntry> diffCrews = new HashMap<>();
+	public List<SeedingListEntry> createSeedingList(Race race, Race srcRace) {
+		Map<Integer, SeedingListEntry> diffCrews = new HashMap<>();
 
 		Set<Registration> srcRegistrations = ConcurrentHashMap.newKeySet();
-		srcRegistrations.addAll(srcRace.getRegistrations());
+		srcRegistrations.addAll(srcRace.getActiveRegistrations().collect(Collectors.toSet()));
 
-		Map<Integer, SetListEntry> equalCrews = new HashMap<>();
+		Map<Integer, SeedingListEntry> equalCrews = new HashMap<>();
 
 		// remove cancelled registrations
-		race.getRegistrations().stream().filter(Registration::isCancelled).forEach(registration -> {
-			SetListEntry entry = SetListEntry.builder().registration(registration).equalCrew(false).build();
+		race.getActiveRegistrations().forEach(registration -> {
+			SeedingListEntry entry = SeedingListEntry.builder().registration(registration).equalCrew(false).build();
 			diffCrews.put(entry.getId(), entry);
 
 			for (Registration srcRegistration : srcRegistrations) {
 
 				// look for equal crew in the source registration
 				if (isEqualCrews(srcRegistration, registration)) {
-					SetListEntry equalCrewEntry = diffCrews.remove(registration.getId());
+					SeedingListEntry equalCrewEntry = diffCrews.remove(registration.getId());
 					// mark crews as equal
 					equalCrewEntry.setEqualCrew(true);
 					// put entry into map of equal crews
@@ -225,19 +225,19 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}
 		});
 
-		List<SetListEntry> setList = createSetListWithEqualCrews(equalCrews, srcRace);
+		List<SeedingListEntry> seedingList = createSetListWithEqualCrews(equalCrews, srcRace);
 
 		// add not added registrations with equal crews, e.g. boat did not finish
 		equalCrews.values().forEach(entry -> diffCrews.put(entry.getId(), entry));
 
-		// sort the remaining registrations according their number
+		// sort the remaining registrations according their bib
 		diffCrews.values().stream().sorted((reg1, reg2) -> reg1.getBib() > reg2.getBib() ? 1 : -1).forEach(entry -> {
-			entry.setRank(setList.size() + 1);
+			entry.setRank(seedingList.size() + 1);
 			findBestMatch(entry, srcRegistrations);
-			setList.add(entry);
+			seedingList.add(entry);
 		});
 
-		return setList;
+		return seedingList;
 	}
 
 	@Override
@@ -252,26 +252,32 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		for (ResultEntry resultEntry : getOfficialResults()) {
 			Race race = resultEntry.getHeat().getRace();
+			boolean raceIsSet = race.isSet();
+			// gets the number of rowers without the cox
 			byte numRowers = race.getBoatClass().getNumRowers();
-//			if (race.getBoatClass().isCoxed()) {
-//				numRowers++;
-//			}
 
 			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
-				Integer pointsBoat = heatReg.getFinalResult().getPoints();
+				if (heatReg.getFinalResult() != null) {
+					Integer pointsBoat = heatReg.getFinalResult().getPoints();
 
-				if (pointsBoat != null) {
-					float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
+					if (pointsBoat != null) {
+						// duplicate points if it's the first heat of a set race
+						if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
+							pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
+						}
 
-					// ignore cox of boat
-					heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
-						Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
-								key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
-						score.addPoints(pointsPerCrew);
+						float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
+
+						// ignore cox of boat
+						heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
+							Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
+									key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
+							score.addPoints(pointsPerCrew);
 
 //						System.out.println("Heat=" + heatReg.getHeat().getNumber() + "', Club=" + score.getClubName()
 //								+ ", points=" + pointsPerCrew);
-					});
+						});
+					}
 				}
 			}
 		}
@@ -408,7 +414,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return crew1.getAthlet().getId() > crew2.getAthlet().getId() ? 1 : -1;
 	}
 
-	private static void findBestMatch(SetListEntry entry, Set<Registration> srcRegistrations) {
+	private static void findBestMatch(SeedingListEntry entry, Set<Registration> srcRegistrations) {
 		Registration registration = entry.getRegistration();
 
 		for (Registration srcRegistration : srcRegistrations) {
@@ -419,8 +425,9 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 	}
 
-	private static List<SetListEntry> createSetListWithEqualCrews(Map<Integer, SetListEntry> equalCrews, Race srcRace) {
-		List<SetListEntry> setList = new ArrayList<>();
+	private static List<SeedingListEntry> createSetListWithEqualCrews(Map<Integer, SeedingListEntry> equalCrews,
+			Race srcRace) {
+		List<SeedingListEntry> setList = new ArrayList<>();
 
 		List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
 
@@ -432,7 +439,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return heatReg1.getFinalResult().getNetTime().intValue() > heatReg2.getFinalResult().getNetTime()
 						.intValue() ? 1 : -1;
 			}).forEach(srcHeatReg -> {
-				SetListEntry entry;
+				SeedingListEntry entry;
 				// ensure the result contains a valid rank, if rank == 0 the boat did not finish
 				if (srcHeatReg.getFinalResult().getRank() > 0) {
 					entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
@@ -461,7 +468,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		// loop over source race heats and get all heat registrations sorted by time
-		srcRace.getHeats().forEach(heat -> {
+		srcRace.getDrivenHeats().forEach(heat -> {
 			List<HeatRegistration> byRank = heat.getEntriesSortedByRank();
 			for (int j = 0; j < byRank.size(); j++) {
 				srcHeatRegs.get(j).add(byRank.get(j));

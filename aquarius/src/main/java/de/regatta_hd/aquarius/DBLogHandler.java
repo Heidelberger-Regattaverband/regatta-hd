@@ -19,7 +19,6 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBThreadPoolExecutor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceException;
 
 @Singleton
 public class DBLogHandler extends Handler {
@@ -79,14 +78,17 @@ public class DBLogHandler extends Handler {
 		this.db.getExecutor().execute(() -> {
 			EntityManager entityManager = this.db.getEntityManager();
 			EntityTransaction transaction = entityManager.getTransaction();
-			transaction.begin();
+			if (!transaction.isActive()) {
+				transaction.begin();
+			}
 			try {
 				this.db.getEntityManager().persist(logRecord);
 				entityManager.flush();
 				transaction.commit();
-			} catch (PersistenceException e) {
+			} catch (Exception e) {
 				transaction.rollback();
 				e.printStackTrace();
+				this.logRecords.addLast(logRecord);
 			}
 		});
 	}
@@ -95,14 +97,16 @@ public class DBLogHandler extends Handler {
 		this.db.getExecutor().execute(() -> {
 			EntityManager entityManager = this.db.getEntityManager();
 			EntityTransaction transaction = entityManager.getTransaction();
-			transaction.begin();
+			if (!transaction.isActive()) {
+				transaction.begin();
+			}
 			try {
 				while (!this.logRecords.isEmpty()) {
 					entityManager.persist(this.logRecords.pop());
 				}
 				entityManager.flush();
 				transaction.commit();
-			} catch (PersistenceException e) {
+			} catch (Exception e) {
 				transaction.rollback();
 				e.printStackTrace();
 			}

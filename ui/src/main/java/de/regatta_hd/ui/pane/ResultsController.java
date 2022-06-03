@@ -59,7 +59,6 @@ public class ResultsController extends AbstractRegattaDAOController {
 	private void loadResults(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.resultsList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
