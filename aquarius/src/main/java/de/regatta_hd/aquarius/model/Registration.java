@@ -3,10 +3,13 @@ package de.regatta_hd.aquarius.model;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -28,21 +31,45 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Registration {
 
+	/**
+	 * Unique identifier of this {@link Registration registration}.
+	 */
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Entry_ID")
 	private Integer id;
 
+	/**
+	 * The {@link Regatta regatta} to which this {@link Registration registration} belongs.
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Entry_Event_ID_FK", nullable = false)
+	private Regatta regatta;
+
+	/**
+	 * The {@link Race race} to which this {@link Registration registration} belongs.
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Entry_Race_ID_FK", nullable = false)
+	private Race race;
+
+	/**
+	 * The {@link Club club} that made this {@link Registration}.
+	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_OwnerClub_ID_FK", nullable = false)
 	@ToString.Include(rank = 9)
 	private Club club;
 
-	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "registration")
-	private List<HeatRegistration> heatEntries;
-
+	/**
+	 * The {@link Crew crews} which is assigned to this {@link Registration registration}.
+	 */
 	@OneToMany(targetEntity = Crew.class, mappedBy = "registration")
 	@OrderBy("pos")
 	private Set<Crew> crews;
+
+	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "registration")
+	private List<HeatRegistration> heatEntries;
 
 	@Column(name = "Entry_Bib")
 	@ToString.Include(rank = 10)
@@ -74,22 +101,30 @@ public class Registration {
 	private String note;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Entry_Event_ID_FK", nullable = false)
-	private Regatta regatta;
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")
 	@ToString.Include(rank = 8)
 	private Label label;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Entry_Race_ID_FK", nullable = false)
-	private Race race;
-
+	/**
+	 * Returns the final crews assigned to this registration, previous changes are filtered out.
+	 *
+	 * @return a list with final crews
+	 */
 	public List<Crew> getFinalCrews() {
 		return getCrews().stream()
 				.filter(crew -> crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo())
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns the labels for the given round which are assigned to this registration.
+	 *
+	 * @param the round
+	 * @return a stream with final labels
+	 */
+	public Stream<RegistrationLabel> getLabels(short round) {
+		return getLabels().stream()
+				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo());
 	}
 
 	/**
@@ -98,6 +133,6 @@ public class Registration {
 	 * @return <code>true</code> if registration is cancelled, otherwise <code>false</code>.
 	 */
 	public boolean isCancelled() {
-		return getCancelValue() == 0;
+		return getCancelValue() > 0;
 	}
 }
