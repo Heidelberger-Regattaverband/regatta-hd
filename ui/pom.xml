@@ -95,10 +95,6 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <mainClass>${mainClass}</mainClass>
-          <options>
-            <option>--add-opens</option>
-            <option>java.base/java.lang=com.google.guice</option>
-          </options>
         </configuration>
       </plugin>
 
