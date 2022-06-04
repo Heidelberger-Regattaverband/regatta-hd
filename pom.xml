@@ -79,6 +79,7 @@
     <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
+    <module>webstart</module>
   </modules>
 
   <prerequisites>

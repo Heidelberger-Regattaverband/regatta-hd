@@ -11,9 +11,7 @@
   <name>Regatta HD - User Interface</name>
 
   <properties>
-    <mainClass>de.regatta_hd.ui.Main</mainClass>
-    <jnlp.build.directory>${project.build.directory}/jnlp</jnlp.build.directory>
-    <archives.directory>${jnlp.build.directory}/lib</archives.directory>
+    <mainClass>de.regatta_hd.ui.RegattaHD</mainClass>
   </properties>
 
   <dependencies>
@@ -104,75 +102,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>webstart-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>build-jnlp</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jnlp</goal>
-            </goals>
-            <configuration>
-              <filenameMapping>full</filenameMapping>
-              <libPath>lib</libPath>
-              <outputJarVersions>false</outputJarVersions>
-              <makeArchive>false</makeArchive>
-              <jnlp>
-                <outputFile>regatta-hd.jnlp</outputFile>
-                <inputTemplate>template.vm</inputTemplate>
-                <mainClass>${mainClass}</mainClass>
-                <j2seVersion>${maven.compiler.release}</j2seVersion>
-              </jnlp>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- ======================= -->
-      <!-- additional deploy steps -->
-      <!-- ======================= -->
-      <plugin>
-        <artifactId>maven-jarsigner-plugin</artifactId>
-        <configuration>
-          <archiveDirectory>${archives.directory}</archiveDirectory>
-          <keystore>keystore.jks</keystore>
-          <alias>selfsigned</alias>
-          <storepass>password</storepass>
-          <keypass>password</keypass>
-        </configuration>
-        <executions>
-          <execution>
-            <id>sign</id>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>de.ofterdinger.maven.plugins</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.1.0</version>
-        <configuration>
-          <server>github-upload</server>
-          <message>Creating site for ${project.version}</message>
-          <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
-          <repositoryName>download</repositoryName>
-          <outputDirectory>${jnlp.build.directory}</outputDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>
