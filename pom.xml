@@ -80,6 +80,7 @@
     <module>aquarius</module>
     <module>ui</module>
     <module>schemas</module>
+    <module>webstart</module>
   </modules>
 
   <prerequisites>
