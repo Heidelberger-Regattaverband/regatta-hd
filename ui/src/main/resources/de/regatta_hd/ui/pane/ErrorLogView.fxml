@@ -39,7 +39,7 @@
             <Label text="%common.loadData" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" sortType="DESCENDING" text="%common.instant">
+            <TableColumn reorderable="false" sortType="DESCENDING" text="%common.time">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>instant</property>

@@ -135,7 +135,7 @@ public class Heat {
 
 	@Column(name = "Comp_Round")
 	@ToString.Include(rank = 7)
-	private Short round;
+	private short round;
 
 	@Column(name = "Comp_RoundCode", length = 8)
 	@ToString.Include(rank = 6)

@@ -198,7 +198,7 @@ public class Race {
 	}
 
 	/**
-	 * @return {@code true} if the result of all {@link Heat heats} is official or cancelled, otherwise {@code false}.
+	 * @return {@code true} if the result of all driven {@link Heat heats} are official, otherwise {@code false}.
 	 */
 	public boolean isOfficial() {
 		return getDrivenHeats().allMatch(Heat::isStateOfficial);
