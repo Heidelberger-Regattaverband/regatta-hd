@@ -5,6 +5,7 @@
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
     <version>0.1.23</version>
+    <relativePath>../..</relativePath>
   </parent>
 
   <artifactId>webstart</artifactId>
