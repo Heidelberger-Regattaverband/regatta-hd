@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.regatta-hd</groupId>
+    <artifactId>regatta-hd</artifactId>
+    <version>0.1.23</version>
+    <relativePath>../..</relativePath>
+  </parent>
+
+  <artifactId>webstart</artifactId>
+  <name>Regatta HD - Webstart</name>
+
+  <properties>
+    <mainClass>de.regatta_hd.webstart.Main</mainClass>
+    <jnlp.build.directory>${project.build.directory}/jnlp</jnlp.build.directory>
+    <archives.directory>${jnlp.build.directory}/lib</archives.directory>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ui</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>${mainClass}</mainClass>
+            </manifest>
+            <manifestEntries>
+              <Permissions>all-permissions</Permissions>
+              <Codebase>*</Codebase>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>webstart-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>build-jnlp</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jnlp</goal>
+            </goals>
+            <configuration>
+              <attachArchive>false</attachArchive>
+              <filenameMapping>full</filenameMapping>
+              <libPath>lib</libPath>
+              <outputJarVersions>false</outputJarVersions>
+              <makeArchive>false</makeArchive>
+              <jnlp>
+                <offlineAllowed>true</offlineAllowed>
+                <outputFile>regatta-hd.jnlp</outputFile>
+                <inputTemplate>template.vm</inputTemplate>
+                <mainClass>${mainClass}</mainClass>
+                <j2seVersion>${maven.compiler.release}</j2seVersion>
+              </jnlp>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- ======================= -->
+      <!-- additional deploy steps -->
+      <!-- ======================= -->
+      <plugin>
+        <artifactId>maven-jarsigner-plugin</artifactId>
+        <configuration>
+          <archiveDirectory>${archives.directory}</archiveDirectory>
+          <keystore>keystore.jks</keystore>
+          <alias>selfsigned</alias>
+          <storepass>password</storepass>
+          <keypass>password</keypass>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sign</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>de.ofterdinger.maven.plugins</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.1.0</version>
+        <configuration>
+          <server>github-upload</server>
+          <message>Creating site for ${project.version}</message>
+          <repositoryOwner>Heidelberger-Regattaverband</repositoryOwner>
+          <repositoryName>download</repositoryName>
+          <outputDirectory>${jnlp.build.directory}</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
