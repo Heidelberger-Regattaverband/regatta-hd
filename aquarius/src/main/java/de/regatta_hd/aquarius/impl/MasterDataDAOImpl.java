@@ -3,6 +3,7 @@ package de.regatta_hd.aquarius.impl;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 
 import com.google.inject.Singleton;
 
@@ -16,6 +17,7 @@ import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.rudern.schemas.service.wettkampfrichter._2017.Liste;
 import de.rudern.schemas.service.wettkampfrichter._2017.TWKR;
+import jakarta.persistence.EntityManager;
 import jakarta.xml.bind.JAXBException;
 
 @Singleton
@@ -84,11 +86,25 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 			for (int i = 0; i < twkrs.size(); i++) {
 				TWKR twkr = twkrs.get(i);
-				Referee ref = Referee.builder().city(twkr.getOrt()).externID(twkr.getLizenznummer())
-						.firstName(twkr.getVorname()).lastName(twkr.getVorname()).build();
 				progress.update(i, twkrs.size(),
 						MessageFormat.format("Importiere Schiedsrichter {0} von {1}.", i + 1, twkrs.size()));
-				super.db.getEntityManager().merge(ref);
+
+				EntityManager entityManager = super.db.getEntityManager();
+				Optional<Referee> refereeOpt = entityManager
+						.createQuery("SELECT r FROM Referee r WHERE r.externID = :externID", Referee.class)
+						.setParameter("externID", twkr.getLizenznummer()).getResultStream().findFirst();
+
+				Referee referee = null;
+				if (refereeOpt.isPresent()) {
+					referee = refereeOpt.get();
+					referee.setFirstName(twkr.getVorname());
+					referee.setLastName(twkr.getNachname());
+					referee.setCity(twkr.getOrt());
+				} else {
+					referee = Referee.builder().city(twkr.getOrt()).externID(twkr.getLizenznummer())
+							.firstName(twkr.getVorname()).lastName(twkr.getVorname()).build();
+				}
+				super.db.getEntityManager().merge(referee);
 			}
 			return twkrs.size();
 		}

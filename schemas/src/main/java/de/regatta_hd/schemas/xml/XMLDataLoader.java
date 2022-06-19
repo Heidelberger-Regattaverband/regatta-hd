@@ -1,6 +1,7 @@
 package de.regatta_hd.schemas.xml;
 
 import java.io.InputStream;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
@@ -34,12 +35,12 @@ public class XMLDataLoader {
 			xmlReader = saxFactory.newSAXParser().getXMLReader();
 
 			// Create the filter (to add namespace) and set the xmlReader as its parent.
-			NamespaceFilter inFilter = new NamespaceFilter("http://schemas.rudern.de/service/wettkampfrichter/2017",
-					true);
-			inFilter.setParent(xmlReader);
+			NamespaceFilter namespaceFilter = new NamespaceFilter(Set.of("Liste", "Wettkampfrichter"),
+					"http://schemas.rudern.de/service/wettkampfrichter/2017", true);
+			namespaceFilter.setParent(xmlReader);
 
 			InvalidNumberFilter numberFilter = new InvalidNumberFilter("Wettkampfrichter", "Lizenznummer");
-			numberFilter.setParent(inFilter);
+			numberFilter.setParent(namespaceFilter);
 
 			Source source = new SAXSource(numberFilter, new InputSource(input));
 

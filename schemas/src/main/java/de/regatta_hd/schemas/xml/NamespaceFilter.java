@@ -1,18 +1,22 @@
 package de.regatta_hd.schemas.xml;
 
+import java.util.Set;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 public class NamespaceFilter extends XMLFilterImpl {
 
-	private String usedNamespaceUri;
+	private final Set<String> localNames;
+	private final String usedNamespaceUri;
 	private boolean addNamespace;
 
 	// State variable
 	private boolean addedNamespace = false;
 
-	public NamespaceFilter(String namespaceUri, boolean addNamespace) {
+	public NamespaceFilter(Set<String> localNames, String namespaceUri, boolean addNamespace) {
+		this.localNames = localNames;
 		if (addNamespace)
 			this.usedNamespaceUri = namespaceUri;
 		else
@@ -30,12 +34,20 @@ public class NamespaceFilter extends XMLFilterImpl {
 
 	@Override
 	public void startElement(String namespaceUri, String localName, String qName, Attributes arg3) throws SAXException {
-		super.startElement(this.usedNamespaceUri, localName, qName, arg3);
+		if (this.localNames.contains(localName)) {
+			super.startElement(this.usedNamespaceUri, localName, qName, arg3);
+		} else {
+			super.startElement(namespaceUri, localName, qName, arg3);
+		}
 	}
 
 	@Override
 	public void endElement(String namespaceUri, String localName, String qName) throws SAXException {
-		super.endElement(this.usedNamespaceUri, localName, qName);
+		if (this.localNames.contains(localName)) {
+			super.endElement(this.usedNamespaceUri, localName, qName);
+		} else {
+			super.endElement(namespaceUri, localName, qName);
+		}
 	}
 
 	@Override
