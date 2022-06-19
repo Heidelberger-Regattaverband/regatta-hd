@@ -89,7 +89,7 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 			for (int i = 0; i < twkrs.size(); i++) {
 				TWKR twkr = twkrs.get(i);
-				progress.update(i, twkrs.size(), MessageFormat.format("Importiere Schiedsrichter {0} von {1}.",
+				progress.update(i, twkrs.size(), MessageFormat.format("Importiere Wettkampfrichter {0} von {1}.",
 						Integer.valueOf(i + 1), maxWork));
 
 				Optional<Referee> refereeOpt = entityManager
