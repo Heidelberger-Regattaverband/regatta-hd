@@ -7,10 +7,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import org.controlsfx.dialog.ProgressDialog;
+
+import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -28,6 +32,8 @@ public class FxUtils {
 	private static final double DEFAULT_Y = 10;
 	private static final double DEFAULT_WIDTH = 1024;
 	private static final double DEFAULT_HEIGHT = 768;
+
+	public static final double DIALOG_WIDTH = 500;
 
 	public static final ResourceBundle bundle = ResourceBundle.getBundle("commons-fx_messages", Locale.GERMANY);
 
@@ -61,6 +67,7 @@ public class FxUtils {
 		alert.setTitle(bundle.getString("error.title"));
 		alert.setHeaderText(exception.getClass().getCanonicalName());
 		alert.setContentText(exception.getMessage());
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.showAndWait();
 	}
 
@@ -69,6 +76,7 @@ public class FxUtils {
 		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.setTitle(bundle.getString("common.info"));
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.showAndWait();
 	}
 
@@ -77,6 +85,7 @@ public class FxUtils {
 		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.setTitle(title);
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.getButtonTypes().clear();
 		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
@@ -92,6 +101,22 @@ public class FxUtils {
 
 		alert.showAndWait();
 		return alert.getResult() == ButtonType.YES;
+	}
+
+	public static <T> ProgressDialog showProgressDialog(Window window, String title, boolean cancel, Worker<T> worker) {
+		ProgressDialog dialog = new ProgressDialog(worker);
+		dialog.initOwner(window);
+		dialog.setTitle(title);
+		dialog.getDialogPane().setPrefWidth(FxUtils.DIALOG_WIDTH);
+		if (cancel) {
+			dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+			dialog.setOnCloseRequest(event -> {
+				if (event.getEventType() == DialogEvent.DIALOG_CLOSE_REQUEST) {
+					worker.cancel();
+				}
+			});
+		}
+		return dialog;
 	}
 
 	public static void loadSizeAndPos(String resource, Stage stage) {
