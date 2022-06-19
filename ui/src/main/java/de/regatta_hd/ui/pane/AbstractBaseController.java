@@ -59,6 +59,7 @@ abstract class AbstractBaseController implements Initializable, Controller {
 		ProgressDialog dialog = new ProgressDialog(dbTask);
 		dialog.initOwner(getWindow());
 		dialog.setTitle(title);
+		dialog.getDialogPane().setPrefWidth(400);
 		if (cancel) {
 			dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 			dialog.setOnCloseRequest(event -> {

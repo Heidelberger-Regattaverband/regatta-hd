@@ -1,7 +1,9 @@
 package de.regatta_hd.schemas.xml;
 
+import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.XMLFilterImpl;
@@ -10,18 +12,19 @@ public class NamespaceFilter extends XMLFilterImpl {
 
 	private final Set<String> localNames;
 	private final String usedNamespaceUri;
-	private boolean addNamespace;
+	private final boolean addNamespace;
 
 	// State variable
 	private boolean addedNamespace = false;
 
-	public NamespaceFilter(Set<String> localNames, String namespaceUri, boolean addNamespace) {
-		this.localNames = localNames;
-		if (addNamespace)
+	public NamespaceFilter(Set<String> localNames, String namespaceUri) {
+		this.localNames = Objects.requireNonNull(localNames, "localNames must not be null.");
+		this.addNamespace = StringUtils.isNotBlank(namespaceUri);
+		if (this.addNamespace) {
 			this.usedNamespaceUri = namespaceUri;
-		else
+		} else {
 			this.usedNamespaceUri = "";
-		this.addNamespace = addNamespace;
+		}
 	}
 
 	@Override

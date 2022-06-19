@@ -82,14 +82,16 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	public int importReferees(InputStream input, ProgressMonitor progress) throws JAXBException {
 		Liste referees = XMLDataLoader.loadWkrListe(input);
 		if (referees != null) {
+			EntityManager entityManager = super.db.getEntityManager();
+
 			List<TWKR> twkrs = referees.getWettkampfrichter();
+			Integer maxWork = Integer.valueOf(twkrs.size());
 
 			for (int i = 0; i < twkrs.size(); i++) {
 				TWKR twkr = twkrs.get(i);
-				progress.update(i, twkrs.size(),
-						MessageFormat.format("Importiere Schiedsrichter {0} von {1}.", i + 1, twkrs.size()));
+				progress.update(i, twkrs.size(), MessageFormat.format("Importiere Schiedsrichter {0} von {1}.",
+						Integer.valueOf(i + 1), maxWork));
 
-				EntityManager entityManager = super.db.getEntityManager();
 				Optional<Referee> refereeOpt = entityManager
 						.createQuery("SELECT r FROM Referee r WHERE r.externID = :externID", Referee.class)
 						.setParameter("externID", twkr.getLizenznummer()).getResultStream().findFirst();
@@ -104,8 +106,10 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 					referee = Referee.builder().city(twkr.getOrt()).externID(twkr.getLizenznummer())
 							.firstName(twkr.getVorname()).lastName(twkr.getVorname()).build();
 				}
-				super.db.getEntityManager().merge(referee);
+				entityManager.merge(referee);
 			}
+			entityManager.flush();
+
 			return twkrs.size();
 		}
 		return 0;

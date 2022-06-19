@@ -36,7 +36,7 @@ public class XMLDataLoader {
 
 			// Create the filter (to add namespace) and set the xmlReader as its parent.
 			NamespaceFilter namespaceFilter = new NamespaceFilter(Set.of("Liste", "Wettkampfrichter"),
-					"http://schemas.rudern.de/service/wettkampfrichter/2017", true);
+					"http://schemas.rudern.de/service/wettkampfrichter/2017");
 			namespaceFilter.setParent(xmlReader);
 
 			InvalidNumberFilter numberFilter = new InvalidNumberFilter("Wettkampfrichter", "Lizenznummer");

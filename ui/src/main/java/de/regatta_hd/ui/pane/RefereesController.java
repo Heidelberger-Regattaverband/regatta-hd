@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +18,7 @@ import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
@@ -144,23 +147,35 @@ public class RefereesController extends AbstractBaseController {
 
 	@FXML
 	void handleImportOnAction() {
+		disableButtons(true);
+
 		File importFile = FxUtils.showOpenDialog(getWindow(), null, "Wettkampfrichter XML Datei", "*.xml");
 
 		if (importFile != null) {
-			super.dbTaskRunner.runInTransaction(progress -> {
+			DBTask<Integer> dbTask = super.dbTaskRunner.createTask(progress -> {
 				try (InputStream reader = new BufferedInputStream(Files.newInputStream(importFile.toPath()))) {
-					this.masterDAO.importReferees(reader, progress);
-					return Void.TYPE;
+					int count = this.masterDAO.importReferees(reader, progress);
+					return Integer.valueOf(count);
 				}
 			}, dbResult -> {
 				try {
-					dbResult.getResult();
+					Integer count = dbResult.getResult();
+					FxUtils.showInfoDialog(getWindow(), MessageFormat
+							.format("Es wurden {0} Schiedsrichter erfolgreich importiert oder aktualisiert.", count));
+				} catch (CancellationException e) {
+					logger.log(Level.FINEST, e.getMessage(), e);
+					FxUtils.showInfoDialog(getWindow(), "Import wurde abgebrochen");
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
 				}
-			});
+			}, true);
+
+			runTaskWithProgressDialog(dbTask, "Importiere Schiedsrichter", true);
 		}
+
 	}
 
 	private void updateLicenceState(boolean licenceState) {

@@ -4,6 +4,8 @@ module de.regatta_hd.schemas {
 
 	requires transitive jakarta.xml.bind;
 
+	requires org.apache.commons.lang3;
+
 	exports de.regatta_hd.schemas.xml;
 	exports de.rudern.schemas.service.wettkampfrichter._2017;
 
