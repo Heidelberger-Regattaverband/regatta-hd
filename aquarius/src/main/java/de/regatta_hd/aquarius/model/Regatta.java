@@ -22,7 +22,7 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
- * The entity contains all information about the regatta event.
+ * The entity contains all information about the {@link Regatta} event.
  */
 @Entity
 @Table(schema = "dbo", name = "Event")

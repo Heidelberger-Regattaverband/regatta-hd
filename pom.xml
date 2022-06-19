@@ -79,6 +79,7 @@
     <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
+    <module>schemas</module>
     <module>releng/app</module>
     <module>releng/webstart</module>
   </modules>
@@ -97,22 +98,24 @@
         <artifactId>commons-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-db</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-fx</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>aquarius</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>schemas</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -180,6 +183,22 @@
         <groupId>org.controlsfx</groupId>
         <artifactId>controlsfx</artifactId>
         <version>${controlsfx.version}</version>
+      </dependency>
+
+      <!-- ============== -->
+      <!-- JAXB & XML     -->
+      <!-- ============== -->
+      <!-- https://search.maven.org/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>4.0.0</version>
       </dependency>
 
       <!-- ============ -->

@@ -5,7 +5,6 @@ module de.regatta_hd.ui {
 	requires transitive javafx.graphics;
 
 	requires org.apache.commons.lang3;
-	requires org.controlsfx.controls;
 	requires org.apache.poi.poi;
 
 	// regatta_hd modules
