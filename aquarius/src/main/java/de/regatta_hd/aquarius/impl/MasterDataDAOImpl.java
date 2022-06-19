@@ -1,6 +1,7 @@
 package de.regatta_hd.aquarius.impl;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.List;
 
 import com.google.inject.Singleton;
@@ -11,8 +12,10 @@ import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.aquarius.model.Referee;
+import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.rudern.schemas.service.wettkampfrichter._2017.Liste;
+import de.rudern.schemas.service.wettkampfrichter._2017.TWKR;
 import jakarta.xml.bind.JAXBException;
 
 @Singleton
@@ -74,14 +77,21 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	}
 
 	@Override
-	public void importReferees(InputStream input) throws JAXBException {
+	public int importReferees(InputStream input, ProgressMonitor progress) throws JAXBException {
 		Liste referees = XMLDataLoader.loadWkrListe(input);
 		if (referees != null) {
-			referees.getWettkampfrichter().forEach(referee -> {
-				Referee ref = Referee.builder().city(referee.getOrt()).externID(referee.getLizenznummer())
-						.firstName(referee.getVorname()).lastName(referee.getVorname()).build();
+			List<TWKR> twkrs = referees.getWettkampfrichter();
+
+			for (int i = 0; i < twkrs.size(); i++) {
+				TWKR twkr = twkrs.get(i);
+				Referee ref = Referee.builder().city(twkr.getOrt()).externID(twkr.getLizenznummer())
+						.firstName(twkr.getVorname()).lastName(twkr.getVorname()).build();
+				progress.update(i, twkrs.size(),
+						MessageFormat.format("Importiere Schiedsrichter {0} von {1}.", i + 1, twkrs.size()));
 				super.db.getEntityManager().merge(ref);
-			});
+			}
+			return twkrs.size();
 		}
+		return 0;
 	}
 }

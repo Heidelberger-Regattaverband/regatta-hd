@@ -8,6 +8,7 @@ import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.aquarius.model.Referee;
+import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import jakarta.xml.bind.JAXBException;
 
 /**
@@ -60,5 +61,5 @@ public interface MasterDataDAO {
 
 	int updateAllRefereesLicenceState(boolean licenceState);
 
-	void importReferees(InputStream inpute) throws JAXBException;
+	int importReferees(InputStream inpute, ProgressMonitor progress) throws JAXBException;
 }

@@ -2,7 +2,6 @@ package de.regatta_hd.ui.pane;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
@@ -150,7 +149,7 @@ public class RefereesController extends AbstractBaseController {
 		if (importFile != null) {
 			super.dbTaskRunner.runInTransaction(progress -> {
 				try (InputStream reader = new BufferedInputStream(Files.newInputStream(importFile.toPath()))) {
-					this.masterDAO.importReferees(reader);
+					this.masterDAO.importReferees(reader, progress);
 					return Void.TYPE;
 				}
 			}, dbResult -> {
