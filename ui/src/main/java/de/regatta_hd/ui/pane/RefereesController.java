@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
@@ -160,11 +159,10 @@ public class RefereesController extends AbstractBaseController {
 			}, dbResult -> {
 				try {
 					Integer count = dbResult.getResult();
-					FxUtils.showInfoDialog(getWindow(), MessageFormat
-							.format("Es wurden {0} Schiedsrichter erfolgreich importiert oder aktualisiert.", count));
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.succeeded", count));
 				} catch (CancellationException e) {
 					logger.log(Level.FINEST, e.getMessage(), e);
-					FxUtils.showInfoDialog(getWindow(), "Import wurde abgebrochen");
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.canceled"));
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -173,7 +171,7 @@ public class RefereesController extends AbstractBaseController {
 				}
 			}, true);
 
-			runTaskWithProgressDialog(dbTask, "Importiere Schiedsrichter", true);
+			runTaskWithProgressDialog(dbTask, getText("referees.import.title"), true);
 		}
 
 	}

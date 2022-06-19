@@ -68,6 +68,7 @@ public class FxUtils {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
 		alert.initOwner(window);
 		alert.setHeaderText(msg);
+		alert.setTitle(bundle.getString("common.info"));
 		alert.showAndWait();
 	}
 
