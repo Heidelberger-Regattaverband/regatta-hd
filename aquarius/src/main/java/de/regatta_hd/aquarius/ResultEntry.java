@@ -111,10 +111,8 @@ public class ResultEntry {
 		return this.result;
 	}
 
-	// static helpers
-
-	private static String getRegistrationLabel(Registration registration) {
-		Optional<RegistrationLabel> label = registration.getLabels().stream().findAny();
+	private String getRegistrationLabel(Registration registration) {
+		Optional<RegistrationLabel> label = registration.getLabels(this.heat.getRound()).findFirst();
 		return label.isPresent() ? label.get().getLabel().getLabelShort() : null;
 	}
 }

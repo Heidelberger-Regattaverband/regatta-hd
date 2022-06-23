@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dvl="http://schemas.rudern.de/vereinsliste/2008/" targetNamespace="http://schemas.rudern.de/vereinsliste/2008/">
+	<annotation>
+		<documentation>DRV Vereinsliste - abrufbar unter http://verwaltung.rudern.de/vereine.php?t=xml2</documentation>
+	</annotation>
+	<complexType name="tVereine">
+		<sequence>
+			<element name="verein" type="dvl:tVerein" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="erstellt" type="dateTime"/>
+	</complexType>
+	<complexType name="tVerein">
+		<sequence>
+			<element name="name" type="string"/>
+			<element name="ort" type="string"/>
+			<element name="kurzform" type="string"/>
+			<element name="lettern" type="string"/>
+			<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="id" type="nonNegativeInteger"/>
+		<anyAttribute namespace="##other" processContents="lax"/>
+	</complexType>
+	<element name="vereine" type="dvl:tVereine"/>
+</schema>

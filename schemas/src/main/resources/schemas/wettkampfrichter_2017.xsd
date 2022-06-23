@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:wkr="http://schemas.rudern.de/service/wettkampfrichter/2017" targetNamespace="http://schemas.rudern.de/service/wettkampfrichter/2017" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Liste">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="wkr:Wettkampfrichter" minOccurs="0" maxOccurs="unbounded" />
+                <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+            </xs:sequence>
+            <xs:attribute name="erstellt" type="xs:date" use="optional" />
+            <xs:anyAttribute />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Wettkampfrichter" type="wkr:tWKR" />
+    <xs:complexType name="tWKR">
+        <xs:sequence>
+            <xs:element name="Vorname" type="xs:string" />
+            <xs:element name="Nachname" type="xs:string" />
+            <xs:element name="Ort" type="xs:string" minOccurs="0" />
+            <xs:element name="Region" type="xs:string" />
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+        </xs:sequence>
+        <xs:attribute name="Status" type="xs:string" use="optional" />
+        <xs:attribute name="Lizenznummer" type="xs:unsignedInt" use="optional" />
+        <xs:anyAttribute namespace="##other" processContents="lax" />
+    </xs:complexType>
+</xs:schema>

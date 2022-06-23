@@ -21,6 +21,7 @@ import de.regatta_hd.aquarius.SeedingListEntry;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
@@ -184,7 +185,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			List<Race> filteredRaces = races.stream()
 					// remove master races, open age class and races with registrations for one heat only, as they will
 					// not be set
-					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters()
+					.filter(race -> !race.getAgeClass().isOpen() // don't set open races
+							&& !race.getAgeClass().isMasters() // don't set master races
+							&& race.getGroupMode() == GroupMode.NONE // don't set races with age groups
+							// don't set races with only one devision
 							&& race.getActiveRegistrations().count() > race.getRaceMode().getLaneCount())
 					// remove races whose source race result isn't official yet
 					.filter(race -> {

@@ -1,7 +1,12 @@
 package de.regatta_hd.ui.pane;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +17,7 @@ import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
@@ -136,6 +142,38 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	void handleActivateAllOnAction() {
 		updateLicenceState(true);
+	}
+
+	@FXML
+	void handleImportOnAction() {
+		disableButtons(true);
+
+		File importFile = FxUtils.showOpenDialog(getWindow(), null, "Wettkampfrichter XML Datei", "*.xml");
+
+		if (importFile != null) {
+			DBTask<Integer> dbTask = super.dbTaskRunner.createTask(progress -> {
+				try (InputStream reader = new BufferedInputStream(Files.newInputStream(importFile.toPath()))) {
+					int count = this.masterDAO.importReferees(reader, progress);
+					return Integer.valueOf(count);
+				}
+			}, dbResult -> {
+				try {
+					Integer count = dbResult.getResult();
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.succeeded", count));
+				} catch (CancellationException e) {
+					logger.log(Level.FINEST, e.getMessage(), e);
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.canceled"));
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			}, true);
+
+			runTaskWithProgressDialog(dbTask, getText("referees.import.title"), true);
+		}
+
 	}
 
 	private void updateLicenceState(boolean licenceState) {

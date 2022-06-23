@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +45,12 @@ public class LogRecord implements Serializable {
 		setHostAddress(hostAddr);
 		setSourceClass(logRecord.getSourceClassName());
 		setSourceMethod(logRecord.getSourceMethodName());
+
+		Optional<Thread> threadOpt = Thread.getAllStackTraces().keySet().stream()
+				.filter(thread -> thread.getId() == logRecord.getThreadID()).findFirst();
+		if (threadOpt.isPresent()) {
+			setThreadName(threadOpt.get().getName());
+		}
 
 		if (logRecord.getLevel() != null) {
 			setLevelName(logRecord.getLevel().getName());
@@ -112,10 +119,16 @@ public class LogRecord implements Serializable {
 	private String message;
 
 	/**
-	 * Thread ID for thread that issued logging call.
+	 * ID of the thread that issued logging call.
 	 */
 	@Column(name = "threadId")
 	private int threadID;
+
+	/**
+	 * Name of the thread that issued logging call.
+	 */
+	@Column(name = "threadName")
+	private String threadName;
 
 	@Column(name = "stackTrace")
 	private String stackTrace;
