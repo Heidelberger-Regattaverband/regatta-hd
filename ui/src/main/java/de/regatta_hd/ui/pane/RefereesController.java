@@ -151,9 +151,9 @@ public class RefereesController extends AbstractBaseController {
 		File importFile = FxUtils.showOpenDialog(getWindow(), null, "Wettkampfrichter XML Datei", "*.xml");
 
 		if (importFile != null) {
-			DBTask<Integer> dbTask = super.dbTaskRunner.createTask(progress -> {
+			DBTask<Integer> dbTask = super.dbTaskRunner.createTask((entityManager, progress) -> {
 				try (InputStream reader = new BufferedInputStream(Files.newInputStream(importFile.toPath()))) {
-					int count = this.masterDAO.importReferees(reader, progress);
+					int count = this.masterDAO.importReferees(reader, entityManager, progress);
 					return Integer.valueOf(count);
 				}
 			}, dbResult -> {
