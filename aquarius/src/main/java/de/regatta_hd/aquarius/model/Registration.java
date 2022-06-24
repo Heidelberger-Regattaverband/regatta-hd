@@ -110,8 +110,8 @@ public class Registration {
 
 	// Second table columns
 
-	@Column(name = "alternative", table = "HRV_Entry")
-	private Boolean alternative;
+	@Column(name = "alternativeTo", table = "HRV_Entry")
+	private String alternativeTo;
 
 	/**
 	 * Returns the final crews assigned to this registration, previous changes are filtered out.

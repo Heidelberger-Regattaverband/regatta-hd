@@ -111,7 +111,7 @@
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Entry" referencedTableName="Entry"
           referencedColumnNames="Entry_ID" foreignKeyName="FK_Entry" />
       </column>
-      <column name="alternative" type="BOOLEAN">
+      <column name="alternativeTo" type="VARCHAR(8)">
         <constraints nullable="false" />
       </column>
     </createTable>
