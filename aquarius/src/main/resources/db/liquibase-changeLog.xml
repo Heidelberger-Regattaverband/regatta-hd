@@ -100,4 +100,21 @@
     </addColumn>
   </changeSet>
 
+  <changeSet id="7" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="HRV_Entry" />
+      </not>
+    </preConditions>
+    <createTable tableName="HRV_Entry">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Entry" referencedTableName="Entry"
+          referencedColumnNames="Entry_ID" foreignKeyName="FK_Entry" />
+      </column>
+      <column name="alternative" type="BOOLEAN">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
 </databaseChangeLog>
