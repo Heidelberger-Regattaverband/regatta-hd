@@ -58,7 +58,7 @@ public class RefereesController extends AbstractBaseController {
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
 		if (event.getDBConnection().isOpen()) {
-			loadResults(true);
+			loadReferees(true);
 			disableButtons(false);
 		} else {
 			disableButtons(true);
@@ -121,7 +121,7 @@ public class RefereesController extends AbstractBaseController {
 		// 5. Add sorted (and filtered) data to the table.
 		this.refereesTbl.setItems(sortedData);
 
-		loadResults(true);
+		loadReferees(false);
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class RefereesController extends AbstractBaseController {
 
 	@FXML
 	void handleRefreshOnAction() {
-		loadResults(true);
+		loadReferees(true);
 	}
 
 	@FXML
@@ -160,6 +160,7 @@ public class RefereesController extends AbstractBaseController {
 				try {
 					Integer count = dbResult.getResult();
 					FxUtils.showInfoDialog(getWindow(), getText("referees.import.succeeded", count));
+					loadReferees(true);
 				} catch (CancellationException e) {
 					logger.log(Level.FINEST, e.getMessage(), e);
 					FxUtils.showInfoDialog(getWindow(), getText("referees.import.canceled"));
@@ -198,7 +199,7 @@ public class RefereesController extends AbstractBaseController {
 		});
 	}
 
-	private void loadResults(boolean refresh) {
+	private void loadReferees(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
