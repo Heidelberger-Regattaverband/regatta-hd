@@ -48,6 +48,8 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	private TextField filterTxf;
 	@FXML
+	private Button importBtn;
+	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
@@ -173,8 +175,9 @@ public class RefereesController extends AbstractBaseController {
 			}, true);
 
 			runTaskWithProgressDialog(dbTask, getText("referees.import.title"), true);
+		} else {
+			disableButtons(false);
 		}
-
 	}
 
 	private void updateLicenceState(boolean licenceState) {
@@ -232,5 +235,6 @@ public class RefereesController extends AbstractBaseController {
 		this.activateAllBtn.setDisable(disabled);
 		this.deactivateAllBtn.setDisable(disabled);
 		this.filterTxf.setDisable(disabled);
+		this.importBtn.setDisable(disabled);
 	}
 }
