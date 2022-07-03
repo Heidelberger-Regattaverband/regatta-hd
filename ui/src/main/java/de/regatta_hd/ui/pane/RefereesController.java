@@ -48,6 +48,8 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	private TextField filterTxf;
 	@FXML
+	private Button importBtn;
+	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
@@ -58,7 +60,7 @@ public class RefereesController extends AbstractBaseController {
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
 		if (event.getDBConnection().isOpen()) {
-			loadResults(true);
+			loadReferees(true);
 			disableButtons(false);
 		} else {
 			disableButtons(true);
@@ -121,7 +123,7 @@ public class RefereesController extends AbstractBaseController {
 		// 5. Add sorted (and filtered) data to the table.
 		this.refereesTbl.setItems(sortedData);
 
-		loadResults(true);
+		loadReferees(false);
 	}
 
 	@Override
@@ -131,7 +133,7 @@ public class RefereesController extends AbstractBaseController {
 
 	@FXML
 	void handleRefreshOnAction() {
-		loadResults(true);
+		loadReferees(true);
 	}
 
 	@FXML
@@ -160,6 +162,7 @@ public class RefereesController extends AbstractBaseController {
 				try {
 					Integer count = dbResult.getResult();
 					FxUtils.showInfoDialog(getWindow(), getText("referees.import.succeeded", count));
+					loadReferees(true);
 				} catch (CancellationException e) {
 					logger.log(Level.FINEST, e.getMessage(), e);
 					FxUtils.showInfoDialog(getWindow(), getText("referees.import.canceled"));
@@ -172,8 +175,9 @@ public class RefereesController extends AbstractBaseController {
 			}, true);
 
 			runTaskWithProgressDialog(dbTask, getText("referees.import.title"), true);
+		} else {
+			disableButtons(false);
 		}
-
 	}
 
 	private void updateLicenceState(boolean licenceState) {
@@ -198,7 +202,7 @@ public class RefereesController extends AbstractBaseController {
 		});
 	}
 
-	private void loadResults(boolean refresh) {
+	private void loadReferees(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
@@ -231,5 +235,6 @@ public class RefereesController extends AbstractBaseController {
 		this.activateAllBtn.setDisable(disabled);
 		this.deactivateAllBtn.setDisable(disabled);
 		this.filterTxf.setDisable(disabled);
+		this.importBtn.setDisable(disabled);
 	}
 }
