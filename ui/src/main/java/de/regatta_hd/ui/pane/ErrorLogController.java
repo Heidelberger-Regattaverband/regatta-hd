@@ -27,9 +27,12 @@ public class ErrorLogController extends AbstractBaseController {
 	@FXML
 	private Button refreshBtn;
 	@FXML
-	private TableView<LogRecord> logRecordsTbl;
-	@FXML
 	private ComboBox<String> hostNameCbx;
+	@FXML
+	private Button deleteBtn;
+
+	@FXML
+	private TableView<LogRecord> logRecordsTbl;
 	@FXML
 	private TextArea stackTraceTar;
 	@FXML
@@ -81,6 +84,17 @@ public class ErrorLogController extends AbstractBaseController {
 		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), false);
 	}
 
+	@FXML
+	void handleDeleteOnAction() {
+		String hostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
+		boolean delete = FxUtils.showConfirmDialog(getWindow(), getText("errorLog.confirmDelete.title"),
+				getText("errorLog.confirmDelete.question", hostName));
+
+		if (delete) {
+
+		}
+	}
+
 	private void loadHostNames() {
 		disableButtons(true);
 		this.hostNamesList.clear();
@@ -124,6 +138,7 @@ public class ErrorLogController extends AbstractBaseController {
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.hostNameCbx.setDisable(disabled);
+		this.deleteBtn.setDisable(disabled);
 	}
 
 }
