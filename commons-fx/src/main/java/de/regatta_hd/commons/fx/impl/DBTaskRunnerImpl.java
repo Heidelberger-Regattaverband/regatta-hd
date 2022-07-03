@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import de.regatta_hd.commons.core.concurrent.AsyncCallable;
 import de.regatta_hd.commons.core.concurrent.AsyncResult;
 import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.fx.db.DBAsyncCallable;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.db.DBTaskRunner;
 import javafx.concurrent.Task;
@@ -27,7 +28,7 @@ public class DBTaskRunnerImpl implements DBTaskRunner {
 	 * @return the {@link Task} executing the given {@link AsyncCallable}
 	 */
 	@Override
-	public <V> DBTask<V> run(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultHandler) {
+	public <V> DBTask<V> run(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultHandler) {
 		return runTask(createTask(callable, resultHandler, false));
 	}
 
@@ -40,12 +41,12 @@ public class DBTaskRunnerImpl implements DBTaskRunner {
 	 * @return the {@link Task} executing the given {@link AsyncCallable}
 	 */
 	@Override
-	public <V> DBTask<V> runInTransaction(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer) {
+	public <V> DBTask<V> runInTransaction(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer) {
 		return runTask(createTask(callable, resultConsumer, true));
 	}
 
 	@Override
-	public <V> DBTask<V> createTask(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer,
+	public <V> DBTask<V> createTask(DBAsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer,
 			boolean inTransaction) {
 		return new DBTaskImpl<>(callable, resultConsumer, inTransaction, this.db);
 	}

@@ -79,10 +79,10 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	}
 
 	@Override
-	public int importReferees(InputStream input, ProgressMonitor progress) throws JAXBException {
+	public int importReferees(InputStream input, EntityManager entityManager, ProgressMonitor progress)
+			throws JAXBException {
 		Liste referees = XMLDataLoader.loadWkrListe(input);
 		if (referees != null) {
-			EntityManager entityManager = super.db.getEntityManager();
 
 			List<TWKR> twkrs = referees.getWettkampfrichter();
 			Integer maxWork = Integer.valueOf(twkrs.size());

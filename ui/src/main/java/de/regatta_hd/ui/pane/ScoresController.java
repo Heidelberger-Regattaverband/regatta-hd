@@ -98,7 +98,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
-		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
+		super.dbTaskRunner.runInTransaction((entityManager, progress) -> this.regattaDAO.calculateScores(), scores -> {
 			try {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();
@@ -119,22 +119,23 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), getText("scores.xsl.fileName"),
-					getText("scores.xsl.description"), "*.xls");
-			if (file != null) {
-				try (Workbook workbook = dbResult.getResult()) {
-					WorkbookUtils.saveWorkbook(workbook, file);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask((entityManager, progress) -> createWorkbook(progress),
+				dbResult -> {
+					File file = FxUtils.showSaveDialog(getWindow(), getText("scores.xsl.fileName"),
+							getText("scores.xsl.description"), "*.xls");
+					if (file != null) {
+						try (Workbook workbook = dbResult.getResult()) {
+							WorkbookUtils.saveWorkbook(workbook, file);
+						} catch (Exception e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+							FxUtils.showErrorMessage(getWindow(), e);
+						} finally {
+							disableButtons(false);
+						}
+					} else {
+						disableButtons(false);
+					}
+				}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("scores.xsl.export"), false);
 	}
@@ -143,9 +144,9 @@ public class ScoresController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			if (refresh) {
-				super.db.getEntityManager().clear();
+				entityManager.clear();
 			}
 			return this.regattaDAO.getScores();
 		}, scores -> {

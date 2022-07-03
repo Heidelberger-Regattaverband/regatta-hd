@@ -86,7 +86,7 @@ public abstract class AbstractDBConnection implements DBConnection {
 	@Override
 	public synchronized EntityManager getEntityManager() {
 		ensureOpen();
-		return this.entityManager.get();
+		return getEntityManagerImpl();
 	}
 
 	@Override
@@ -120,6 +120,10 @@ public abstract class AbstractDBConnection implements DBConnection {
 	protected abstract void openImpl();
 
 	protected abstract void convertException(PersistenceException ex) throws SQLException;
+
+	protected EntityManager getEntityManagerImpl() {
+		return this.entityManager.get();
+	}
 
 	protected void notifyListeners(StateChangedEvent event) {
 		List<StateChangedEventListener> listeners = this.listenerManager.getListeners(StateChangedEventListener.class);

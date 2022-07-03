@@ -3,6 +3,7 @@ package de.regatta_hd.aquarius.impl;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -94,9 +95,16 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	}
 
 	private String readVersion() {
-		MetaData metaData = this.getEntityManager()
+		MetaData metaData = getEntityManagerImpl()
 				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class).getSingleResult();
 		return metaData.getValue();
+	}
+
+	@Override
+	public <R> Future<R> execute(DBCallable<R> callable) {
+		return getExecutor().submit(() -> {
+			return callable.execute(getEntityManagerImpl());
+		});
 	}
 
 }

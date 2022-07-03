@@ -164,7 +164,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private void loadRaces() {
 		clearRaces();
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run((entityManager, progress) -> {
 			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
@@ -218,7 +218,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			this.crewTbl.getItems().clear();
 
 			// then load new crew lists from DB
-			super.dbTaskRunner.run(progress -> {
+			super.dbTaskRunner.run((entityManager, progress) -> {
 				List<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getFinalCrews()
 						: null;
 				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
@@ -271,7 +271,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				// remove onAction eventhandler to avoid multiple calls -> workaround
 				this.racesCbo.setOnAction(null);
 
-				super.dbTaskRunner.run(progress -> {
+				super.dbTaskRunner.run((entityManager, progress) -> {
 					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
 					return new Race[] { srcRace, race };
@@ -303,8 +303,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (selectedRace != null) {
 			disableButtons();
 
-			super.dbTaskRunner.run(progress -> {
-				this.db.getEntityManager().clear();
+			super.dbTaskRunner.run((entityManager, progress) -> {
+				entityManager.clear();
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
 				return new Race[] { srcRace, race };
@@ -332,7 +332,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 
 			AtomicReference<Race> raceRef = new AtomicReference<>();
-			super.dbTaskRunner.run(progress -> {
+			super.dbTaskRunner.run((entityManager, progress) -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
 				raceRef.set(race);
@@ -358,7 +358,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 			this.seedingListTbl.getItems().clear();
 
-			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH),
+			super.dbTaskRunner.run(
+					(entityManager, progress) -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH),
 					dbResult -> {
 						Race race = null;
 						try {
@@ -380,11 +381,11 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		if (selectedRace != null && !this.seedingListTbl.getItems().isEmpty()) {
 			disableButtons();
 
-			super.dbTaskRunner.runInTransaction(progress -> {
+			super.dbTaskRunner.runInTransaction((entityManager, progress) -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.setRaceHeats(race, this.seedingListTbl.getItems());
 
-				this.db.getEntityManager().clear();
+				entityManager.clear();
 				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				return race;
 			}, dbResult -> {
@@ -410,7 +411,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				getText("SetRaceView.confirmDelete.question"))) {
 			disableButtons();
 
-			super.dbTaskRunner.runInTransaction(progress -> {
+			super.dbTaskRunner.runInTransaction((entityManager, progress) -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				this.regattaDAO.cleanRaceHeats(race);
 				return race;
@@ -644,18 +645,18 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				int dropIndex = row.isEmpty() ? targetItems.size() : row.getIndex();
 				targetItems.add(dropIndex, draggedEntry);
 
-				super.dbTaskRunner.runInTransaction(monitor -> {
+				super.dbTaskRunner.runInTransaction((entityManager, progress) -> {
 					// re-calculate lanes in source heat
 					for (short i = 0; i < srcItems.size(); i++) {
 						HeatRegistration heatReg = srcItems.get(i);
 						heatReg.setLane((short) (i + 1));
-						super.db.getEntityManager().merge(heatReg);
+						entityManager.merge(heatReg);
 					}
 					// re-calculate lanes in target heat
 					for (short i = 0; i < targetItems.size(); i++) {
 						HeatRegistration heatRegistration = targetItems.get(i);
 						heatRegistration.setLane((short) (i + 1));
-						super.db.getEntityManager().merge(heatRegistration);
+						entityManager.merge(heatRegistration);
 					}
 					return null;
 				}, result -> {

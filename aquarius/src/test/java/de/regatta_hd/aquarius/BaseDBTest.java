@@ -37,24 +37,23 @@ class BaseDBTest implements BeforeAllCallback {
 
 		aquariusDb = (AquariusDBImpl) injector.getInstance(DBConnection.class);
 
-		aquariusDb.getExecutor().submit(() -> {
-			try {
-				aquariusDb.open(connectionData);
-				aquariusDb.updateSchema();
-			} catch (SQLException e) {
-				fail(e);
-			}
+		aquariusDb.open(connectionData);
+
+		aquariusDb.execute((entityManager) -> {
+			aquariusDb.updateSchema();
+			return null;
 		}).get();
 	}
 
 	@Test
 	void testOpen() throws InterruptedException, ExecutionException {
-		aquariusDb.getExecutor().submit(() -> {
+		aquariusDb.execute((entityManager) -> {
 			try {
 				aquariusDb.open(connectionData);
 			} catch (SQLException e) {
 				fail(e);
 			}
+			return null;
 		}).get();
 		assertTrue(aquariusDb.isOpen());
 	}

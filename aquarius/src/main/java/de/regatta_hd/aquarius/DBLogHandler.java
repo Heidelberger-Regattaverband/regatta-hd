@@ -17,7 +17,6 @@ import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBThreadPoolExecutor;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 @Singleton
@@ -75,14 +74,13 @@ public class DBLogHandler extends Handler {
 	}
 
 	private void persist(LogRecord logRecord) {
-		this.db.getExecutor().execute(() -> {
-			EntityManager entityManager = this.db.getEntityManager();
+		this.db.execute(entityManager -> {
 			EntityTransaction transaction = entityManager.getTransaction();
 			if (!transaction.isActive()) {
 				transaction.begin();
 			}
 			try {
-				this.db.getEntityManager().persist(logRecord);
+				entityManager.persist(logRecord);
 				entityManager.flush();
 				transaction.commit();
 			} catch (Exception e) {
@@ -90,12 +88,12 @@ public class DBLogHandler extends Handler {
 				e.printStackTrace();
 				this.logRecords.addLast(logRecord);
 			}
+			return null;
 		});
 	}
 
 	private void persist() {
-		this.db.getExecutor().execute(() -> {
-			EntityManager entityManager = this.db.getEntityManager();
+		this.db.execute(entityManager -> {
 			EntityTransaction transaction = entityManager.getTransaction();
 			if (!transaction.isActive()) {
 				transaction.begin();
@@ -110,6 +108,7 @@ public class DBLogHandler extends Handler {
 				transaction.rollback();
 				e.printStackTrace();
 			}
+			return null;
 		});
 	}
 }
