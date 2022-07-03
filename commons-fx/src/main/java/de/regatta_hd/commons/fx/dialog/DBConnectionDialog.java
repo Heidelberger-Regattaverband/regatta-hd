@@ -5,6 +5,7 @@ import static de.regatta_hd.commons.fx.util.FxUtils.bundle;
 import java.util.Objects;
 
 import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -14,7 +15,9 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Window;
 
 public class DBConnectionDialog extends Dialog<DBConfig> {
@@ -32,6 +35,13 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 		gridpane.setPadding(new Insets(5));
 		gridpane.setHgap(5);
 		gridpane.setVgap(5);
+
+		gridpane.getColumnConstraints().add(new ColumnConstraints());
+
+		ColumnConstraints columnConstraints = new ColumnConstraints();
+		columnConstraints.setFillWidth(true);
+		columnConstraints.setHgrow(Priority.ALWAYS);
+		gridpane.getColumnConstraints().add(columnConstraints);
 
 		Label dbHostLbl = new Label(bundle.getString("DatabaseConnectionDialog.dbHost"));
 		gridpane.add(dbHostLbl, 0, 1);
@@ -60,7 +70,6 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 				event -> trustServerCertificateCbox.setDisable(!encryptCbox.isSelected()));
 
 		TextField hostNameFld = new TextField(this.connectionData.getDbHost());
-		hostNameFld.setPrefColumnCount(20);
 		gridpane.add(hostNameFld, 1, 1);
 		TextField dbNameFld = new TextField(this.connectionData.getDbName());
 		gridpane.add(dbNameFld, 1, 2);
@@ -72,6 +81,7 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 
 		getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		getDialogPane().setContent(gridpane);
+		getDialogPane().setPrefWidth(FxUtils.DIALOG_WIDTH);
 
 		setResultConverter(dialogButton -> {
 			if (dialogButton.getButtonData() == ButtonData.OK_DONE) {

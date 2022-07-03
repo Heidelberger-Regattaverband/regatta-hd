@@ -1,7 +1,12 @@
 package de.regatta_hd.ui.pane;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +17,7 @@ import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
@@ -42,6 +48,8 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	private TextField filterTxf;
 	@FXML
+	private Button importBtn;
+	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
@@ -52,7 +60,7 @@ public class RefereesController extends AbstractBaseController {
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
 		if (event.getDBConnection().isOpen()) {
-			loadResults(true);
+			loadReferees(true);
 			disableButtons(false);
 		} else {
 			disableButtons(true);
@@ -115,7 +123,7 @@ public class RefereesController extends AbstractBaseController {
 		// 5. Add sorted (and filtered) data to the table.
 		this.refereesTbl.setItems(sortedData);
 
-		loadResults(true);
+		loadReferees(false);
 	}
 
 	@Override
@@ -125,7 +133,7 @@ public class RefereesController extends AbstractBaseController {
 
 	@FXML
 	void handleRefreshOnAction() {
-		loadResults(true);
+		loadReferees(true);
 	}
 
 	@FXML
@@ -136,6 +144,40 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	void handleActivateAllOnAction() {
 		updateLicenceState(true);
+	}
+
+	@FXML
+	void handleImportOnAction() {
+		disableButtons(true);
+
+		File importFile = FxUtils.showOpenDialog(getWindow(), null, "Wettkampfrichter XML Datei", "*.xml");
+
+		if (importFile != null) {
+			DBTask<Integer> dbTask = super.dbTaskRunner.createTask(progress -> {
+				try (InputStream reader = new BufferedInputStream(Files.newInputStream(importFile.toPath()))) {
+					int count = this.masterDAO.importReferees(reader, progress);
+					return Integer.valueOf(count);
+				}
+			}, dbResult -> {
+				try {
+					Integer count = dbResult.getResult();
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.succeeded", count));
+					loadReferees(true);
+				} catch (CancellationException e) {
+					logger.log(Level.FINEST, e.getMessage(), e);
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.canceled"));
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			}, true);
+
+			runTaskWithProgressDialog(dbTask, getText("referees.import.title"), true);
+		} else {
+			disableButtons(false);
+		}
 	}
 
 	private void updateLicenceState(boolean licenceState) {
@@ -160,7 +202,7 @@ public class RefereesController extends AbstractBaseController {
 		});
 	}
 
-	private void loadResults(boolean refresh) {
+	private void loadReferees(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
 
@@ -193,5 +235,6 @@ public class RefereesController extends AbstractBaseController {
 		this.activateAllBtn.setDisable(disabled);
 		this.deactivateAllBtn.setDisable(disabled);
 		this.filterTxf.setDisable(disabled);
+		this.importBtn.setDisable(disabled);
 	}
 }
