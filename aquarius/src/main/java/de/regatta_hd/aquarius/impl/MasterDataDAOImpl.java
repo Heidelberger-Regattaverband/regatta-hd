@@ -57,6 +57,12 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	}
 
 	@Override
+	public int deleteLogRecords(String hostName) {
+		return super.db.getEntityManager().createQuery("DELETE FROM LogRecord lr WHERE lr.hostName = :hostName")
+				.setParameter("hostName", hostName).executeUpdate();
+	}
+
+	@Override
 	public List<String> getHostNames() {
 		return super.db.getEntityManager().createQuery("SELECT DISTINCT lr.hostName FROM LogRecord lr", String.class)
 				.getResultList();
@@ -114,4 +120,5 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 		}
 		return 0;
 	}
+
 }

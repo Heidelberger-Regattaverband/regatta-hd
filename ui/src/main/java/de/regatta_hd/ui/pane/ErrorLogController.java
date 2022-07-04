@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -86,23 +87,43 @@ public class ErrorLogController extends AbstractBaseController {
 
 	@FXML
 	void handleDeleteOnAction() {
+		disableButtons(true);
+
 		String hostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
 		boolean delete = FxUtils.showConfirmDialog(getWindow(), getText("errorLog.confirmDelete.title"),
 				getText("errorLog.confirmDelete.question", hostName));
 
 		if (delete) {
-
+			super.dbTaskRunner.runInTransaction(progress -> {
+				return Integer.valueOf(this.dao.deleteLogRecords(hostName));
+			}, dbResult -> {
+				try {
+					dbResult.getResult();
+					loadHostNames();
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			});
+		} else {
+			disableButtons(false);
 		}
 	}
 
 	private void loadHostNames() {
 		disableButtons(true);
-		this.hostNamesList.clear();
 
 		super.dbTaskRunner.run(progress -> this.dao.getHostNames(), dbResult -> {
 			try {
 				this.hostNamesList.setAll(dbResult.getResult());
-				this.hostNameCbx.getSelectionModel().select(this.hostName);
+
+				if (this.hostNamesList.contains(this.hostName)) {
+					this.hostNameCbx.getSelectionModel().select(this.hostName);
+				} else {
+					this.hostNameCbx.getSelectionModel().selectFirst();
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -114,7 +135,7 @@ public class ErrorLogController extends AbstractBaseController {
 
 	private void loadLogRecords(String hostName, boolean refresh) {
 		disableButtons(true);
-		this.logRecordsList.clear();
+		updatePlaceholder(getText("common.loadData"));
 
 		super.dbTaskRunner.run(progress -> {
 			EntityManager entityManager = super.db.getEntityManager();
@@ -130,9 +151,14 @@ public class ErrorLogController extends AbstractBaseController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
+				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.logRecordsTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
