@@ -10,6 +10,8 @@ import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.LogRecord;
+import de.regatta_hd.commons.core.ListenerManager;
+import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
@@ -40,6 +42,8 @@ public class ErrorLogController extends AbstractBaseController {
 	private TextField throwableTxf;
 
 	@Inject
+	private ListenerManager listenerManager;
+	@Inject
 	private MasterDataDAO dao;
 	@Inject
 	@Named("hostName")
@@ -47,6 +51,17 @@ public class ErrorLogController extends AbstractBaseController {
 
 	private final ObservableList<LogRecord> logRecordsList = FXCollections.observableArrayList();
 	private final ObservableList<String> hostNamesList = FXCollections.observableArrayList();
+
+	private final StateChangedEventListener eventListener = event -> {
+		disableButtons(!event.getDBConnection().isOpen());
+
+		if (event.getDBConnection().isOpen()) {
+			loadHostNames();
+		} else {
+			this.hostNamesList.clear();
+			this.logRecordsList.clear();
+		}
+	};
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -67,35 +82,37 @@ public class ErrorLogController extends AbstractBaseController {
 			}
 		});
 
+		this.listenerManager.addListener(StateChangedEventListener.class, this.eventListener);
+
 		loadHostNames();
 	}
 
 	@Override
 	public void shutdown() {
-		// nothing to shutdown
+		this.listenerManager.removeListener(StateChangedEventListener.class, this.eventListener);
 	}
 
 	@FXML
 	void handleRefreshOnAction() {
-		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), true);
+		loadLogRecords(true);
 	}
 
 	@FXML
 	void handleHostNameOnAction() {
-		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), false);
+		loadLogRecords(false);
 	}
 
 	@FXML
 	void handleDeleteOnAction() {
 		disableButtons(true);
 
-		String hostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
+		String selectedHostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
 		boolean delete = FxUtils.showConfirmDialog(getWindow(), getText("errorLog.confirmDelete.title"),
-				getText("errorLog.confirmDelete.question", hostName));
+				getText("errorLog.confirmDelete.question", selectedHostName));
 
 		if (delete) {
 			super.dbTaskRunner.runInTransaction(progress -> {
-				return Integer.valueOf(this.dao.deleteLogRecords(hostName));
+				return Integer.valueOf(this.dao.deleteLogRecords(selectedHostName));
 			}, dbResult -> {
 				try {
 					dbResult.getResult();
@@ -133,28 +150,32 @@ public class ErrorLogController extends AbstractBaseController {
 		});
 	}
 
-	private void loadLogRecords(String hostName, boolean refresh) {
-		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
+	private void loadLogRecords(boolean refresh) {
+		String selectedHostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
 
-		super.dbTaskRunner.run(progress -> {
-			EntityManager entityManager = super.db.getEntityManager();
-			if (refresh) {
-				entityManager.clear();
-			}
-			return this.dao.getLogRecords(hostName);
-		}, dbResult -> {
-			try {
-				this.logRecordsList.setAll(dbResult.getResult());
-				FxUtils.autoResizeColumns(this.logRecordsTbl);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
-				disableButtons(false);
-			}
-		});
+		if (selectedHostName != null) {
+			disableButtons(true);
+			updatePlaceholder(getText("common.loadData"));
+
+			super.dbTaskRunner.run(progress -> {
+				EntityManager entityManager = super.db.getEntityManager();
+				if (refresh) {
+					entityManager.clear();
+				}
+				return this.dao.getLogRecords(selectedHostName);
+			}, dbResult -> {
+				try {
+					this.logRecordsList.setAll(dbResult.getResult());
+					FxUtils.autoResizeColumns(this.logRecordsTbl);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					updatePlaceholder(getText("common.noDataAvailable"));
+					disableButtons(false);
+				}
+			});
+		}
 	}
 
 	private void updatePlaceholder(String text) {
