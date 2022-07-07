@@ -73,7 +73,7 @@
     <poi.version>5.2.2</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
-    <jSerialComm.version>2.9.1</jSerialComm.version>
+    <jSerialComm.version>2.9.2</jSerialComm.version>
   </properties>
 
   <modules>
