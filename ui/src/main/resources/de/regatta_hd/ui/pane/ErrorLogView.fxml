@@ -28,6 +28,7 @@
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
         <ComboBox fx:id="hostNameCbx" onAction="#handleHostNameOnAction" />
+        <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%common.delete" />
       </items>
     </ToolBar>
 
@@ -39,7 +40,7 @@
             <Label text="%common.loadData" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" sortType="DESCENDING" text="%common.instant">
+            <TableColumn reorderable="false" sortType="DESCENDING" text="%common.time">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>instant</property>

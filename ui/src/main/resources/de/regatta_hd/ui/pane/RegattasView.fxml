@@ -38,7 +38,7 @@
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <CheckBoxTableCellFactory fx:factory="create" />
+            <CheckBoxTableCellFactory fx:factory="readonly" />
           </cellFactory>
         </TableColumn>
         <TableColumn fx:id="idCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">

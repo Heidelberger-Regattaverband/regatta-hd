@@ -39,6 +39,11 @@ public class RegattasController extends AbstractRegattaDAOController {
 		loadRegattas(false);
 	}
 
+	@FXML
+	void handleRefreshOnAction() {
+		loadRegattas(true);
+	}
+
 	@Override
 	protected void onActiveRegattaChanged(Regatta activeRegatta) {
 		if (activeRegatta != null) {
@@ -55,15 +60,9 @@ public class RegattasController extends AbstractRegattaDAOController {
 				: getText("PrimaryView.regattasMitm.text");
 	}
 
-	@FXML
-	public void handleRefreshOnAction() {
-		loadRegattas(true);
-	}
-
 	private void loadRegattas(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.regattasList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {

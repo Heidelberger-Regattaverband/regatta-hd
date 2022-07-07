@@ -14,28 +14,26 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.db.DBTaskRunner;
 import de.regatta_hd.commons.fx.stage.Controller;
+import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 abstract class AbstractBaseController implements Initializable, Controller {
 
-	protected URL location;
+	@FXML
+	private Pane rootPane;
 
+	protected URL location;
 	protected ResourceBundle resources;
 
 	@Inject
 	protected DBTaskRunner dbTaskRunner;
 	@Inject
 	protected DBConnection db;
-
-	@FXML
-	protected Pane rootPane;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -55,18 +53,9 @@ abstract class AbstractBaseController implements Initializable, Controller {
 		return this.rootPane.getScene().getWindow();
 	}
 
-	protected void runTaskWithProgressDialog(DBTask<?> dbTask, String title, boolean cancel) {
-		ProgressDialog dialog = new ProgressDialog(dbTask);
-		dialog.initOwner(getWindow());
-		dialog.setTitle(title);
-		if (cancel) {
-			dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-			dialog.setOnCloseRequest(event -> {
-				if (event.getEventType() == DialogEvent.DIALOG_CLOSE_REQUEST) {
-					dbTask.cancel();
-				}
-			});
-		}
+	protected <T> void runTaskWithProgressDialog(DBTask<T> dbTask, String title, boolean cancel) {
+		ProgressDialog dialog = FxUtils.showProgressDialog(getWindow(), title, cancel, dbTask);
+
 		dbTask.setProgressMessageConsumer(t -> Platform.runLater(() -> dialog.setHeaderText(t)));
 		this.dbTaskRunner.runTask(dbTask);
 	}

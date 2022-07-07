@@ -10,6 +10,13 @@ import jakarta.persistence.EntityManager;
 public interface DBConnection {
 
 	/**
+	 * Returns the name of the database.
+	 *
+	 * @return the database name or {@code null} if not connected.
+	 */
+	String getName();
+
+	/**
 	 * Closes connection to aquarius database.
 	 */
 	void close();
@@ -36,6 +43,13 @@ public interface DBConnection {
 	 */
 	ExecutorService getExecutor();
 
+	void updateSchema();
+
+	/**
+	 * @return {@link EntityManager} instance
+	 */
+	EntityManager getEntityManager();
+
 	interface StateChangedEvent {
 
 		DBConnection getDBConnection();
@@ -49,12 +63,5 @@ public interface DBConnection {
 
 		void stateChanged(StateChangedEvent event);
 	}
-
-	void updateSchema();
-
-	/**
-	 * @return {@link EntityManager} instance
-	 */
-	EntityManager getEntityManager();
 
 }

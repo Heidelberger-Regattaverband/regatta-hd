@@ -13,6 +13,7 @@ open module de.regatta_hd.aquarius {
 	requires org.apache.commons.lang3;
 
 	requires transitive de.regatta_hd.commons.db;
+	requires transitive de.regatta_hd.schemas;
 
 	// exports
 	exports de.regatta_hd.aquarius;

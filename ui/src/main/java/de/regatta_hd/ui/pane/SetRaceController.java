@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,15 +17,17 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.SearchableComboBox;
 
-import de.regatta_hd.aquarius.SetListEntry;
+import de.regatta_hd.aquarius.SeedingListEntry;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -46,6 +47,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 public class SetRaceController extends AbstractRegattaDAOController {
+	private static final int TABLE_BORDER_WIDTH = 5;
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
 	private static final String FULL_GRAPH = "race-to-results";
 	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
@@ -54,16 +56,49 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private SearchableComboBox<Race> racesCbo;
 	@FXML
 	private VBox srcRaceVBox;
+
+	// seeding list table
 	@FXML
-	private TableView<SetListEntry> setListTbl;
+	private TableView<SeedingListEntry> seedingListTbl;
+	@FXML
+	private TableColumn<SeedingListEntry, Integer> seedingListPosCol;
+	@FXML
+	private TableColumn<SeedingListEntry, Integer> seedingListBibCol;
+	@FXML
+	private TableColumn<SeedingListEntry, String> seedingListBoatCol;
+	@FXML
+	private TableColumn<SeedingListEntry, Integer> seedingListRankCol;
+	@FXML
+	private TableColumn<SeedingListEntry, Integer> seedingListDevisionNumberCol;
+	@FXML
+	private TableColumn<SeedingListEntry, String> seedingListResultCol;
+	@FXML
+	private TableColumn<SeedingListEntry, Boolean> seedingListEqualCrewCol;
+
+	// source crew table
 	@FXML
 	private Label srcCrewLbl;
 	@FXML
 	private TableView<Crew> srcCrewTbl;
 	@FXML
+	private TableColumn<Crew, Byte> srcCrewPosCol;
+	@FXML
+	private TableColumn<Crew, Boolean> srcCrewCoxCol;
+	@FXML
+	private TableColumn<Crew, String> srcCrewNameCol;
+
+	// crew table
+	@FXML
 	private Label crewLbl;
 	@FXML
 	private TableView<Crew> crewTbl;
+	@FXML
+	private TableColumn<Crew, Byte> crewPosCol;
+	@FXML
+	private TableColumn<Crew, Boolean> crewCoxCol;
+	@FXML
+	private TableColumn<Crew, String> crewNameCol;
+
 	@FXML
 	private VBox raceVBox;
 
@@ -87,11 +122,26 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		this.racesCbo.setItems(this.racesList);
 		this.racesCbo.setDisable(true);
-		this.setListTbl.setDisable(true);
+		this.seedingListTbl.setDisable(true);
 		disableButtons();
 
-		this.setListTbl.getSelectionModel().selectedItemProperty().addListener(
+		this.seedingListTbl.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldSelection, newSelection) -> handleSetListSelectedItemChanged(newSelection));
+
+		DoubleBinding usedWidth = this.srcCrewPosCol.widthProperty().add(this.srcCrewCoxCol.widthProperty());
+		this.srcCrewNameCol.prefWidthProperty()
+				.bind(this.srcCrewTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+
+		usedWidth = this.crewPosCol.widthProperty().add(this.crewCoxCol.widthProperty());
+		this.crewNameCol.prefWidthProperty()
+				.bind(this.crewTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+
+		usedWidth = this.seedingListPosCol.widthProperty().add(this.seedingListBibCol.widthProperty())
+				.add(this.seedingListRankCol.widthProperty())
+				.add(this.seedingListDevisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
+						.add(this.seedingListEqualCrewCol.widthProperty()));
+		this.seedingListBoatCol.prefWidthProperty()
+				.bind(this.seedingListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
 
 		loadRaces();
 	}
@@ -133,22 +183,26 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			});
 
 			List<Race> filteredRaces = races.stream()
-					// remove master races, open age class and races with one heat, as they will not
-					// be set
-					.filter(race -> !race.getAgeClass().isOpen() && !race.getAgeClass().isMasters()
-							&& race.getHeats().size() > 1)
+					// remove master races, open age class and races with registrations for one heat only, as they will
+					// not be set
+					.filter(race -> !race.getAgeClass().isOpen() // don't set open races
+							&& !race.getAgeClass().isMasters() // don't set master races
+							&& race.getGroupMode() == GroupMode.NONE // don't set races with age groups
+							// don't set races with only one devision
+							&& race.getActiveRegistrations().count() > race.getRaceMode().getLaneCount())
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
-						Race race2 = srcRaces.get(getSrcRaceNumber(race));
-						return race2 != null && race2.isOfficial();
+						Race srcRace = srcRaces.get(getSrcRaceNumber(race));
+						// the source race needs to be driven with an official result
+						return srcRace != null && srcRace.isOfficial() && !srcRace.isCancelled();
 					}).collect(Collectors.toList());
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
 			try {
 				this.racesList.addAll(dbResult.getResult());
 				this.racesCbo.setDisable(false);
-				this.setListTbl.setDisable(false);
+				this.seedingListTbl.setDisable(false);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -156,16 +210,17 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		});
 	}
 
-	private void handleSetListSelectedItemChanged(SetListEntry newSelection) {
+	private void handleSetListSelectedItemChanged(SeedingListEntry newSelection) {
 		if (newSelection != null) {
-			final SetListEntry entry = this.setListTbl.getSelectionModel().getSelectedItem();
+			final SeedingListEntry entry = this.seedingListTbl.getSelectionModel().getSelectedItem();
 			// clear tables
 			this.srcCrewTbl.getItems().clear();
 			this.crewTbl.getItems().clear();
 
 			// then load new crew lists from DB
 			super.dbTaskRunner.run(progress -> {
-				Set<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getCrews() : null;
+				List<Crew> srcCrew = entry.getSrcRegistration() != null ? entry.getSrcRegistration().getFinalCrews()
+						: null;
 				List<Crew> crews = entry.getRegistration() != null ? entry.getRegistration().getFinalCrews() : null;
 				if (srcCrew != null) {
 					srcCrew.forEach(Crew::getAthlet);
@@ -176,12 +231,11 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				return new Pair<>(srcCrew, crews);
 			}, (dbResult -> {
 				try {
-					Pair<Set<Crew>, List<Crew>> result = dbResult.getResult();
+					Pair<List<Crew>, List<Crew>> result = dbResult.getResult();
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
 						this.srcCrewLbl.setText(createCrewsLabel(entry, entry.getSrcRegistration()));
-						FxUtils.autoResizeColumns(this.srcCrewTbl);
 					} else {
 						this.srcCrewLbl.setText(getText("SetRaceView.noBoat"));
 					}
@@ -189,7 +243,6 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					if (result.getValue() != null) {
 						this.crewTbl.getItems().setAll(result.getValue());
 						this.crewLbl.setText(createCrewsLabel(entry, entry.getRegistration()));
-						FxUtils.autoResizeColumns(this.crewTbl);
 					} else {
 						this.crewLbl.setText(getText("SetRaceView.noBoat"));
 					}
@@ -211,7 +264,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			this.raceVBox.getChildren().clear();
 			this.srcRaceVBox.getChildren().clear();
-			this.setListTbl.getItems().clear();
+			this.seedingListTbl.getItems().clear();
 
 			Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 			if (selectedRace != null) {
@@ -283,11 +336,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
 				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
 				raceRef.set(race);
-				return this.regattaDAO.createSetList(race, srcRace);
+				return this.regattaDAO.createSeedingList(race, srcRace);
 			}, dbResult -> {
 				try {
-					this.setListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
-					FxUtils.autoResizeColumns(this.setListTbl);
+					this.seedingListTbl.setItems(FXCollections.observableArrayList(dbResult.getResult()));
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
@@ -304,7 +356,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		if (selectedRace != null) {
 			disableButtons();
-			this.setListTbl.getItems().clear();
+			this.seedingListTbl.getItems().clear();
 
 			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH),
 					dbResult -> {
@@ -325,12 +377,12 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	private void handleSetRaceOnAction() {
 		Race selectedRace = this.racesCbo.getSelectionModel().getSelectedItem();
 
-		if (selectedRace != null && !this.setListTbl.getItems().isEmpty()) {
+		if (selectedRace != null && !this.seedingListTbl.getItems().isEmpty()) {
 			disableButtons();
 
 			super.dbTaskRunner.runInTransaction(progress -> {
 				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				this.regattaDAO.setRaceHeats(race, this.setListTbl.getItems());
+				this.regattaDAO.setRaceHeats(race, this.seedingListTbl.getItems());
 
 				this.db.getEntityManager().clear();
 				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
@@ -395,13 +447,15 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		vbox.getChildren().add(new Label(labelText));
 
 		// loops over all heats of race and reads required data from DB
-		race.getHeats().forEach(heat -> {
+		race.getDrivenHeats().forEach(heat -> {
 			Label heatNrLabel = new Label(
 					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
-			compEntriesTable.setItems(FXCollections.observableArrayList(heat.getEntries()));
+
+			ObservableList<HeatRegistration> items = FXCollections
+					.observableArrayList(withResult ? heat.getEntriesSortedByRank() : heat.getEntriesSortedByLane());
+			compEntriesTable.setItems(items);
 			compEntriesTable.sort();
-			FxUtils.autoResizeColumns(compEntriesTable);
 
 			vbox.getChildren().addAll(heatNrLabel, compEntriesTable);
 		});
@@ -409,18 +463,18 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	private void enableButtons(Race race) {
 		if (race != null) {
-			boolean isSet = race.getSet() != null && race.getSet().booleanValue();
+			boolean isSet = race.isSet();
 			// disable setRace button if race is already set or set list is empty
-			this.setRaceBtn.setDisable(isSet || this.setListTbl.getItems().isEmpty());
+			this.setRaceBtn.setDisable(isSet || this.seedingListTbl.getItems().isEmpty());
 			this.deleteBtn.setDisable(!isSet);
-			this.createSetListBtn.setDisable(!this.setListTbl.getItems().isEmpty());
+			this.createSetListBtn.setDisable(!this.seedingListTbl.getItems().isEmpty());
 		} else {
 			this.setRaceBtn.setDisable(true);
 			this.deleteBtn.setDisable(true);
 			this.createSetListBtn.setDisable(true);
 		}
 
-		this.deleteSetListBtn.setDisable(this.setListTbl.getItems().isEmpty());
+		this.deleteSetListBtn.setDisable(this.seedingListTbl.getItems().isEmpty());
 		this.refreshBtn.setDisable(false);
 	}
 
@@ -441,15 +495,21 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		TableColumn<HeatRegistration, Number> bibCol = new TableColumn<>(getText("common.bibAbr"));
 		bibCol.setStyle(FX_ALIGNMENT_CENTER);
+		bibCol.setResizable(false);
+		bibCol.setMaxWidth(35);
+		bibCol.setSortable(false);
+		bibCol.setReorderable(false);
 		bibCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
-			if (entry != null && entry.getBib() != 0) {
-				return new SimpleIntegerProperty(entry.getBib());
+			if (entry != null && entry.getBib() != null) {
+				return new SimpleIntegerProperty(entry.getBib().intValue());
 			}
 			return null;
 		});
 
 		TableColumn<HeatRegistration, String> boatCol = new TableColumn<>(getText("common.boat"));
+		boatCol.setReorderable(false);
+		boatCol.setSortable(false);
 		boatCol.setCellValueFactory(row -> {
 			Registration entry = row.getValue().getRegistration();
 			if (entry != null && entry.getClub() != null) {
@@ -466,6 +526,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		TableColumn<HeatRegistration, String> resultCol = null;
 		if (sourceTable) {
 			rankCol = new TableColumn<>(getText("common.rank"));
+			rankCol.setResizable(false);
+			rankCol.setReorderable(false);
+			rankCol.setSortable(false);
+			rankCol.setMaxWidth(35);
 			rankCol.setStyle(FX_ALIGNMENT_CENTER);
 			rankCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
@@ -476,6 +540,10 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			});
 
 			resultCol = new TableColumn<>(getText("common.result"));
+			resultCol.setResizable(false);
+			resultCol.setMaxWidth(60);
+			resultCol.setReorderable(false);
+			resultCol.setSortable(false);
 			resultCol.setStyle(FX_ALIGNMENT_CENTER_RIGHT);
 			resultCol.setCellValueFactory(row -> {
 				Result result = row.getValue().getFinalResult();
@@ -487,14 +555,27 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			heatRegsTbl.getColumns().add(rankCol);
 			heatRegsTbl.getSortOrder().add(resultCol);
+
+			DoubleBinding usedWidth = bibCol.widthProperty().add(rankCol.widthProperty())
+					.add(resultCol.widthProperty());
+			boatCol.prefWidthProperty()
+					.bind(heatRegsTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
 		} else {
 			TableColumn<HeatRegistration, Number> laneCol = null;
 			laneCol = new TableColumn<>(getText("common.lane"));
+			laneCol.setMaxWidth(35);
+			laneCol.setResizable(false);
+			laneCol.setReorderable(false);
+			laneCol.setSortable(false);
 			laneCol.setStyle(FX_ALIGNMENT_CENTER);
 			laneCol.setCellValueFactory(row -> new SimpleIntegerProperty(row.getValue().getLane()));
 
 			heatRegsTbl.getColumns().add(laneCol);
 			heatRegsTbl.getSortOrder().add(laneCol);
+
+			DoubleBinding usedWidth = bibCol.widthProperty().add(laneCol.widthProperty());
+			boatCol.prefWidthProperty()
+					.bind(heatRegsTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
 		}
 
 		heatRegsTbl.getColumns().add(bibCol);
@@ -597,7 +678,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	// static helpers
 
-	private static String createCrewsLabel(SetListEntry entry, Registration registration) {
+	private static String createCrewsLabel(SeedingListEntry entry, Registration registration) {
 		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
 	}
 

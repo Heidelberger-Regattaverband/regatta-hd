@@ -30,6 +30,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
@@ -58,6 +59,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private MenuItem eventsMitm;
 	@FXML
+	private MenuItem refereesMitm;
+	@FXML
 	private MenuItem racesMitm;
 	@FXML
 	private MenuItem setRaceMitm;
@@ -71,6 +74,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private MenuItem heatsMitm;
 	@FXML
 	private ComboBox<Regatta> activeRegattaCBox;
+	@FXML
+	private Label dbNameLbl;
 
 	// fields
 	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
@@ -88,6 +93,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 				Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 				return new Pair<>(regattas, activeRegatta);
 			}, dbResult -> {
+				this.dbNameLbl.setText(event.getDBConnection().getName());
+
 				try {
 					this.regattasList.setAll(dbResult.getResult().getKey());
 					this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
@@ -100,6 +107,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			});
 		} else {
 			this.regattasList.clear();
+			this.dbNameLbl.setText("");
 		}
 	};
 
@@ -169,6 +177,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	void handleEvents() {
 		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
+	}
+
+	@FXML
+	void handleRefereesOnAction() {
+		openStage("RefereesView.fxml", getText("common.referees"));
 	}
 
 	@FXML
@@ -285,6 +298,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		this.dbConnectMitm.setDisable(isOpen || isConnecting);
 		this.dbDisconnectMitm.setDisable(!isOpen);
 		this.eventsMitm.setDisable(!isOpen);
+		this.refereesMitm.setDisable(!isOpen);
 		this.errorLogMitm.setDisable(!isOpen);
 	}
 
