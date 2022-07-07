@@ -45,6 +45,8 @@ public interface MasterDataDAO {
 
 	List<LogRecord> getLogRecords(String hostName);
 
+	int deleteLogRecords(String hostName);
+
 	List<String> getHostNames();
 
 	/**
