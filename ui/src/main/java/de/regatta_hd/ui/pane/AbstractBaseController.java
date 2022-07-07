@@ -24,17 +24,16 @@ import javafx.stage.Window;
 
 abstract class AbstractBaseController implements Initializable, Controller {
 
-	protected URL location;
+	@FXML
+	private Pane rootPane;
 
+	protected URL location;
 	protected ResourceBundle resources;
 
 	@Inject
 	protected DBTaskRunner dbTaskRunner;
 	@Inject
 	protected DBConnection db;
-
-	@FXML
-	protected Pane rootPane;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
