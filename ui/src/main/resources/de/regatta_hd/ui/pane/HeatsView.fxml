@@ -49,17 +49,17 @@
             <DateTimeTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
-        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>number</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
         <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>raceNumber</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
@@ -74,6 +74,13 @@
           <cellValueFactory>
             <PropertyValueFactory>
               <property>devisionLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.state">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>stateLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
