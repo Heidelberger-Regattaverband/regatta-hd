@@ -56,10 +56,10 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>number</property>
+              <property>devisionLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
@@ -70,10 +70,10 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
+        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>devisionLabel</property>
+              <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
