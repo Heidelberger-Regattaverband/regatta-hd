@@ -153,7 +153,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.heatsList.clear();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
