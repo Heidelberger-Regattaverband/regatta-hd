@@ -242,7 +242,7 @@ public class Heat {
 		case 0:
 			return bundle.getString("heat.state.initial");
 		case 1:
-			return bundle.getString("heat.state.set");
+			return bundle.getString("heat.state.scheduled");
 		case 2:
 			return bundle.getString("heat.state.started");
 		case 4:
