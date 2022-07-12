@@ -3,6 +3,8 @@ package de.regatta_hd.aquarius.model;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -71,6 +73,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 public class Heat {
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -229,6 +232,28 @@ public class Heat {
 
 	public String getRaceLongLabel() {
 		return this.race.getLongLabel();
+	}
+
+	public String getStateLabel() {
+		if (isCancelled()) {
+			return bundle.getString("heat.state.cancelled");
+		}
+		switch (getState()) {
+		case 0:
+			return bundle.getString("heat.state.initial");
+		case 1:
+			return bundle.getString("heat.state.scheduled");
+		case 2:
+			return bundle.getString("heat.state.started");
+		case 4:
+			return bundle.getString("heat.state.official");
+		case 5:
+			return bundle.getString("heat.state.finished");
+		case 6:
+			return bundle.getString("heat.state.photoFinish");
+		default:
+			return Byte.toString(getState());
+		}
 	}
 
 	private String getGroupValueLabel() {

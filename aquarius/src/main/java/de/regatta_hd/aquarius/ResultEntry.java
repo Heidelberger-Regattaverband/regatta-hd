@@ -77,15 +77,8 @@ public class ResultEntry {
 		return getPoints(3);
 	}
 
-	public String getState() {
-		switch (this.heat.getState()) {
-		case 5:
-			return "beendet";
-		case 4:
-			return "offiziel";
-		default:
-			return "-";
-		}
+	public String getStateLabel() {
+		return this.heat.getStateLabel();
 	}
 
 	private String getRegistrationName(final int index) {
