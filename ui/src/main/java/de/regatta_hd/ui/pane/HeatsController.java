@@ -69,7 +69,13 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Heat, Instant> timeCol;
 
+	@FXML
+	private TableView<HeatRegistration> scheduleTbl;
+	@FXML
+	private TableColumn<HeatRegistration, String> boatCol;
+
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> scheduleList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -77,6 +83,16 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
+		this.scheduleTbl.setItems(this.scheduleList);
+
+		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				this.scheduleList.setAll(newSelection.getEntries());
+				FxUtils.autoResizeColumns(this.scheduleTbl);
+			} else {
+				this.scheduleList.clear();
+			}
+		});
 
 		loadHeats(false);
 	}

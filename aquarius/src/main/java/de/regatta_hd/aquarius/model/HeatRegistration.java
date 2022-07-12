@@ -63,4 +63,16 @@ public class HeatRegistration {
 	public Result getFinalResult() {
 		return getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
 	}
+
+	public String getBib() {
+		Registration reg = getRegistration();
+		if (reg.getBib() != null) {
+			return reg.getBib().toString();
+		}
+		return null;
+	}
+
+	public String getBoatLabel() {
+		return getRegistration().getBoatLabel();
+	}
 }

@@ -143,4 +143,13 @@ public class Registration {
 	public boolean isCancelled() {
 		return getCancelValue() > 0;
 	}
+
+	public String getBoatLabel() {
+		String boatLabel = getClub().getAbbreviation();
+		if (getBoatNumber() != null) {
+			boatLabel += " - Boot " + getBoatNumber();
+		}
+		return boatLabel;
+	}
+
 }

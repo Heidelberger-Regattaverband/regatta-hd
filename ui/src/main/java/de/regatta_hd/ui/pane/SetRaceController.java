@@ -235,14 +235,14 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
-						this.srcCrewLbl.setText(createCrewsLabel(entry, entry.getSrcRegistration()));
+						this.srcCrewLbl.setText(createCrewsLabel(entry.getSrcRegistration()));
 					} else {
 						this.srcCrewLbl.setText(getText("SetRaceView.noBoat"));
 					}
 
 					if (result.getValue() != null) {
 						this.crewTbl.getItems().setAll(result.getValue());
-						this.crewLbl.setText(createCrewsLabel(entry, entry.getRegistration()));
+						this.crewLbl.setText(createCrewsLabel(entry.getRegistration()));
 					} else {
 						this.crewLbl.setText(getText("SetRaceView.noBoat"));
 					}
@@ -511,15 +511,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		boatCol.setReorderable(false);
 		boatCol.setSortable(false);
 		boatCol.setCellValueFactory(row -> {
-			Registration entry = row.getValue().getRegistration();
-			if (entry != null && entry.getClub() != null) {
-				String value = entry.getClub().getAbbreviation();
-				if (entry.getBoatNumber() != null) {
-					value += " - Boot " + entry.getBoatNumber();
-				}
-				return new SimpleStringProperty(value);
-			}
-			return null;
+			return new SimpleStringProperty(row.getValue().getBoatLabel());
 		});
 
 		TableColumn<HeatRegistration, Number> rankCol = null;
@@ -678,8 +670,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	// static helpers
 
-	private static String createCrewsLabel(SeedingListEntry entry, Registration registration) {
-		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
+	private static String createCrewsLabel(Registration registration) {
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + registration.getBoatLabel();
 	}
 
 	private static String getSrcRaceNumber(Race race) {
