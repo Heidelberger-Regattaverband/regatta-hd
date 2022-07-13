@@ -1,6 +1,8 @@
 package de.regatta_hd.aquarius.model;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,6 +35,7 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Registration {
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	/**
 	 * Unique identifier of this {@link Registration registration}.
@@ -147,7 +150,7 @@ public class Registration {
 	public String getBoatLabel() {
 		String boatLabel = getClub().getAbbreviation();
 		if (getBoatNumber() != null) {
-			boatLabel += " - Boot " + getBoatNumber();
+			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();
 		}
 		return boatLabel;
 	}

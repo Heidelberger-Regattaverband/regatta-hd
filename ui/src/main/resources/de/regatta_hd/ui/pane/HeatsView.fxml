@@ -72,7 +72,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
+            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>number</property>
@@ -107,10 +107,31 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="boatCol" text="%common.boat">
+            <TableColumn fx:id="boatCol" reorderable="false" sortable="false" text="%common.boat">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>boatLabel</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.rank">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>resultRank</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.result">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>resultDisplayValue</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.points">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>points</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
