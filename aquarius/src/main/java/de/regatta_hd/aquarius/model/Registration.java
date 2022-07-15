@@ -20,6 +20,8 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -155,4 +157,22 @@ public class Registration {
 		return boatLabel;
 	}
 
+	public String getClubName() {
+		if (getClub() != null) {
+			return getClub().getName();
+		}
+		return null;
+	}
+
+	public String getClubCity() {
+		if (getClub() != null) {
+			return getClub().getCity();
+		}
+		return null;
+	}
+
+	// JavaFX properties
+	public ObservableBooleanValue signedOffProperty() {
+		return new SimpleBooleanProperty(getCancelValue() > 0);
+	}
 }

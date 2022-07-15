@@ -8,13 +8,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.ClubCityStringConverter;
-import de.regatta_hd.ui.util.ClubNameStringConverter;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,10 +41,6 @@ public class OffersController extends AbstractRegattaDAOController {
 
 	@FXML
 	private TableView<Registration> regsTbl;
-	@FXML
-	private TableColumn<Race, Club> clubCol;
-	@FXML
-	private TableColumn<Race, Club> cityCol;
 
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
@@ -72,8 +65,6 @@ public class OffersController extends AbstractRegattaDAOController {
 
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
-		this.clubCol.setCellFactory(TextFieldTableCell.forTableColumn(new ClubNameStringConverter()));
-		this.cityCol.setCellFactory(TextFieldTableCell.forTableColumn(new ClubCityStringConverter()));
 
 		loadRaces(true);
 	}

@@ -127,19 +127,29 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="clubCol" resizable="true" reorderable="false" text="%common.club">
+            <TableColumn resizable="true" reorderable="false" text="%common.club">
               <cellValueFactory>
                 <PropertyValueFactory>
-                  <property>club</property>
+                  <property>clubName</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="cityCol" resizable="true" reorderable="false" text="%common.city">
+            <TableColumn resizable="true" reorderable="false" text="%common.city">
               <cellValueFactory>
                 <PropertyValueFactory>
-                  <property>club</property>
+                  <property>clubCity</property>
                 </PropertyValueFactory>
               </cellValueFactory>
+            </TableColumn>
+            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.signedOff">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>signedOff</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+              <cellFactory>
+                <CheckBoxTableCellFactory fx:factory="readonly" />
+              </cellFactory>
             </TableColumn>
           </columns>
         </TableView>
