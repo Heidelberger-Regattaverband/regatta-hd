@@ -77,22 +77,25 @@ public class HeatRegistration {
 	}
 
 	public String getResultDisplayValue() {
-		if (getFinalResult() != null) {
+		Result result = getFinalResult();
+		if (result != null) {
 			return getFinalResult().getDisplayValue();
 		}
 		return null;
 	}
 
 	public String getResultRank() {
-		if (getFinalResult() != null) {
+		Result result = getFinalResult();
+		if (result != null && result.getRank() > 0) {
 			return Byte.toString(getFinalResult().getRank());
 		}
 		return null;
 	}
 
 	public String getPoints() {
-		if (getFinalResult() != null && getFinalResult().getPoints() != null) {
-			return getFinalResult().getPoints().toString();
+		Result result = getFinalResult();
+		if (result != null && result.getPoints() != null) {
+			return result.getPoints().toString();
 		}
 		return null;
 	}

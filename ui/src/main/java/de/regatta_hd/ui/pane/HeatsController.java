@@ -164,7 +164,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		int selectedItem = this.heatsTbl.getSelectionModel().getSelectedIndex();
+		Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {

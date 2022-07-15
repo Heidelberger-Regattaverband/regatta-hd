@@ -138,7 +138,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		int selectedIndex = this.racesTbl.getSelectionModel().getSelectedIndex();
+		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -148,7 +148,7 @@ public class OffersController extends AbstractRegattaDAOController {
 		}, dbResult -> {
 			try {
 				this.racesList.setAll(dbResult.getResult());
-				this.racesTbl.getSelectionModel().select(selectedIndex);
+				this.racesTbl.getSelectionModel().select(selectedItem);
 				this.racesTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);

@@ -94,42 +94,42 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.lane" prefWidth="40">
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.lane" prefWidth="45">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>lane</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.bibAbr" prefWidth="40">
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.bibAbr" prefWidth="45">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>bib</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="boatCol" reorderable="false" sortable="false" text="%common.boat" prefWidth="140">
+            <TableColumn fx:id="boatCol" reorderable="false" sortable="false" text="%common.boat" prefWidth="200">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>boatLabel</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.rank" prefWidth="40">
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.rank" prefWidth="45">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>resultRank</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.result" prefWidth="60">
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.result" prefWidth="70">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>resultDisplayValue</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.points" prefWidth="40">
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.points" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>points</property>

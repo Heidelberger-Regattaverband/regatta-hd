@@ -23,6 +23,7 @@ import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -61,6 +62,7 @@ import lombok.ToString;
 // lombok
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"id"})
 @ToString(onlyExplicitlyIncluded = true)
 public class Race {
 
