@@ -46,14 +46,14 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" text="%common.labelShort" prefWidth="140">
+            <TableColumn reorderable="false" resizable="false" sortable="false" text="%common.labelShort" prefWidth="140">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>shortLabel</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" text="%common.label" prefWidth="310">
+            <TableColumn reorderable="false" resizable="false" sortable="false" text="%common.label" prefWidth="310">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>longLabel</property>
@@ -82,7 +82,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.lightweightAbr" prefWidth="45">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.lightweightAbr" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>lightweight</property>
