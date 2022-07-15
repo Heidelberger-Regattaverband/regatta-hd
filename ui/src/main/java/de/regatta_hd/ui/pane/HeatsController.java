@@ -65,11 +65,13 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
-	private TableColumn<Heat, String> numberCol;
-	@FXML
 	private TableColumn<Heat, Instant> timeCol;
 
+	@FXML
+	private TableView<HeatRegistration> scheduleTbl;
+
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> scheduleList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -77,6 +79,15 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
+		this.scheduleTbl.setItems(this.scheduleList);
+
+		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				this.scheduleList.setAll(newSelection.getEntries());
+			} else {
+				this.scheduleList.clear();
+			}
+		});
 
 		loadHeats(false);
 	}
@@ -153,6 +164,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		int selectedItem = this.heatsTbl.getSelectionModel().getSelectedIndex();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -163,6 +175,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			try {
 				this.heatsList.setAll(dbResult.getResult());
 				this.heatsTbl.sort();
+				this.heatsTbl.getSelectionModel().select(selectedItem);
 				FxUtils.autoResizeColumns(this.heatsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -289,6 +302,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
+		this.heatsTbl.setDisable(disabled);
+		this.scheduleTbl.setDisable(disabled);
 	}
 
 	private void updatePlaceholder(String text) {

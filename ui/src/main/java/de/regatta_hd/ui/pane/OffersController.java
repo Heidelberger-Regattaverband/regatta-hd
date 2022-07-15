@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.collections.FXCollections;
@@ -26,28 +27,43 @@ public class OffersController extends AbstractRegattaDAOController {
 
 	// UI Controls
 	@FXML
-	private TableView<Race> racesTbl;
-	@FXML
-	private TableColumn<Race, Integer> idCol;
-	@FXML
-	private TableColumn<Race, Race.GroupMode> groupModeCol;
-	@FXML
 	private Button refreshBtn;
 	@FXML
 	private Button setDistancesBtn;
 	@FXML
 	private Button setMastersAgeClassesBtn;
+	@FXML
+	private TableView<Race> racesTbl;
+	@FXML
+	private TableColumn<Race, Integer> idCol;
+	@FXML
+	private TableColumn<Race, Race.GroupMode> groupModeCol;
+
+	@FXML
+	private TableView<Registration> regsTbl;
 
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
+	private final ObservableList<Registration> regsList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		// races table
 		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
+		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				this.regsList.setAll(newSelection.getRegistrations());
+			} else {
+				this.regsList.clear();
+			}
+		});
+
+		// registrations table
+		this.regsTbl.setItems(this.regsList);
 
 		loadRaces(true);
 	}
@@ -122,6 +138,7 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		int selectedIndex = this.racesTbl.getSelectionModel().getSelectedIndex();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -131,8 +148,8 @@ public class OffersController extends AbstractRegattaDAOController {
 		}, dbResult -> {
 			try {
 				this.racesList.setAll(dbResult.getResult());
+				this.racesTbl.getSelectionModel().select(selectedIndex);
 				this.racesTbl.sort();
-				FxUtils.autoResizeColumns(this.racesTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -151,6 +168,8 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
+		this.racesTbl.setDisable(disabled);
+		this.regsTbl.setDisable(disabled);
 	}
 
 }
