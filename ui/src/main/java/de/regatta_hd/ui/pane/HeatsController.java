@@ -84,7 +84,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.scheduleList.setAll(newSelection.getEntries());
-				FxUtils.autoResizeColumns(this.scheduleTbl);
 			} else {
 				this.scheduleList.clear();
 			}

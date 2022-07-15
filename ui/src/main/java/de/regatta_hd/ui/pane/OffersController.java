@@ -57,7 +57,6 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.regsList.setAll(newSelection.getRegistrations());
-//				FxUtils.autoResizeColumns(this.regsTbl);
 			} else {
 				this.regsList.clear();
 			}
@@ -151,7 +150,6 @@ public class OffersController extends AbstractRegattaDAOController {
 				this.racesList.setAll(dbResult.getResult());
 				this.racesTbl.getSelectionModel().select(selectedIndex);
 				this.racesTbl.sort();
-				FxUtils.autoResizeColumns(this.racesTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
