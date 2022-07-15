@@ -57,7 +57,7 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.regsList.setAll(newSelection.getRegistrations());
-				FxUtils.autoResizeColumns(this.regsTbl);
+//				FxUtils.autoResizeColumns(this.regsTbl);
 			} else {
 				this.regsList.clear();
 			}
