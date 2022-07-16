@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,13 +56,19 @@ public class HeatRegistration {
 	@OrderBy("rank")
 	private Set<Result> results;
 
+	@Transient
+	private Result finalResult;
+
 	/**
 	 * Returns result of final race.
 	 *
 	 * @return {@link Result} of final or <code>null</code> if not available
 	 */
 	public Result getFinalResult() {
-		return getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		if (this.finalResult == null) {
+			this.finalResult = getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		}
+		return this.finalResult;
 	}
 
 	public String getBib() {
@@ -77,8 +84,7 @@ public class HeatRegistration {
 	}
 
 	public String getResultDisplayValue() {
-		Result result = getFinalResult();
-		if (result != null) {
+		if (getFinalResult() != null) {
 			return getFinalResult().getDisplayValue();
 		}
 		return null;

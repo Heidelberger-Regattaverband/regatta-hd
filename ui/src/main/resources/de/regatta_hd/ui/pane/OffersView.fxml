@@ -113,35 +113,35 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" resizable="true" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>id</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" resizable="true" style="-fx-alignment: CENTER;" text="%common.bibAbr" prefWidth="45">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.bibAbr" prefWidth="45">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>bib</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn resizable="true" reorderable="false" text="%common.club" prefWidth="270">
+            <TableColumn resizable="true" reorderable="false" text="%common.club" prefWidth="300">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>clubName</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn resizable="true" reorderable="false" text="%common.city" prefWidth="130">
+            <TableColumn resizable="true" reorderable="false" text="%common.city" prefWidth="140">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>clubCity</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.signedOff" prefWidth="80">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.signedOff" prefWidth="80">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>signedOff</property>
@@ -151,7 +151,7 @@
                 <CheckBoxTableCellFactory fx:factory="readonly" />
               </cellFactory>
             </TableColumn>
-            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.alternativeTo" prefWidth="80">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.alternativeTo" prefWidth="80">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>alternativeTo</property>
