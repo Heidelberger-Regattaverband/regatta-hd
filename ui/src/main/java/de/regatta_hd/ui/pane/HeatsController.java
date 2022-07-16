@@ -170,7 +170,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getHeats();
+			return this.regattaDAO.getHeats(Heat.GRAPH_ALL);
 		}, dbResult -> {
 			try {
 				this.heatsList.setAll(dbResult.getResult());

@@ -49,7 +49,6 @@ import javafx.util.Pair;
 public class SetRaceController extends AbstractRegattaDAOController {
 	private static final int TABLE_BORDER_WIDTH = 5;
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
-	private static final String FULL_GRAPH = "race-to-results";
 	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
 	@FXML
@@ -165,7 +164,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		clearRaces();
 
 		super.dbTaskRunner.run(progress -> {
-			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
+			List<Race> allRaces = this.regattaDAO.getRaces(Race.GRAPH_RESULTS);
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
 			allRaces.forEach(race -> {
@@ -272,8 +271,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				this.racesCbo.setOnAction(null);
 
 				super.dbTaskRunner.run(progress -> {
-					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
+					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
+					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), Race.GRAPH_RESULTS);
 					return new Race[] { srcRace, race };
 				}, dbResult -> {
 					Race race = null;
@@ -305,8 +304,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			super.dbTaskRunner.run(progress -> {
 				this.db.getEntityManager().clear();
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), Race.GRAPH_RESULTS);
 				return new Race[] { srcRace, race };
 			}, dbResult -> {
 				Race race = null;
@@ -333,8 +332,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			AtomicReference<Race> raceRef = new AtomicReference<>();
 			super.dbTaskRunner.run(progress -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), Race.GRAPH_RESULTS);
 				raceRef.set(race);
 				return this.regattaDAO.createSeedingList(race, srcRace);
 			}, dbResult -> {
@@ -358,7 +357,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 			this.seedingListTbl.getItems().clear();
 
-			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH),
+			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS),
 					dbResult -> {
 						Race race = null;
 						try {
@@ -381,11 +380,11 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 
 			super.dbTaskRunner.runInTransaction(progress -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
 				this.regattaDAO.setRaceHeats(race, this.seedingListTbl.getItems());
 
 				this.db.getEntityManager().clear();
-				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
 				return race;
 			}, dbResult -> {
 				Race race = null;
@@ -411,7 +410,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 
 			super.dbTaskRunner.runInTransaction(progress -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
 				this.regattaDAO.cleanRaceHeats(race);
 				return race;
 			}, dbResult -> {

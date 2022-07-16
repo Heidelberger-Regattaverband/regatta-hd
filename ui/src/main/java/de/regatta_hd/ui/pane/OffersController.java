@@ -144,7 +144,7 @@ public class OffersController extends AbstractRegattaDAOController {
 			if (refresh) {
 				this.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getRaces();
+			return this.regattaDAO.getRaces(Race.GRAPH_CLUBS);
 		}, dbResult -> {
 			try {
 				this.racesList.setAll(dbResult.getResult());

@@ -35,7 +35,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
-@NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
+@NamedEntityGraphs(@NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
@@ -76,6 +76,8 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Heat {
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
+
+	public static final String GRAPH_ALL = "heat-all";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
