@@ -191,7 +191,6 @@ public class RefereesController extends AbstractBaseController {
 			try {
 				this.refereesList.setAll(dbResult.getResult());
 				this.refereesTbl.sort();
-				FxUtils.autoResizeColumns(this.refereesTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
