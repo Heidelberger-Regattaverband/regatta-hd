@@ -18,12 +18,13 @@
   </properties>
 
   <dependencies>
-    <!-- =========== -->
-    <!-- Open JavaFX -->
-    <!-- =========== -->
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
     <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ui</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- ============ -->
