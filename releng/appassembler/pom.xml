@@ -8,7 +8,7 @@
     <relativePath>../..</relativePath>
   </parent>
 
-  <artifactId>app</artifactId>
+  <artifactId>appassembler</artifactId>
   <name>Regatta HD - Appassembler</name>
 
   <properties>
