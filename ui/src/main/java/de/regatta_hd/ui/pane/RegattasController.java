@@ -72,7 +72,6 @@ public class RegattasController extends AbstractRegattaDAOController {
 		}, dbResult -> {
 			try {
 				this.regattasList.setAll(dbResult.getResult());
-				FxUtils.autoResizeColumns(this.regattasTbl);
 				this.regattasTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -90,6 +89,7 @@ public class RegattasController extends AbstractRegattaDAOController {
 
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
+		this.regattasTbl.setDisable(disabled);
 	}
 
 }
