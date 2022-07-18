@@ -25,6 +25,7 @@ import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -60,13 +61,12 @@ import lombok.ToString;
 				@NamedAttributeNode("registrations") //
 		} //
 ), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
-		subgraphs = {
-				@NamedSubgraph(name = "registration.club", attributeNodes = { @NamedAttributeNode("club") }) }, //
+		subgraphs = { @NamedSubgraph(name = "registration.club", attributeNodes = { @NamedAttributeNode("club") }) }, //
 		attributeNodes = { @NamedAttributeNode(value = "registrations", subgraph = "registration.club") }) })
 // lombok
 @Getter
 @Setter
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Race {
 
@@ -76,6 +76,7 @@ public class Race {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Offer_ID")
+	@Include
 	private int id;
 
 	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)

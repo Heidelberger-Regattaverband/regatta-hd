@@ -205,6 +205,7 @@ public class RefereesController extends AbstractBaseController {
 	private void loadReferees(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		Referee selectedItem = this.refereesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -215,7 +216,7 @@ public class RefereesController extends AbstractBaseController {
 			try {
 				this.refereesList.setAll(dbResult.getResult());
 				this.refereesTbl.sort();
-				FxUtils.autoResizeColumns(this.refereesTbl);
+				this.refereesTbl.getSelectionModel().select(selectedItem);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -236,5 +237,6 @@ public class RefereesController extends AbstractBaseController {
 		this.deactivateAllBtn.setDisable(disabled);
 		this.filterTxf.setDisable(disabled);
 		this.importBtn.setDisable(disabled);
+		this.refereesTbl.setDisable(disabled);
 	}
 }
