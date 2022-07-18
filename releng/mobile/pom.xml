@@ -9,33 +9,28 @@
   </parent>
 
   <artifactId>androidApp</artifactId>
-  <version>0.1.24</version>
-
   <name>Regatta HD - Mobile</name>
 
   <properties>
-    <gluonfx.plugin.version>1.0.14</gluonfx.plugin.version>
     <charm.version>6.1.1</charm.version>
     <attach.version>4.0.14</attach.version>
-    <main.class>de.regatta_hd.sample.Main</main.class>
+    <main.class>de.regatta_hd.mobile.Main</main.class>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-base</artifactId>
-      <version>${openjfx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <version>${openjfx.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>${openjfx.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.gluonhq</groupId>
       <artifactId>charm-glisten</artifactId>
@@ -81,7 +76,6 @@
       <plugin>
         <groupId>com.gluonhq</groupId>
         <artifactId>gluonfx-maven-plugin</artifactId>
-        <version>${gluonfx.plugin.version}</version>
         <configuration>
           <target>${gluonfx.target}</target>
           <mainClass>${main.class}</mainClass>
