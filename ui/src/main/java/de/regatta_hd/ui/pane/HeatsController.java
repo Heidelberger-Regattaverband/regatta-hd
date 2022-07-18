@@ -176,7 +176,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 				this.heatsList.setAll(dbResult.getResult());
 				this.heatsTbl.sort();
 				this.heatsTbl.getSelectionModel().select(selectedItem);
-				FxUtils.autoResizeColumns(this.heatsTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);

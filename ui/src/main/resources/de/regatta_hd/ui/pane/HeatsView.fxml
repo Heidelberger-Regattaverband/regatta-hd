@@ -34,14 +34,21 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>id</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="timeCol" reorderable="false" sortable="true" text="%common.time">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.heat" prefWidth="45">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>number</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="timeCol" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.time" prefWidth="145">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>time</property>
@@ -51,35 +58,28 @@
                 <DateTimeTableCellFactory fx:factory="createMedium" />
               </cellFactory>
             </TableColumn>
-            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr">
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>raceNumber</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr" prefWidth="70">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>devisionLabel</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" text="%common.shortLabelAbr">
+            <TableColumn reorderable="false" resizable="false" sortable="false" text="%common.shortLabelAbr" prefWidth="140">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>raceShortLabel</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
-              <cellValueFactory>
-                <PropertyValueFactory>
-                  <property>number</property>
-                </PropertyValueFactory>
-              </cellValueFactory>
-            </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.state">
+            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.state" prefWidth="75">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>stateLabel</property>
@@ -94,6 +94,13 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
+            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>id</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
             <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.lane" prefWidth="45">
               <cellValueFactory>
                 <PropertyValueFactory>

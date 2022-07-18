@@ -127,7 +127,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn resizable="true" reorderable="false" text="%common.club" prefWidth="300">
+            <TableColumn resizable="true" reorderable="false" sortable="false" text="%common.club" prefWidth="300">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>clubName</property>
