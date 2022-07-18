@@ -3,6 +3,8 @@ package de.regatta_hd.aquarius.model;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -22,6 +24,8 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +36,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
-@NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
+@NamedEntityGraphs(@NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
@@ -69,12 +73,17 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Heat {
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
+
+	public static final String GRAPH_ALL = "heat-all";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Comp_ID")
+	@Include
 	private int id;
 
 	/**
@@ -229,6 +238,28 @@ public class Heat {
 
 	public String getRaceLongLabel() {
 		return this.race.getLongLabel();
+	}
+
+	public String getStateLabel() {
+		if (isCancelled()) {
+			return bundle.getString("heat.state.cancelled");
+		}
+		switch (getState()) {
+		case 0:
+			return bundle.getString("heat.state.initial");
+		case 1:
+			return bundle.getString("heat.state.scheduled");
+		case 2:
+			return bundle.getString("heat.state.started");
+		case 4:
+			return bundle.getString("heat.state.official");
+		case 5:
+			return bundle.getString("heat.state.finished");
+		case 6:
+			return bundle.getString("heat.state.photoFinish");
+		default:
+			return Byte.toString(getState());
+		}
 	}
 
 	private String getGroupValueLabel() {

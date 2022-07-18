@@ -70,12 +70,14 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
-	private TableColumn<Heat, String> numberCol;
-	@FXML
 	private TableColumn<Heat, Instant> timeCol;
+
+	@FXML
+	private TableView<HeatRegistration> scheduleTbl;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
 	private final ObservableList<SerialPort> commPortsList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> scheduleList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -83,6 +85,15 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
+		this.scheduleTbl.setItems(this.scheduleList);
+
+		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				this.scheduleList.setAll(newSelection.getEntries());
+			} else {
+				this.scheduleList.clear();
+			}
+		});
 
 		loadHeats(false);
 		this.commPortsList.addAll(SerialPort.getCommPorts());
@@ -161,18 +172,18 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.heatsList.clear();
+		Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getHeats();
+			return this.regattaDAO.getHeats(Heat.GRAPH_ALL);
 		}, dbResult -> {
 			try {
 				this.heatsList.setAll(dbResult.getResult());
 				this.heatsTbl.sort();
-				FxUtils.autoResizeColumns(this.heatsTbl);
+				this.heatsTbl.getSelectionModel().select(selectedItem);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -298,6 +309,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
+		this.heatsTbl.setDisable(disabled);
+		this.scheduleTbl.setDisable(disabled);
 	}
 
 	private void updatePlaceholder(String text) {

@@ -90,11 +90,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public Race getRace(String raceNumber) {
-		return getRace(raceNumber, null);
-	}
-
-	@Override
 	public Race getRace(String raceNumber, String graphName) {
 		EntityManager entityManager = super.db.getEntityManager();
 
@@ -340,12 +335,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Heat> getHeats() {
+	public List<Heat> getHeats(String graphName) {
 		EntityManager entityManager = this.db.getEntityManager();
 
-		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta", Heat.class)
-				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
+		TypedQuery<Heat> query = entityManager
+				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta", Heat.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta());
+		if (graphName != null) {
+			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
+			query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityGraph);
+		}
+
+		return query.getResultList();
 	}
 
 	private List<Heat> getOfficialHeats() {

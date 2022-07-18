@@ -1,4 +1,4 @@
-package de.regatta_hd.app;
+package de.regatta_hd.appassembler;
 
 import de.regatta_hd.ui.RegattaHD;
 

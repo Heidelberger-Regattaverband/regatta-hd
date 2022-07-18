@@ -22,11 +22,9 @@ public interface RegattaDAO {
 
 	List<Race> getRaces(String graphName);
 
-	Race getRace(String raceNumber);
-
 	Race getRace(String raceNumber, String graphName);
 
-	List<Heat> getHeats();
+	List<Heat> getHeats(String graphName);
 
 	List<ResultEntry> getOfficialResults();
 

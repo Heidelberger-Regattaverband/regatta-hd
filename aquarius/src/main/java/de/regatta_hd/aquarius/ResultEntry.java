@@ -77,18 +77,11 @@ public class ResultEntry {
 		return getPoints(3);
 	}
 
-	public String getState() {
-		switch (this.heat.getState()) {
-		case 5:
-			return "beendet";
-		case 4:
-			return "offiziel";
-		default:
-			return "-";
-		}
+	public String getStateLabel() {
+		return this.heat.getStateLabel();
 	}
 
-	private String getRegistrationName(final int index) {
+	private String getRegistrationName(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getRegistration() != null) {
 			return getRegistrationLabel(heatResult.get(index).getRegistration());
@@ -96,7 +89,7 @@ public class ResultEntry {
 		return null;
 	}
 
-	private Integer getPoints(final int index) {
+	private Integer getPoints(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getFinalResult() != null) {
 			return heatResult.get(index).getFinalResult().getPoints();

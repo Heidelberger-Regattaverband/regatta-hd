@@ -18,7 +18,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -27,13 +30,16 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Event")
 // lombok
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Regatta {
 
 	@Id
 	@Column(name = "Event_ID")
 	@ToString.Include(rank = 20)
+	@Include
 	private int id;
 
 	@Column(name = "Event_Title", nullable = false, length = 64)
@@ -56,37 +62,37 @@ public class Regatta {
 	@OneToMany(targetEntity = Registration.class, mappedBy = "regatta")
 	private List<Registration> registrations;
 
-	@Column(name = "Event_BoardMemberA", length = 32)
+	@Column(name = "Event_BoardMemberA")
 	private String boardMemberA;
 
-	@Column(name = "Event_BoardMemberB", length = 32)
+	@Column(name = "Event_BoardMemberB")
 	private String boardMemberB;
 
 	@Column(name = "Event_DefaultDistance")
 	private Integer defaultDistance;
 
-	@Column(name = "Event_FootLogo", length = 64)
+	@Column(name = "Event_FootLogo")
 	private String footLogo;
 
-	@Column(name = "Event_HeadLogo_A", length = 64)
+	@Column(name = "Event_HeadLogo_A")
 	private String headLogoA;
 
-	@Column(name = "Event_HeadLogo_B", length = 64)
+	@Column(name = "Event_HeadLogo_B")
 	private String headLogoB;
 
-	@Column(name = "Event_SubTitle", length = 32)
+	@Column(name = "Event_SubTitle")
 	private String subTitle;
 
-	@Column(name = "Event_TrackDirection", length = 3)
+	@Column(name = "Event_TrackDirection")
 	private String trackDirection;
 
-	@Column(name = "Event_Type", length = 1)
+	@Column(name = "Event_Type")
 	private String type;
 
-	@Column(name = "Event_Url", length = 64)
+	@Column(name = "Event_Url")
 	private String url;
 
-	@Column(name = "Event_Venue", length = 32)
+	@Column(name = "Event_Venue")
 	private String venue;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -115,25 +121,9 @@ public class Regatta {
 	@Transient
 	private boolean active;
 
+	// JavaFX properties
 	public BooleanProperty activeProperty() {
 		return new SimpleBooleanProperty(this.active);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Regatta other = (Regatta) obj;
-		return this.id == other.id;
-	}
-
-	@Override
-	public int hashCode() {
-		return this.id;
 	}
 
 }
