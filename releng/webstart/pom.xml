@@ -35,10 +35,6 @@
             <manifest>
               <mainClass>${mainClass}</mainClass>
             </manifest>
-            <manifestEntries>
-              <Permissions>all-permissions</Permissions>
-              <Codebase>*</Codebase>
-            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
