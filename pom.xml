@@ -80,7 +80,7 @@
     <module>aquarius</module>
     <module>ui</module>
     <module>schemas</module>
-    <module>releng/app</module>
+    <module>releng/appassembler</module>
     <module>releng/webstart</module>
   </modules>
 

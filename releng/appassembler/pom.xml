@@ -9,10 +9,10 @@
   </parent>
 
   <artifactId>app</artifactId>
-  <name>Regatta HD - Application</name>
+  <name>Regatta HD - Appassembler</name>
 
   <properties>
-    <mainClass>de.regatta_hd.app.Main</mainClass>
+    <mainClass>de.regatta_hd.appassembler.Main</mainClass>
   </properties>
 
   <dependencies>
