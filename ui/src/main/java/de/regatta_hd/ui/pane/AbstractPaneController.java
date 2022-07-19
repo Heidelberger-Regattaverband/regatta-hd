@@ -2,7 +2,11 @@ package de.regatta_hd.ui.pane;
 
 import org.controlsfx.dialog.ProgressDialog;
 
+import com.google.inject.Inject;
+
+import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.db.DBTaskRunner;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -14,6 +18,11 @@ abstract class AbstractPaneController extends AbstractBaseController {
 
 	@FXML
 	private Pane rootPane;
+
+	@Inject
+	protected DBTaskRunner dbTaskRunner;
+	@Inject
+	protected DBConnection db;
 
 	protected Window getWindow() {
 		return this.rootPane.getScene().getWindow();
