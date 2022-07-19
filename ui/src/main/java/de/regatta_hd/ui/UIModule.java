@@ -17,10 +17,9 @@ import javafx.beans.property.SimpleBooleanProperty;
  * The guice module to register UI components.
  */
 public class UIModule extends AbstractModule {
+	private static final Logger logger = Logger.getLogger(UIModule.class.getName());
 
 	public static final String CONFIG_SHOW_ID_COLUMN = "config.showIdColumn";
-
-	private static final java.util.logging.Logger logger = Logger.getLogger(UIModule.class.getCanonicalName());
 
 	@Override
 	protected void configure() {

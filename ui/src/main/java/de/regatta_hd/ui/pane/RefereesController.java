@@ -31,7 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class RefereesController extends AbstractBaseController {
+public class RefereesController extends AbstractPaneController {
 	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
 
 	@Inject

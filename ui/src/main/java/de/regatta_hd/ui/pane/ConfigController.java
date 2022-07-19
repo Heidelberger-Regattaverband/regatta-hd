@@ -6,14 +6,12 @@ import java.util.ResourceBundle;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import de.regatta_hd.commons.fx.stage.Controller;
 import de.regatta_hd.ui.UIModule;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 
-public class ConfigController implements Initializable, Controller {
+public class ConfigController extends AbstractBaseController {
 
 	@FXML
 	private CheckBox showIdColumnCbox;
@@ -29,7 +27,7 @@ public class ConfigController implements Initializable, Controller {
 
 	@Override
 	public void shutdown() {
-		// TODO Auto-generated method stub
+		// nothing to clean-up yet
 	}
 
 }
