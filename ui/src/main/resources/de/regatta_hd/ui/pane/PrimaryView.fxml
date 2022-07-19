@@ -9,10 +9,9 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="de.regatta_hd.ui.pane.PrimaryController">
   <top>
     <VBox>
@@ -31,6 +30,8 @@
               <items>
                 <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.regattasMitm.text" />
                 <MenuItem fx:id="refereesMitm" onAction="#handleRefereesOnAction" text="%common.referees" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem id="configMitm" mnemonicParsing="false" onAction="#handleConfigOnAction" text="%common.config" />
               </items>
             </Menu>
             <Menu text="%common.regatta">
@@ -58,8 +59,8 @@
                 <RegattaStringConverter />
               </converter>
             </ComboBox>
-            <Label text="%PrimaryView.database"/>
-            <Label fx:id="dbNameLbl"/>
+            <Label text="%PrimaryView.database" />
+            <Label fx:id="dbNameLbl" />
           </items>
         </ToolBar>
       </children>

@@ -185,6 +185,11 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleConfigOnAction() {
+		openStage("ConfigView.fxml", getText("common.config"));
+	}
+
+	@FXML
 	void handleRacesOnAction() {
 		openStage("RacesView.fxml", getText("PrimaryView.racesMitm.text"));
 	}

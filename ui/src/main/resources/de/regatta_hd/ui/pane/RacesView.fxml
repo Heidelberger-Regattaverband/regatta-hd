@@ -113,7 +113,7 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
+            <TableColumn fx:id="regsIdCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>id</property>
