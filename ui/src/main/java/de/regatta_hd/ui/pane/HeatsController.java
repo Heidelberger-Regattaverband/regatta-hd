@@ -4,11 +4,11 @@ import static java.util.Objects.nonNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,6 +25,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -107,21 +109,38 @@ public class HeatsController extends AbstractRegattaDAOController {
 	}
 
 	private void openPort(SerialPort port) {
-		boolean openPort = port.isOpen() || port.openPort();
-		if (openPort) {
-			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
-				byte[] buffer = new byte[1024];
-				int read = portIn.read(buffer);
-				while (read >= 0) {
-					System.out.println(buffer);
-					read = portIn.read(buffer);
-				}
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				port.closePort();
+		SerialPortDataListener listener = new SerialPortDataListener() {
+
+			@Override
+			public void serialEvent(SerialPortEvent event) {
+				event.getEventType();
+				System.out.println(Arrays.toString(event.getReceivedData()));
 			}
+
+			@Override
+			public int getListeningEvents() {
+				return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+			}
+		};
+		port.addDataListener(listener);
+
+		boolean openPort = port.isOpen() || port.openPort();
+
+		if (openPort) {
+
+//			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
+//				byte[] buffer = new byte[1024];
+//				int read = portIn.read(buffer);
+//				while (read >= 0) {
+//					System.out.println("Read " + read + ": "+ Arrays.toString(buffer));
+//					read = portIn.read(buffer);
+//				}
+//			} catch (IOException e) {
+//				logger.log(Level.SEVERE, e.getMessage(), e);
+//				FxUtils.showErrorMessage(getWindow(), e);
+//			} finally {
+//				port.closePort();
+//			}
 		} else {
 			FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
 		}
