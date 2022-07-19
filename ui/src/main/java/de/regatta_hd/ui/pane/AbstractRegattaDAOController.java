@@ -11,7 +11,7 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.ListenerManager;
 import javafx.application.Platform;
 
-abstract class AbstractRegattaDAOController extends AbstractBaseController {
+abstract class AbstractRegattaDAOController extends AbstractPaneController {
 
 	@Inject
 	protected RegattaDAO regattaDAO;

@@ -17,6 +17,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +35,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Referee {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Referee_ID")
+	@Include
 	private int id;
 
 	@Column(name = "Referee_LastName")
@@ -69,6 +73,7 @@ public class Referee {
 	@JoinColumn(name = "Referee_Nation_ID_FK")
 	private Nation nation;
 
+	// JavaFX properties
 	public BooleanProperty activeProperty() {
 		BooleanProperty property = new SimpleBooleanProperty(this.licenceState);
 		property.addListener((observable, oldValue, newValue) -> this.licenceState = newValue.booleanValue());

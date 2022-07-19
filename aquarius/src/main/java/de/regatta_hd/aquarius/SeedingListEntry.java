@@ -36,12 +36,7 @@ public class SeedingListEntry {
 	}
 
 	public String getBoat() {
-		StringBuilder boatBuilder = new StringBuilder();
-		boatBuilder.append(this.registration.getClub().getAbbreviation());
-		if (this.registration.getBoatNumber() != null) {
-			boatBuilder.append(" - Boot ").append(this.registration.getBoatNumber());
-		}
-		return boatBuilder.toString();
+		return getRegistration().getBoatLabel();
 	}
 
 	public Short getDevisionNumber() {

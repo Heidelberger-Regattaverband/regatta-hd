@@ -89,7 +89,7 @@ class AquariusDBTests extends BaseDBTest {
 		System.out.println(regatta.toString());
 
 		Race offer = aquariusDb.getExecutor().submit(() -> {
-			return regattaDAO.getRace("104");
+			return regattaDAO.getRace("104", null);
 		}).get();
 
 		assertEquals("104", offer.getNumber());

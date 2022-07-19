@@ -24,6 +24,8 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,7 +36,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
-@NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
+@NamedEntityGraphs(@NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
@@ -71,13 +73,17 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Heat {
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
+	public static final String GRAPH_ALL = "heat-all";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Comp_ID")
+	@Include
 	private int id;
 
 	/**

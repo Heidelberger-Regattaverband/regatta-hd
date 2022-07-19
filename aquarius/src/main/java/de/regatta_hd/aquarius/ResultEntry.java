@@ -81,7 +81,7 @@ public class ResultEntry {
 		return this.heat.getStateLabel();
 	}
 
-	private String getRegistrationName(final int index) {
+	private String getRegistrationName(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getRegistration() != null) {
 			return getRegistrationLabel(heatResult.get(index).getRegistration());
@@ -89,7 +89,7 @@ public class ResultEntry {
 		return null;
 	}
 
-	private Integer getPoints(final int index) {
+	private Integer getPoints(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getFinalResult() != null) {
 			return heatResult.get(index).getFinalResult().getPoints();

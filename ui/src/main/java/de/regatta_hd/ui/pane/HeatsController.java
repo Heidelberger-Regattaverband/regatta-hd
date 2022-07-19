@@ -23,13 +23,18 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.WorkbookUtils;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -65,18 +70,39 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
-	private TableColumn<Heat, String> numberCol;
-	@FXML
 	private TableColumn<Heat, Instant> timeCol;
+	@FXML
+	private TableColumn<Heat, Integer> heatsIdCol;
+	@FXML
+	private TableView<HeatRegistration> divisionTbl;
+	@FXML
+	private TableColumn<Heat, Integer> divisionIdCol;
+
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> scheduleList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.heatsIdCol.visibleProperty().bind(this.showIdColumn);
+		this.divisionIdCol.visibleProperty().bind(this.showIdColumn);
+
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
+		this.divisionTbl.setItems(this.scheduleList);
+
+		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				this.scheduleList.setAll(newSelection.getEntries());
+			} else {
+				this.scheduleList.clear();
+			}
+		});
 
 		loadHeats(false);
 	}
@@ -153,17 +179,18 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getHeats();
+			return this.regattaDAO.getHeats(Heat.GRAPH_ALL);
 		}, dbResult -> {
 			try {
 				this.heatsList.setAll(dbResult.getResult());
 				this.heatsTbl.sort();
-				FxUtils.autoResizeColumns(this.heatsTbl);
+				this.heatsTbl.getSelectionModel().select(selectedItem);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -289,6 +316,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
+		this.heatsTbl.setDisable(disabled);
+		this.divisionTbl.setDisable(disabled);
 	}
 
 	private void updatePlaceholder(String text) {

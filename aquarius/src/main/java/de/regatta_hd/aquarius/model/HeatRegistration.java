@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,12 +56,53 @@ public class HeatRegistration {
 	@OrderBy("rank")
 	private Set<Result> results;
 
+	@Transient
+	private Result finalResult;
+
 	/**
 	 * Returns result of final race.
 	 *
 	 * @return {@link Result} of final or <code>null</code> if not available
 	 */
 	public Result getFinalResult() {
-		return getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		if (this.finalResult == null) {
+			this.finalResult = getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		}
+		return this.finalResult;
+	}
+
+	public String getBib() {
+		Registration reg = getRegistration();
+		if (reg.getBib() != null) {
+			return reg.getBib().toString();
+		}
+		return null;
+	}
+
+	public String getBoatLabel() {
+		return getRegistration().getBoatLabel();
+	}
+
+	public String getResultDisplayValue() {
+		if (getFinalResult() != null) {
+			return getFinalResult().getDisplayValue();
+		}
+		return null;
+	}
+
+	public String getResultRank() {
+		Result result = getFinalResult();
+		if (result != null && result.getRank() > 0) {
+			return Byte.toString(getFinalResult().getRank());
+		}
+		return null;
+	}
+
+	public String getPoints() {
+		Result result = getFinalResult();
+		if (result != null && result.getPoints() != null) {
+			return result.getPoints().toString();
+		}
+		return null;
 	}
 }
