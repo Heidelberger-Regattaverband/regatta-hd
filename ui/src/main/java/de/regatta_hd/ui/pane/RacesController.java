@@ -22,8 +22,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-public class OffersController extends AbstractRegattaDAOController {
-	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
+public class RacesController extends AbstractRegattaDAOController {
+	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
 
 	// UI Controls
 	@FXML

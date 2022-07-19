@@ -186,7 +186,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleRacesOnAction() {
-		openStage("OffersView.fxml", getText("PrimaryView.racesMitm.text"));
+		openStage("RacesView.fxml", getText("PrimaryView.racesMitm.text"));
 	}
 
 	@FXML
