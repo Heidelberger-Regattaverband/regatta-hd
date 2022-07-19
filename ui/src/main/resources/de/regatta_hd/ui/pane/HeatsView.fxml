@@ -34,7 +34,7 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
+            <TableColumn fx:id="heatsIdCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>id</property>
@@ -94,7 +94,7 @@
             <Label text="%common.noDataAvailable" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
+            <TableColumn fx:id="scheduleIdCol" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>id</property>
