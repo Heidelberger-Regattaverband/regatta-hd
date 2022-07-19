@@ -4,6 +4,7 @@ import static java.util.Objects.nonNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -95,9 +96,35 @@ public class HeatsController extends AbstractRegattaDAOController {
 			}
 		});
 
+		this.serialPortsCBox.getSelectionModel().selectedItemProperty()
+				.addListener((obs, oldSelection, newSelection) -> {
+					openPort(newSelection);
+				});
+
 		loadHeats(false);
 		this.commPortsList.addAll(SerialPort.getCommPorts());
 		this.serialPortsCBox.setItems(this.commPortsList);
+	}
+
+	private void openPort(SerialPort port) {
+		boolean openPort = port.isOpen() || port.openPort();
+		if (openPort) {
+			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
+				byte[] buffer = new byte[1024];
+				int read = portIn.read(buffer);
+				while (read >= 0) {
+					System.out.println(buffer);
+					read = portIn.read(buffer);
+				}
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			} finally {
+				port.closePort();
+			}
+		} else {
+			FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
+		}
 	}
 
 	@Override
