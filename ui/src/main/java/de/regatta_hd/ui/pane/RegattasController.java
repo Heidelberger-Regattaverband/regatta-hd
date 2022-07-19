@@ -7,8 +7,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,11 +32,17 @@ public class RegattasController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Regatta, Integer> idCol;
 
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
+
 	private final ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		this.idCol.visibleProperty().bind(this.showIdColumn);
 
 		this.regattasTbl.setItems(this.regattasList);
 		this.regattasTbl.getSortOrder().add(this.idCol);

@@ -8,11 +8,16 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,8 +27,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-public class OffersController extends AbstractRegattaDAOController {
-	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
+public class RacesController extends AbstractRegattaDAOController {
+	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
 
 	// UI Controls
 	@FXML
@@ -38,9 +43,15 @@ public class OffersController extends AbstractRegattaDAOController {
 	private TableColumn<Race, Integer> idCol;
 	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
+	@FXML
+	private TableColumn<Race, Integer> regsIdCol;
 
 	@FXML
 	private TableView<Registration> regsTbl;
+
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
@@ -49,6 +60,9 @@ public class OffersController extends AbstractRegattaDAOController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+
+		this.idCol.visibleProperty().bind(this.showIdColumn);
+		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
 
 		// races table
 		this.racesTbl.setItems(this.racesList);

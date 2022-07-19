@@ -27,6 +27,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
@@ -34,7 +36,9 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.WorkbookUtils;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -74,9 +78,16 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, Instant> timeCol;
-
 	@FXML
-	private TableView<HeatRegistration> scheduleTbl;
+	private TableColumn<Heat, Integer> heatsIdCol;
+	@FXML
+	private TableView<HeatRegistration> divisionTbl;
+	@FXML
+	private TableColumn<Heat, Integer> divisionIdCol;
+
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
 	private final ObservableList<SerialPort> commPortsList = FXCollections.observableArrayList();
@@ -86,9 +97,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.heatsIdCol.visibleProperty().bind(this.showIdColumn);
+		this.divisionIdCol.visibleProperty().bind(this.showIdColumn);
+
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.scheduleTbl.setItems(this.scheduleList);
+		this.divisionTbl.setItems(this.scheduleList);
 
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
@@ -356,7 +370,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
 		this.heatsTbl.setDisable(disabled);
-		this.scheduleTbl.setDisable(disabled);
+		this.divisionTbl.setDisable(disabled);
 	}
 
 	private void updatePlaceholder(String text) {
