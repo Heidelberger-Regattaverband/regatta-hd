@@ -74,10 +74,10 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Heat, Integer> heatsIdCol;
 	@FXML
-	private TableColumn<Heat, Integer> scheduleIdCol;
-
+	private TableView<HeatRegistration> divisionTbl;
 	@FXML
-	private TableView<HeatRegistration> scheduleTbl;
+	private TableColumn<Heat, Integer> divisionIdCol;
+
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
@@ -90,11 +90,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 		super.initialize(location, resources);
 
 		this.heatsIdCol.visibleProperty().bind(this.showIdColumn);
-		this.scheduleIdCol.visibleProperty().bind(this.showIdColumn);
+		this.divisionIdCol.visibleProperty().bind(this.showIdColumn);
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.scheduleTbl.setItems(this.scheduleList);
+		this.divisionTbl.setItems(this.scheduleList);
 
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
@@ -317,7 +317,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.exportCsvBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
 		this.heatsTbl.setDisable(disabled);
-		this.scheduleTbl.setDisable(disabled);
+		this.divisionTbl.setDisable(disabled);
 	}
 
 	private void updatePlaceholder(String text) {

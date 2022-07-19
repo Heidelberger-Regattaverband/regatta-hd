@@ -9,26 +9,28 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<TabPane fx:controller="de.regatta_hd.ui.pane.ConfigController" xmlns="http://javafx.com/javafx/18"
-  xmlns:fx="http://javafx.com/fxml/1">
+<TabPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="de.regatta_hd.ui.pane.ConfigController">
   <tabs>
-    <Tab text="%config.common">
+    <Tab closable="false" text="%config.common">
       <content>
         <AnchorPane>
           <children>
-            <GridPane>
+            <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
               <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
               </padding>
               <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" />
-                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+                <ColumnConstraints />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints />
+                <RowConstraints />
               </rowConstraints>
               <children>
-                <CheckBox fx:id="showIdColumnCbox" text="%config.showIdColumn" GridPane.columnSpan="2" />
+                <CheckBox fx:id="showIdColumnCbox" text="%config.showIdColumn" GridPane.columnSpan="1" />
               </children>
             </GridPane>
           </children>

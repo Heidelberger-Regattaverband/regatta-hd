@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Referee;
@@ -19,6 +20,7 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,6 +58,10 @@ public class RefereesController extends AbstractPaneController {
 	@FXML
 	private TableColumn<Referee, Boolean> activeCol;
 
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
+
 	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
@@ -74,6 +80,7 @@ public class RefereesController extends AbstractPaneController {
 
 		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class, this.stateChangedEventListener);
 
+		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.activeCol.setCellValueFactory(cellData -> {
 			BooleanProperty property = cellData.getValue().activeProperty();
 			property.addListener((observable, newValue, oldValue) -> {
