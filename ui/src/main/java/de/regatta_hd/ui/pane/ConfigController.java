@@ -44,24 +44,12 @@ public class ConfigController extends AbstractBaseController {
 
 		this.serialPortsStartSignalList.addAll(SerialPort.getCommPorts());
 		this.serialPortStartSignalCBox.setItems(this.serialPortsStartSignalList);
-		int index = -1;
-		for (int i = 0; i < this.serialPortsStartSignalList.size(); i++) {
-			if (this.serialPortsStartSignalList.get(i).getSystemPortPath().equals(this.serialPortStartSignal.get())) {
-				index = i;
-				break;
-			}
-		}
+		int index = getIndex(this.serialPortsStartSignalList, this.serialPortStartSignal);
 		this.serialPortStartSignalCBox.getSelectionModel().select(index);
 
 		this.serialPortsTrafficLightList.addAll(SerialPort.getCommPorts());
-		this.serialPortTrafficLightCBox.setItems(this.serialPortsStartSignalList);
-		index = -1;
-		for (int i = 0; i < this.serialPortsTrafficLightList.size(); i++) {
-			if (this.serialPortsTrafficLightList.get(i).getSystemPortPath().equals(this.serialPortTrafficLight.get())) {
-				index = i;
-				break;
-			}
-		}
+		this.serialPortTrafficLightCBox.setItems(this.serialPortsTrafficLightList);
+		index = getIndex(this.serialPortsTrafficLightList, this.serialPortTrafficLight);
 		this.serialPortTrafficLightCBox.getSelectionModel().select(index);
 	}
 
@@ -75,7 +63,10 @@ public class ConfigController extends AbstractBaseController {
 		SerialPort serialPort = this.serialPortStartSignalCBox.getSelectionModel().getSelectedItem();
 		if (serialPort != null) {
 			this.serialPortStartSignal.set(serialPort.getSystemPortPath());
+		} else {
+			this.serialPortStartSignal.set(null);
 		}
+
 	}
 
 	@FXML
@@ -83,7 +74,22 @@ public class ConfigController extends AbstractBaseController {
 		SerialPort serialPort = this.serialPortTrafficLightCBox.getSelectionModel().getSelectedItem();
 		if (serialPort != null) {
 			this.serialPortTrafficLight.set(serialPort.getSystemPortPath());
+		} else {
+			this.serialPortTrafficLight.set(null);
 		}
+	}
+
+	// static helpers
+
+	private static int getIndex(ObservableList<SerialPort> list, StringProperty value) {
+		int index = -1;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getSystemPortPath().equals(value.get())) {
+				index = i;
+				break;
+			}
+		}
+		return index;
 	}
 
 }
