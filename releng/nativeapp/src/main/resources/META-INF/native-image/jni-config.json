@@ -1,9 +1,52 @@
 [
 {
+  "name":"[Lcom.fazecast.jSerialComm.SerialPort;"
+},
+{
   "name":"[Lcom.sun.glass.ui.Screen;"
 },
 {
   "name":"[Ljava.lang.String;"
+},
+{
+  "name":"[[Ljava.lang.String;"
+},
+{
+  "name":"com.fazecast.jSerialComm.SerialPort",
+  "fields":[
+    {"name":"autoFlushIOBuffers"}, 
+    {"name":"baudRate"}, 
+    {"name":"comPort"}, 
+    {"name":"dataBits"}, 
+    {"name":"disableConfig"}, 
+    {"name":"disableExclusiveLock"}, 
+    {"name":"eventFlags"}, 
+    {"name":"eventListenerRunning"}, 
+    {"name":"flowControl"}, 
+    {"name":"friendlyName"}, 
+    {"name":"isDtrEnabled"}, 
+    {"name":"isRtsEnabled"}, 
+    {"name":"parity"}, 
+    {"name":"portDescription"}, 
+    {"name":"portHandle"}, 
+    {"name":"portLocation"}, 
+    {"name":"readTimeout"}, 
+    {"name":"receiveDeviceQueueSize"}, 
+    {"name":"requestElevatedPermissions"}, 
+    {"name":"rs485ActiveHigh"}, 
+    {"name":"rs485DelayAfter"}, 
+    {"name":"rs485DelayBefore"}, 
+    {"name":"rs485EnableTermination"}, 
+    {"name":"rs485Mode"}, 
+    {"name":"rs485RxDuringTx"}, 
+    {"name":"sendDeviceQueueSize"}, 
+    {"name":"stopBits"}, 
+    {"name":"timeoutMode"}, 
+    {"name":"writeTimeout"}, 
+    {"name":"xoffStopChar"}, 
+    {"name":"xonStartChar"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.glass.ui.Application",
@@ -19,6 +62,25 @@
     {"name":"notifyWillHide","parameterTypes":[] }, 
     {"name":"notifyWillResignActive","parameterTypes":[] }, 
     {"name":"notifyWillUnhide","parameterTypes":[] }
+  ]
+},
+{
+  "name":"com.sun.glass.ui.CommonDialogs$ExtensionFilter",
+  "methods":[
+    {"name":"extensionsToArray","parameterTypes":[] }, 
+    {"name":"getDescription","parameterTypes":[] }
+  ]
+},
+{
+  "name":"com.sun.glass.ui.CommonDialogs$FileChooserResult",
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List","com.sun.glass.ui.CommonDialogs$ExtensionFilter"] }]
+},
+{
+  "name":"com.sun.glass.ui.EventLoop",
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"enter","parameterTypes":[] }, 
+    {"name":"leave","parameterTypes":["java.lang.Object"] }
   ]
 },
 {
@@ -104,6 +166,10 @@
   "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
 },
 {
+  "name":"java.io.File",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
   "name":"java.lang.Boolean",
   "methods":[{"name":"booleanValue","parameterTypes":[] }]
 },
@@ -117,6 +183,9 @@
     {"name":"getPlatformClassLoader","parameterTypes":[] }, 
     {"name":"loadClass","parameterTypes":["java.lang.String"] }
   ]
+},
+{
+  "name":"java.lang.Exception"
 },
 {
   "name":"java.lang.Integer",
@@ -136,6 +205,7 @@
 {
   "name":"java.lang.String",
   "methods":[
+    {"name":"<init>","parameterTypes":["byte[]","java.lang.String"] }, 
     {"name":"lastIndexOf","parameterTypes":["int"] }, 
     {"name":"substring","parameterTypes":["int"] }
   ]
@@ -144,8 +214,13 @@
   "name":"java.lang.System",
   "methods":[
     {"name":"getProperty","parameterTypes":["java.lang.String"] }, 
+    {"name":"load","parameterTypes":["java.lang.String"] }, 
     {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }
   ]
+},
+{
+  "name":"java.util.ArrayList",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"java.util.List",

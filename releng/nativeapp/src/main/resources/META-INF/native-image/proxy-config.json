@@ -1,5 +1,14 @@
 [
   {
+    "interfaces":["jakarta.xml.bind.annotation.XmlAccessorType","org.glassfish.jaxb.core.v2.model.annotation.Locatable"]}
+  ,
+  {
+    "interfaces":["jakarta.xml.bind.annotation.XmlAnyAttribute","org.glassfish.jaxb.core.v2.model.annotation.Locatable"]}
+  ,
+  {
+    "interfaces":["jakarta.xml.bind.annotation.XmlAnyElement","org.glassfish.jaxb.core.v2.model.annotation.Locatable"]}
+  ,
+  {
     "interfaces":["net.bytebuddy.description.method.MethodDescription$InDefinedShape$AbstractBase$Executable"]}
   ,
   {
