@@ -15,6 +15,9 @@
   </properties>
 
   <dependencies>
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>aquarius</artifactId>
@@ -39,22 +42,9 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
     </dependency>
-
-    <!-- cross-platform fat jar -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <classifier>win</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-graphics</artifactId>
-      <classifier>linux</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-graphics</artifactId>
-      <classifier>mac</classifier>
     </dependency>
 
     <dependency>

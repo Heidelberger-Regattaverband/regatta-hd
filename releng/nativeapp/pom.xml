@@ -8,11 +8,11 @@
     <relativePath>../..</relativePath>
   </parent>
 
-  <artifactId>appassembler</artifactId>
-  <name>Regatta HD - Appassembler</name>
+  <artifactId>nativeapp</artifactId>
+  <name>Regatta HD - Native Application</name>
 
   <properties>
-    <mainClass>de.regatta_hd.appassembler.Main</mainClass>
+    <mainClass>de.regatta_hd.nativeapp.Main</mainClass>
   </properties>
 
   <dependencies>
@@ -36,52 +36,38 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <classifier>linux</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-graphics</artifactId>
       <classifier>mac</classifier>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
-          <archive>
-            <manifest>
-              <mainClass>${mainClass}</mainClass>
-            </manifest>
-            <manifestEntries>
-              <Permissions>all-permissions</Permissions>
-              <Codebase>*</Codebase>
-            </manifestEntries>
-          </archive>
+          <mainClass>${mainClass}</mainClass>
         </configuration>
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>appassembler-maven-plugin</artifactId>
+        <groupId>com.gluonhq</groupId>
+        <artifactId>gluonfx-maven-plugin</artifactId>
         <configuration>
-          <programs>
-            <program>
-              <mainClass>${mainClass}</mainClass>
-              <id>app</id>
-              <name>regatta-hd</name>
-            </program>
-          </programs>
+          <target>host</target>
+          <mainClass>${mainClass}</mainClass>
+          <appIdentifier>regatta-hd</appIdentifier>
         </configuration>
-        <executions>
+
+        <!-- executions>
           <execution>
+            <id>gluonfx-build</id>
             <goals>
-              <goal>assemble</goal>
+              <goal>compile</goal>
+              <goal>link</goal>
             </goals>
           </execution>
-        </executions>
+        </executions -->
       </plugin>
 
     </plugins>

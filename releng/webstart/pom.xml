@@ -18,10 +18,32 @@
   </properties>
 
   <dependencies>
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>ui</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <!-- ============================= -->
+    <!-- JavaFX cross-platform support -->
+    <!-- ============================= -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
     </dependency>
   </dependencies>
 
