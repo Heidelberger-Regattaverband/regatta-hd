@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.util.SerialPortStringConverter?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -9,28 +12,61 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<TabPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="de.regatta_hd.ui.pane.ConfigController">
+<TabPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.ConfigController">
   <tabs>
     <Tab closable="false" text="%config.common">
       <content>
         <AnchorPane>
           <children>
-            <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
+            <GridPane hgap="10.0" vgap="10.0">
               <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
               </padding>
               <columnConstraints>
                 <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
-                <ColumnConstraints />
+                <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints />
                 <RowConstraints />
               </rowConstraints>
               <children>
-                <CheckBox fx:id="showIdColumnCbox" text="%config.showIdColumn" GridPane.columnSpan="1" />
+                <CheckBox fx:id="showIdColumnCbox" text="%config.showIdColumn" GridPane.columnSpan="2" />
+              </children>
+            </GridPane>
+          </children>
+        </AnchorPane>
+      </content>
+    </Tab>
+    <Tab closable="false" text="%config.serial">
+      <content>
+        <AnchorPane>
+          <children>
+            <GridPane hgap="10.0" vgap="10.0">
+              <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+              </padding>
+              <columnConstraints>
+                <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+                <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+              </rowConstraints>
+              <children>
+                <Label text="%config.serialPort.startSignal" />
+                <ComboBox fx:id="serialPortStartSignalCBox" onAction="#handleSerialPortStartSignalOnAction" prefWidth="300" GridPane.columnIndex="1">
+                  <converter>
+                    <SerialPortStringConverter />
+                  </converter>
+                </ComboBox>
+                <Label text="%config.serialPort.trafficLight" GridPane.rowIndex="1" />
+                <ComboBox fx:id="serialPortTrafficLightCBox" onAction="#handleSerialPortTrafficLightOnAction" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <converter>
+                    <SerialPortStringConverter />
+                  </converter>
+                </ComboBox>
               </children>
             </GridPane>
           </children>

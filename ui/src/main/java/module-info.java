@@ -6,6 +6,7 @@ module de.regatta_hd.ui {
 
 	requires org.apache.commons.lang3;
 	requires org.apache.poi.poi;
+	requires com.fazecast.jSerialComm;
 
 	// regatta_hd modules
 	requires de.regatta_hd.aquarius;

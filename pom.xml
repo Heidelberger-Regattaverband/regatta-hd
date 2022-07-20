@@ -71,6 +71,9 @@
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.2</poi.version>
+
+    <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
+    <jSerialComm.version>2.9.2</jSerialComm.version>
   </properties>
 
   <modules>
@@ -227,6 +230,11 @@
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
         <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fazecast</groupId>
+        <artifactId>jSerialComm</artifactId>
+        <version>${jSerialComm.version}</version>
       </dependency>
 
       <!-- ========== -->
