@@ -7,6 +7,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.regatta_hd.commons.fx.stage.BaseController;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.SerialPortUtils;
 import javafx.beans.property.BooleanProperty;
@@ -16,7 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 
-public class ConfigController extends AbstractBaseController {
+public class ConfigController extends BaseController {
 
 	@FXML
 	private CheckBox showIdColumnCbox;

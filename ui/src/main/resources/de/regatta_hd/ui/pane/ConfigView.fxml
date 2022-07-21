@@ -31,7 +31,7 @@
                 <RowConstraints />
               </rowConstraints>
               <children>
-                <CheckBox fx:id="showIdColumnCbox" text="%config.showIdColumn" GridPane.columnSpan="2" />
+                <CheckBox fx:id="showIdColumnCbox" text="%config.showIdColumn" />
               </children>
             </GridPane>
           </children>

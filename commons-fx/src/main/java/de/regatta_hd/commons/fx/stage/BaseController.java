@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.pane;
+package de.regatta_hd.commons.fx.stage;
 
 import static java.util.Objects.requireNonNull;
 
@@ -6,10 +6,9 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import de.regatta_hd.commons.fx.stage.Controller;
 import javafx.fxml.Initializable;
 
-abstract class AbstractBaseController implements Initializable, Controller {
+public abstract class BaseController implements Initializable, Controller {
 
 	protected URL location;
 	protected ResourceBundle resources;
