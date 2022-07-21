@@ -3,6 +3,7 @@
 <?import de.regatta_hd.commons.fx.control.DateTimeTableCellFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -24,6 +25,7 @@
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
         <Button fx:id="exportCsvBtn" onAction="#handleExportCsvOnAction" text="%heats.csv.export" />
         <Button fx:id="exportXslBtn" onAction="#handleExportXslOnAction" text="%heats.xsl.export" />
+        <ToggleButton fx:id="startSignalTbtn" onAction="#handleStartSignalOnAction" text="%heats.startSignal" />
       </items>
     </ToolBar>
     <SplitPane dividerPositions="0.7" orientation="VERTICAL" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">

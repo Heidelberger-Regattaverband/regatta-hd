@@ -8,9 +8,9 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.ui.UIModule;
+import de.regatta_hd.ui.util.SerialPortUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -35,21 +35,19 @@ public class ConfigController extends AbstractBaseController {
 	@Named(UIModule.CONFIG_SERIAL_PORT_TRAFFIC_LIGHT)
 	private StringProperty serialPortTrafficLight;
 
-	private final ObservableList<SerialPort> serialPortsStartSignalList = FXCollections.observableArrayList();
-	private final ObservableList<SerialPort> serialPortsTrafficLightList = FXCollections.observableArrayList();
+	private final ObservableList<SerialPort> serialPortsStartSignalList = SerialPortUtils.getAllSerialPorts(true);
+	private final ObservableList<SerialPort> serialPortsTrafficLightList = SerialPortUtils.getAllSerialPorts(true);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.showIdColumnCbox.selectedProperty().bindBidirectional(this.showIdColumn);
 
-		this.serialPortsStartSignalList.addAll(SerialPort.getCommPorts());
 		this.serialPortStartSignalCBox.setItems(this.serialPortsStartSignalList);
-		int index = getIndex(this.serialPortsStartSignalList, this.serialPortStartSignal);
+		int index = SerialPortUtils.findByPortPath(this.serialPortsStartSignalList, this.serialPortStartSignal.get());
 		this.serialPortStartSignalCBox.getSelectionModel().select(index);
 
-		this.serialPortsTrafficLightList.addAll(SerialPort.getCommPorts());
 		this.serialPortTrafficLightCBox.setItems(this.serialPortsTrafficLightList);
-		index = getIndex(this.serialPortsTrafficLightList, this.serialPortTrafficLight);
+		index = SerialPortUtils.findByPortPath(this.serialPortsTrafficLightList, this.serialPortTrafficLight.get());
 		this.serialPortTrafficLightCBox.getSelectionModel().select(index);
 	}
 
@@ -61,35 +59,13 @@ public class ConfigController extends AbstractBaseController {
 	@FXML
 	void handleSerialPortStartSignalOnAction() {
 		SerialPort serialPort = this.serialPortStartSignalCBox.getSelectionModel().getSelectedItem();
-		if (serialPort != null) {
-			this.serialPortStartSignal.set(serialPort.getSystemPortPath());
-		} else {
-			this.serialPortStartSignal.set(null);
-		}
-
+		this.serialPortStartSignal.set(serialPort != null ? serialPort.getSystemPortPath() : null);
 	}
 
 	@FXML
 	void handleSerialPortTrafficLightOnAction() {
 		SerialPort serialPort = this.serialPortTrafficLightCBox.getSelectionModel().getSelectedItem();
-		if (serialPort != null) {
-			this.serialPortTrafficLight.set(serialPort.getSystemPortPath());
-		} else {
-			this.serialPortTrafficLight.set(null);
-		}
-	}
-
-	// static helpers
-
-	private static int getIndex(ObservableList<SerialPort> list, StringProperty value) {
-		int index = -1;
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getSystemPortPath().equals(value.get())) {
-				index = i;
-				break;
-			}
-		}
-		return index;
+		this.serialPortTrafficLight.set(serialPort != null ? serialPort.getSystemPortPath() : null);
 	}
 
 }

@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +38,10 @@ import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
+import de.regatta_hd.ui.util.SerialPortUtils;
 import de.regatta_hd.ui.util.WorkbookUtils;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -46,6 +49,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 
 public class HeatsController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
@@ -72,6 +76,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private Button exportXslBtn;
 	@FXML
+	private ToggleButton startSignalTbtn;
+	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, Instant> timeCol;
@@ -85,9 +91,14 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
+	@Inject
+	@Named(UIModule.CONFIG_SERIAL_PORT_START_SIGNAL)
+	private StringProperty serialPortStartSignal;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
-	private final ObservableList<HeatRegistration> scheduleList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> devisionList = FXCollections.observableArrayList();
+
+	private Optional<SerialPort> serialPortOpt;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -98,38 +109,49 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.divisionTbl.setItems(this.scheduleList);
+		this.divisionTbl.setItems(this.devisionList);
 
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
-				this.scheduleList.setAll(newSelection.getEntries());
+				this.devisionList.setAll(newSelection.getEntries());
 			} else {
-				this.scheduleList.clear();
+				this.devisionList.clear();
 			}
 		});
+
+		this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
+		this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
 
 		loadHeats(false);
 	}
 
-	private void openPort(SerialPort port) {
-		SerialPortDataListener listener = new SerialPortDataListener() {
+	@Override
+	public void shutdown() {
+		closePort();
+		// don't forget to shutdown parent class
+		super.shutdown();
+	}
 
-			@Override
-			public void serialEvent(SerialPortEvent event) {
-				event.getEventType();
-				System.out.println(Arrays.toString(event.getReceivedData()));
-			}
+	private void openPort() {
+		if (this.serialPortOpt.isPresent()) {
+			SerialPort serialPort = this.serialPortOpt.get();
+			boolean openPort = serialPort.isOpen() || serialPort.openPort();
 
-			@Override
-			public int getListeningEvents() {
-				return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
-			}
-		};
-		port.addDataListener(listener);
+			if (openPort) {
+				SerialPortDataListener serialPortListener = new SerialPortDataListener() {
 
-		boolean openPort = port.isOpen() || port.openPort();
+					@Override
+					public void serialEvent(SerialPortEvent event) {
+						event.getEventType();
+						System.out.println(Arrays.toString(event.getReceivedData()));
+					}
 
-		if (openPort) {
+					@Override
+					public int getListeningEvents() {
+						return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+					}
+				};
+				serialPort.addDataListener(serialPortListener);
 
 //			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
 //				byte[] buffer = new byte[1024];
@@ -144,8 +166,17 @@ public class HeatsController extends AbstractRegattaDAOController {
 //			} finally {
 //				port.closePort();
 //			}
-		} else {
-			FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
+			} else {
+				FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
+			}
+		}
+	}
+
+	private void closePort() {
+		if (this.serialPortOpt.isPresent()) {
+			SerialPort serialPort = this.serialPortOpt.get();
+			serialPort.removeDataListener();
+			serialPort.closePort();
 		}
 	}
 
@@ -434,6 +465,15 @@ public class HeatsController extends AbstractRegattaDAOController {
 				.append(DELIMITER).append(HEADER_BOOT_BAHN_1).append(DELIMITER).append(HEADER_BOOT_BAHN_2)
 				.append(DELIMITER).append(HEADER_BOOT_BAHN_3).append(DELIMITER).append(HEADER_BOOT_BAHN_4)
 				.append(DELIMITER).append(HEADER_STATUS).append(StringUtils.LF);
+	}
+
+	@FXML
+	public void handleStartSignalOnAction() {
+		if (this.startSignalTbtn.isSelected()) {
+			openPort();
+		} else {
+			closePort();
+		}
 	}
 
 }
