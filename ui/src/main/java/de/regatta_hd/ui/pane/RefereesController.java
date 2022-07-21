@@ -19,6 +19,7 @@ import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
 import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import javafx.beans.property.BooleanProperty;
@@ -33,7 +34,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class RefereesController extends AbstractPaneController {
+public class RefereesController extends PaneController {
 	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
 
 	@Inject
