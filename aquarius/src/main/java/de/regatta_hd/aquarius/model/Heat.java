@@ -36,7 +36,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
-@NamedEntityGraphs(@NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
+@NamedEntityGraphs({ @NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
@@ -66,7 +66,25 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "boatClass"), //
 						@NamedAttributeNode(value = "raceMode") //
 				}) //
-}))
+}), @NamedEntityGraph(name = Heat.GRAPH_ENTRIES, attributeNodes = {
+		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
+		@NamedAttributeNode(value = "race", subgraph = "race") //
+}, subgraphs = { @NamedSubgraph(name = "heat.entries", //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "registration", subgraph = "registration"), //
+				@NamedAttributeNode(value = "results") //
+		}), //
+		@NamedSubgraph(name = "registration", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "club"), //
+				}), //
+		@NamedSubgraph(name = "race", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "ageClass"), //
+						@NamedAttributeNode(value = "boatClass"), //
+						@NamedAttributeNode(value = "raceMode") //
+				}) //
+}) })
 //lombok
 @Getter
 @Setter
@@ -79,6 +97,7 @@ public class Heat {
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	public static final String GRAPH_ALL = "heat-all";
+	public static final String GRAPH_ENTRIES = "heat-entries";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -220,24 +239,24 @@ public class Heat {
 	}
 
 	public String getRaceNumber() {
-		return this.race.getNumber();
+		return getRace().getNumber();
 	}
 
 	public String getRaceShortLabel() {
-		return this.race.getShortLabel();
+		return getRace().getShortLabel();
 	}
 
 	public String getDevisionLabel() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getRoundCode()).append(getRoundLabel());
-		if (this.race.getAgeClass().isMasters()) {
+		if (getRace().getAgeClass().isMasters()) {
 			builder.append(", AK ").append(getGroupValueLabel());
 		}
 		return builder.toString();
 	}
 
 	public String getRaceLongLabel() {
-		return this.race.getLongLabel();
+		return getRace().getLongLabel();
 	}
 
 	public String getStateLabel() {
