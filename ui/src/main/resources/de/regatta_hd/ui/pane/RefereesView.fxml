@@ -48,7 +48,7 @@
             <CheckBoxTableCellFactory fx:factory="editable" />
           </cellFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="true" text="%common.lastName" prefWidth="130">
+        <TableColumn fx:id="lastNameCol" reorderable="false" sortable="true" text="%common.lastName" prefWidth="130">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>lastName</property>

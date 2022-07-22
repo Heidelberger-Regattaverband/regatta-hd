@@ -58,6 +58,8 @@ public class RefereesController extends PaneController {
 	private TableColumn<Referee, String> idCol;
 	@FXML
 	private TableColumn<Referee, Boolean> activeCol;
+	@FXML
+	private TableColumn<Referee, String> lastNameCol;
 
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
@@ -99,7 +101,7 @@ public class RefereesController extends PaneController {
 			return property;
 		});
 
-		this.refereesTbl.getSortOrder().add(this.idCol);
+		this.refereesTbl.getSortOrder().add(this.lastNameCol);
 
 		// table sorting and filtering: https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
