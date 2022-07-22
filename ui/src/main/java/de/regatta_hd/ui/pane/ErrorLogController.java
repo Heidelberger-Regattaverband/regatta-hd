@@ -153,6 +153,7 @@ public class ErrorLogController extends PaneController {
 
 	private void loadLogRecords(boolean refresh) {
 		String selectedHostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
+		LogRecord selectedItem = this.logRecordsTbl.getSelectionModel().getSelectedItem();
 
 		if (selectedHostName != null) {
 			disableButtons(true);
@@ -167,6 +168,7 @@ public class ErrorLogController extends PaneController {
 			}, dbResult -> {
 				try {
 					this.logRecordsList.setAll(dbResult.getResult());
+					this.logRecordsTbl.getSelectionModel().select(selectedItem);
 					FxUtils.autoResizeColumns(this.logRecordsTbl);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
