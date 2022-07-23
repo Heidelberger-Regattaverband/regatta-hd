@@ -1,4 +1,6 @@
-package de.regatta_hd.ui;
+package de.regatta_hd.nativeapp;
+
+import de.regatta_hd.ui.RegattaHD;
 
 public class Main {
 

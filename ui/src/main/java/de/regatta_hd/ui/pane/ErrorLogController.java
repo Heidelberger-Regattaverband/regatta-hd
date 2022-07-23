@@ -10,6 +10,9 @@ import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.LogRecord;
+import de.regatta_hd.commons.core.ListenerManager;
+import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
@@ -17,24 +20,30 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class ErrorLogController extends AbstractBaseController {
+public class ErrorLogController extends PaneController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
 
 	@FXML
 	private Button refreshBtn;
 	@FXML
-	private TableView<LogRecord> logRecordsTbl;
-	@FXML
 	private ComboBox<String> hostNameCbx;
+	@FXML
+	private Button deleteBtn;
+
+	@FXML
+	private TableView<LogRecord> logRecordsTbl;
 	@FXML
 	private TextArea stackTraceTar;
 	@FXML
 	private TextField throwableTxf;
 
+	@Inject
+	private ListenerManager listenerManager;
 	@Inject
 	private MasterDataDAO dao;
 	@Inject
@@ -43,6 +52,17 @@ public class ErrorLogController extends AbstractBaseController {
 
 	private final ObservableList<LogRecord> logRecordsList = FXCollections.observableArrayList();
 	private final ObservableList<String> hostNamesList = FXCollections.observableArrayList();
+
+	private final StateChangedEventListener eventListener = event -> {
+		disableButtons(!event.getDBConnection().isOpen());
+
+		if (event.getDBConnection().isOpen()) {
+			loadHostNames();
+		} else {
+			this.hostNamesList.clear();
+			this.logRecordsList.clear();
+		}
+	};
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -63,32 +83,65 @@ public class ErrorLogController extends AbstractBaseController {
 			}
 		});
 
+		this.listenerManager.addListener(StateChangedEventListener.class, this.eventListener);
+
 		loadHostNames();
 	}
 
 	@Override
 	public void shutdown() {
-		// nothing to shutdown
+		this.listenerManager.removeListener(StateChangedEventListener.class, this.eventListener);
 	}
 
 	@FXML
 	void handleRefreshOnAction() {
-		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), true);
+		loadLogRecords(true);
 	}
 
 	@FXML
 	void handleHostNameOnAction() {
-		loadLogRecords(this.hostNameCbx.getSelectionModel().getSelectedItem(), false);
+		loadLogRecords(false);
+	}
+
+	@FXML
+	void handleDeleteOnAction() {
+		disableButtons(true);
+
+		String selectedHostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
+		boolean delete = FxUtils.showConfirmDialog(getWindow(), getText("errorLog.confirmDelete.title"),
+				getText("errorLog.confirmDelete.question", selectedHostName));
+
+		if (delete) {
+			super.dbTaskRunner.runInTransaction(progress -> {
+				return Integer.valueOf(this.dao.deleteLogRecords(selectedHostName));
+			}, dbResult -> {
+				try {
+					dbResult.getResult();
+					loadHostNames();
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			});
+		} else {
+			disableButtons(false);
+		}
 	}
 
 	private void loadHostNames() {
 		disableButtons(true);
-		this.hostNamesList.clear();
 
 		super.dbTaskRunner.run(progress -> this.dao.getHostNames(), dbResult -> {
 			try {
 				this.hostNamesList.setAll(dbResult.getResult());
-				this.hostNameCbx.getSelectionModel().select(this.hostName);
+
+				if (this.hostNamesList.contains(this.hostName)) {
+					this.hostNameCbx.getSelectionModel().select(this.hostName);
+				} else {
+					this.hostNameCbx.getSelectionModel().selectFirst();
+				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -98,32 +151,44 @@ public class ErrorLogController extends AbstractBaseController {
 		});
 	}
 
-	private void loadLogRecords(String hostName, boolean refresh) {
-		disableButtons(true);
-		this.logRecordsList.clear();
+	private void loadLogRecords(boolean refresh) {
+		String selectedHostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
+		LogRecord selectedItem = this.logRecordsTbl.getSelectionModel().getSelectedItem();
 
-		super.dbTaskRunner.run(progress -> {
-			EntityManager entityManager = super.db.getEntityManager();
-			if (refresh) {
-				entityManager.clear();
-			}
-			return this.dao.getLogRecords(hostName);
-		}, dbResult -> {
-			try {
-				this.logRecordsList.setAll(dbResult.getResult());
-				FxUtils.autoResizeColumns(this.logRecordsTbl);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
-			}
-		});
+		if (selectedHostName != null) {
+			disableButtons(true);
+			updatePlaceholder(getText("common.loadData"));
+
+			super.dbTaskRunner.run(progress -> {
+				EntityManager entityManager = super.db.getEntityManager();
+				if (refresh) {
+					entityManager.clear();
+				}
+				return this.dao.getLogRecords(selectedHostName);
+			}, dbResult -> {
+				try {
+					this.logRecordsList.setAll(dbResult.getResult());
+					this.logRecordsTbl.getSelectionModel().select(selectedItem);
+					FxUtils.autoResizeColumns(this.logRecordsTbl);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					updatePlaceholder(getText("common.noDataAvailable"));
+					disableButtons(false);
+				}
+			});
+		}
+	}
+
+	private void updatePlaceholder(String text) {
+		((Label) this.logRecordsTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.hostNameCbx.setDisable(disabled);
+		this.deleteBtn.setDisable(disabled);
 	}
 
 }

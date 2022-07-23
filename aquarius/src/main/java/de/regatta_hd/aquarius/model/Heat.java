@@ -3,6 +3,8 @@ package de.regatta_hd.aquarius.model;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -22,6 +24,8 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +36,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
-@NamedEntityGraphs(@NamedEntityGraph(name = "heat-all", attributeNodes = { //
+@NamedEntityGraphs({ @NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
@@ -62,19 +66,43 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "boatClass"), //
 						@NamedAttributeNode(value = "raceMode") //
 				}) //
-}))
+}), @NamedEntityGraph(name = Heat.GRAPH_ENTRIES, attributeNodes = {
+		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
+		@NamedAttributeNode(value = "race", subgraph = "race") //
+}, subgraphs = { @NamedSubgraph(name = "heat.entries", //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "registration", subgraph = "registration"), //
+				@NamedAttributeNode(value = "results") //
+		}), //
+		@NamedSubgraph(name = "registration", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "club"), //
+				}), //
+		@NamedSubgraph(name = "race", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "ageClass"), //
+						@NamedAttributeNode(value = "boatClass"), //
+						@NamedAttributeNode(value = "raceMode") //
+				}) //
+}) })
 //lombok
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Heat {
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
+
+	public static final String GRAPH_ALL = "heat-all";
+	public static final String GRAPH_ENTRIES = "heat-entries";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Comp_ID")
+	@Include
 	private int id;
 
 	/**
@@ -99,20 +127,26 @@ public class Heat {
 	private short devisionNumber;
 
 	/**
-	 * Indicates whether this heat is cancelled or not.
+	 * The time when this {@link Heat heat} is started.
+	 */
+	@Column(name = "Comp_DateTime")
+	private Instant time;
+
+	/**
+	 * Indicates whether this {@link Heat heat} is cancelled or not.
 	 */
 	@Column(name = "Comp_Cancelled")
 	private boolean cancelled;
 
-	@Column(name = "Comp_DateTime")
-	private Instant instant;
-
-	@Column(name = "Comp_Dummy")
-	private boolean dummy;
-
+	/**
+	 * All assigned registrations to this heat.
+	 */
 	@OneToMany(targetEntity = HeatRegistration.class, mappedBy = "heat")
 	@OrderBy("lane")
 	private Set<HeatRegistration> entries;
+
+	@Column(name = "Comp_Dummy")
+	private boolean dummy;
 
 	@Column(name = "Comp_GroupValue")
 	private short groupValue;
@@ -129,7 +163,7 @@ public class Heat {
 
 	@Column(name = "Comp_Round")
 	@ToString.Include(rank = 7)
-	private Short round;
+	private short round;
 
 	@Column(name = "Comp_RoundCode", length = 8)
 	@ToString.Include(rank = 6)
@@ -205,24 +239,46 @@ public class Heat {
 	}
 
 	public String getRaceNumber() {
-		return this.race.getNumber();
+		return getRace().getNumber();
 	}
 
 	public String getRaceShortLabel() {
-		return this.race.getShortLabel();
+		return getRace().getShortLabel();
 	}
 
 	public String getDevisionLabel() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getRoundCode()).append(getRoundLabel());
-		if (this.race.getAgeClass().isMasters()) {
+		if (getRace().getAgeClass().isMasters()) {
 			builder.append(", AK ").append(getGroupValueLabel());
 		}
 		return builder.toString();
 	}
 
 	public String getRaceLongLabel() {
-		return this.race.getLongLabel();
+		return getRace().getLongLabel();
+	}
+
+	public String getStateLabel() {
+		if (isCancelled()) {
+			return bundle.getString("heat.state.cancelled");
+		}
+		switch (getState()) {
+		case 0:
+			return bundle.getString("heat.state.initial");
+		case 1:
+			return bundle.getString("heat.state.scheduled");
+		case 2:
+			return bundle.getString("heat.state.started");
+		case 4:
+			return bundle.getString("heat.state.official");
+		case 5:
+			return bundle.getString("heat.state.finished");
+		case 6:
+			return bundle.getString("heat.state.photoFinish");
+		default:
+			return Byte.toString(getState());
+		}
 	}
 
 	private String getGroupValueLabel() {

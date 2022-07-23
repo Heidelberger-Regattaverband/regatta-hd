@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,9 +16,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.EqualsAndHashCode.Include;
 
 /*
 * The entity contains a log record.
@@ -26,10 +29,11 @@ import lombok.Setter;
 @Table(schema = "dbo", name = "HRV_LogRecord")
 //lombok
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class LogRecord implements Serializable {
 	private static final long serialVersionUID = 1984221053172318902L;
 
@@ -44,6 +48,12 @@ public class LogRecord implements Serializable {
 		setHostAddress(hostAddr);
 		setSourceClass(logRecord.getSourceClassName());
 		setSourceMethod(logRecord.getSourceMethodName());
+
+		Optional<Thread> threadOpt = Thread.getAllStackTraces().keySet().stream()
+				.filter(thread -> thread.getId() == logRecord.getThreadID()).findFirst();
+		if (threadOpt.isPresent()) {
+			setThreadName(threadOpt.get().getName());
+		}
 
 		if (logRecord.getLevel() != null) {
 			setLevelName(logRecord.getLevel().getName());
@@ -66,6 +76,7 @@ public class LogRecord implements Serializable {
 	 */
 	@Id
 	@Column(name = "instant")
+	@Include
 	private Instant instant;
 
 	@Column(name = "hostName")
@@ -112,10 +123,16 @@ public class LogRecord implements Serializable {
 	private String message;
 
 	/**
-	 * Thread ID for thread that issued logging call.
+	 * ID of the thread that issued logging call.
 	 */
 	@Column(name = "threadId")
 	private int threadID;
+
+	/**
+	 * Name of the thread that issued logging call.
+	 */
+	@Column(name = "threadName")
+	private String threadName;
 
 	@Column(name = "stackTrace")
 	private String stackTrace;

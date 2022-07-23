@@ -7,10 +7,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import org.controlsfx.dialog.ProgressDialog;
+
+import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -29,6 +33,8 @@ public class FxUtils {
 	private static final double DEFAULT_WIDTH = 1024;
 	private static final double DEFAULT_HEIGHT = 768;
 
+	public static final double DIALOG_WIDTH = 500;
+
 	public static final ResourceBundle bundle = ResourceBundle.getBundle("commons-fx_messages", Locale.GERMANY);
 
 	private FxUtils() {
@@ -45,12 +51,32 @@ public class FxUtils {
 		return fileChooser.showSaveDialog(window);
 	}
 
+	public static File showOpenDialog(Window window, String fileName, String description, final String... extensions) {
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter for text files
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(description, extensions));
+		fileChooser.setInitialFileName(fileName);
+		// Show save file dialog
+		return fileChooser.showOpenDialog(window);
+	}
+
 	public static void showErrorMessage(Window window, Throwable exception) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.initOwner(window);
 		alert.setTitle(bundle.getString("error.title"));
 		alert.setHeaderText(exception.getClass().getCanonicalName());
 		alert.setContentText(exception.getMessage());
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
+		alert.showAndWait();
+	}
+	public static void showErrorMessage(Window window, String header, String errMsg) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.initOwner(window);
+		alert.setTitle(bundle.getString("error.title"));
+		alert.setHeaderText(header);
+		alert.setContentText(errMsg);
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.showAndWait();
 	}
 
@@ -58,6 +84,8 @@ public class FxUtils {
 		Alert alert = new Alert(AlertType.INFORMATION, null, ButtonType.OK);
 		alert.initOwner(window);
 		alert.setHeaderText(msg);
+		alert.setTitle(bundle.getString("common.info"));
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.showAndWait();
 	}
 
@@ -66,6 +94,7 @@ public class FxUtils {
 		alert.initOwner(window);
 		alert.setHeaderText(msg);
 		alert.setTitle(title);
+		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.getButtonTypes().clear();
 		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
@@ -81,6 +110,22 @@ public class FxUtils {
 
 		alert.showAndWait();
 		return alert.getResult() == ButtonType.YES;
+	}
+
+	public static <T> ProgressDialog showProgressDialog(Window window, String title, boolean cancel, Worker<T> worker) {
+		ProgressDialog dialog = new ProgressDialog(worker);
+		dialog.initOwner(window);
+		dialog.setTitle(title);
+		dialog.getDialogPane().setPrefWidth(FxUtils.DIALOG_WIDTH);
+		if (cancel) {
+			dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+			dialog.setOnCloseRequest(event -> {
+				if (event.getEventType() == DialogEvent.DIALOG_CLOSE_REQUEST) {
+					worker.cancel();
+				}
+			});
+		}
+		return dialog;
 	}
 
 	public static void loadSizeAndPos(String resource, Stage stage) {
@@ -109,25 +154,27 @@ public class FxUtils {
 		// Set the right policy
 		table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 		table.getColumns().stream().forEach(column -> {
-			// Minimal width = columnheader
-			Text t = new Text(column.getText());
-			double max = t.getLayoutBounds().getWidth();
+			if (column.isResizable()) {
+				// Minimal width = columnheader
+				Text text = new Text(column.getText());
+				double max = text.getLayoutBounds().getWidth();
 
-			if (table.getItems() != null) {
-				for (int i = 0; i < table.getItems().size(); i++) {
-					// cell must not be empty
-					if (column.getCellData(i) != null) {
-						t = new Text(column.getCellData(i).toString());
-						double calcwidth = t.getLayoutBounds().getWidth();
-						// remember new max-width
-						if (calcwidth > max) {
-							max = calcwidth;
+				if (table.getItems() != null) {
+					for (int i = 0; i < table.getItems().size(); i++) {
+						// cell must not be empty
+						if (column.getCellData(i) != null) {
+							text = new Text(column.getCellData(i).toString());
+							double calcwidth = text.getLayoutBounds().getWidth();
+							// remember new max-width
+							if (calcwidth > max) {
+								max = calcwidth;
+							}
 						}
 					}
 				}
+				// set the new max-widht with some extra space
+				column.setPrefWidth(max + 10.0d);
 			}
-			// set the new max-widht with some extra space
-			column.setPrefWidth(max + 10.0d);
 		});
 	}
 

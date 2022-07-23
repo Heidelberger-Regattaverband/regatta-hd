@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.regatta-hd</groupId>
+    <artifactId>regatta-hd</artifactId>
+    <version>0.1.24</version>
+    <relativePath>../..</relativePath>
+  </parent>
+
+  <artifactId>nativeapp</artifactId>
+  <name>Regatta HD - Native Application</name>
+
+  <properties>
+    <mainClass>de.regatta_hd.nativeapp.Main</mainClass>
+  </properties>
+
+  <dependencies>
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ui</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- ============================= -->
+    <!-- JavaFX cross-platform support -->
+    <!-- ============================= -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>${mainClass}</mainClass>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.gluonhq</groupId>
+        <artifactId>gluonfx-maven-plugin</artifactId>
+        <configuration>
+          <target>host</target>
+          <mainClass>${mainClass}</mainClass>
+          <appIdentifier>regatta-hd</appIdentifier>
+        </configuration>
+
+        <!-- executions>
+          <execution>
+            <id>gluonfx-build</id>
+            <goals>
+              <goal>compile</goal>
+              <goal>link</goal>
+            </goals>
+          </execution>
+        </executions -->
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

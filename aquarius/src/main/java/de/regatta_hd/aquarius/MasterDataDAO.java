@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius;
 
+import java.io.InputStream;
 import java.util.List;
 
 import de.regatta_hd.aquarius.model.AgeClass;
@@ -7,6 +8,8 @@ import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.aquarius.model.Referee;
+import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
+import jakarta.xml.bind.JAXBException;
 
 /**
  * Provides access to the master data of the Aquarius database.
@@ -42,6 +45,8 @@ public interface MasterDataDAO {
 
 	List<LogRecord> getLogRecords(String hostName);
 
+	int deleteLogRecords(String hostName);
+
 	List<String> getHostNames();
 
 	/**
@@ -57,4 +62,6 @@ public interface MasterDataDAO {
 	List<Referee> getReferees();
 
 	int updateAllRefereesLicenceState(boolean licenceState);
+
+	int importReferees(InputStream inpute, ProgressMonitor progress) throws JAXBException;
 }

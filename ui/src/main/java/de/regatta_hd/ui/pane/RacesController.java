@@ -8,10 +8,16 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,10 +27,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-public class OffersController extends AbstractRegattaDAOController {
-	private static final Logger logger = Logger.getLogger(OffersController.class.getName());
+public class RacesController extends AbstractRegattaDAOController {
+	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
 
 	// UI Controls
+	@FXML
+	private Button refreshBtn;
+	@FXML
+	private Button setDistancesBtn;
+	@FXML
+	private Button setMastersAgeClassesBtn;
 	@FXML
 	private TableView<Race> racesTbl;
 	@FXML
@@ -32,24 +44,42 @@ public class OffersController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
 	@FXML
-	private Button refreshBtn;
+	private TableColumn<Race, Integer> regsIdCol;
+
 	@FXML
-	private Button setDistancesBtn;
-	@FXML
-	private Button setMastersAgeClassesBtn;
+	private TableView<Registration> regsTbl;
+
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
+	private final ObservableList<Registration> regsList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
+		this.idCol.visibleProperty().bind(this.showIdColumn);
+		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
+
+		// races table
 		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
+		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				this.regsList.setAll(newSelection.getRegistrations());
+			} else {
+				this.regsList.clear();
+			}
+		});
 
-		loadRaces(false);
+		// registrations table
+		this.regsTbl.setItems(this.regsList);
+
+		loadRaces(true);
 	}
 
 	@Override
@@ -122,17 +152,17 @@ public class OffersController extends AbstractRegattaDAOController {
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
-		this.racesList.clear();
+		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
 				this.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getRaces();
+			return this.regattaDAO.getRaces(Race.GRAPH_CLUBS);
 		}, dbResult -> {
 			try {
 				this.racesList.setAll(dbResult.getResult());
-				FxUtils.autoResizeColumns(this.racesTbl);
+				this.racesTbl.getSelectionModel().select(selectedItem);
 				this.racesTbl.sort();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -152,6 +182,8 @@ public class OffersController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
+		this.racesTbl.setDisable(disabled);
+		this.regsTbl.setDisable(disabled);
 	}
 
 }

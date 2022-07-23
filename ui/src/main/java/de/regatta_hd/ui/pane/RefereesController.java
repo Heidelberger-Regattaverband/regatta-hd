@@ -1,18 +1,27 @@
 package de.regatta_hd.ui.pane;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,7 +34,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class RefereesController extends AbstractBaseController {
+public class RefereesController extends PaneController {
 	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
 
 	@Inject
@@ -42,17 +51,25 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	private TextField filterTxf;
 	@FXML
+	private Button importBtn;
+	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
 	@FXML
 	private TableColumn<Referee, Boolean> activeCol;
+	@FXML
+	private TableColumn<Referee, String> lastNameCol;
+
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
 		if (event.getDBConnection().isOpen()) {
-			loadResults(true);
+			loadReferees(true);
 			disableButtons(false);
 		} else {
 			disableButtons(true);
@@ -66,6 +83,7 @@ public class RefereesController extends AbstractBaseController {
 
 		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class, this.stateChangedEventListener);
 
+		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.activeCol.setCellValueFactory(cellData -> {
 			BooleanProperty property = cellData.getValue().activeProperty();
 			property.addListener((observable, newValue, oldValue) -> {
@@ -83,7 +101,7 @@ public class RefereesController extends AbstractBaseController {
 			return property;
 		});
 
-		this.refereesTbl.getSortOrder().add(this.idCol);
+		this.refereesTbl.getSortOrder().add(this.lastNameCol);
 
 		// table sorting and filtering: https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
@@ -115,7 +133,7 @@ public class RefereesController extends AbstractBaseController {
 		// 5. Add sorted (and filtered) data to the table.
 		this.refereesTbl.setItems(sortedData);
 
-		loadResults(true);
+		loadReferees(false);
 	}
 
 	@Override
@@ -125,7 +143,7 @@ public class RefereesController extends AbstractBaseController {
 
 	@FXML
 	void handleRefreshOnAction() {
-		loadResults(true);
+		loadReferees(true);
 	}
 
 	@FXML
@@ -136,6 +154,40 @@ public class RefereesController extends AbstractBaseController {
 	@FXML
 	void handleActivateAllOnAction() {
 		updateLicenceState(true);
+	}
+
+	@FXML
+	void handleImportOnAction() {
+		disableButtons(true);
+
+		File importFile = FxUtils.showOpenDialog(getWindow(), null, "Wettkampfrichter XML Datei", "*.xml");
+
+		if (importFile != null) {
+			DBTask<Integer> dbTask = super.dbTaskRunner.createTask(progress -> {
+				try (InputStream reader = new BufferedInputStream(Files.newInputStream(importFile.toPath()))) {
+					int count = this.masterDAO.importReferees(reader, progress);
+					return Integer.valueOf(count);
+				}
+			}, dbResult -> {
+				try {
+					Integer count = dbResult.getResult();
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.succeeded", count));
+					loadReferees(true);
+				} catch (CancellationException e) {
+					logger.log(Level.FINEST, e.getMessage(), e);
+					FxUtils.showInfoDialog(getWindow(), getText("referees.import.canceled"));
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			}, true);
+
+			runTaskWithProgressDialog(dbTask, getText("referees.import.title"), true);
+		} else {
+			disableButtons(false);
+		}
 	}
 
 	private void updateLicenceState(boolean licenceState) {
@@ -149,7 +201,6 @@ public class RefereesController extends AbstractBaseController {
 			try {
 				this.refereesList.setAll(dbResult.getResult());
 				this.refereesTbl.sort();
-				FxUtils.autoResizeColumns(this.refereesTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -160,9 +211,10 @@ public class RefereesController extends AbstractBaseController {
 		});
 	}
 
-	private void loadResults(boolean refresh) {
+	private void loadReferees(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		Referee selectedItem = this.refereesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -173,7 +225,7 @@ public class RefereesController extends AbstractBaseController {
 			try {
 				this.refereesList.setAll(dbResult.getResult());
 				this.refereesTbl.sort();
-				FxUtils.autoResizeColumns(this.refereesTbl);
+				this.refereesTbl.getSelectionModel().select(selectedItem);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -193,5 +245,7 @@ public class RefereesController extends AbstractBaseController {
 		this.activateAllBtn.setDisable(disabled);
 		this.deactivateAllBtn.setDisable(disabled);
 		this.filterTxf.setDisable(disabled);
+		this.importBtn.setDisable(disabled);
+		this.refereesTbl.setDisable(disabled);
 	}
 }

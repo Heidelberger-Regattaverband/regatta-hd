@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -23,6 +24,8 @@ import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,7 +36,7 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Offer")
 @SecondaryTable(name = "HRV_Offer", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
-@NamedEntityGraph(name = "race-to-results", //
+@NamedEntityGraphs({ @NamedEntityGraph(name = Race.GRAPH_RESULTS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
 						attributeNodes = { @NamedAttributeNode(value = "entries", subgraph = "heatreg.results") } //
@@ -57,16 +60,23 @@ import lombok.ToString;
 				@NamedAttributeNode("raceMode"), //
 				@NamedAttributeNode("registrations") //
 		} //
-)
+), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
+		subgraphs = { @NamedSubgraph(name = "registration.club", attributeNodes = { @NamedAttributeNode("club") }) }, //
+		attributeNodes = { @NamedAttributeNode(value = "registrations", subgraph = "registration.club") }) })
 // lombok
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Race {
+
+	public static final String GRAPH_CLUBS = "race-registrations-clubs";
+	public static final String GRAPH_RESULTS = "race-heats-heatreg-results";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Offer_ID")
+	@Include
 	private int id;
 
 	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
@@ -198,7 +208,7 @@ public class Race {
 	}
 
 	/**
-	 * @return {@code true} if the result of all {@link Heat heats} is official or cancelled, otherwise {@code false}.
+	 * @return {@code true} if the result of all driven {@link Heat heats} are official, otherwise {@code false}.
 	 */
 	public boolean isOfficial() {
 		return getDrivenHeats().allMatch(Heat::isStateOfficial);

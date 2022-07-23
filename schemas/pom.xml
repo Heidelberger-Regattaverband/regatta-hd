@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.regatta-hd</groupId>
+    <artifactId>regatta-hd</artifactId>
+    <version>0.1.24</version>
+  </parent>
+
+  <artifactId>schemas</artifactId>
+  <packaging>jar</packaging>
+  <name>Regatta HD - XML Schema Models</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- https://search.maven.org/artifact/org.codehaus.mojo/jaxb2-maven-plugin -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>xjc-ausschreibung_2010</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src/main/resources/schemas/ausschreibung_2010.xsd</source>
+              </sources>
+              <clearOutputDir>true</clearOutputDir>
+            </configuration>
+          </execution>
+          <execution>
+            <id>xjc-ergebnisse_2017</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src/main/resources/schemas/ergebnisse_2017.xsd</source>
+              </sources>
+              <clearOutputDir>false</clearOutputDir>
+            </configuration>
+          </execution>
+          <execution>
+            <id>xjc-meldungen_2010</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src/main/resources/schemas/meldungen_2010.xsd</source>
+              </sources>
+              <clearOutputDir>false</clearOutputDir>
+            </configuration>
+          </execution>
+          <execution>
+            <id>xjc-vereinsliste_v2</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src/main/resources/schemas/vereinsliste_v2.xsd</source>
+              </sources>
+              <clearOutputDir>false</clearOutputDir>
+            </configuration>
+          </execution>
+          <execution>
+            <id>xjc-wettkampfrichter_2017.xsd</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src/main/resources/schemas/wettkampfrichter_2017.xsd</source>
+              </sources>
+              <clearOutputDir>false</clearOutputDir>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

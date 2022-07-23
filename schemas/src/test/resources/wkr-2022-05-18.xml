@@ -1,0 +1,1456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wkr:Liste
+	xmlns:wkr="http://schemas.rudern.de/service/wettkampfrichter/2017"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schemas.rudern.de/service/wettkampfrichter/2017 http://schemas.rudern.de/service/wettkampfrichter_2017.xsd"
+	erstellt="2022-05-18">
+
+	<Wettkampfrichter Lizenznummer="897" Status="N">
+		<Vorname>Jan</Vorname>
+		<Nachname>Ackermann</Nachname>
+		<Ort>Düsseldorf</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2009111501" Status="N">
+		<Vorname>Hendrik</Vorname>
+		<Nachname>Ahrens</Nachname>
+		<Ort>Backnang</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="815" Status="N">
+		<Vorname>Bert</Vorname>
+		<Nachname>Alpen</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="871" Status="N">
+		<Vorname>Gerrit</Vorname>
+		<Nachname>Bäumer</Nachname>
+		<Ort>Sprockhövel</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="790" Status="I">
+		<Vorname>Kurt</Vorname>
+		<Nachname>Bauder</Nachname>
+		<Ort>Mannheim</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="900" Status="N">
+		<Vorname>Theresa</Vorname>
+		<Nachname>Beissel</Nachname>
+		<Ort>Dransfeld</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="898" Status="N">
+		<Vorname>Stephan</Vorname>
+		<Nachname>Berger</Nachname>
+		<Ort>Farum, Dänemark</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="636" Status="N">
+		<Vorname>Werner</Vorname>
+		<Nachname>Beutler</Nachname>
+		<Ort>Cuxhaven</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="894" Status="N">
+		<Vorname>Alexander</Vorname>
+		<Nachname>Biel</Nachname>
+		<Ort>Stuttgart</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="597" Status="N">
+		<Vorname>Karl</Vorname>
+		<Nachname>Bitsch</Nachname>
+		<Ort>Breisach</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="872" Status="I">
+		<Vorname>Mark</Vorname>
+		<Nachname>Bitter</Nachname>
+		<Ort>Braunschweig</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2020012606" Status="N">
+		<Vorname>Moritz</Vorname>
+		<Nachname>Blauermel</Nachname>
+		<Ort>Braunschweig</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2021311002" Status="N">
+		<Vorname>Sinja</Vorname>
+		<Nachname>Blohm</Nachname>
+		<Ort></Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014012501" Status="N">
+		<Vorname>Myriam</Vorname>
+		<Nachname>Bockwoldt</Nachname>
+		<Ort></Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="875" Status="N">
+		<Vorname>Carsten</Vorname>
+		<Nachname>Böhning</Nachname>
+		<Ort>Minden</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2018012002" Status="N">
+		<Vorname>Martin</Vorname>
+		<Nachname>Bönewitz</Nachname>
+		<Ort>Leipzig</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="507" Status="I">
+		<Vorname>Arno</Vorname>
+		<Nachname>Boes</Nachname>
+		<Ort>Halsenbach</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="739" Status="N">
+		<Vorname>Jürgen</Vorname>
+		<Nachname>Bogenrieder</Nachname>
+		<Ort>Landshut</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017012101" Status="N">
+		<Vorname>Lars</Vorname>
+		<Nachname>Bohling</Nachname>
+		<Ort>Osterholz-Scharmbeck</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="886" Status="N">
+		<Vorname>Jens</Vorname>
+		<Nachname>Botzum</Nachname>
+		<Ort>Hainburg</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2007110401" Status="N">
+		<Vorname>Joachim</Vorname>
+		<Nachname>Brandt</Nachname>
+		<Ort>Abstatt</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="800" Status="N">
+		<Vorname>Peggy</Vorname>
+		<Nachname>Brandt</Nachname>
+		<Ort>Falkensee</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="858" Status="N">
+		<Vorname>Johannes</Vorname>
+		<Nachname>Breitenbach</Nachname>
+		<Ort>Heidelberg</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="789" Status="N">
+		<Vorname>Dagmar</Vorname>
+		<Nachname>Brinck</Nachname>
+		<Ort>Limburg/Lahn</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="832" Status="N">
+		<Vorname>Susanne</Vorname>
+		<Nachname>Bruch</Nachname>
+		<Ort>Frankfurt</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2013111001" Status="N">
+		<Vorname>Beate</Vorname>
+		<Nachname>Brühe</Nachname>
+		<Ort>Ludwigshafen</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2009032101" Status="N">
+		<Vorname>Daniel</Vorname>
+		<Nachname>Brym</Nachname>
+		<Ort>Krummensee /Mittenwalde</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="879" Status="N">
+		<Vorname>Steffen</Vorname>
+		<Nachname>Buschmann</Nachname>
+		<Ort>Eilenburg</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2019012704" Status="N">
+		<Vorname>Jonas</Vorname>
+		<Nachname>Dahl</Nachname>
+		<Ort>Halle(Saale)</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="797" Status="N">
+		<Vorname>Manuela</Vorname>
+		<Nachname>Damm</Nachname>
+		<Ort>Offenbach</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2021311004" Status="N">
+		<Vorname>Jan-Christoph</Vorname>
+		<Nachname>Dröge</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014111606" Status="N">
+		<Vorname>Laura</Vorname>
+		<Nachname>Ebisch</Nachname>
+		<Ort>Schrobenhausen</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="812" Status="N">
+		<Vorname>Axel</Vorname>
+		<Nachname>Eimers</Nachname>
+		<Ort></Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="714" Status="N">
+		<Vorname>Steffi</Vorname>
+		<Nachname>Engel</Nachname>
+		<Ort>Nürnberg</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="583" Status="I">
+		<Vorname>Erhard</Vorname>
+		<Nachname>Engelmann</Nachname>
+		<Ort>Rheda-Wiedenbrück</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012021104" Status="N">
+		<Vorname>christina</Vorname>
+		<Nachname>faiss</Nachname>
+		<Ort>Nürtingen</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2020012602" Status="N">
+		<Vorname>Mary Carol</Vorname>
+		<Nachname>Falk</Nachname>
+		<Ort>Ladenburg</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="850" Status="N">
+		<Vorname>Manuel</Vorname>
+		<Nachname>Fenske</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="637" Status="N">
+		<Vorname>Klaus</Vorname>
+		<Nachname>Fischer</Nachname>
+		<Ort>Telgte</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011013001" Status="N">
+		<Vorname>Claudia</Vorname>
+		<Nachname>Fleckenstein</Nachname>
+		<Ort>Offenbach</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="616" Status="N">
+		<Vorname>Petra</Vorname>
+		<Nachname>Franz</Nachname>
+		<Ort>Velbert</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="784" Status="N">
+		<Vorname>Timm</Vorname>
+		<Nachname>Fricke</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2009032102" Status="N">
+		<Vorname>Holger</Vorname>
+		<Nachname>Fröhlich</Nachname>
+		<Ort>Leipzig</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="876" Status="N">
+		<Vorname>Thorsten</Vorname>
+		<Nachname>Fuchs</Nachname>
+		<Ort>Wachtberg</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="692" Status="I">
+		<Vorname>Volker</Vorname>
+		<Nachname>Garmatter</Nachname>
+		<Ort>Havelsee,  OT: Briest</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2010012405" Status="N">
+		<Vorname>Anja</Vorname>
+		<Nachname>Gerhart</Nachname>
+		<Ort>Kemberg</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017111101" Status="N">
+		<Vorname>Theelko</Vorname>
+		<Nachname>Gerken</Nachname>
+		<Ort>Hannover</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="782" Status="N">
+		<Vorname>Klaus</Vorname>
+		<Nachname>Gerking</Nachname>
+		<Ort>Leer</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="754" Status="I">
+		<Vorname>Uwe</Vorname>
+		<Nachname>Gerstenmaier</Nachname>
+		<Ort>Ulm</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="862" Status="N">
+		<Vorname>Martin</Vorname>
+		<Nachname>Goer</Nachname>
+		<Ort>Waltrop</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="765" Status="N">
+		<Vorname>Holger</Vorname>
+		<Nachname>Goldberg</Nachname>
+		<Ort>Duisburg</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="838" Status="N">
+		<Vorname>Torsten</Vorname>
+		<Nachname>Gorski</Nachname>
+		<Ort>Ahnatal</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012021101" Status="N">
+		<Vorname>Anita</Vorname>
+		<Nachname>Gramann</Nachname>
+		<Ort>Regensburg</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="821" Status="I">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Greiner</Nachname>
+		<Ort>Bannewitz</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="607" Status="I">
+		<Vorname>Georg</Vorname>
+		<Nachname>Grützner</Nachname>
+		<Ort>Bonn (Venusberg)</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="868" Status="N">
+		<Vorname>Henner</Vorname>
+		<Nachname>Günter</Nachname>
+		<Ort>Aerzen</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="788" Status="N">
+		<Vorname>Peter</Vorname>
+		<Nachname>Gutsche</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2007110402" Status="N">
+		<Vorname>Sofia</Vorname>
+		<Nachname>Habicht</Nachname>
+		<Ort>Traunstein</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2019012705" Status="N">
+		<Vorname>Jeannette</Vorname>
+		<Nachname>Hahne</Nachname>
+		<Ort></Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="854" Status="N">
+		<Vorname>Peter</Vorname>
+		<Nachname>Halama</Nachname>
+		<Ort>Seligenstadt</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017012104" Status="N">
+		<Vorname>Svenja</Vorname>
+		<Nachname>Hamdorf</Nachname>
+		<Ort>Potsdam</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011013002" Status="N">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Hanfler</Nachname>
+		<Ort>Hünstetten</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="839" Status="I">
+		<Vorname>Ulrike</Vorname>
+		<Nachname>Hartmann</Nachname>
+		<Ort>Potsdam</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2020012605" Status="N">
+		<Vorname>Simone</Vorname>
+		<Nachname>Haubner</Nachname>
+		<Ort>Leipzig</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2009111503" Status="N">
+		<Vorname>sebastian</Vorname>
+		<Nachname>haux</Nachname>
+		<Ort>Offenbach</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2015111401" Status="N">
+		<Vorname>Marie</Vorname>
+		<Nachname>Heinig</Nachname>
+		<Ort>Hanau</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="781" Status="I">
+		<Vorname>Holger</Vorname>
+		<Nachname>Heitsch</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="783" Status="N">
+		<Vorname>Torsten</Vorname>
+		<Nachname>Heitsch</Nachname>
+		<Ort>Otterndorf</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="881" Status="N">
+		<Vorname>Astrid</Vorname>
+		<Nachname>Helzel</Nachname>
+		<Ort>Lübeck</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011022602" Status="N">
+		<Vorname>Lucas</Vorname>
+		<Nachname>Hesselmann</Nachname>
+		<Ort></Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="874" Status="N">
+		<Vorname>Marc</Vorname>
+		<Nachname>Hildebrandt</Nachname>
+		<Ort>Lingen</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="615" Status="N">
+		<Vorname>Jürgen</Vorname>
+		<Nachname>Hillen</Nachname>
+		<Ort>Karben</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="748" Status="N">
+		<Vorname>christian</Vorname>
+		<Nachname>hintze</Nachname>
+		<Ort>Woltersdorf</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="845" Status="N">
+		<Vorname>Holger</Vorname>
+		<Nachname>Hoffmann</Nachname>
+		<Ort>Dresden</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="891" Status="N">
+		<Vorname>Martin</Vorname>
+		<Nachname>Hoffmann</Nachname>
+		<Ort>Würzburg</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2013031003" Status="N">
+		<Vorname>Ron</Vorname>
+		<Nachname>Hoffmann</Nachname>
+		<Ort></Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="895" Status="N">
+		<Vorname>Jörg</Vorname>
+		<Nachname>Ingenhütt</Nachname>
+		<Ort>Schönefeld</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="780" Status="N">
+		<Vorname>Wolfdietrich</Vorname>
+		<Nachname>Jacobs</Nachname>
+		<Ort>Karlsbad</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2013031001" Status="N">
+		<Vorname>Christian</Vorname>
+		<Nachname>Jäckel</Nachname>
+		<Ort>Witten</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="907" Status="N">
+		<Vorname>Martin</Vorname>
+		<Nachname>Jahn</Nachname>
+		<Ort>Kelsterbach</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017012103" Status="N">
+		<Vorname>Deborah</Vorname>
+		<Nachname>Jautzke</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="882" Status="N">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Jendroßek</Nachname>
+		<Ort>Meißen</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="791" Status="I">
+		<Vorname>Jan Erik</Vorname>
+		<Nachname>Jonescheit</Nachname>
+		<Ort>Mannheim</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="603" Status="I">
+		<Vorname>Ulrich</Vorname>
+		<Nachname>Kaeswurm</Nachname>
+		<Ort>Nürtingen</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2013111002" Status="N">
+		<Vorname>Jakob</Vorname>
+		<Nachname>Kaiser</Nachname>
+		<Ort>Mannheim</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017012105" Status="N">
+		<Vorname>Stefan</Vorname>
+		<Nachname>Kapeller</Nachname>
+		<Ort>Deuerling</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="625" Status="I">
+		<Vorname>Susanne</Vorname>
+		<Nachname>Kassler</Nachname>
+		<Ort>Bochum</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="" Status="N">
+		<Vorname>Kerstin</Vorname>
+		<Nachname>Kemle</Nachname>
+		<Ort>Rüsselsheim</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012012902" Status="I">
+		<Vorname>Michael</Vorname>
+		<Nachname>Keschka</Nachname>
+		<Ort>Aschersleben</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="901" Status="N">
+		<Vorname>Stefan</Vorname>
+		<Nachname>Kießler</Nachname>
+		<Ort>Hannover</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="830" Status="I">
+		<Vorname>Frank</Vorname>
+		<Nachname>Kilian</Nachname>
+		<Ort>Bad - Dürkheim</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="586" Status="I">
+		<Vorname>Klaus-Dieter</Vorname>
+		<Nachname>König</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="778" Status="N">
+		<Vorname>Annegret</Vorname>
+		<Nachname>Körner</Nachname>
+		<Ort>Dresden</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="856" Status="N">
+		<Vorname>Christof</Vorname>
+		<Nachname>Kollnig</Nachname>
+		<Ort>Mannheim</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="632" Status="I">
+		<Vorname>Frank-Michael</Vorname>
+		<Nachname>Korgitzsch</Nachname>
+		<Ort>Bad Dürkheim</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2019012702" Status="N">
+		<Vorname>Dennis</Vorname>
+		<Nachname>Kowalke</Nachname>
+		<Ort>Minden</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="744" Status="I">
+		<Vorname>Stephan</Vorname>
+		<Nachname>Krajewski</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="461" Status="N">
+		<Vorname>Hans-Juergen</Vorname>
+		<Nachname>Kramp</Nachname>
+		<Ort>Lindau</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="867" Status="N">
+		<Vorname>Martina</Vorname>
+		<Nachname>Krehl</Nachname>
+		<Ort>Greifswald</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="822" Status="N">
+		<Vorname>Tobias</Vorname>
+		<Nachname>Kretschmer</Nachname>
+		<Ort>München</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="883" Status="N">
+		<Vorname>Roman</Vorname>
+		<Nachname>Kuhnert</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012012901" Status="N">
+		<Vorname>Sibylle</Vorname>
+		<Nachname>Kumm-Kottke</Nachname>
+		<Ort>Werder/Havel</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="517" Status="I">
+		<Vorname>Dietmar</Vorname>
+		<Nachname>Langusch</Nachname>
+		<Ort>Runkel</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2007110405" Status="N">
+		<Vorname>Tim</Vorname>
+		<Nachname>Laube</Nachname>
+		<Ort>Bremen</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="904" Status="N">
+		<Vorname>Eva</Vorname>
+		<Nachname>Laugwitz</Nachname>
+		<Ort>Scheßlitz</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="639" Status="N">
+		<Vorname>Andrea</Vorname>
+		<Nachname>Lechtenboehmer</Nachname>
+		<Ort>Münster</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="823" Status="N">
+		<Vorname>Frank</Vorname>
+		<Nachname>Lehne</Nachname>
+		<Ort>Braunschweig</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017012106" Status="N">
+		<Vorname>Thea</Vorname>
+		<Nachname>Leube</Nachname>
+		<Ort>Erlangen</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2021311003" Status="N">
+		<Vorname>Felix</Vorname>
+		<Nachname>Lindemann</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="884" Status="N">
+		<Vorname>Rudolf</Vorname>
+		<Nachname>Löffler</Nachname>
+		<Ort>Dresden</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2010012401" Status="N">
+		<Vorname>Steffen</Vorname>
+		<Nachname>Ludwig</Nachname>
+		<Ort>Weißenfels</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2016021403" Status="N">
+		<Vorname>Henriette</Vorname>
+		<Nachname>Lupke</Nachname>
+		<Ort>Kirchmöser</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="774" Status="N">
+		<Vorname>Lothar</Vorname>
+		<Nachname>Mannheim</Nachname>
+		<Ort>Bad Ems</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2009111504" Status="N">
+		<Vorname>Klaus</Vorname>
+		<Nachname>Menold</Nachname>
+		<Ort>Heidelberg</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2010012402" Status="N">
+		<Vorname>Martin</Vorname>
+		<Nachname>Mensch</Nachname>
+		<Ort>Bremen</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="645" Status="N">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Merz</Nachname>
+		<Ort>Dresden</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="552" Status="I">
+		<Vorname>Gerhard</Vorname>
+		<Nachname>Meyboden</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="860" Status="N">
+		<Vorname>Sebastian</Vorname>
+		<Nachname>Meyer</Nachname>
+		<Ort>Riedstadt</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="642" Status="N">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Meyer</Nachname>
+		<Ort>Delmenhorst</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="857" Status="N">
+		<Vorname>Stefan</Vorname>
+		<Nachname>Mieth</Nachname>
+		<Ort>Hainburg</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2018012001" Status="N">
+		<Vorname>Gero</Vorname>
+		<Nachname>Mimberg</Nachname>
+		<Ort>Köln</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2019012701" Status="N">
+		<Vorname>Clemens</Vorname>
+		<Nachname>Mistele</Nachname>
+		<Ort>Neckartailfingen</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="796" Status="I">
+		<Vorname>Karen</Vorname>
+		<Nachname>Molkenthin</Nachname>
+		<Ort>Falkensee</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="805" Status="I">
+		<Vorname>Markus</Vorname>
+		<Nachname>Molly</Nachname>
+		<Ort>Albstadt</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="757" Status="N">
+		<Vorname>Sönke</Vorname>
+		<Nachname>Nehls</Nachname>
+		<Ort>Kiel</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="888" Status="N">
+		<Vorname>Jan Philipp</Vorname>
+		<Nachname>Neumann</Nachname>
+		<Ort>Würzburg</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="861" Status="N">
+		<Vorname>Ralf</Vorname>
+		<Nachname>Niederreuther</Nachname>
+		<Ort>Obertshausen</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2013031002" Status="N">
+		<Vorname>Joachim</Vorname>
+		<Nachname>Nikolai</Nachname>
+		<Ort>München</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2007110406" Status="N">
+		<Vorname>Bärbel</Vorname>
+		<Nachname>Ocker</Nachname>
+		<Ort>Hanau</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2007110407" Status="N">
+		<Vorname>Burkhard</Vorname>
+		<Nachname>Ocker</Nachname>
+		<Ort>Hanau</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014111604" Status="N">
+		<Vorname>Christian</Vorname>
+		<Nachname>Oelze</Nachname>
+		<Ort>Leipzig</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="769" Status="I">
+		<Vorname>Stefanie</Vorname>
+		<Nachname>Palfner</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011013003" Status="I">
+		<Vorname>Daniel</Vorname>
+		<Nachname>Pankatz</Nachname>
+		<Ort>Bonn</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2021311001" Status="N">
+		<Vorname>Yannick</Vorname>
+		<Nachname>Pfeifer</Nachname>
+		<Ort>Karlsruhe</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="902" Status="N">
+		<Vorname>Dirk</Vorname>
+		<Nachname>Poppitz</Nachname>
+		<Ort>Rostock</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014022301" Status="N">
+		<Vorname>Malte</Vorname>
+		<Nachname>Prohn</Nachname>
+		<Ort>Bremen</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2008110101" Status="N">
+		<Vorname>Heiko</Vorname>
+		<Nachname>Radke</Nachname>
+		<Ort>Hamburg</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="853" Status="N">
+		<Vorname>Bernd</Vorname>
+		<Nachname>Ravens</Nachname>
+		<Ort>Dreieich</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011013004" Status="N">
+		<Vorname>Gisela</Vorname>
+		<Nachname>Ravens-Taeuber</Nachname>
+		<Ort>Dreieich</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="837" Status="N">
+		<Vorname>Frank</Vorname>
+		<Nachname>Reppe</Nachname>
+		<Ort>Gießen</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="808" Status="N">
+		<Vorname>Dirk</Vorname>
+		<Nachname>Reuschling</Nachname>
+		<Ort>Bremen</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="803" Status="N">
+		<Vorname>Anja</Vorname>
+		<Nachname>Risse</Nachname>
+		<Ort>Limburg</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="885" Status="N">
+		<Vorname>Elke</Vorname>
+		<Nachname>Rittner</Nachname>
+		<Ort>Aspach</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="835" Status="N">
+		<Vorname>Holger</Vorname>
+		<Nachname>Römer</Nachname>
+		<Ort>Kassel</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012021106" Status="N">
+		<Vorname>Michael</Vorname>
+		<Nachname>Rosemann</Nachname>
+		<Ort>Waging am See</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011022603" Status="N">
+		<Vorname>Paloma</Vorname>
+		<Nachname>Rüdel</Nachname>
+		<Ort>Koblenz</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="577" Status="I">
+		<Vorname>Willi</Vorname>
+		<Nachname>Rüdel</Nachname>
+		<Ort>Boppard</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="836" Status="N">
+		<Vorname>Karin-Anne</Vorname>
+		<Nachname>Rützel</Nachname>
+		<Ort>Kassel</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2010031404" Status="N">
+		<Vorname>Svenja</Vorname>
+		<Nachname>Rupieper</Nachname>
+		<Ort>Bochum</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014111603" Status="N">
+		<Vorname>Sebastian</Vorname>
+		<Nachname>Salomon</Nachname>
+		<Ort>Ihringen</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="855" Status="N">
+		<Vorname>Peter</Vorname>
+		<Nachname>Scharnagl</Nachname>
+		<Ort>Wendelstein</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012041501" Status="N">
+		<Vorname>Maik</Vorname>
+		<Nachname>Schauenburg</Nachname>
+		<Ort>Mülheim an der Ruhr</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="892" Status="N">
+		<Vorname>Frank</Vorname>
+		<Nachname>Schellenberg</Nachname>
+		<Ort>Fuldabrück</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="818" Status="N">
+		<Vorname>Tilman</Vorname>
+		<Nachname>Schenk</Nachname>
+		<Ort>Leipzig</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="709" Status="N">
+		<Vorname>Doris</Vorname>
+		<Nachname>Schiek</Nachname>
+		<Ort>Bernburg</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="903" Status="N">
+		<Vorname>Oliver</Vorname>
+		<Nachname>Schirmer</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2019012706" Status="N">
+		<Vorname>Jonathan</Vorname>
+		<Nachname>Schmid</Nachname>
+		<Ort>Münster</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2019012703" Status="N">
+		<Vorname>Valentin</Vorname>
+		<Nachname>Schmid</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012021102" Status="N">
+		<Vorname>Martin</Vorname>
+		<Nachname>Schmidt</Nachname>
+		<Ort>München</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2016021401" Status="N">
+		<Vorname>Lennert</Vorname>
+		<Nachname>Schmitz</Nachname>
+		<Ort>Mülheim (Ruhr)</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="842" Status="I">
+		<Vorname>Philip</Vorname>
+		<Nachname>Schmolling</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="816" Status="I">
+		<Vorname>Axel</Vorname>
+		<Nachname>Scholler</Nachname>
+		<Ort></Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="869" Status="N">
+		<Vorname>Roland</Vorname>
+		<Nachname>Schreiber</Nachname>
+		<Ort>Vechelde</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="896" Status="N">
+		<Vorname>stefan</Vorname>
+		<Nachname>schroeter</Nachname>
+		<Ort>Hildesheim</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2020012601" Status="N">
+		<Vorname>Lucas</Vorname>
+		<Nachname>Schulz</Nachname>
+		<Ort>Eilenburg</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="629" Status="I">
+		<Vorname>Tobias</Vorname>
+		<Nachname>Schulz</Nachname>
+		<Ort>Kleinmachnow</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2016021402" Status="N">
+		<Vorname>Valentin</Vorname>
+		<Nachname>Schumacher</Nachname>
+		<Ort>Düsseldorf</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="877" Status="N">
+		<Vorname>Lena</Vorname>
+		<Nachname>Seiffert</Nachname>
+		<Ort>Witten</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="579" Status="I">
+		<Vorname>Holger</Vorname>
+		<Nachname>Siegler</Nachname>
+		<Ort>Münster</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="201012404" Status="N">
+		<Vorname>Jens</Vorname>
+		<Nachname>Sparmann</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2020012603" Status="N">
+		<Vorname>Carla Sophia</Vorname>
+		<Nachname>Spiller</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="825" Status="I">
+		<Vorname>Frank</Vorname>
+		<Nachname>Spingat</Nachname>
+		<Ort>Oldenburg</Ort>
+		<Region>NW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2015111402" Status="N">
+		<Vorname>Sophie</Vorname>
+		<Nachname>Stadler</Nachname>
+		<Ort>Heidelberg</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2018012003" Status="N">
+		<Vorname>Lukas</Vorname>
+		<Nachname>Stein</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="859" Status="I">
+		<Vorname>Karin</Vorname>
+		<Nachname>Stephan</Nachname>
+		<Ort>Mannheim</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="773" Status="N">
+		<Vorname>Klaus</Vorname>
+		<Nachname>Straube</Nachname>
+		<Ort>Bad Honnef</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="873" Status="N">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Streckert</Nachname>
+		<Ort>Witten</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="905" Status="N">
+		<Vorname>Andre</Vorname>
+		<Nachname>Ströttchen</Nachname>
+		<Ort>Essen</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="795" Status="N">
+		<Vorname>Oliver</Vorname>
+		<Nachname>Terborg</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2020012604" Status="N">
+		<Vorname>Jan</Vorname>
+		<Nachname>Thiesbrummel </Nachname>
+		<Ort>Velbert</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2012021103" Status="N">
+		<Vorname>Michaela</Vorname>
+		<Nachname>Tießler</Nachname>
+		<Ort>München</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="794" Status="N">
+		<Vorname>Tobias</Vorname>
+		<Nachname>Tietgen</Nachname>
+		<Ort>Friedrichstadt</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2010031405" Status="N">
+		<Vorname>Vincent</Vorname>
+		<Nachname>van Almsick</Nachname>
+		<Ort>Witten</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="899" Status="N">
+		<Vorname>Torsten</Vorname>
+		<Nachname>Vercek</Nachname>
+		<Ort>Bamberg</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="622" Status="N">
+		<Vorname>uwe</Vorname>
+		<Nachname>von diecken</Nachname>
+		<Ort>Witten</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="768" Status="N">
+		<Vorname>Gerhard</Vorname>
+		<Nachname>Walter</Nachname>
+		<Ort>Feucht</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011022604" Status="I">
+		<Vorname>Nils</Vorname>
+		<Nachname>Warnke</Nachname>
+		<Ort>Münster</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="621" Status="I">
+		<Vorname>Rolf</Vorname>
+		<Nachname>Warnke</Nachname>
+		<Ort>Münster</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="634" Status="N">
+		<Vorname>Björn</Vorname>
+		<Nachname>Weiß</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2007110403" Status="N">
+		<Vorname>Charlotte</Vorname>
+		<Nachname>Weißenberger</Nachname>
+		<Ort>Kriftel</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2018012004" Status="N">
+		<Vorname>Lea Katharina</Vorname>
+		<Nachname>Weisz</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2018012005" Status="N">
+		<Vorname>Rebecca</Vorname>
+		<Nachname>Weisz</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2017012102" Status="N">
+		<Vorname>Tobias</Vorname>
+		<Nachname>Westermann</Nachname>
+		<Ort>Ziethen</Ort>
+		<Region>N</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2011022605" Status="I">
+		<Vorname>Tobias</Vorname>
+		<Nachname>Weysters</Nachname>
+		<Ort>Duisburg</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="864" Status="I">
+		<Vorname>Jens</Vorname>
+		<Nachname>Wiesner</Nachname>
+		<Ort>Köln</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="826" Status="N">
+		<Vorname>Rüdiger</Vorname>
+		<Nachname>Wilz</Nachname>
+		<Ort>Kaiseraugst</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="829" Status="N">
+		<Vorname>Volker</Vorname>
+		<Nachname>Wilz</Nachname>
+		<Ort>Heidelberg</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="798" Status="N">
+		<Vorname>Manfred</Vorname>
+		<Nachname>Winter</Nachname>
+		<Ort>Offenbach</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="906" Status="I">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Witt</Nachname>
+		<Ort>Ulm</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014022302" Status="N">
+		<Vorname>Eva</Vorname>
+		<Nachname>Wöstemeyer</Nachname>
+		<Ort>Krefeld</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="702" Status="N">
+		<Vorname>Harald</Vorname>
+		<Nachname>Wujanz</Nachname>
+		<Ort>Potsdam</Ort>
+		<Region>BB</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="893" Status="N">
+		<Vorname>Dennis</Vorname>
+		<Nachname>Wulf</Nachname>
+		<Ort>München</Ort>
+		<Region>S</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="678" Status="N">
+		<Vorname>Sven</Vorname>
+		<Nachname>Wuwer</Nachname>
+		<Ort>Leipzig</Ort>
+		<Region>O</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2014111601" Status="N">
+		<Vorname>Fabian</Vorname>
+		<Nachname>Zillmann</Nachname>
+		<Ort>Berlin</Ort>
+		<Region>B</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="807" Status="N">
+		<Vorname>Andrea</Vorname>
+		<Nachname>Zöger</Nachname>
+		<Ort>Hanau</Ort>
+		<Region>M</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="599" Status="N">
+		<Vorname>Volker</Vorname>
+		<Nachname>Zöllner</Nachname>
+		<Ort>Schallstadt</Ort>
+		<Region>SW</Region>
+	</Wettkampfrichter>
+
+	<Wettkampfrichter Lizenznummer="2010031402" Status="N">
+		<Vorname>Thomas</Vorname>
+		<Nachname>Zündorf</Nachname>
+		<Ort>Münster</Ort>
+		<Region>W</Region>
+	</Wettkampfrichter>
+	</wkr:Liste>
