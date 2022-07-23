@@ -44,9 +44,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
@@ -69,6 +72,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private static final String DELIMITER = ";";
 	private static final Pattern delayPattern = Pattern.compile("\\d*[\\.,]?\\d+");
 
+	// main toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -77,16 +81,22 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private Button exportXslBtn;
 	@FXML
 	private ToggleButton startSignalTbtn;
+
+	// heats table
 	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, Instant> timeCol;
 	@FXML
 	private TableColumn<Heat, Integer> heatsIdCol;
+
+	// division table
 	@FXML
 	private TableView<HeatRegistration> divisionTbl;
 	@FXML
 	private TableColumn<Heat, Integer> divisionIdCol;
+	@FXML
+	private Menu swapMenu;
 
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
@@ -96,7 +106,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private StringProperty serialPortStartSignal;
 
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
-	private final ObservableList<HeatRegistration> devisionList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> divisionList = FXCollections.observableArrayList();
 
 	private Optional<SerialPort> serialPortOpt;
 
@@ -109,13 +119,13 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.divisionTbl.setItems(this.devisionList);
+		this.divisionTbl.setItems(this.divisionList);
 
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
-				this.devisionList.setAll(newSelection.getEntries());
+				this.divisionList.setAll(newSelection.getEntries());
 			} else {
-				this.devisionList.clear();
+				this.divisionList.clear();
 			}
 		});
 
@@ -468,12 +478,41 @@ public class HeatsController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	public void handleStartSignalOnAction() {
+	void handleStartSignalOnAction() {
 		if (this.startSignalTbtn.isSelected()) {
 			openPort();
 		} else {
 			closePort();
 		}
+	}
+
+	@FXML
+	void handleDivisionContextMenuOnShowing() {
+		HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
+		this.swapMenu.getItems().clear();
+		this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
+			String label = heatReg.getBib() + " - " + heatReg.getBoatLabel();
+			MenuItem menuItem = new MenuItem(label);
+			menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+				String question = getText("heats.confirmSwapRsult.question", selectedItem.getBoatLabel(),
+						heatReg.getBoatLabel());
+
+				if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), question)) {
+					this.dbTaskRunner.runInTransaction(progress -> {
+						this.regattaDAO.swapResults(heatReg, selectedItem);
+						return null;
+					}, dbResult -> {
+						try {
+							dbResult.getResult();
+						} catch (Exception ex) {
+							logger.log(Level.SEVERE, ex.getMessage(), ex);
+							FxUtils.showErrorMessage(getWindow(), ex);
+						}
+					});
+				}
+			});
+			this.swapMenu.getItems().add(menuItem);
+		});
 	}
 
 }
