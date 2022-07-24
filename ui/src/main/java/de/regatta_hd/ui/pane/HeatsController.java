@@ -488,31 +488,36 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleDivisionContextMenuOnShowing() {
-		HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
+		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
 		this.swapMenu.getItems().clear();
-		this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
-			String label = heatReg.getBib() + " - " + heatReg.getBoatLabel();
-			MenuItem menuItem = new MenuItem(label);
-			menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-				String question = getText("heats.confirmSwapRsult.question", selectedItem.getBoatLabel(),
-						heatReg.getBoatLabel());
 
-				if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), question)) {
-					this.dbTaskRunner.runInTransaction(progress -> {
-						this.regattaDAO.swapResults(heatReg, selectedItem);
-						return null;
-					}, dbResult -> {
-						try {
-							dbResult.getResult();
-						} catch (Exception ex) {
-							logger.log(Level.SEVERE, ex.getMessage(), ex);
-							FxUtils.showErrorMessage(getWindow(), ex);
-						}
-					});
-				}
+		if (selectedHeat.isStateFinished()) {
+			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
+
+			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
+				String label = heatReg.getBib() + " - " + heatReg.getBoatLabel();
+				MenuItem menuItem = new MenuItem(label);
+				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+					String question = getText("heats.confirmSwapRsult.question", selectedItem.getBoatLabel(),
+							heatReg.getBoatLabel());
+
+					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), question)) {
+						this.dbTaskRunner.runInTransaction(progress -> {
+							this.regattaDAO.swapResults(heatReg, selectedItem);
+							return null;
+						}, dbResult -> {
+							try {
+								dbResult.getResult();
+							} catch (Exception ex) {
+								logger.log(Level.SEVERE, ex.getMessage(), ex);
+								FxUtils.showErrorMessage(getWindow(), ex);
+							}
+						});
+					}
+				});
+				this.swapMenu.getItems().add(menuItem);
 			});
-			this.swapMenu.getItems().add(menuItem);
-		});
+		}
 	}
 
 }
