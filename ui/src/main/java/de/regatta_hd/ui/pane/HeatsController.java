@@ -518,6 +518,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 				this.swapMenu.getItems().add(menuItem);
 			});
 		}
+
+		// disable context menu if it's empty
+		this.swapMenu.setVisible(!this.swapMenu.getItems().isEmpty());
 	}
 
 }
