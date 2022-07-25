@@ -89,6 +89,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 	private TableColumn<Heat, Instant> timeCol;
 	@FXML
 	private TableColumn<Heat, Integer> heatsIdCol;
+	@FXML
+	private Menu stateMenu;
 
 	// division table
 	@FXML
@@ -119,15 +121,16 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.divisionTbl.setItems(this.divisionList);
-
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.divisionList.setAll(newSelection.getEntries());
+				this.divisionTbl.sort();
 			} else {
 				this.divisionList.clear();
 			}
 		});
+
+		this.divisionTbl.setItems(this.divisionList);
 
 		this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
 		this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
@@ -251,6 +254,92 @@ public class HeatsController extends AbstractRegattaDAOController {
 		}, false);
 
 		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+	}
+
+	@FXML
+	void handleStartSignalOnAction() {
+		if (this.startSignalTbtn.isSelected()) {
+			openPort();
+		} else {
+			closePort();
+		}
+	}
+
+	@FXML
+	void handleHeatsContextMenuOnShowing() {
+		this.stateMenu.getItems().clear();
+
+		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
+		if (selectedHeat != null) {
+			int currentState = selectedHeat.getState();
+			byte[] allowedStates = Heat.getAllowedStates();
+			for (int i = 0; i < allowedStates.length; i++) {
+				if (currentState != allowedStates[i]) {
+					final byte newState = allowedStates[i];
+					String newStateLabel = Heat.getStateLabel(allowedStates[i]);
+					MenuItem menuItem = new MenuItem(newStateLabel);
+					menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+						// confirm changing the state
+						if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmChangeState.title"), getText(
+								"heats.confirmChangeState.question", selectedHeat.getStateLabel(), newStateLabel))) {
+							// changing state requires a transaction
+							this.dbTaskRunner.runInTransaction(progress -> {
+								selectedHeat.setState(newState);
+								return this.db.getEntityManager().merge(selectedHeat);
+							}, dbResult -> {
+								try {
+									 int indexOf = this.heatsList.indexOf(selectedHeat);
+									 this.heatsList.set(indexOf, dbResult.getResult());
+								} catch (Exception ex) {
+									logger.log(Level.SEVERE, ex.getMessage(), ex);
+									FxUtils.showErrorMessage(getWindow(), ex);
+								}
+							});
+						}
+					});
+					this.stateMenu.getItems().add(menuItem);
+				}
+			}
+		}
+
+		// disable context menu if it's empty
+		this.stateMenu.setVisible(!this.stateMenu.getItems().isEmpty());
+	}
+
+	@FXML
+	void handleDivisionContextMenuOnShowing() {
+		this.swapMenu.getItems().clear();
+
+		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
+		if (selectedHeat != null && selectedHeat.isStateFinished()) {
+			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
+
+			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
+				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + heatReg.getBoatLabel());
+				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+					// confirm swapping the results
+					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), getText(
+							"heats.confirmSwapRsult.question", selectedItem.getBoatLabel(), heatReg.getBoatLabel()))) {
+						// swapping results requires a transaction
+						this.dbTaskRunner.runInTransaction(progress -> {
+							return this.regattaDAO.swapResults(heatReg, selectedItem);
+						}, dbResult -> {
+							try {
+								this.divisionList.setAll(dbResult.getResult().getEntries());
+								this.divisionTbl.sort();
+							} catch (Exception ex) {
+								logger.log(Level.SEVERE, ex.getMessage(), ex);
+								FxUtils.showErrorMessage(getWindow(), ex);
+							}
+						});
+					}
+				});
+				this.swapMenu.getItems().add(menuItem);
+			});
+		}
+
+		// disable context menu if it's empty
+		this.swapMenu.setVisible(!this.swapMenu.getItems().isEmpty());
 	}
 
 	@Override
@@ -475,52 +564,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 				.append(DELIMITER).append(HEADER_BOOT_BAHN_1).append(DELIMITER).append(HEADER_BOOT_BAHN_2)
 				.append(DELIMITER).append(HEADER_BOOT_BAHN_3).append(DELIMITER).append(HEADER_BOOT_BAHN_4)
 				.append(DELIMITER).append(HEADER_STATUS).append(StringUtils.LF);
-	}
-
-	@FXML
-	void handleStartSignalOnAction() {
-		if (this.startSignalTbtn.isSelected()) {
-			openPort();
-		} else {
-			closePort();
-		}
-	}
-
-	@FXML
-	void handleDivisionContextMenuOnShowing() {
-		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
-		this.swapMenu.getItems().clear();
-
-		if (selectedHeat.isStateFinished()) {
-			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
-
-			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
-				String label = heatReg.getBib() + " - " + heatReg.getBoatLabel();
-				MenuItem menuItem = new MenuItem(label);
-				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-					String question = getText("heats.confirmSwapRsult.question", selectedItem.getBoatLabel(),
-							heatReg.getBoatLabel());
-
-					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), question)) {
-						this.dbTaskRunner.runInTransaction(progress -> {
-							this.regattaDAO.swapResults(heatReg, selectedItem);
-							return null;
-						}, dbResult -> {
-							try {
-								dbResult.getResult();
-							} catch (Exception ex) {
-								logger.log(Level.SEVERE, ex.getMessage(), ex);
-								FxUtils.showErrorMessage(getWindow(), ex);
-							}
-						});
-					}
-				});
-				this.swapMenu.getItems().add(menuItem);
-			});
-		}
-
-		// disable context menu if it's empty
-		this.swapMenu.setVisible(!this.swapMenu.getItems().isEmpty());
 	}
 
 }

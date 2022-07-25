@@ -97,6 +97,13 @@
               </cellValueFactory>
             </TableColumn>
           </columns>
+          <contextMenu>
+            <ContextMenu onShowing="#handleHeatsContextMenuOnShowing">
+              <items>
+                <Menu fx:id="stateMenu" text="Status aendern ..." />
+              </items>
+            </ContextMenu>
+          </contextMenu>
         </TableView>
 
         <TableView fx:id="divisionTbl">
@@ -112,7 +119,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;"
+            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
               text="%common.lane">
               <cellValueFactory>
                 <PropertyValueFactory>
@@ -120,7 +127,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;"
+            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
               text="%common.bibAbr">
               <cellValueFactory>
                 <PropertyValueFactory>
@@ -135,7 +142,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;"
+            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
               text="%common.rank">
               <cellValueFactory>
                 <PropertyValueFactory>
@@ -143,7 +150,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="70" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;"
+            <TableColumn prefWidth="70" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
               text="%common.result">
               <cellValueFactory>
                 <PropertyValueFactory>
@@ -151,7 +158,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="50" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;"
+            <TableColumn prefWidth="50" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
               text="%common.points">
               <cellValueFactory>
                 <PropertyValueFactory>
