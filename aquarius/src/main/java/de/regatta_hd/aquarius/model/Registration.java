@@ -164,6 +164,13 @@ public class Registration {
 		return null;
 	}
 
+	public String getClubNameAbr() {
+		if (getClub() != null) {
+			return getClub().getAbbreviation();
+		}
+		return null;
+	}
+
 	public String getClubCity() {
 		if (getClub() != null) {
 			return getClub().getCity();
