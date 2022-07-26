@@ -33,12 +33,6 @@ public class UIModule extends AbstractModule {
 
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
-	private SimpleBooleanProperty showIdColumn;
-
-	private SimpleStringProperty serialPortStartSignal;
-
-	private SimpleStringProperty serialPortTrafficLight;
-
 	@Override
 	protected void configure() {
 		bind(TrafficLightsStartList.class);
@@ -49,53 +43,48 @@ public class UIModule extends AbstractModule {
 	@Named(CONFIG_SHOW_ID_COLUMN)
 	@Singleton
 	BooleanProperty getShowIdColumn(ConfigService configService) {
-		if (this.showIdColumn == null) {
-			this.showIdColumn = new SimpleBooleanProperty(configService.getBooleanProperty(CONFIG_SHOW_ID_COLUMN));
-			this.showIdColumn.addListener((obs, oldValue, newValue) -> {
-				try {
-					configService.setProperty(CONFIG_SHOW_ID_COLUMN, newValue.booleanValue());
-				} catch (IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			});
-		}
-		return this.showIdColumn;
+		SimpleBooleanProperty showIdColumn = new SimpleBooleanProperty(
+				configService.getBooleanProperty(CONFIG_SHOW_ID_COLUMN));
+		showIdColumn.addListener((obs, oldValue, newValue) -> {
+			try {
+				configService.setProperty(CONFIG_SHOW_ID_COLUMN, newValue.booleanValue());
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		});
+		return showIdColumn;
 	}
 
 	@Provides
 	@Named(CONFIG_SERIAL_PORT_START_SIGNAL)
 	@Singleton
 	StringProperty getSerialPortStartSignal(ConfigService configService) {
-		if (this.serialPortStartSignal == null) {
-			this.serialPortStartSignal = new SimpleStringProperty(
-					configService.getProperty(CONFIG_SERIAL_PORT_START_SIGNAL));
-			this.serialPortStartSignal.addListener((obs, oldValue, newValue) -> {
-				try {
-					configService.setProperty(CONFIG_SERIAL_PORT_START_SIGNAL, newValue);
-				} catch (IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			});
-		}
-		return this.serialPortStartSignal;
+		SimpleStringProperty serialPortStartSignal = new SimpleStringProperty(
+				configService.getProperty(CONFIG_SERIAL_PORT_START_SIGNAL));
+		serialPortStartSignal.addListener((obs, oldValue, newValue) -> {
+			try {
+				configService.setProperty(CONFIG_SERIAL_PORT_START_SIGNAL, newValue);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		});
+		return serialPortStartSignal;
 	}
 
 	@Provides
 	@Named(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS)
 	@Singleton
 	StringProperty getSerialPortTrafficLight(ConfigService configService) {
-		if (this.serialPortTrafficLight == null) {
-			this.serialPortTrafficLight = new SimpleStringProperty(
-					configService.getProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS));
-			this.serialPortTrafficLight.addListener((obs, oldValue, newValue) -> {
-				try {
-					configService.setProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS, newValue);
-				} catch (IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			});
-		}
-		return this.serialPortTrafficLight;
+		SimpleStringProperty serialPortTrafficLight = new SimpleStringProperty(
+				configService.getProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS));
+		serialPortTrafficLight.addListener((obs, oldValue, newValue) -> {
+			try {
+				configService.setProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS, newValue);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		});
+		return serialPortTrafficLight;
 	}
 
 	@Provides
