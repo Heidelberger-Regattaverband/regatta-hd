@@ -246,7 +246,7 @@ public class Heat {
 		return getRace().getShortLabel();
 	}
 
-	public String getDevisionLabel() {
+	public String getDivisionLabel() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getRoundCode()).append(getRoundLabel());
 		if (getRace().getAgeClass().isMasters()) {
@@ -263,22 +263,7 @@ public class Heat {
 		if (isCancelled()) {
 			return bundle.getString("heat.state.cancelled");
 		}
-		switch (getState()) {
-		case 0:
-			return bundle.getString("heat.state.initial");
-		case 1:
-			return bundle.getString("heat.state.scheduled");
-		case 2:
-			return bundle.getString("heat.state.started");
-		case 4:
-			return bundle.getString("heat.state.official");
-		case 5:
-			return bundle.getString("heat.state.finished");
-		case 6:
-			return bundle.getString("heat.state.photoFinish");
-		default:
-			return Byte.toString(getState());
-		}
+		return getStateLabel(getState());
 	}
 
 	private String getGroupValueLabel() {
@@ -306,5 +291,30 @@ public class Heat {
 		default:
 			return null;
 		}
+	}
+
+	// static helpers
+
+	public static String getStateLabel(byte state) {
+		switch (state) {
+		case 0:
+			return bundle.getString("heat.state.initial");
+		case 1:
+			return bundle.getString("heat.state.scheduled");
+		case 2:
+			return bundle.getString("heat.state.started");
+		case 4:
+			return bundle.getString("heat.state.official");
+		case 5:
+			return bundle.getString("heat.state.finished");
+		case 6:
+			return bundle.getString("heat.state.photoFinish");
+		default:
+			return Byte.toString(state);
+		}
+	}
+
+	public static byte[] getAllowedStates() {
+		return new byte[] { 0, 1, 2, 5, 4, 6 };
 	}
 }

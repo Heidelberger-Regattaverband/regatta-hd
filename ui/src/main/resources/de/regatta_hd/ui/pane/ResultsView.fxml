@@ -58,10 +58,10 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.divisionAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>devisionLabel</property>
+              <property>divisionLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
