@@ -28,7 +28,7 @@ public class UIModule extends AbstractModule {
 
 	public static final String CONFIG_SERIAL_PORT_START_SIGNAL = "config.serialPort.startSignal";
 
-	public static final String CONFIG_SERIAL_PORT_TRAFFIC_LIGHT = "config.serialPort.trafficLight";
+	public static final String CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS = "config.serialPort.trafficLights";
 
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
 
@@ -78,14 +78,14 @@ public class UIModule extends AbstractModule {
 	}
 
 	@Provides
-	@Named(CONFIG_SERIAL_PORT_TRAFFIC_LIGHT)
+	@Named(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS)
 	StringProperty getSerialPortTrafficLight(ConfigService configService) {
 		if (this.serialPortTrafficLight == null) {
 			this.serialPortTrafficLight = new SimpleStringProperty(
-					configService.getProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHT));
+					configService.getProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS));
 			this.serialPortTrafficLight.addListener((obs, oldValue, newValue) -> {
 				try {
-					configService.setProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHT, newValue);
+					configService.setProperty(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS, newValue);
 				} catch (IOException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}

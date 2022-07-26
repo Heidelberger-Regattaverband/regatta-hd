@@ -33,8 +33,8 @@ public class ConfigController extends BaseController {
 	@Named(UIModule.CONFIG_SERIAL_PORT_START_SIGNAL)
 	private StringProperty serialPortStartSignal;
 	@Inject
-	@Named(UIModule.CONFIG_SERIAL_PORT_TRAFFIC_LIGHT)
-	private StringProperty serialPortTrafficLight;
+	@Named(UIModule.CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS)
+	private StringProperty serialPortTrafficLights;
 
 	private final ObservableList<SerialPort> serialPortsStartSignalList = SerialPortUtils.getAllSerialPorts(true);
 	private final ObservableList<SerialPort> serialPortsTrafficLightList = SerialPortUtils.getAllSerialPorts(true);
@@ -48,7 +48,7 @@ public class ConfigController extends BaseController {
 		this.serialPortStartSignalCBox.getSelectionModel().select(index);
 
 		this.serialPortTrafficLightCBox.setItems(this.serialPortsTrafficLightList);
-		index = SerialPortUtils.findByPortPath(this.serialPortsTrafficLightList, this.serialPortTrafficLight.get());
+		index = SerialPortUtils.findByPortPath(this.serialPortsTrafficLightList, this.serialPortTrafficLights.get());
 		this.serialPortTrafficLightCBox.getSelectionModel().select(index);
 	}
 
@@ -66,7 +66,7 @@ public class ConfigController extends BaseController {
 	@FXML
 	void handleSerialPortTrafficLightOnAction() {
 		SerialPort serialPort = this.serialPortTrafficLightCBox.getSelectionModel().getSelectedItem();
-		this.serialPortTrafficLight.set(serialPort != null ? serialPort.getSystemPortPath() : null);
+		this.serialPortTrafficLights.set(serialPort != null ? serialPort.getSystemPortPath() : null);
 	}
 
 }
