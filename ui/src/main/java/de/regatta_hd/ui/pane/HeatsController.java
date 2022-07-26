@@ -191,12 +191,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportCsvOnAction() {
 		disableButtons(true);
 
-		DBTask<String> dbTask = super.dbTaskRunner.createTask(progress -> {
-			return this.startList.createCsv(this.heatsList, progress);
-		}, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"),
-					"*.csv");
-			if (file != null) {
+		File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"), "*.csv");
+		if (file != null) {
+			DBTask<String> dbTask = super.dbTaskRunner.createTask(progress -> {
+				return this.startList.createCsv(this.heatsList, progress);
+			}, dbResult -> {
 				try {
 					saveCsvFile(dbResult.getResult(), file);
 				} catch (Exception e) {
@@ -205,24 +204,23 @@ public class HeatsController extends AbstractRegattaDAOController {
 				} finally {
 					disableButtons(false);
 				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+			}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+			runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+		} else {
+			disableButtons(false);
+		}
 	}
 
 	@FXML
 	void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(progress -> {
-			return this.startList.createWorkbook(this.heatsList, progress);
-		}, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"),
-					"*.xls");
-			if (file != null) {
+		File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"), "*.xls");
+		if (file != null) {
+			DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(progress -> {
+				return this.startList.createWorkbook(this.heatsList, progress);
+			}, dbResult -> {
 				try (Workbook workbook = dbResult.getResult()) {
 					WorkbookUtils.saveWorkbook(workbook, file);
 				} catch (Exception e) {
@@ -231,12 +229,12 @@ public class HeatsController extends AbstractRegattaDAOController {
 				} finally {
 					disableButtons(false);
 				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+			}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+			runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+		} else {
+			disableButtons(false);
+		}
 	}
 
 	@FXML
