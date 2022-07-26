@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.commons.core.ConfigService;
@@ -46,6 +47,7 @@ public class UIModule extends AbstractModule {
 
 	@Provides
 	@Named(CONFIG_SHOW_ID_COLUMN)
+	@Singleton
 	BooleanProperty getShowIdColumn(ConfigService configService) {
 		if (this.showIdColumn == null) {
 			this.showIdColumn = new SimpleBooleanProperty(configService.getBooleanProperty(CONFIG_SHOW_ID_COLUMN));
@@ -62,6 +64,7 @@ public class UIModule extends AbstractModule {
 
 	@Provides
 	@Named(CONFIG_SERIAL_PORT_START_SIGNAL)
+	@Singleton
 	StringProperty getSerialPortStartSignal(ConfigService configService) {
 		if (this.serialPortStartSignal == null) {
 			this.serialPortStartSignal = new SimpleStringProperty(
@@ -79,6 +82,7 @@ public class UIModule extends AbstractModule {
 
 	@Provides
 	@Named(CONFIG_SERIAL_PORT_TRAFFIC_LIGHTS)
+	@Singleton
 	StringProperty getSerialPortTrafficLight(ConfigService configService) {
 		if (this.serialPortTrafficLight == null) {
 			this.serialPortTrafficLight = new SimpleStringProperty(
@@ -95,6 +99,7 @@ public class UIModule extends AbstractModule {
 	}
 
 	@Provides
+	@Singleton
 	ResourceBundle getResourceBundle() {
 		return bundle;
 	}
