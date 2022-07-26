@@ -76,9 +76,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private Menu swapMenu;
 
+	// injections
 	@Inject
 	private TrafficLightsStartList startList;
-
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
@@ -86,9 +86,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@Named(UIModule.CONFIG_SERIAL_PORT_START_SIGNAL)
 	private StringProperty serialPortStartSignal;
 
+	// private fields
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
 	private final ObservableList<HeatRegistration> divisionList = FXCollections.observableArrayList();
-
 	private Optional<SerialPort> serialPortOpt;
 
 	@Override
