@@ -61,7 +61,7 @@
         <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>devisionLabel</property>
+              <property>divisionLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>

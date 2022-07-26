@@ -246,7 +246,7 @@ public class Heat {
 		return getRace().getShortLabel();
 	}
 
-	public String getDevisionLabel() {
+	public String getDivisionLabel() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getRoundCode()).append(getRoundLabel());
 		if (getRace().getAgeClass().isMasters()) {
