@@ -1,6 +1,8 @@
 package de.regatta_hd.ui;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,6 +12,7 @@ import com.google.inject.name.Named;
 
 import de.regatta_hd.commons.core.ConfigService;
 import de.regatta_hd.commons.fx.CommonsFXModule;
+import de.regatta_hd.ui.util.TrafficLightsStartList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,6 +30,8 @@ public class UIModule extends AbstractModule {
 
 	public static final String CONFIG_SERIAL_PORT_TRAFFIC_LIGHT = "config.serialPort.trafficLight";
 
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.GERMANY);
+
 	private SimpleBooleanProperty showIdColumn;
 
 	private SimpleStringProperty serialPortStartSignal;
@@ -35,6 +40,7 @@ public class UIModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		bind(TrafficLightsStartList.class);
 		install(new CommonsFXModule());
 	}
 
@@ -88,4 +94,8 @@ public class UIModule extends AbstractModule {
 		return this.serialPortTrafficLight;
 	}
 
+	@Provides
+	ResourceBundle getResourceBundle() {
+		return bundle;
+	}
 }

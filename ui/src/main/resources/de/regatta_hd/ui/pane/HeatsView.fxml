@@ -74,10 +74,10 @@
               </cellValueFactory>
             </TableColumn>
             <TableColumn prefWidth="70" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;"
-              text="%common.devisionAbr">
+              text="%common.divisionAbr">
               <cellValueFactory>
                 <PropertyValueFactory>
-                  <property>devisionLabel</property>
+                  <property>divisionLabel</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
@@ -100,7 +100,7 @@
           <contextMenu>
             <ContextMenu onShowing="#handleHeatsContextMenuOnShowing">
               <items>
-                <Menu fx:id="stateMenu" text="Status aendern ..." />
+                <Menu fx:id="stateMenu" text="%heats.changeState" />
               </items>
             </ContextMenu>
           </contextMenu>
