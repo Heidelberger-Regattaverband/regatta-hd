@@ -45,7 +45,7 @@ public class RegistrationLabel {
 	@JoinColumn(name = "EL_Entry_ID_FK", nullable = false)
 	private Registration registration;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "EL_Label_ID_FK", nullable = false)
 	@ToString.Include(rank = 10)
 	private Label label;

@@ -77,7 +77,12 @@ import lombok.ToString;
 		@NamedSubgraph(name = "registration", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "club"), //
+						@NamedAttributeNode(value = "labels", subgraph = "label") //
 				}), //
+		@NamedSubgraph(name = "label", //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "label") //
+		}), //
 		@NamedSubgraph(name = "race", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "ageClass"), //
