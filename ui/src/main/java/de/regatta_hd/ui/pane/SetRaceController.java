@@ -68,7 +68,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<SeedingListEntry, Integer> seedingListRankCol;
 	@FXML
-	private TableColumn<SeedingListEntry, Integer> seedingListDevisionNumberCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListDivisionNumberCol;
 	@FXML
 	private TableColumn<SeedingListEntry, String> seedingListResultCol;
 	@FXML
@@ -137,7 +137,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		usedWidth = this.seedingListPosCol.widthProperty().add(this.seedingListBibCol.widthProperty())
 				.add(this.seedingListRankCol.widthProperty())
-				.add(this.seedingListDevisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
+				.add(this.seedingListDivisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
 						.add(this.seedingListEqualCrewCol.widthProperty()));
 		this.seedingListBoatCol.prefWidthProperty()
 				.bind(this.seedingListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
@@ -448,7 +448,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		// loops over all heats of race and reads required data from DB
 		race.getDrivenHeats().forEach(heat -> {
 			Label heatNrLabel = new Label(
-					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
+					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDivisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 
 			ObservableList<HeatRegistration> items = FXCollections

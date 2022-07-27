@@ -258,7 +258,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 					if (pointsBoat != null) {
 						// duplicate points if it's the first heat of a set race
-						if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
+						if (raceIsSet && heatReg.getHeat().getDivisionNumber() == 1) {
 							pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
 						}
 

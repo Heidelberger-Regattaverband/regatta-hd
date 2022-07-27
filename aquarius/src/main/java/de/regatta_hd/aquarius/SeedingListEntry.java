@@ -39,9 +39,9 @@ public class SeedingListEntry {
 		return getRegistration().getBoatLabel();
 	}
 
-	public Short getDevisionNumber() {
+	public Short getDivisionNumber() {
 		return this.srcHeatRregistration != null
-				? Short.valueOf(this.srcHeatRregistration.getHeat().getDevisionNumber())
+				? Short.valueOf(this.srcHeatRregistration.getHeat().getDivisionNumber())
 				: null;
 	}
 

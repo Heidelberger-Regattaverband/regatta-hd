@@ -29,8 +29,8 @@ public class ResultEntry {
 		return this.heat.getNumber();
 	}
 
-	public short getDevisionNumber() {
-		return this.heat.getDevisionNumber();
+	public short getDivisionNumber() {
+		return this.heat.getDivisionNumber();
 	}
 
 	public String getDivisionLabel() {

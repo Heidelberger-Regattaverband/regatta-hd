@@ -107,7 +107,7 @@ public class Race {
 	private BoatClass boatClass;
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
-	@OrderBy("devisionNumber")
+	@OrderBy("divisionNumber")
 	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
@@ -225,7 +225,7 @@ public class Race {
 
 	private Stream<Heat> getSortedHeats() {
 		return getHeats().stream()
-				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
+				.sorted((entry1, entry2) -> entry1.getDivisionNumber() > entry2.getDivisionNumber() ? 1 : -1);
 	}
 
 	public enum GroupMode {

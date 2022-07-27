@@ -124,7 +124,7 @@ public class Heat {
 	 */
 	@Column(name = "Comp_HeatNumber")
 	@ToString.Include(rank = 10)
-	private short devisionNumber;
+	private short divisionNumber;
 
 	/**
 	 * The time when this {@link Heat heat} is started.
