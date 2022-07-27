@@ -56,7 +56,7 @@ public class TrafficLightsStartList {
 
 			builder.append(heat.getNumber()).append(DELIMITER);
 			builder.append(heat.getRaceNumber()).append(DELIMITER);
-			builder.append(heat.getDevisionNumber()).append(DELIMITER);
+			builder.append(heat.getDivisionNumber()).append(DELIMITER);
 
 			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			short laneCount = heat.getRace().getRaceMode().getLaneCount();
@@ -108,7 +108,7 @@ public class TrafficLightsStartList {
 
 			row.createCell(cellIdx++).setCellValue(heat.getNumber());
 			row.createCell(cellIdx++).setCellValue(heat.getRaceNumber());
-			row.createCell(cellIdx++).setCellValue(heat.getDevisionNumber());
+			row.createCell(cellIdx++).setCellValue(heat.getDivisionNumber());
 
 			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			short laneCount = heat.getRace().getRaceMode().getLaneCount();
