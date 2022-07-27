@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.24</version>
+  <version>0.1.25</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -43,7 +43,7 @@
     <maven.compiler.release>11</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>18.0.1</openjfx.version>
+    <openjfx.version>18.0.2</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.1.1</controlsfx.version>
@@ -67,10 +67,13 @@
     <junit.version>5.8.2</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.13.0</liquibase.version>
+    <liquibase.version>4.14.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.2</poi.version>
+
+    <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
+    <jSerialComm.version>2.9.2</jSerialComm.version>
   </properties>
 
   <modules>
@@ -81,6 +84,7 @@
     <module>ui</module>
     <module>schemas</module>
     <module>releng/appassembler</module>
+    <module>releng/nativeapp</module>
     <module>releng/webstart</module>
   </modules>
 
@@ -227,6 +231,11 @@
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
         <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fazecast</groupId>
+        <artifactId>jSerialComm</artifactId>
+        <version>${jSerialComm.version}</version>
       </dependency>
 
       <!-- ========== -->

@@ -127,14 +127,21 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn resizable="true" reorderable="false" sortable="false" text="%common.club" prefWidth="300">
+            <TableColumn resizable="true" reorderable="false" sortable="true" text="%common.club" prefWidth="200">
               <cellValueFactory>
                 <PropertyValueFactory>
-                  <property>clubName</property>
+                  <property>clubNameAbr</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn resizable="true" reorderable="false" text="%common.city" prefWidth="140">
+            <TableColumn resizable="false" reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.boat" prefWidth="50">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>boatNumber</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn resizable="true" reorderable="false" sortable="true" text="%common.city" prefWidth="140">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>clubCity</property>

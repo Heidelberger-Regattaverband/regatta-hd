@@ -33,8 +33,8 @@ public class ResultEntry {
 		return this.heat.getDevisionNumber();
 	}
 
-	public String getDevisionLabel() {
-		return this.heat.getDevisionLabel();
+	public String getDivisionLabel() {
+		return this.heat.getDivisionLabel();
 	}
 
 	public String getRaceNumber() {

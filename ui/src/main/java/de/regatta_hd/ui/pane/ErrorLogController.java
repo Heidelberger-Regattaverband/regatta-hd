@@ -12,6 +12,7 @@ import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
@@ -24,7 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class ErrorLogController extends AbstractPaneController {
+public class ErrorLogController extends PaneController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
 
 	@FXML
@@ -152,6 +153,7 @@ public class ErrorLogController extends AbstractPaneController {
 
 	private void loadLogRecords(boolean refresh) {
 		String selectedHostName = this.hostNameCbx.getSelectionModel().getSelectedItem();
+		LogRecord selectedItem = this.logRecordsTbl.getSelectionModel().getSelectedItem();
 
 		if (selectedHostName != null) {
 			disableButtons(true);
@@ -166,6 +168,7 @@ public class ErrorLogController extends AbstractPaneController {
 			}, dbResult -> {
 				try {
 					this.logRecordsList.setAll(dbResult.getResult());
+					this.logRecordsTbl.getSelectionModel().select(selectedItem);
 					FxUtils.autoResizeColumns(this.logRecordsTbl);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);

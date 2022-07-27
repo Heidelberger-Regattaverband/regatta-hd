@@ -1,4 +1,4 @@
-package de.regatta_hd.ui.pane;
+package de.regatta_hd.commons.fx.stage;
 
 import org.controlsfx.dialog.ProgressDialog;
 
@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-abstract class AbstractPaneController extends AbstractBaseController {
+public abstract class PaneController extends BaseController {
 
 	@FXML
 	private Pane rootPane;

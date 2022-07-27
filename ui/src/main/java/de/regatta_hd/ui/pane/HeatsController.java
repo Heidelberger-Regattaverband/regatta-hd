@@ -8,59 +8,47 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
+import de.regatta_hd.ui.util.SerialPortUtils;
+import de.regatta_hd.ui.util.TrafficLightsStartList;
 import de.regatta_hd.ui.util.WorkbookUtils;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 
 public class HeatsController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
 
-	private static final String HEADER_INDEX = "Index";
-	private static final String HEADER_RENN_NR = "RennNr";
-	private static final String HEADER_ABTEILUNG = "Abtlg";
-	private static final String HEADER_STATUS = "Status";
-	private static final String HEADER_BOOT_BAHN_4 = "Boot Bahn 4";
-	private static final String HEADER_BOOT_BAHN_3 = "Boot Bahn 3";
-	private static final String HEADER_BOOT_BAHN_2 = "Boot Bahn 2";
-	private static final String HEADER_BOOT_BAHN_1 = "Boot Bahn 1";
-	private static final String HEADER_DELAY_BAHN_4 = "Delay Bahn 4";
-	private static final String HEADER_DELAY_BAHN_3 = "Delay Bahn 3";
-	private static final String HEADER_DELAY_BAHN_2 = "Delay Bahn 2";
-	private static final String HEADER_DELAY_BAHN_1 = "Delay Bahn 1";
-	private static final String DELIMITER = ";";
-	private static final Pattern delayPattern = Pattern.compile("\\d*[\\.,]?\\d+");
-
+	// main toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -68,22 +56,40 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private Button exportXslBtn;
 	@FXML
+	private ToggleButton startSignalTbtn;
+
+	// heats table
+	@FXML
 	private TableView<Heat> heatsTbl;
 	@FXML
 	private TableColumn<Heat, Instant> timeCol;
 	@FXML
 	private TableColumn<Heat, Integer> heatsIdCol;
 	@FXML
+	private Menu stateMenu;
+
+	// division table
+	@FXML
 	private TableView<HeatRegistration> divisionTbl;
 	@FXML
 	private TableColumn<Heat, Integer> divisionIdCol;
+	@FXML
+	private Menu swapMenu;
 
+	// injections
+	@Inject
+	private TrafficLightsStartList startList;
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
+	@Inject
+	@Named(UIModule.CONFIG_SERIAL_PORT_START_SIGNAL)
+	private StringProperty serialPortStartSignal;
 
+	// private fields
 	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
-	private final ObservableList<HeatRegistration> scheduleList = FXCollections.observableArrayList();
+	private final ObservableList<HeatRegistration> divisionList = FXCollections.observableArrayList();
+	private Optional<SerialPort> serialPortOpt;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -94,17 +100,76 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.heatsTbl.setItems(this.heatsList);
 		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.divisionTbl.setItems(this.scheduleList);
-
 		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
-				this.scheduleList.setAll(newSelection.getEntries());
+				this.divisionList.setAll(newSelection.getEntries());
+				this.divisionTbl.sort();
 			} else {
-				this.scheduleList.clear();
+				this.divisionList.clear();
 			}
 		});
 
+		this.divisionTbl.setItems(this.divisionList);
+
+		this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
+		this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
+
 		loadHeats(false);
+	}
+
+	@Override
+	public void shutdown() {
+		closePort();
+		// don't forget to shutdown parent class
+		super.shutdown();
+	}
+
+	private void openPort() {
+		if (this.serialPortOpt.isPresent()) {
+			SerialPort serialPort = this.serialPortOpt.get();
+			boolean openPort = serialPort.isOpen() || serialPort.openPort();
+
+			if (openPort) {
+				SerialPortDataListener serialPortListener = new SerialPortDataListener() {
+
+					@Override
+					public void serialEvent(SerialPortEvent event) {
+						event.getEventType();
+						System.out.println(Arrays.toString(event.getReceivedData()));
+					}
+
+					@Override
+					public int getListeningEvents() {
+						return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+					}
+				};
+				serialPort.addDataListener(serialPortListener);
+
+//			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
+//				byte[] buffer = new byte[1024];
+//				int read = portIn.read(buffer);
+//				while (read >= 0) {
+//					System.out.println("Read " + read + ": "+ Arrays.toString(buffer));
+//					read = portIn.read(buffer);
+//				}
+//			} catch (IOException e) {
+//				logger.log(Level.SEVERE, e.getMessage(), e);
+//				FxUtils.showErrorMessage(getWindow(), e);
+//			} finally {
+//				port.closePort();
+//			}
+			} else {
+				FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
+			}
+		}
+	}
+
+	private void closePort() {
+		if (this.serialPortOpt.isPresent()) {
+			SerialPort serialPort = this.serialPortOpt.get();
+			serialPort.removeDataListener();
+			serialPort.closePort();
+		}
 	}
 
 	@Override
@@ -126,10 +191,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 	void handleExportCsvOnAction() {
 		disableButtons(true);
 
-		DBTask<String> dbTask = super.dbTaskRunner.createTask(this::createCsv, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"),
-					"*.csv");
-			if (file != null) {
+		File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"), "*.csv");
+		if (file != null) {
+			DBTask<String> dbTask = super.dbTaskRunner.createTask(progress -> {
+				return this.startList.createCsv(this.heatsList, progress);
+			}, dbResult -> {
 				try {
 					saveCsvFile(dbResult.getResult(), file);
 				} catch (Exception e) {
@@ -138,22 +204,23 @@ public class HeatsController extends AbstractRegattaDAOController {
 				} finally {
 					disableButtons(false);
 				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+			}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+			runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+		} else {
+			disableButtons(false);
+		}
 	}
 
 	@FXML
 	void handleExportXslOnAction() {
 		disableButtons(true);
 
-		DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(this::createWorkbook, dbResult -> {
-			File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"),
-					"*.xls");
-			if (file != null) {
+		File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"), "*.xls");
+		if (file != null) {
+			DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(progress -> {
+				return this.startList.createWorkbook(this.heatsList, progress);
+			}, dbResult -> {
 				try (Workbook workbook = dbResult.getResult()) {
 					WorkbookUtils.saveWorkbook(workbook, file);
 				} catch (Exception e) {
@@ -162,12 +229,98 @@ public class HeatsController extends AbstractRegattaDAOController {
 				} finally {
 					disableButtons(false);
 				}
-			} else {
-				disableButtons(false);
-			}
-		}, false);
+			}, false);
 
-		runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+			runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+		} else {
+			disableButtons(false);
+		}
+	}
+
+	@FXML
+	void handleStartSignalOnAction() {
+		if (this.startSignalTbtn.isSelected()) {
+			openPort();
+		} else {
+			closePort();
+		}
+	}
+
+	@FXML
+	void handleHeatsContextMenuOnShowing() {
+		this.stateMenu.getItems().clear();
+
+		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
+		if (selectedHeat != null) {
+			int currentState = selectedHeat.getState();
+			byte[] allowedStates = Heat.getAllowedStates();
+			for (int i = 0; i < allowedStates.length; i++) {
+				if (currentState != allowedStates[i]) {
+					final byte newState = allowedStates[i];
+					String newStateLabel = Heat.getStateLabel(allowedStates[i]);
+					MenuItem menuItem = new MenuItem(newStateLabel);
+					menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+						// confirm changing the state
+						if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmChangeState.title"), getText(
+								"heats.confirmChangeState.question", selectedHeat.getStateLabel(), newStateLabel))) {
+							// changing state requires a transaction
+							this.dbTaskRunner.runInTransaction(progress -> {
+								selectedHeat.setState(newState);
+								return this.db.getEntityManager().merge(selectedHeat);
+							}, dbResult -> {
+								try {
+									int indexOf = this.heatsList.indexOf(selectedHeat);
+									this.heatsList.set(indexOf, dbResult.getResult());
+								} catch (Exception ex) {
+									logger.log(Level.SEVERE, ex.getMessage(), ex);
+									FxUtils.showErrorMessage(getWindow(), ex);
+								}
+							});
+						}
+					});
+					this.stateMenu.getItems().add(menuItem);
+				}
+			}
+		}
+
+		// disable context menu if it's empty
+		this.stateMenu.setVisible(!this.stateMenu.getItems().isEmpty());
+	}
+
+	@FXML
+	void handleDivisionContextMenuOnShowing() {
+		this.swapMenu.getItems().clear();
+
+		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
+		if (selectedHeat != null && selectedHeat.isStateFinished()) {
+			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
+
+			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
+				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + heatReg.getBoatLabel());
+				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
+					// confirm swapping the results
+					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), getText(
+							"heats.confirmSwapRsult.question", selectedItem.getBoatLabel(), heatReg.getBoatLabel()))) {
+						// swapping results requires a transaction
+						this.dbTaskRunner.runInTransaction(progress -> {
+							return this.regattaDAO.swapResults(heatReg, selectedItem);
+						}, dbResult -> {
+							try {
+								this.divisionList.setAll(dbResult.getResult().getEntries());
+								this.divisionTbl.sort();
+							} catch (Exception ex) {
+								logger.log(Level.SEVERE, ex.getMessage(), ex);
+								FxUtils.showErrorMessage(getWindow(), ex);
+							}
+						});
+					}
+				});
+				this.swapMenu.getItems().add(menuItem);
+			});
+		}
+
+		// disable context menu if it's empty
+		this.swapMenu.setVisible(!this.swapMenu.getItems().isEmpty());
 	}
 
 	@Override
@@ -185,7 +338,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 			if (refresh) {
 				super.db.getEntityManager().clear();
 			}
-			return this.regattaDAO.getHeats(Heat.GRAPH_ALL);
+			return this.regattaDAO.getHeats(Heat.GRAPH_ENTRIES);
 		}, dbResult -> {
 			try {
 				this.heatsList.setAll(dbResult.getResult());
@@ -199,108 +352,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 				disableButtons(false);
 			}
 		});
-	}
-
-	private Workbook createWorkbook(ProgressMonitor progress) {
-		Workbook workbook = new HSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Startliste");
-
-		Row row = sheet.createRow(0);
-		addHeader(workbook, row);
-
-		for (int j = 0; j < this.heatsList.size(); j++) {
-			int cellIdx = 0;
-
-			Heat heat = this.heatsList.get(j);
-			row = sheet.createRow(j + 1);
-
-			row.createCell(cellIdx++).setCellValue(heat.getNumber());
-			row.createCell(cellIdx++).setCellValue(heat.getRaceNumber());
-			row.createCell(cellIdx++).setCellValue(heat.getDevisionNumber());
-
-			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
-			short laneCount = heat.getRace().getRaceMode().getLaneCount();
-			short diff = (short) (laneCount - heatRegs.size());
-
-			// add delays
-			if (heat.getRace().getAgeClass().isMasters()) {
-				for (HeatRegistration heatReg : heatRegs) {
-					row.createCell(cellIdx++).setCellValue(getDelay(heatReg));
-				}
-				for (int i = 0; i < diff; i++) {
-					row.createCell(cellIdx++).setCellValue(0);
-				}
-			} else {
-				for (int i = 0; i < laneCount; i++) {
-					row.createCell(cellIdx++).setCellValue(0);
-				}
-			}
-
-			// add bibs
-			for (HeatRegistration heatReg : heatRegs) {
-				row.createCell(cellIdx++)
-						.setCellValue(heatReg.getRegistration().getBib() != null
-								? heatReg.getRegistration().getBib().doubleValue()
-								: 0);
-			}
-			for (int i = 0; i < diff; i++) {
-				row.createCell(cellIdx++).setCellValue(0);
-			}
-
-			// add status
-			row.createCell(cellIdx).setCellValue("-");
-
-			progress.update(j, this.heatsList.size(), getText("heats.csv.progress", Short.valueOf(heat.getNumber())));
-		}
-		return workbook;
-	}
-
-	private String createCsv(ProgressMonitor progress) {
-		StringBuilder builder = new StringBuilder(4096);
-
-		// add header line
-		addCsvHeader(builder);
-
-		for (int j = 0; j < this.heatsList.size(); j++) {
-			Heat heat = this.heatsList.get(j);
-
-			builder.append(heat.getNumber()).append(DELIMITER);
-			builder.append(heat.getRaceNumber()).append(DELIMITER);
-			builder.append(heat.getDevisionNumber()).append(DELIMITER);
-
-			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
-			short laneCount = heat.getRace().getRaceMode().getLaneCount();
-			short diff = (short) (laneCount - heatRegs.size());
-
-			// add delays
-			if (heat.getRace().getAgeClass().isMasters()) {
-				for (HeatRegistration heatReg : heatRegs) {
-					builder.append(getDelay(heatReg)).append(DELIMITER);
-				}
-				for (int i = 0; i < diff; i++) {
-					builder.append(0).append(DELIMITER);
-				}
-			} else {
-				for (int i = 0; i < laneCount; i++) {
-					builder.append(0).append(DELIMITER);
-				}
-			}
-
-			// add bibs
-			for (HeatRegistration heatReg : heatRegs) {
-				builder.append(heatReg.getRegistration().getBib()).append(DELIMITER);
-			}
-			for (int i = 0; i < diff; i++) {
-				builder.append(0).append(DELIMITER);
-			}
-
-			// add status
-			builder.append("-").append(StringUtils.LF);
-
-			progress.update(j, this.heatsList.size(), getText("heats.csv.progress", Short.valueOf(heat.getNumber())));
-		}
-
-		return builder.toString();
 	}
 
 	private void saveCsvFile(String csvContent, File file) {
@@ -322,76 +373,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private void updatePlaceholder(String text) {
 		((Label) this.heatsTbl.getPlaceholder()).setText(text);
-	}
-
-	// static helpers
-
-	private static float getDelay(HeatRegistration heatReg) {
-		float delay = 0;
-		String comment = heatReg.getRegistration().getComment();
-		if (StringUtils.isNotBlank(comment)) {
-			Matcher matcher = delayPattern.matcher(comment);
-			if (matcher.find()) {
-				String delayStr = matcher.group().replace(",", ".");
-				try {
-					delay = Float.parseFloat(delayStr);
-				} catch (NumberFormatException e) {
-					logger.log(Level.WARNING, e.getMessage(), e);
-				}
-			}
-		}
-		return delay;
-	}
-
-	private static void addHeader(Workbook workbook, Row row) {
-		int idx = 0;
-		CellStyle headerCellStyle = WorkbookUtils.createHeaderCellStyle(workbook);
-
-		Cell headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_INDEX);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_RENN_NR);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_ABTEILUNG);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_DELAY_BAHN_1);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_DELAY_BAHN_2);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_DELAY_BAHN_3);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_DELAY_BAHN_4);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_BOOT_BAHN_1);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_BOOT_BAHN_2);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_BOOT_BAHN_3);
-		headerCell = row.createCell(idx++);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_BOOT_BAHN_4);
-		headerCell = row.createCell(idx);
-		headerCell.setCellStyle(headerCellStyle);
-		headerCell.setCellValue(HEADER_STATUS);
-	}
-
-	private static void addCsvHeader(StringBuilder builder) {
-		builder.append(HEADER_INDEX).append(DELIMITER).append(HEADER_RENN_NR).append(DELIMITER).append(HEADER_ABTEILUNG)
-				.append(DELIMITER).append(HEADER_DELAY_BAHN_1).append(DELIMITER).append(HEADER_DELAY_BAHN_2)
-				.append(DELIMITER).append(HEADER_DELAY_BAHN_3).append(DELIMITER).append(HEADER_DELAY_BAHN_4)
-				.append(DELIMITER).append(HEADER_BOOT_BAHN_1).append(DELIMITER).append(HEADER_BOOT_BAHN_2)
-				.append(DELIMITER).append(HEADER_BOOT_BAHN_3).append(DELIMITER).append(HEADER_BOOT_BAHN_4)
-				.append(DELIMITER).append(HEADER_STATUS).append(StringUtils.LF);
 	}
 
 }

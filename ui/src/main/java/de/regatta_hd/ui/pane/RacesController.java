@@ -71,6 +71,7 @@ public class RacesController extends AbstractRegattaDAOController {
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
 				this.regsList.setAll(newSelection.getRegistrations());
+				this.regsTbl.sort();
 			} else {
 				this.regsList.clear();
 			}

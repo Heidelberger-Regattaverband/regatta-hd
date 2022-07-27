@@ -9,9 +9,10 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.RegattaDAO.RegattaChangedEventListener;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.ListenerManager;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import javafx.application.Platform;
 
-abstract class AbstractRegattaDAOController extends AbstractPaneController {
+abstract class AbstractRegattaDAOController extends PaneController {
 
 	@Inject
 	protected RegattaDAO regattaDAO;

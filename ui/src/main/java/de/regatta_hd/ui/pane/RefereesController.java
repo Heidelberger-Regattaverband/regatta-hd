@@ -19,6 +19,7 @@ import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
 import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import javafx.beans.property.BooleanProperty;
@@ -33,7 +34,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class RefereesController extends AbstractPaneController {
+public class RefereesController extends PaneController {
 	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
 
 	@Inject
@@ -57,6 +58,8 @@ public class RefereesController extends AbstractPaneController {
 	private TableColumn<Referee, String> idCol;
 	@FXML
 	private TableColumn<Referee, Boolean> activeCol;
+	@FXML
+	private TableColumn<Referee, String> lastNameCol;
 
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
@@ -98,7 +101,7 @@ public class RefereesController extends AbstractPaneController {
 			return property;
 		});
 
-		this.refereesTbl.getSortOrder().add(this.idCol);
+		this.refereesTbl.getSortOrder().add(this.lastNameCol);
 
 		// table sorting and filtering: https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
