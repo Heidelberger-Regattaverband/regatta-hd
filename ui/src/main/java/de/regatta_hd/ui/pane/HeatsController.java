@@ -72,7 +72,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableView<HeatRegistration> divisionTbl;
 	@FXML
-	private TableColumn<Heat, Integer> divisionIdCol;
+	private TableColumn<HeatRegistration, Integer> divisionIdCol;
 	@FXML
 	private Menu swapMenu;
 

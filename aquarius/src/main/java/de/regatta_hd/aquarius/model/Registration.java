@@ -111,7 +111,7 @@ public class Registration {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")
 	@ToString.Include(rank = 8)
-	private Label label;
+	private Label manualLabel;
 
 	// Second table columns
 

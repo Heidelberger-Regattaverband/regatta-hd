@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
+import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -75,14 +76,18 @@ public class HeatRegistration {
 	}
 
 	public String getBib() {
-		Registration reg = getRegistration();
-		if (reg.getBib() != null) {
-			return reg.getBib().toString();
+		if (getRegistration().getBib() != null) {
+			return getRegistration().getBib().toString();
 		}
 		return null;
 	}
 
 	public String getBoatLabel() {
+		short round = getHeat().getRound();
+		Optional<RegistrationLabel> optional = getRegistration().getLabels(round).findFirst();
+		if (optional.isPresent()) {
+			return optional.get().getLabel().getLabelShort();
+		}
 		return getRegistration().getBoatLabel();
 	}
 

@@ -44,7 +44,7 @@ public class Label {
 	/**
 	 * The club to which this identifier belongs.
 	 */
-	@OneToMany(targetEntity = Registration.class, mappedBy = "label")
+	@OneToMany(targetEntity = Registration.class, mappedBy = "manualLabel")
 	private Set<Registration> registrations;
 
 	/**
