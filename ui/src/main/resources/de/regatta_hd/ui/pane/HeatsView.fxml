@@ -135,7 +135,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="200" reorderable="false" sortable="false" text="%common.boat">
+            <TableColumn prefWidth="300" reorderable="false" sortable="false" text="%common.boat">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>boatLabel</property>

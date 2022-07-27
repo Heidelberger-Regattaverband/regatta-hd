@@ -135,7 +135,7 @@ public class Registration {
 	 * @param the round
 	 * @return a stream with final labels
 	 */
-	public Stream<RegistrationLabel> getLabels(short round) {
+	Stream<RegistrationLabel> getLabels(short round) {
 		return getLabels().stream()
 				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo());
 	}
