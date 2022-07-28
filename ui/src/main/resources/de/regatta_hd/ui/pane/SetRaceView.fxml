@@ -31,7 +31,7 @@
       </converter>
     </SearchableComboBox>
 
-    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
+    <SplitPane dividerPositions="0.25,0.75" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
       GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <VBox>
