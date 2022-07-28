@@ -496,13 +496,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 					entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
 					if (entry != null) {
 						entry.setRank(setList.size() + 1);
-						entry.setSrcHeatRregistration(srcHeatReg);
+						entry.setSrcHeatRegistration(srcHeatReg);
 						setList.add(entry);
 					}
 				} else {
 					entry = equalCrews.get(srcHeatReg.getRegistration().getId());
 					if (entry != null) {
-						entry.setSrcHeatRregistration(srcHeatReg);
+						entry.setSrcHeatRegistration(srcHeatReg);
 					}
 				}
 			});

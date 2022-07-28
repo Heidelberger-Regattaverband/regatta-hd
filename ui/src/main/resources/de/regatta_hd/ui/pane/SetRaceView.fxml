@@ -51,7 +51,7 @@
               </ToolBar>
               <TableView fx:id="seedingListTbl" VBox.vgrow="ALWAYS">
                 <placeholder>
-                  <Label text="%SetRaceView.noSetList" />
+                  <Label text="%SetRaceView.noSeedingList" />
                 </placeholder>
                 <columns>
                   <TableColumn fx:id="seedingListPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
