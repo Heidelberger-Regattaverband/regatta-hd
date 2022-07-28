@@ -31,7 +31,14 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.active">
+        <TableColumn fx:id="idCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="45">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>id</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.active" prefWidth="50">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>active</property>
@@ -41,21 +48,14 @@
             <CheckBoxTableCellFactory fx:factory="readonly" />
           </cellFactory>
         </TableColumn>
-        <TableColumn fx:id="idCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>id</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.title">
+        <TableColumn reorderable="false" sortable="false" text="%common.title" prefWidth="250">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>title</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.begin">
+        <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.begin" prefWidth="90">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>startDate</property>
@@ -65,7 +65,7 @@
             <DateTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.end">
+        <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.end" prefWidth="90">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>endDate</property>

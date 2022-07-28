@@ -1,12 +1,9 @@
 package de.regatta_hd.aquarius;
 
 import java.util.List;
-import java.util.Optional;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Registration;
-import de.regatta_hd.aquarius.model.RegistrationLabel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,12 +26,12 @@ public class ResultEntry {
 		return this.heat.getNumber();
 	}
 
-	public short getDevisionNumber() {
-		return this.heat.getDevisionNumber();
+	public short getDivisionNumber() {
+		return this.heat.getDivisionNumber();
 	}
 
-	public String getDevisionLabel() {
-		return this.heat.getDevisionLabel();
+	public String getDivisionLabel() {
+		return this.heat.getDivisionLabel();
 	}
 
 	public String getRaceNumber() {
@@ -77,26 +74,19 @@ public class ResultEntry {
 		return getPoints(3);
 	}
 
-	public String getState() {
-		switch (this.heat.getState()) {
-		case 5:
-			return "beendet";
-		case 4:
-			return "offiziel";
-		default:
-			return "-";
-		}
+	public String getStateLabel() {
+		return this.heat.getStateLabel();
 	}
 
-	private String getRegistrationName(final int index) {
+	private String getRegistrationName(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getRegistration() != null) {
-			return getRegistrationLabel(heatResult.get(index).getRegistration());
+			return heatResult.get(index).getBoatLabel();
 		}
 		return null;
 	}
 
-	private Integer getPoints(final int index) {
+	private Integer getPoints(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getFinalResult() != null) {
 			return heatResult.get(index).getFinalResult().getPoints();
@@ -111,8 +101,4 @@ public class ResultEntry {
 		return this.result;
 	}
 
-	private String getRegistrationLabel(Registration registration) {
-		Optional<RegistrationLabel> label = registration.getLabels(this.heat.getRound()).findFirst();
-		return label.isPresent() ? label.get().getLabel().getLabelShort() : null;
-	}
 }

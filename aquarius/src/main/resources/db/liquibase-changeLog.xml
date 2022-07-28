@@ -4,7 +4,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-  <changeSet author="markus@ofterdinger.de" id="1">
+  <changeSet id="1" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="HRV_AgeClass" />
@@ -21,7 +21,7 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="markus@ofterdinger.de" id="2" runOnChange="true">
+  <changeSet id="2" author="markus@ofterdinger.de" runOnChange="true">
     <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;" relativeToChangelogFile="true" separator=","
       tableName="HRV_AgeClass" primaryKey="id">
       <column header="id" name="id" type="NUMERIC" />
@@ -30,7 +30,7 @@
     </loadUpdateData>
   </changeSet>
 
-  <changeSet author="markus@ofterdinger.de" id="3">
+  <changeSet id="3" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
         <tableExists tableName="HRV_Offer" />
@@ -98,6 +98,23 @@
     <addColumn tableName="HRV_LogRecord">
       <column name="threadName" type="VARCHAR(256)" afterColumn="threadId" />
     </addColumn>
+  </changeSet>
+
+  <changeSet id="7" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="HRV_Entry" />
+      </not>
+    </preConditions>
+    <createTable tableName="HRV_Entry">
+      <column name="id" type="INT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Entry" referencedTableName="Entry"
+          referencedColumnNames="Entry_ID" foreignKeyName="FK_Entry" />
+      </column>
+      <column name="alternativeTo" type="VARCHAR(8)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
   </changeSet>
 
 </databaseChangeLog>

@@ -1,5 +1,8 @@
 package de.regatta_hd.aquarius.model;
 
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -13,6 +16,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +38,7 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class HeatRegistration {
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,12 +61,64 @@ public class HeatRegistration {
 	@OrderBy("rank")
 	private Set<Result> results;
 
+	@Transient
+	@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)
+	private Result finalResult;
+
 	/**
 	 * Returns result of final race.
 	 *
 	 * @return {@link Result} of final or <code>null</code> if not available
 	 */
 	public Result getFinalResult() {
-		return getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		if (this.finalResult == null) {
+			this.finalResult = getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		}
+		return this.finalResult;
+	}
+
+	public String getBib() {
+		if (getRegistration().getBib() != null) {
+			return getRegistration().getBib().toString();
+		}
+		return null;
+	}
+
+	public String getBoatLabel() {
+		Registration reg = getRegistration();
+		short round = getHeat().getRound();
+		Optional<RegistrationLabel> optional = reg.getLabel(round);
+		if (optional.isPresent()) {
+			String boatLabel = optional.get().getLabel().getLabelShort();
+			if (reg.getBoatNumber() != null) {
+				boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + reg.getBoatNumber();
+			}
+			return boatLabel;
+		}
+		return reg.getBoatLabel();
+	}
+
+	public String getResultDisplayValue() {
+		if (getFinalResult() != null) {
+			return getFinalResult().getDisplayValue();
+		}
+		return null;
+	}
+
+	public String getResultRank() {
+		Result result = getFinalResult();
+		if (result != null && result.getRank() > 0) {
+			return Byte.toString(getFinalResult().getRank());
+		}
+		return null;
+	}
+
+	public String getPoints() {
+		Result result = getFinalResult();
+		if (result != null && result.getPoints() != null) {
+			return result.getPoints().toString();
+		}
+		return null;
 	}
 }

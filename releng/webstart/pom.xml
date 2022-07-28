@@ -4,7 +4,8 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.23</version>
+    <version>0.1.25</version>
+    <relativePath>../..</relativePath>
   </parent>
 
   <artifactId>webstart</artifactId>
@@ -17,10 +18,32 @@
   </properties>
 
   <dependencies>
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>ui</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <!-- ============================= -->
+    <!-- JavaFX cross-platform support -->
+    <!-- ============================= -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
     </dependency>
   </dependencies>
 
@@ -34,10 +57,6 @@
             <manifest>
               <mainClass>${mainClass}</mainClass>
             </manifest>
-            <manifestEntries>
-              <Permissions>all-permissions</Permissions>
-              <Codebase>*</Codebase>
-            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
@@ -96,7 +115,7 @@
       <plugin>
         <groupId>de.ofterdinger.maven.plugins</groupId>
         <artifactId>site-maven-plugin</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1</version>
         <configuration>
           <server>github-upload</server>
           <message>Creating site for ${project.version}</message>

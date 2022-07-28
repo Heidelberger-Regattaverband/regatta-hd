@@ -28,6 +28,7 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.commons.core.ConfigService;
 import de.regatta_hd.commons.core.ListenerManager;
@@ -87,11 +88,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityGraph);
 		}
 		return query.getResultList();
-	}
-
-	@Override
-	public Race getRace(String raceNumber) {
-		return getRace(raceNumber, null);
 	}
 
 	@Override
@@ -262,7 +258,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 					if (pointsBoat != null) {
 						// duplicate points if it's the first heat of a set race
-						if (raceIsSet && heatReg.getHeat().getDevisionNumber() == 1) {
+						if (raceIsSet && heatReg.getHeat().getDivisionNumber() == 1) {
 							pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
 						}
 
@@ -340,12 +336,18 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Heat> getHeats() {
+	public List<Heat> getHeats(String graphName) {
 		EntityManager entityManager = this.db.getEntityManager();
 
-		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta", Heat.class)
-				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
+		TypedQuery<Heat> query = entityManager
+				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta", Heat.class)
+				.setParameter(PARAM_REGATTA, getActiveRegatta());
+		if (graphName != null) {
+			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);
+			query.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityGraph);
+		}
+
+		return query.getResultList();
 	}
 
 	private List<Heat> getOfficialHeats() {
@@ -354,6 +356,55 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND h.state = 4", Heat.class)
 				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
+	}
+
+	@Override
+	public Heat swapResults(HeatRegistration source, HeatRegistration target) {
+		Result result1 = source.getFinalResult();
+		Result result2 = target.getFinalResult();
+
+		String comment = result2.getComment();
+		Integer dayTime = result2.getDayTime();
+		Integer delta = result2.getDelta();
+		String displayType = result2.getDisplayType();
+		String displayValue = result2.getDisplayValue();
+		Integer netTime = result2.getNetTime();
+		String params = result2.getParams();
+		byte rank = result2.getRank();
+		String resultType = result2.getResultType();
+		Integer sortValue = result2.getSortValue();
+		byte splitNr = result2.getSplitNr();
+
+		result2.setComment(result1.getComment());
+		result2.setDayTime(result1.getDayTime());
+		result2.setDelta(result1.getDelta());
+		result2.setDisplayType(result1.getDisplayType());
+		result2.setDisplayValue(result1.getDisplayValue());
+		result2.setNetTime(result1.getNetTime());
+		result2.setParams(result1.getParams());
+		result2.setRank(result1.getRank());
+		result2.setResultType(result1.getResultType());
+		result2.setSortValue(result1.getSortValue());
+		result2.setSplitNr(result1.getSplitNr());
+
+		result1.setComment(comment);
+		result1.setDayTime(dayTime);
+		result1.setDelta(delta);
+		result1.setDisplayType(displayType);
+		result1.setDisplayValue(displayValue);
+		result1.setNetTime(netTime);
+		result1.setParams(params);
+		result1.setRank(rank);
+		result1.setResultType(resultType);
+		result1.setSortValue(sortValue);
+		result1.setSplitNr(splitNr);
+
+		EntityManager entityManager = this.db.getEntityManager();
+		entityManager.merge(result1);
+		entityManager.merge(result2);
+		entityManager.flush();
+
+		return source.getHeat();
 	}
 
 	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {
@@ -445,13 +496,13 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 					entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
 					if (entry != null) {
 						entry.setRank(setList.size() + 1);
-						entry.setSrcHeatRregistration(srcHeatReg);
+						entry.setSrcHeatRegistration(srcHeatReg);
 						setList.add(entry);
 					}
 				} else {
 					entry = equalCrews.get(srcHeatReg.getRegistration().getId());
 					if (entry != null) {
-						entry.setSrcHeatRregistration(srcHeatReg);
+						entry.setSrcHeatRegistration(srcHeatReg);
 					}
 				}
 			});

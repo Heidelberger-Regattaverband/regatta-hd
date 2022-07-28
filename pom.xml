@@ -4,12 +4,12 @@
   <parent>
     <groupId>de.ofterdinger.parents</groupId>
     <artifactId>build</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.23</version>
+  <version>0.1.25</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -43,7 +43,7 @@
     <maven.compiler.release>17</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>18.0.1</openjfx.version>
+    <openjfx.version>18.0.2</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.1.1</controlsfx.version>
@@ -55,22 +55,25 @@
     <guice.version>5.1.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
-    <hibernate.version>5.6.9.Final</hibernate.version>
+    <hibernate.version>5.6.10.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>10.2.1.jre11</mssql.version>
+    <mssql.version>11.1.2.jre11-preview</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.8.2</junit.version>
+    <junit.version>5.9.0</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.11.0</liquibase.version>
+    <liquibase.version>4.14.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.2</poi.version>
+
+    <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
+    <jSerialComm.version>2.9.2</jSerialComm.version>
   </properties>
 
   <modules>
@@ -79,7 +82,10 @@
     <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
-    <module>webstart</module>
+    <module>schemas</module>
+    <module>releng/appassembler</module>
+    <module>releng/nativeapp</module>
+    <module>releng/webstart</module>
   </modules>
 
   <prerequisites>
@@ -96,22 +102,24 @@
         <artifactId>commons-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-db</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>commons-fx</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>aquarius</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>schemas</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -181,6 +189,22 @@
         <version>${controlsfx.version}</version>
       </dependency>
 
+      <!-- ============== -->
+      <!-- JAXB & XML     -->
+      <!-- ============== -->
+      <!-- https://search.maven.org/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+
       <!-- ============ -->
       <!-- Google Guice -->
       <!-- ============ -->
@@ -207,6 +231,11 @@
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
         <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fazecast</groupId>
+        <artifactId>jSerialComm</artifactId>
+        <version>${jSerialComm.version}</version>
       </dependency>
 
       <!-- ========== -->

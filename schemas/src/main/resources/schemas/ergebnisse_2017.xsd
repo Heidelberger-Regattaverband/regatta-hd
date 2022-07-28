@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<schema xmlns:drvre="http://schemas.rudern.de/service/ergebnisse/2017/" targetNamespace="http://schemas.rudern.de/service/ergebnisse/2017/" xmlns="http://www.w3.org/2001/XMLSchema">
+    <element name="Ergebnisse">
+        <complexType>
+            <sequence>
+                <element name="Rennen" type="drvre:tRennen" minOccurs="0" maxOccurs="unbounded" />
+                <element name="Wettkampfrichter" type="drvre:tRegattaWKR" minOccurs="0" maxOccurs="unbounded">
+                    <annotation>
+                        <documentation>(ergänzende) Liste aller eingesetzten WKR zur Regatta, die ggü. den Schiedsrichtern der Läufe eventuell zusätzliche WKR enthält.</documentation>
+                    </annotation>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+    <complexType name="tRennen">
+        <complexContent>
+            <extension base="drvre:tExtensible">
+                <sequence>
+                    <element name="Lauf" type="drvre:tLauf" minOccurs="0" maxOccurs="unbounded" />
+                    <element name="Abmeldung" type="drvre:tAbmeldung" minOccurs="0" maxOccurs="unbounded" />
+                </sequence>
+                <attribute name="Nummer" type="string" use="required">
+                    <annotation>
+                        <documentation>Rennnummer gemäß Ausschreibung im Verwaltungsportal</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Distanz" type="unsignedInt" use="required">
+                    <annotation>
+                        <documentation>Strecke in Meter</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="istAusgefallen" default="false" type="boolean" use="optional" />
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tLauf">
+        <complexContent>
+            <extension base="drvre:tExtensible">
+                <sequence>
+                    <element name="Boot" type="drvre:tBootErgebnis" minOccurs="0" maxOccurs="unbounded" />
+                    <element name="Schiedsrichter" type="drvre:tWettkampfrichter" minOccurs="0" maxOccurs="unbounded" />
+                </sequence>
+                <attribute name="Typ" use="required">
+                    <annotation>
+                        <documentation>In welchem Lauftyp ("Runde") wurde gerudert?
+B = Bahnverteilungsrennen
+V = Vorlauf
+Q = Viertelfinale
+H = Hoffnungslauf
+S = Halbfinale
+F = Finale
+A = Abteilung</documentation>
+                    </annotation>
+                    <simpleType>
+                        <restriction base="string">
+                            <enumeration value="B" />
+                            <enumeration value="V" />
+                            <enumeration value="Q" />
+                            <enumeration value="H" />
+                            <enumeration value="S" />
+                            <enumeration value="F" />
+                            <enumeration value="A" />
+                        </restriction>
+                    </simpleType>
+                </attribute>
+                <attribute name="Nummer" type="unsignedByte" use="required">
+                    <annotation>
+                        <documentation>Nummer des Laufes (Zwecks Reihenfolge): bei "Vorlauf B" ergibt sich Nummer = 2</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Bezeichnung" type="string" use="optional">
+                    <annotation>
+                        <documentation>Textbezeichnung des Laufes bspw. "kleines Finale" statt Finale B, ohne Angaben zur Leistungsgruppe oder Alterklasse</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Leistungsgruppe" use="optional">
+                    <simpleType>
+                        <restriction base="unsignedShort">
+                            <minInclusive value="1" />
+                            <maxInclusive value="3" />
+                        </restriction>
+                    </simpleType>
+                </attribute>
+                <attribute name="Altersklasse" use="optional">
+                    <simpleType>
+                        <restriction base="string">
+                            <minLength value="1" />
+                            <maxLength value="1" />
+                            <pattern value="[A-Z]" />
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tBoot">
+        <complexContent>
+            <extension base="drvre:tExtensible">
+                <sequence>
+                    <element name="Sportler" type="drvre:tSportler" minOccurs="0" maxOccurs="unbounded" />
+                </sequence>
+                <attribute name="Startnummer" type="unsignedInt" use="required">
+                    <annotation>
+                        <documentation>Startnummer des Boots</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="MeldungsID" type="unsignedInt" use="optional">
+                    <annotation>
+                        <documentation>ID der ursprünglichen Meldung im Verwaltungsportal</documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tSportler">
+        <complexContent>
+            <extension base="drvre:tExtensible">
+                <sequence minOccurs="0" maxOccurs="1">
+                    <annotation>
+                        <documentation>Optionale Details zum Sportler. Insbesondere für Nicht-DRV-Athleten. Bei vorhandener Aktivendatenbank-ID werden die angegebenen Felder ignoriert und sollten dann im XML nicht angegeben werden.</documentation>
+                    </annotation>
+                    <element name="Nachname" type="string" minOccurs="1" maxOccurs="1" />
+                    <element name="Vorname" type="string" minOccurs="1" maxOccurs="1" />
+                    <element name="Jahrgang" type="gYear" minOccurs="1" maxOccurs="1" />
+                    <element name="VereinsName" minOccurs="0" maxOccurs="1">
+                        <complexType>
+                            <annotation>
+                                <documentation>Name des Vereins, ggf. optionale Kurzschreibweise</documentation>
+                            </annotation>
+                            <simpleContent>
+                                <extension base="string">
+                                    <attribute name="Kuerzel" type="string" use="optional" />
+                                </extension>
+                            </simpleContent>
+                        </complexType>
+                    </element>
+                </sequence>
+                <attribute name="Position" use="required">
+                    <annotation>
+                        <documentation>Bootsposition, beginnend bei Eins. Steuermann im Achter hat Position Neun.</documentation>
+                    </annotation>
+                    <simpleType>
+                        <restriction base="unsignedShort">
+                            <minInclusive value="1" />
+                        </restriction>
+                    </simpleType>
+                </attribute>
+                <attribute name="istSteuermann" default="false" type="boolean" use="optional">
+                    <annotation>
+                        <documentation>Ist dieser Sportler Steuermann des Boots?</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="AktivenID" use="optional">
+                    <annotation>
+                        <documentation>ID aus DRV-Aktivendatenbank. Darf für Nicht-DRV-Athleten oder Aktiven, die auf der Regatta einen Antrag für die Aktivendatenbank gestellt haben, nicht angegeben werden. Bei Angabe der ID können alle Kindelemente entfallen. Diese werden bei Angabe einer ID ignoriert.</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="VereinsID" use="optional">
+                    <annotation>
+                        <documentation>Für DRV-Athleten (mit ID) optionale Angabe der Vereins-ID, für den der Sportler gestartet ist. Sofern nicht angegeben, wird bei Übernahme des Ergebnis der zum Zeitpunkt der Übernahme in der Aktivenliste hinterlegte Verein angenommen.</documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tErgebnis">
+        <complexContent>
+            <extension base="drvre:tExtensible">
+                <attribute name="Rang" type="unsignedInt" use="optional">
+                    <annotation>
+                        <documentation>Platzierung des Boots, Attribut entfällt bei nicht-platzierten Booten (nicht am Start, aufgegeben etc.)</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Zeit" type="duration" use="optional">
+                    <annotation>
+                        <documentation>gewertete Zeit des Ergebnis, nach Anwendung von Strafen/Bonus (vgl. Zeitkorrektur-Attribut). Differenzen/Rückstandszeiten müssen über Delta-Attribut angeben. Das Zeit-Attribut kann bspw. entfallen lassen, wenn keine geruderte Zeit ermittelt werden konnte.</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Delta" type="duration" use="optional">
+                    <annotation>
+                        <documentation>Differenz zum Sieger (auch bei fehlenden Zeiten)</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Zeitkorrektur" type="duration" use="optional">
+                    <annotation>
+                        <documentation>Korrektur, die auf angegebenen Wert des Zeitattributs angewendet worden ist. Angabe eines negativen Vorzeichen möglich. Eine Zeitstrafe hat dementsprechend einen positiven Wert (kein Vorzeichen!). Ein Bonus (vgl. Zeitbonus bei Masters) einen negativen.</documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="Bemerkung" type="string" use="optional">
+                    <annotation>
+                        <documentation>bspw. "aufgegeben" oder "nicht am Start", Ergebnisse einer Punktewertung, sonstige Anmerkungen oder Begründungen für Ausschlüsse</documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tAbmeldung">
+        <complexContent>
+            <extension base="drvre:tBoot">
+                <attribute name="Grund" type="string" use="optional" />
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tBootErgebnis">
+        <complexContent>
+            <extension base="drvre:tBoot">
+                <sequence>
+                    <element name="Ergebnis" type="drvre:tErgebnis" minOccurs="0" />
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tWettkampfrichter">
+        <complexContent>
+            <extension base="drvre:tExtensible">
+                <sequence minOccurs="0" maxOccurs="1">
+                    <element name="Nachname" type="string" minOccurs="1" />
+                    <element name="Vorname" type="string" minOccurs="1" />
+                    <element name="Herkunft" type="string" minOccurs="1" />
+                </sequence>
+                <attribute name="Lizenznummer" type="unsignedInt" use="optional">
+                    <annotation>
+                        <documentation>DRV-WKR-Lizenznummer. Bei Angabe werden alle Kindelemente ignoriert und können dann entfallen. Bei Nicht-DRV-WKR müssen Name und Vorname angegeben werden, hingegen darf keine ID angegeben werden.</documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tRegattaWKR">
+        <complexContent>
+            <extension base="drvre:tWettkampfrichter">
+                <attribute name="IstObmann" type="boolean" />
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="tExtensible">
+        <sequence>
+            <any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+        </sequence>
+        <anyAttribute namespace="##other" processContents="lax" />
+    </complexType>
+</schema>

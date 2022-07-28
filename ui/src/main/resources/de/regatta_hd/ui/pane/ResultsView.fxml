@@ -58,17 +58,17 @@
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.devisionAbr">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.divisionAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>devisionLabel</property>
+              <property>divisionLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="Status">
+        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.state">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>state</property>
+              <property>stateLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>

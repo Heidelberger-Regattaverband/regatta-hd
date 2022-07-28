@@ -1,0 +1,12 @@
+{
+  "types":[
+    {
+      "name":"java.lang.Integer"
+    },
+    {
+      "name":"java.lang.Number"
+    }
+  ],
+  "lambdaCapturingTypes":[
+  ]
+}

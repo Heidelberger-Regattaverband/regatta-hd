@@ -49,7 +49,6 @@ import javafx.util.Pair;
 public class SetRaceController extends AbstractRegattaDAOController {
 	private static final int TABLE_BORDER_WIDTH = 5;
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
-	private static final String FULL_GRAPH = "race-to-results";
 	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
 	@FXML
@@ -69,7 +68,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<SeedingListEntry, Integer> seedingListRankCol;
 	@FXML
-	private TableColumn<SeedingListEntry, Integer> seedingListDevisionNumberCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListDivisionNumberCol;
 	@FXML
 	private TableColumn<SeedingListEntry, String> seedingListResultCol;
 	@FXML
@@ -138,7 +137,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		usedWidth = this.seedingListPosCol.widthProperty().add(this.seedingListBibCol.widthProperty())
 				.add(this.seedingListRankCol.widthProperty())
-				.add(this.seedingListDevisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
+				.add(this.seedingListDivisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
 						.add(this.seedingListEqualCrewCol.widthProperty()));
 		this.seedingListBoatCol.prefWidthProperty()
 				.bind(this.seedingListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
@@ -165,7 +164,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		clearRaces();
 
 		super.dbTaskRunner.run(progress -> {
-			List<Race> allRaces = this.regattaDAO.getRaces(FULL_GRAPH);
+			List<Race> allRaces = this.regattaDAO.getRaces(Race.GRAPH_RESULTS);
 			List<Race> races = new ArrayList<>();
 			Map<String, Race> srcRaces = new HashMap<>();
 			allRaces.forEach(race -> {
@@ -235,14 +234,14 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 					if (result.getKey() != null) {
 						this.srcCrewTbl.getItems().setAll(result.getKey());
-						this.srcCrewLbl.setText(createCrewsLabel(entry, entry.getSrcRegistration()));
+						this.srcCrewLbl.setText(createCrewsLabel(entry.getSrcRegistration()));
 					} else {
 						this.srcCrewLbl.setText(getText("SetRaceView.noBoat"));
 					}
 
 					if (result.getValue() != null) {
 						this.crewTbl.getItems().setAll(result.getValue());
-						this.crewLbl.setText(createCrewsLabel(entry, entry.getRegistration()));
+						this.crewLbl.setText(createCrewsLabel(entry.getRegistration()));
 					} else {
 						this.crewLbl.setText(getText("SetRaceView.noBoat"));
 					}
@@ -272,8 +271,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 				this.racesCbo.setOnAction(null);
 
 				super.dbTaskRunner.run(progress -> {
-					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), FULL_GRAPH);
+					Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
+					Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(selectedRace), Race.GRAPH_RESULTS);
 					return new Race[] { srcRace, race };
 				}, dbResult -> {
 					Race race = null;
@@ -305,8 +304,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			super.dbTaskRunner.run(progress -> {
 				this.db.getEntityManager().clear();
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), Race.GRAPH_RESULTS);
 				return new Race[] { srcRace, race };
 			}, dbResult -> {
 				Race race = null;
@@ -333,8 +332,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			AtomicReference<Race> raceRef = new AtomicReference<>();
 			super.dbTaskRunner.run(progress -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
-				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
+				Race srcRace = this.regattaDAO.getRace(getSrcRaceNumber(race), Race.GRAPH_RESULTS);
 				raceRef.set(race);
 				return this.regattaDAO.createSeedingList(race, srcRace);
 			}, dbResult -> {
@@ -358,7 +357,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 			this.seedingListTbl.getItems().clear();
 
-			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH),
+			super.dbTaskRunner.run(progress -> this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS),
 					dbResult -> {
 						Race race = null;
 						try {
@@ -381,11 +380,11 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 
 			super.dbTaskRunner.runInTransaction(progress -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
 				this.regattaDAO.setRaceHeats(race, this.seedingListTbl.getItems());
 
 				this.db.getEntityManager().clear();
-				race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
 				return race;
 			}, dbResult -> {
 				Race race = null;
@@ -411,7 +410,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			disableButtons();
 
 			super.dbTaskRunner.runInTransaction(progress -> {
-				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), FULL_GRAPH);
+				Race race = this.regattaDAO.getRace(selectedRace.getNumber(), Race.GRAPH_RESULTS);
 				this.regattaDAO.cleanRaceHeats(race);
 				return race;
 			}, dbResult -> {
@@ -449,7 +448,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		// loops over all heats of race and reads required data from DB
 		race.getDrivenHeats().forEach(heat -> {
 			Label heatNrLabel = new Label(
-					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
+					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDivisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 
 			ObservableList<HeatRegistration> items = FXCollections
@@ -511,15 +510,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		boatCol.setReorderable(false);
 		boatCol.setSortable(false);
 		boatCol.setCellValueFactory(row -> {
-			Registration entry = row.getValue().getRegistration();
-			if (entry != null && entry.getClub() != null) {
-				String value = entry.getClub().getAbbreviation();
-				if (entry.getBoatNumber() != null) {
-					value += " - Boot " + entry.getBoatNumber();
-				}
-				return new SimpleStringProperty(value);
-			}
-			return null;
+			return new SimpleStringProperty(row.getValue().getBoatLabel());
 		});
 
 		TableColumn<HeatRegistration, Number> rankCol = null;
@@ -678,8 +669,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 	// static helpers
 
-	private static String createCrewsLabel(SeedingListEntry entry, Registration registration) {
-		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + entry.getBoat();
+	private static String createCrewsLabel(Registration registration) {
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + registration.getBoatLabel();
 	}
 
 	private static String getSrcRaceNumber(Race race) {

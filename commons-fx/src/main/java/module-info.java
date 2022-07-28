@@ -8,6 +8,8 @@ module de.regatta_hd.commons.fx {
 	requires transitive javafx.controls;
 	requires transitive javafx.fxml;
 
+	requires transitive org.controlsfx.controls;
+
 	requires transitive de.regatta_hd.commons.db;
 
 	// exports
@@ -21,4 +23,5 @@ module de.regatta_hd.commons.fx {
 
 	opens de.regatta_hd.commons.fx.db to com.google.guice;
 	opens de.regatta_hd.commons.fx.impl to com.google.guice;
+	opens de.regatta_hd.commons.fx.stage to com.google.guice, javafx.fxml;
 }

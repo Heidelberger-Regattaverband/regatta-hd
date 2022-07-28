@@ -70,7 +70,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 				dbConfig.getDbName(), Boolean.toString(dbConfig.isEncrypt()));
 
 		if (dbConfig.isEncrypt() && dbConfig.isTrustServerCertificate()) {
-			url += ";trustServerCertificate=true";
+			url += ";trustServerCertificate=true;sslProtocol=TLSv1.2";
 		}
 
 		properties.put("javax.persistence.jdbc.url", url);

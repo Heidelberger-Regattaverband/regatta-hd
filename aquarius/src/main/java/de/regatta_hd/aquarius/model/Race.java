@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -23,6 +24,8 @@ import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,7 +36,7 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Offer")
 @SecondaryTable(name = "HRV_Offer", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
-@NamedEntityGraph(name = "race-to-results", //
+@NamedEntityGraphs({ @NamedEntityGraph(name = Race.GRAPH_RESULTS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
 						attributeNodes = { @NamedAttributeNode(value = "entries", subgraph = "heatreg.results") } //
@@ -41,14 +44,24 @@ import lombok.ToString;
 				@NamedSubgraph(name = "heatreg.results", //
 						attributeNodes = { //
 								@NamedAttributeNode("results"), //
-								@NamedAttributeNode(value = "registration", subgraph = "registration.crews") //
+								@NamedAttributeNode(value = "registration", subgraph = "registration") //
 						} //
 				), //
-				@NamedSubgraph(name = "registration.crews", //
-						attributeNodes = { @NamedAttributeNode(value = "crews", subgraph = "crew.club") } //
+				@NamedSubgraph(name = "registration", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club"), //
+								@NamedAttributeNode(value = "labels", subgraph = "labels") //
+						} //
 				), //
+				@NamedSubgraph(name = "labels", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "label") //
+						}), //
 				@NamedSubgraph(name = "crew.club", //
-						attributeNodes = { @NamedAttributeNode("club"), @NamedAttributeNode("athlet") } //
+						attributeNodes = { //
+								@NamedAttributeNode("club"), //
+								@NamedAttributeNode("athlet") //
+						} //
 				) }, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
@@ -57,16 +70,36 @@ import lombok.ToString;
 				@NamedAttributeNode("raceMode"), //
 				@NamedAttributeNode("registrations") //
 		} //
-)
+), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
+		subgraphs = { //
+				@NamedSubgraph(name = "registration.club", //
+						attributeNodes = { //
+								@NamedAttributeNode("club"), //
+								@NamedAttributeNode(value = "labels", subgraph = "labels") //
+						}), //
+				@NamedSubgraph(name = "labels", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "label") //
+						}) //
+		}, //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "registrations", subgraph = "registration.club") //
+		}) //
+})
 // lombok
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Race {
+
+	public static final String GRAPH_CLUBS = "race-registrations-clubs";
+	public static final String GRAPH_RESULTS = "race-heats-heatreg-results";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Offer_ID")
+	@Include
 	private int id;
 
 	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
@@ -97,7 +130,7 @@ public class Race {
 	private BoatClass boatClass;
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
-	@OrderBy("devisionNumber")
+	@OrderBy("divisionNumber")
 	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
@@ -215,7 +248,7 @@ public class Race {
 
 	private Stream<Heat> getSortedHeats() {
 		return getHeats().stream()
-				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
+				.sorted((entry1, entry2) -> entry1.getDivisionNumber() > entry2.getDivisionNumber() ? 1 : -1);
 	}
 
 	public enum GroupMode {

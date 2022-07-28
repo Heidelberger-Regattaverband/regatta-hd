@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://schemas.rudern.de/service/ausschreibung/2010/"
+	xmlns:drvra="http://schemas.rudern.de/service/ausschreibung/2010/">
+
+	<element name="ausschreibungen" type="drvra:tAusschreibung" />
+
+	<complexType name="tAusschreibung">
+		<sequence>
+			<element name="regatta" type="drvra:tRegatta" maxOccurs="unbounded"
+				minOccurs="1" />
+		</sequence>
+	</complexType>
+
+	<complexType name="tRegatta">
+		<sequence>
+			<element name="angaben" type="drvra:tAngaben" maxOccurs="1"
+				minOccurs="1" />
+			<element name="rennfolge" type="drvra:tRennfolge" maxOccurs="1"
+				minOccurs="1" />
+		</sequence>
+		<attribute name="stand" type="dateTime" />
+	</complexType>
+
+	<complexType name="tAngaben">
+		<sequence>
+			<element name="titel" type="string" maxOccurs="1"
+				minOccurs="1" />
+			<element name="subTitel" type="string" maxOccurs="1"
+				minOccurs="1" />
+			<element name="ort" type="string" maxOccurs="1"
+				minOccurs="1" />
+			<element name="veranstalter" type="drvra:tVeranstalter"
+				maxOccurs="1" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="de">
+						Name des Veranstaltenden Vereins; wird bei
+						Import ignoriert, die Angabe kann dann entfallen
+					</documentation>
+				</annotation>
+			</element>
+			
+			<element name="startDatum" type="date" maxOccurs="1"
+				minOccurs="1" />
+			<element name="endDatum" type="date" maxOccurs="1"
+				minOccurs="1" />
+			<element name="meldeschluss" type="dateTime" maxOccurs="1"
+				minOccurs="0">
+				<annotation>
+					<documentation xml:lang="de">
+						Angabe des Meldeschluss: kann entfallen; bei
+						Import wird er dann automatisch 10 Tage vor den
+						ersten Regatta-Tag, 18 Uhr, gesetzt
+					</documentation>
+				</annotation>
+			</element>
+			<element name="homepage" type="string" maxOccurs="1"
+				minOccurs="0" />
+			<element name="email" type="string" maxOccurs="1"
+				minOccurs="0" />
+			<element name="bestimmungen" maxOccurs="1" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="bestimmung" maxOccurs="7"
+							minOccurs="0">
+							<complexType>
+								<sequence>
+									<any namespace="##other"
+										processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+								</sequence>
+								<attribute name="nr" use="required">
+									<simpleType>
+										<restriction base="int">
+											<minInclusive value="1" />
+											<maxInclusive value="7" />
+										</restriction>
+									</simpleType>
+								</attribute>
+								<attribute name="inhalt"
+									use="required">
+									<simpleType>
+										<restriction base="string">
+											<enumeration
+												value="application/xhtml+xml" />
+											<enumeration
+												value="text/plain" />
+										</restriction>
+									</simpleType>
+								</attribute>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="tRennfolge">
+		<sequence>
+			<element name="rennen" type="drvra:tRennen" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="tRennen">
+		<sequence>
+			<element name="nummer" type="drvra:tRennNummer" minOccurs="1"
+				maxOccurs="1">
+				<annotation>
+					<documentation xml:lang="de">Rennnummer. Die Nummer muss
+						nicht numerisch sein.</documentation>
+				</annotation>
+			</element>
+			<element name="spezifikation" type="drvra:tRennSpezifikation"
+				minOccurs="1" maxOccurs="1">
+				<annotation>
+					<documentation xml:lang="de">Spezifikation gemäß
+						DRV-Bestimmungen. Bspw. SM 4x A/B I-III LG</documentation>
+				</annotation>
+			</element>
+			<element name="zusatz" type="drvra:tRennZusatz" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="de">Zusätzliche Angaben zum
+						Rennen bspw. 'Verein', 'Ehrenpreis', 'RP' etc.</documentation>
+				</annotation>
+			</element>
+			<element name="parameters" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="param">
+							<complexType>
+								<simpleContent>
+									<extension base="string">
+										<attribute name="name" type="string" />
+									</extension>
+								</simpleContent>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="datum" type="date" use="optional">
+			<annotation>
+				<documentation xml:lang="de">
+					Datum des Regattatages an dem das Finale/Hauptrennen ausgetragen wird.
+					Wird es bei Import nicht
+					angegeben, wird das Rennen am letzten Regatttag eingefügt
+        </documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<simpleType name="tRennNummer">
+		<restriction base="string">
+			<maxLength value="6" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="tRennSpezifikation">
+		<restriction base="string">
+			<maxLength value="64" />
+			<minLength value="2" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="tRennZusatz">
+		<restriction base="string">
+			<maxLength value="64" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="tVeranstalter">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="id" type="string" use="optional">
+					<annotation>
+						<documentation>DRV ID des Veranstaltenden Vereins</documentation>
+					</annotation></attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+</schema>

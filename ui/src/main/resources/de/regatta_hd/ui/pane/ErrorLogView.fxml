@@ -28,6 +28,7 @@
       <items>
         <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
         <ComboBox fx:id="hostNameCbx" onAction="#handleHostNameOnAction" />
+        <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%common.delete" />
       </items>
     </ToolBar>
 

@@ -4,6 +4,7 @@ import java.util.EventListener;
 import java.util.List;
 
 import de.regatta_hd.aquarius.model.Heat;
+import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Score;
@@ -22,11 +23,9 @@ public interface RegattaDAO {
 
 	List<Race> getRaces(String graphName);
 
-	Race getRace(String raceNumber);
-
 	Race getRace(String raceNumber, String graphName);
 
-	List<Heat> getHeats();
+	List<Heat> getHeats(String graphName);
 
 	List<ResultEntry> getOfficialResults();
 
@@ -57,6 +56,7 @@ public interface RegattaDAO {
 	void cleanRaceHeats(Race race);
 
 	// score
+	Heat swapResults(HeatRegistration source, HeatRegistration target);
 
 	List<Score> calculateScores();
 

@@ -1,9 +1,11 @@
 package de.regatta_hd.aquarius.model;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +17,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,11 +31,13 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Entry")
+@SecondaryTable(name = "HRV_Entry", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class Registration {
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	/**
 	 * Unique identifier of this {@link Registration registration}.
@@ -103,7 +111,12 @@ public class Registration {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")
 	@ToString.Include(rank = 8)
-	private Label label;
+	private Label manualLabel;
+
+	// Second table columns
+
+	@Column(name = "alternativeTo", table = "HRV_Entry")
+	private String alternativeTo;
 
 	/**
 	 * Returns the final crews assigned to this registration, previous changes are filtered out.
@@ -117,17 +130,6 @@ public class Registration {
 	}
 
 	/**
-	 * Returns the labels for the given round which are assigned to this registration.
-	 *
-	 * @param the round
-	 * @return a stream with final labels
-	 */
-	public Stream<RegistrationLabel> getLabels(short round) {
-		return getLabels().stream()
-				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo());
-	}
-
-	/**
 	 * Indicates whether this registration is cancelled or not.
 	 *
 	 * @return <code>true</code> if registration is cancelled, otherwise <code>false</code>.
@@ -135,4 +137,53 @@ public class Registration {
 	public boolean isCancelled() {
 		return getCancelValue() > 0;
 	}
+
+	public String getBoatLabel() {
+		String boatLabel = null;
+		Optional<RegistrationLabel> boatLabelOpt = getLabel((short) 0);
+		boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
+				: getClub().getAbbreviation();
+		if (getBoatNumber() != null) {
+			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();
+		}
+		return boatLabel;
+	}
+
+	public String getClubName() {
+		if (getClub() != null) {
+			return getClub().getName();
+		}
+		return null;
+	}
+
+	public String getClubNameAbr() {
+		if (getClub() != null) {
+			return getClub().getAbbreviation();
+		}
+		return null;
+	}
+
+	public String getClubCity() {
+		if (getClub() != null) {
+			return getClub().getCity();
+		}
+		return null;
+	}
+
+	// JavaFX properties
+	public ObservableBooleanValue signedOffProperty() {
+		return new SimpleBooleanProperty(getCancelValue() > 0);
+	}
+
+	/**
+	 * Returns the labels for the given round which are assigned to this registration.
+	 *
+	 * @param the round
+	 * @return a stream with final labels
+	 */
+	Optional<RegistrationLabel> getLabel(short round) {
+		return getLabels().stream()
+				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo()).findFirst();
+	}
+
 }
