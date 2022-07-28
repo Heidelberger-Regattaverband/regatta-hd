@@ -2,10 +2,10 @@ package de.regatta_hd.aquarius.model;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -130,17 +130,6 @@ public class Registration {
 	}
 
 	/**
-	 * Returns the labels for the given round which are assigned to this registration.
-	 *
-	 * @param the round
-	 * @return a stream with final labels
-	 */
-	Stream<RegistrationLabel> getLabels(short round) {
-		return getLabels().stream()
-				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo());
-	}
-
-	/**
 	 * Indicates whether this registration is cancelled or not.
 	 *
 	 * @return <code>true</code> if registration is cancelled, otherwise <code>false</code>.
@@ -150,7 +139,10 @@ public class Registration {
 	}
 
 	public String getBoatLabel() {
-		String boatLabel = getClub().getAbbreviation();
+		String boatLabel = null;
+		Optional<RegistrationLabel> boatLabelOpt = getLabel((short) 0);
+		boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
+				: getClub().getAbbreviation();
 		if (getBoatNumber() != null) {
 			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();
 		}
@@ -182,4 +174,16 @@ public class Registration {
 	public ObservableBooleanValue signedOffProperty() {
 		return new SimpleBooleanProperty(getCancelValue() > 0);
 	}
+
+	/**
+	 * Returns the labels for the given round which are assigned to this registration.
+	 *
+	 * @param the round
+	 * @return a stream with final labels
+	 */
+	Optional<RegistrationLabel> getLabel(short round) {
+		return getLabels().stream()
+				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo()).findFirst();
+	}
+
 }

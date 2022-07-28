@@ -127,17 +127,10 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn resizable="true" reorderable="false" sortable="true" text="%common.club" prefWidth="200">
+            <TableColumn resizable="true" reorderable="false" sortable="true" text="%common.club" prefWidth="300">
               <cellValueFactory>
                 <PropertyValueFactory>
-                  <property>clubNameAbr</property>
-                </PropertyValueFactory>
-              </cellValueFactory>
-            </TableColumn>
-            <TableColumn resizable="false" reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.boat" prefWidth="50">
-              <cellValueFactory>
-                <PropertyValueFactory>
-                  <property>boatNumber</property>
+                  <property>boatLabel</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>

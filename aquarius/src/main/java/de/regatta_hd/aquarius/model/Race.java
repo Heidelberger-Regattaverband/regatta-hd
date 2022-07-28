@@ -44,14 +44,24 @@ import lombok.ToString;
 				@NamedSubgraph(name = "heatreg.results", //
 						attributeNodes = { //
 								@NamedAttributeNode("results"), //
-								@NamedAttributeNode(value = "registration", subgraph = "registration.crews") //
+								@NamedAttributeNode(value = "registration", subgraph = "registration") //
 						} //
 				), //
-				@NamedSubgraph(name = "registration.crews", //
-						attributeNodes = { @NamedAttributeNode(value = "crews", subgraph = "crew.club") } //
+				@NamedSubgraph(name = "registration", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club"), //
+								@NamedAttributeNode(value = "labels", subgraph = "labels") //
+						} //
 				), //
+				@NamedSubgraph(name = "labels", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "label") //
+						}), //
 				@NamedSubgraph(name = "crew.club", //
-						attributeNodes = { @NamedAttributeNode("club"), @NamedAttributeNode("athlet") } //
+						attributeNodes = { //
+								@NamedAttributeNode("club"), //
+								@NamedAttributeNode("athlet") //
+						} //
 				) }, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
@@ -61,8 +71,21 @@ import lombok.ToString;
 				@NamedAttributeNode("registrations") //
 		} //
 ), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
-		subgraphs = { @NamedSubgraph(name = "registration.club", attributeNodes = { @NamedAttributeNode("club") }) }, //
-		attributeNodes = { @NamedAttributeNode(value = "registrations", subgraph = "registration.club") }) })
+		subgraphs = { //
+				@NamedSubgraph(name = "registration.club", //
+						attributeNodes = { //
+								@NamedAttributeNode("club"), //
+								@NamedAttributeNode(value = "labels", subgraph = "labels") //
+						}), //
+				@NamedSubgraph(name = "labels", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "label") //
+						}) //
+		}, //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "registrations", subgraph = "registration.club") //
+		}) //
+})
 // lombok
 @Getter
 @Setter
