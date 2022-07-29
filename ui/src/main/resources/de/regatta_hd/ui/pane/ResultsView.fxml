@@ -30,38 +30,38 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.id">
+        <TableColumn fx:id="idCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id" prefWidth="50">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>id</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="numberCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.heat">
+        <TableColumn fx:id="numberCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.heat" prefWidth="50">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>number</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr">
+        <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.raceNrAbr" prefWidth="50">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>raceNumber</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" sortable="false" text="%common.shortLabelAbr">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>raceLabel</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.divisionAbr">
+        <TableColumn reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.divisionAbr" prefWidth="65">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>divisionLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn reorderable="false" resizable="false" sortable="false" text="%common.shortLabelAbr" prefWidth="130">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>raceLabel</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>

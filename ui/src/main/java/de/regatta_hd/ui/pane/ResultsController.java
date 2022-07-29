@@ -7,9 +7,14 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,7 +31,13 @@ public class ResultsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableView<ResultEntry> resultsTbl;
 	@FXML
+	private TableColumn<ResultEntry, Integer> idCol;
+	@FXML
 	private TableColumn<ResultEntry, String> numberCol;
+
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	private final ObservableList<ResultEntry> resultsList = FXCollections.observableArrayList();
 
@@ -36,6 +47,8 @@ public class ResultsController extends AbstractRegattaDAOController {
 
 		this.resultsTbl.setItems(this.resultsList);
 		this.resultsTbl.getSortOrder().add(this.numberCol);
+
+		this.idCol.visibleProperty().bind(this.showIdColumn);
 
 		loadResults(false);
 	}
