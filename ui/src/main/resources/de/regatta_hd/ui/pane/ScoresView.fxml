@@ -29,12 +29,12 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn fx:id="rankCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.rank">
+        <TableColumn fx:id="rankCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.rank" prefWidth="50">
           <cellValueFactory>
             <PropertyValueFactory property="rank" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="pointsCol" reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
+        <TableColumn fx:id="pointsCol" reorderable="false" resizable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points" prefWidth="60">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>

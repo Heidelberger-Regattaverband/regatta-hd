@@ -97,19 +97,19 @@ public class ScoresController extends AbstractRegattaDAOController {
 	void handleCalculateOnAction() {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		Score selectedScore = this.scoresTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
 			try {
 				this.scoresList.setAll(scores.getResult());
+				this.scoresTbl.getSelectionModel().select(selectedScore);
 				this.scoresTbl.sort();
 				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				if (this.scoresList.isEmpty()) {
-					updatePlaceholder(getText("common.noDataAvailable"));
-				}
+				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -142,6 +142,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 	private void loadScores(boolean refresh) {
 		disableButtons(true);
 		updatePlaceholder(getText("common.loadData"));
+		Score selectedScore = this.scoresTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
 			if (refresh) {
@@ -152,6 +153,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 			try {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();
+				this.scoresTbl.getSelectionModel().select(selectedScore);
 				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -213,6 +215,7 @@ public class ScoresController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.calculateBtn.setDisable(disabled);
 		this.exportXslBtn.setDisable(disabled);
+		this.scoresTbl.setDisable(disabled);
 	}
 
 }

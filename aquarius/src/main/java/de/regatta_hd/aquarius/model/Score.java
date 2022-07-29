@@ -13,6 +13,7 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,7 @@ import lombok.ToString.Include;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Score implements Serializable {
 	private static final long serialVersionUID = 1670725569568728048L;
 
@@ -42,10 +44,12 @@ public class Score implements Serializable {
 
 	@Id
 	@Column(name = "club_id")
+	@EqualsAndHashCode.Include
 	private int clubId;
 
 	@Id
 	@Column(name = "event_id")
+	@EqualsAndHashCode.Include
 	private int regattaId;
 
 	@ManyToOne
