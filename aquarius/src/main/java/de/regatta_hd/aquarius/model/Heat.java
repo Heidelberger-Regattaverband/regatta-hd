@@ -57,7 +57,11 @@ import lombok.ToString;
 				}), //
 		@NamedSubgraph(name = "crew.athlet", //
 				attributeNodes = { //
-						@NamedAttributeNode(value = "athlet") //
+						@NamedAttributeNode(value = "athlet", subgraph = "athlet.club") //
+				}), //
+		@NamedSubgraph(name = "athlet.club", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "club") //
 				}), //
 		@NamedSubgraph(name = "race.ageClass", //
 				attributeNodes = { //
