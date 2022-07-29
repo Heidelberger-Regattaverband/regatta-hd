@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,12 +25,7 @@ import lombok.ToString.Include;
 @Entity
 @Table(schema = "dbo", name = "HRV_Score")
 @NamedEntityGraph(name = Score.GRAPH_ALL, attributeNodes = { //
-		@NamedAttributeNode(value = "club", subgraph = "club") //
-}, subgraphs = { //
-		@NamedSubgraph(name = "club", //
-				attributeNodes = { //
-						@NamedAttributeNode(value = "name") //
-				}) //
+		@NamedAttributeNode(value = "club") //
 })
 @IdClass(ScoreId.class)
 // lombok
@@ -55,12 +49,12 @@ public class Score implements Serializable {
 	private int regattaId;
 
 	@ManyToOne
-	@JoinColumn(name = "club_id")
+	@JoinColumn(name = "club_id", insertable = false, updatable = false)
 	@Include
 	private Club club;
 
 	@ManyToOne
-	@JoinColumn(name = "event_id")
+	@JoinColumn(name = "event_id", insertable = false, updatable = false)
 	private Regatta regatta;
 
 	@Column(name = "rank")
@@ -78,4 +72,5 @@ public class Score implements Serializable {
 	public void addPoints(float addPoints) {
 		this.points += addPoints;
 	}
+
 }
