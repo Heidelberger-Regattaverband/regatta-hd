@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,14 @@ import lombok.ToString.Include;
  */
 @Entity
 @Table(schema = "dbo", name = "HRV_Score")
-@NamedEntityGraph(name = "score-club", attributeNodes = { @NamedAttributeNode(value = "club") })
+@NamedEntityGraph(name = Score.GRAPH_ALL, attributeNodes = { //
+		@NamedAttributeNode(value = "club", subgraph = "club") //
+}, subgraphs = { //
+		@NamedSubgraph(name = "club", //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "name") //
+				}) //
+})
 // lombok
 @Getter
 @Setter
@@ -32,8 +40,9 @@ import lombok.ToString.Include;
 @AllArgsConstructor
 @Builder
 public class Score implements Serializable {
-
 	private static final long serialVersionUID = 1670725569568728048L;
+
+	public static final String GRAPH_ALL = "score-all";
 
 	@Id
 	@OneToOne

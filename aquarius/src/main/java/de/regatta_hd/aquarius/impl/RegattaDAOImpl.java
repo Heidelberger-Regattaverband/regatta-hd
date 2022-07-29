@@ -19,7 +19,6 @@ import com.google.inject.Singleton;
 import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.SeedingListEntry;
-import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
@@ -311,7 +310,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 		return entityManager
 				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.rank ASC", Score.class)
-				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("score-club"))
+				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph(Score.GRAPH_ALL))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
@@ -322,9 +321,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = this.db.getEntityManager();
 
 		getRaces().forEach(race -> {
-			AgeClass ageClass = race.getAgeClass();
-			GroupMode mode = race.getGroupMode();
-			if (ageClass.isMasters() && !mode.equals(GroupMode.AGE)) {
+			if (race.getAgeClass().isMasters() && !race.getGroupMode().equals(GroupMode.AGE)) {
 				race.setGroupMode(GroupMode.AGE);
 				entityManager.merge(race);
 				races.add(race);
