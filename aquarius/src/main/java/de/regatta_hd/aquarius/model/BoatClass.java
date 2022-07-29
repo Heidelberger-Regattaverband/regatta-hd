@@ -34,21 +34,37 @@ public class BoatClass {
 	@ToString.Include(rank = 1)
 	private int id;
 
+	/**
+	 * The abbreviation of this boat class.
+	 */
 	@Column(name = "BoatClass_Abbr", nullable = false, length = 8)
 	@ToString.Include(rank = 10)
 	private String abbreviation;
 
+	/**
+	 * The name of this boat class.
+	 */
 	@Column(name = "BoatClass_Caption", nullable = false, length = 50)
 	@ToString.Include(rank = 9)
-	private String caption;
+	private String name;
 
+	/**
+	 * Indicates whether or not this boat class has a cox.
+	 */
 	@Column(name = "BoatClass_Coxed")
 	private boolean coxed;
 
+	/**
+	 * The number of rowers in the boot, without the optional cox.
+	 */
 	@Column(name = "BoatClass_NumRowers")
 	private byte numRowers;
 
+	/**
+	 * All races with this boat class
+	 */
 	@OneToMany(targetEntity = Race.class, mappedBy = "boatClass")
 	@OrderBy("raceNumber")
 	private Set<Race> races;
+
 }

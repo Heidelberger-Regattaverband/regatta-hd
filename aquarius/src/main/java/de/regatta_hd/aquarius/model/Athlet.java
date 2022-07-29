@@ -26,7 +26,7 @@ import lombok.ToString;
 //lombok
 @Getter
 @Setter
-@ToString(onlyExplicitlyIncluded = true, doNotUseGetters = true)
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Athlet {
 
@@ -58,7 +58,7 @@ public class Athlet {
 	private String gender;
 
 	/**
-	 * The age of the athlete.
+	 * The age group of the athlete.
 	 */
 	@Column(name = "Athlet_DOB")
 	private Date dob;
@@ -93,4 +93,5 @@ public class Athlet {
 	@JoinColumn(name = "Athlet_Nation_ID_FK")
 	@ToString.Include(rank = 1)
 	private Nation nation;
+
 }

@@ -67,14 +67,14 @@ public class Label {
 	/**
 	 * The long label text.
 	 */
-	@Column(name = "Label_Long", nullable = false, length = 512)
+	@Column(name = "Label_Long")
 	@ToString.Include(rank = 9)
 	private String labelLong;
 
 	/**
 	 * The short label text.
 	 */
-	@Column(name = "Label_Short", nullable = false, length = 256)
+	@Column(name = "Label_Short")
 	@ToString.Include(rank = 10)
 	private String labelShort;
 

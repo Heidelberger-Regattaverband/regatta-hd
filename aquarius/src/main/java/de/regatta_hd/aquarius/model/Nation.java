@@ -12,7 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * The nation of an {@link Athlet}.
+ * The nation of an {@link Athlet athlete}, {@link Club rowing club} or {@link Regatta regatta}.
  */
 @Entity
 @Table(schema = "dbo", name = "Nation")
@@ -35,14 +35,14 @@ public class Nation {
 	@OneToMany(targetEntity = Regatta.class, mappedBy = "nation")
 	private Set<Regatta> regattas;
 
-	@Column(name = "Nation_IOC_Code", length = 5)
+	@Column(name = "Nation_IOC_Code")
 	private String iocCode;
 
-	@Column(name = "Nation_Name", length = 64)
+	@Column(name = "Nation_Name")
 	@ToString.Include(rank = 10)
 	private String name;
 
-	@Column(name = "Nation_Name_German", length = 64)
+	@Column(name = "Nation_Name_German")
 	@ToString.Include(rank = 8)
 	private String nameGerman;
 
