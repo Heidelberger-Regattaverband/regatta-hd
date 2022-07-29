@@ -36,13 +36,37 @@ public class Athlet {
 	@EqualsAndHashCode.Include
 	private int id;
 
-	@Column(name = "Athlet_DOB", columnDefinition = "datetime", nullable = false)
+	/**
+	 * The last name of the athlete.
+	 */
+	@Column(name = "Athlet_LastName")
+	@ToString.Include(rank = 10)
+	private String lastName;
+
+	/**
+	 * The first name of the athlete.
+	 */
+	@Column(name = "Athlet_FirstName")
+	@ToString.Include(rank = 9)
+	private String firstName;
+
+	/**
+	 * The gender of the athlete.
+	 */
+	@Column(name = "Athlet_Gender")
+	@ToString.Include(rank = 8)
+	private String gender;
+
+	/**
+	 * The age of the athlete.
+	 */
+	@Column(name = "Athlet_DOB")
 	private Date dob;
 
-	@Column(name = "Athlet_ExternID_A", length = 11)
+	@Column(name = "Athlet_ExternID_A")
 	private String externIDA;
 
-	@Column(name = "Athlet_ExternID_B", length = 11)
+	@Column(name = "Athlet_ExternID_B")
 	private String externIDB;
 
 	@Column(name = "Athlet_ExternState")
@@ -51,25 +75,13 @@ public class Athlet {
 	@Column(name = "Athlet_ExternState_B")
 	private Byte externStateB;
 
-	@Column(name = "Athlet_FirstName", nullable = false, length = 32)
-	@ToString.Include(rank = 9)
-	private String firstName;
-
-	@Column(name = "Athlet_Gender", nullable = false, length = 1)
-	@ToString.Include(rank = 8)
-	private String gender;
-
-	@Column(name = "Athlet_LastName", nullable = false, length = 64)
-	@ToString.Include(rank = 10)
-	private String lastName;
-
-	@Column(name = "Athlet_SoundEx", length = 5)
+	@Column(name = "Athlet_SoundEx")
 	private String soundEx;
 
 	@Column(name = "Athlet_State")
 	private byte state;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "Athlet_Club_ID_FK")
 	@ToString.Include(rank = 2)
 	private Club club;

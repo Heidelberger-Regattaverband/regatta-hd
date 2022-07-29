@@ -19,7 +19,6 @@ import jakarta.persistence.Transient;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,14 +31,14 @@ import lombok.ToString;
 // lombok
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Regatta {
 
 	@Id
 	@Column(name = "Event_ID")
 	@ToString.Include(rank = 20)
-	@Include
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@Column(name = "Event_Title", nullable = false, length = 64)

@@ -38,38 +38,6 @@ public class LogRecord implements Serializable {
 
 	private static final Logger log = Logger.getLogger(LogRecord.class.getName());
 
-	public LogRecord(String hostName, String hostAddr, java.util.logging.LogRecord logRecord) {
-		setInstant(logRecord.getInstant());
-		setLogger(logRecord.getLoggerName());
-		setMessage(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
-		setThreadID(logRecord.getThreadID());
-		setHostName(hostName);
-		setHostAddress(hostAddr);
-		setSourceClass(logRecord.getSourceClassName());
-		setSourceMethod(logRecord.getSourceMethodName());
-
-		Optional<Thread> threadOpt = Thread.getAllStackTraces().keySet().stream()
-				.filter(thread -> thread.getId() == logRecord.getThreadID()).findFirst();
-		if (threadOpt.isPresent()) {
-			setThreadName(threadOpt.get().getName());
-		}
-
-		if (logRecord.getLevel() != null) {
-			setLevelName(logRecord.getLevel().getName());
-			setLevelValue(logRecord.getLevel().intValue());
-		}
-
-		if (logRecord.getThrown() != null) {
-			setThrowable(logRecord.getThrown().getClass().getName());
-			try (StringWriter strWriter = new StringWriter(); PrintWriter writer = new PrintWriter(strWriter);) {
-				logRecord.getThrown().printStackTrace(writer);
-				setStackTrace(strWriter.toString());
-			} catch (IOException e) {
-				log.log(Level.SEVERE, e.getMessage(), e);
-			}
-		}
-	}
-
 	/**
 	 * Event time.
 	 */
@@ -138,4 +106,37 @@ public class LogRecord implements Serializable {
 
 	@Column(name = "throwable")
 	private String throwable;
+
+	public LogRecord(String hostName, String hostAddr, java.util.logging.LogRecord logRecord) {
+		setInstant(logRecord.getInstant());
+		setLogger(logRecord.getLoggerName());
+		setMessage(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
+		setThreadID(logRecord.getThreadID());
+		setHostName(hostName);
+		setHostAddress(hostAddr);
+		setSourceClass(logRecord.getSourceClassName());
+		setSourceMethod(logRecord.getSourceMethodName());
+
+		Optional<Thread> threadOpt = Thread.getAllStackTraces().keySet().stream()
+				.filter(thread -> thread.getId() == logRecord.getThreadID()).findFirst();
+		if (threadOpt.isPresent()) {
+			setThreadName(threadOpt.get().getName());
+		}
+
+		if (logRecord.getLevel() != null) {
+			setLevelName(logRecord.getLevel().getName());
+			setLevelValue(logRecord.getLevel().intValue());
+		}
+
+		if (logRecord.getThrown() != null) {
+			setThrowable(logRecord.getThrown().getClass().getName());
+			try (StringWriter strWriter = new StringWriter(); PrintWriter writer = new PrintWriter(strWriter);) {
+				logRecord.getThrown().printStackTrace(writer);
+				setStackTrace(strWriter.toString());
+			} catch (IOException e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+	}
+
 }
