@@ -266,7 +266,8 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 						// ignore cox of boat
 						heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
 							Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
-									key -> Score.builder().club(key).regatta(regatta).points(0.0f).build());
+									key -> Score.builder().clubId(key.getId()).regattaId(regatta.getId()).club(key)
+											.regatta(regatta).points(0.0f).build());
 							score.addPoints(pointsPerCrew);
 
 //						System.out.println("Heat=" + heatReg.getHeat().getNumber() + "', Club=" + score.getClubName()
