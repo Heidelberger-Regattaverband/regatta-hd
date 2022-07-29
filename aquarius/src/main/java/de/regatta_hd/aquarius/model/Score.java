@@ -5,11 +5,12 @@ import java.io.Serializable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedSubgraph;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,7 @@ import lombok.ToString.Include;
 						@NamedAttributeNode(value = "name") //
 				}) //
 })
+@IdClass(ScoreId.class)
 // lombok
 @Getter
 @Setter
@@ -45,13 +47,19 @@ public class Score implements Serializable {
 	public static final String GRAPH_ALL = "score-all";
 
 	@Id
-	@OneToOne
+	@Column(name = "club_id")
+	private int clubId;
+
+	@Id
+	@Column(name = "event_id")
+	private int regattaId;
+
+	@ManyToOne
 	@JoinColumn(name = "club_id")
 	@Include
 	private Club club;
 
-	@Id
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "event_id")
 	private Regatta regatta;
 
