@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,11 +27,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true, doNotUseGetters = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Athlet {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Athlet_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@Column(name = "Athlet_DOB", columnDefinition = "datetime", nullable = false)

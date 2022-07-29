@@ -281,6 +281,30 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return updateScores(scores.values(), entityManager);
 	}
 
+	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {
+		entityManager.createQuery("DELETE FROM Score s WHERE s.regatta = :regatta")
+				.setParameter(PARAM_REGATTA, getActiveRegatta()).executeUpdate();
+		entityManager.clear();
+
+		List<Score> scoresResult = scores.stream().sorted((score1, score2) -> {
+			if (score1.getPoints() == score2.getPoints()) {
+				return 0;
+			}
+			return score1.getPoints() > score2.getPoints() ? -1 : 1;
+		}).collect(Collectors.toList());
+
+		for (int i = 0; i < scoresResult.size(); i++) {
+			Score score = scoresResult.get(i);
+			score.setRank((short) (i + 1));
+			score.getClubName(); // get club in current session
+			entityManager.persist(score);
+		}
+
+		entityManager.flush();
+
+		return scoresResult;
+	}
+
 	@Override
 	public List<Score> getScores() {
 		EntityManager entityManager = this.db.getEntityManager();
@@ -405,28 +429,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		entityManager.flush();
 
 		return source.getHeat();
-	}
-
-	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {
-		entityManager.createQuery("DELETE FROM Score s WHERE s.regatta = :regatta")
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).executeUpdate();
-
-		List<Score> scoresResult = scores.stream().sorted((score1, score2) -> {
-			if (score1.getPoints() == score2.getPoints()) {
-				return 0;
-			}
-			return score1.getPoints() > score2.getPoints() ? -1 : 1;
-		}).collect(Collectors.toList());
-
-		for (int i = 0; i < scoresResult.size(); i++) {
-			Score score = scoresResult.get(i);
-			score.setRank((short) (i + 1));
-			entityManager.persist(score);
-		}
-
-		entityManager.flush();
-
-		return scoresResult;
 	}
 
 	private void notifyListeners(RegattaDAO.RegattaChangedEvent event) {

@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.ToString.Include;
 
 /**
  * The age class of a race.
@@ -34,21 +35,24 @@ public class Score implements Serializable {
 
 	private static final long serialVersionUID = 1670725569568728048L;
 
-	@Column(name = "rank")
-	private short rank;
-
-	@Column(name = "points")
-	private float points;
-
 	@Id
 	@OneToOne
 	@JoinColumn(name = "club_id")
+	@Include
 	private Club club;
 
 	@Id
 	@OneToOne
 	@JoinColumn(name = "event_id")
 	private Regatta regatta;
+
+	@Column(name = "rank")
+	@Include
+	private short rank;
+
+	@Column(name = "points")
+	@Include
+	private float points;
 
 	public String getClubName() {
 		return getClub().getName();
