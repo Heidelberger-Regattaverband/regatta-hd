@@ -30,13 +30,15 @@ import javafx.scene.control.cell.TextFieldTableCell;
 public class RacesController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
 
-	// UI Controls
+	// toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
 	private Button setDistancesBtn;
 	@FXML
 	private Button setMastersAgeClassesBtn;
+
+	// races table
 	@FXML
 	private TableView<Race> racesTbl;
 	@FXML
@@ -46,8 +48,11 @@ public class RacesController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Race, Integer> regsIdCol;
 
+	// registrations table
 	@FXML
 	private TableView<Registration> regsTbl;
+	@FXML
+	private TableColumn<Registration, Short> regsBibCol;
 
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
@@ -79,6 +84,7 @@ public class RacesController extends AbstractRegattaDAOController {
 
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
+		this.regsTbl.getSortOrder().add(this.regsBibCol);
 
 		loadRaces(true);
 	}
