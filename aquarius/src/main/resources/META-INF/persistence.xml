@@ -13,6 +13,7 @@
       <property name="hibernate.jdbc.batch_size" value="25" />
       <property name="hibernate.order_inserts" value="true" />
       <property name="hibernate.order_updates" value="true" />
+      <property name="hibernate.type.preferred_instant_jdbc_type" value="TIMESTAMP" />
     </properties>
   </persistence-unit>
 </persistence>

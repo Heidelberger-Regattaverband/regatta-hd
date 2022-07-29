@@ -25,7 +25,6 @@ import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -99,7 +98,7 @@ public class Race {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Offer_ID")
-	@Include
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)

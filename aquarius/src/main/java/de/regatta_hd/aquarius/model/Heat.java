@@ -25,7 +25,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -80,9 +79,9 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "labels", subgraph = "label") //
 				}), //
 		@NamedSubgraph(name = "label", //
-		attributeNodes = { //
-				@NamedAttributeNode(value = "label") //
-		}), //
+				attributeNodes = { //
+						@NamedAttributeNode(value = "label") //
+				}), //
 		@NamedSubgraph(name = "race", //
 				attributeNodes = { //
 						@NamedAttributeNode(value = "ageClass"), //
@@ -107,7 +106,7 @@ public class Heat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Comp_ID")
-	@Include
+	@EqualsAndHashCode.Include
 	private int id;
 
 	/**

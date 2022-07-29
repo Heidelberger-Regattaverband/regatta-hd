@@ -20,7 +20,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.EqualsAndHashCode.Include;
 
 /*
 * The entity contains a log record.
@@ -76,7 +75,7 @@ public class LogRecord implements Serializable {
 	 */
 	@Id
 	@Column(name = "instant")
-	@Include
+	@EqualsAndHashCode.Include
 	private Instant instant;
 
 	@Column(name = "hostName")
