@@ -74,6 +74,8 @@ public class HeatsController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<HeatRegistration, Integer> divisionIdCol;
 	@FXML
+	private TableColumn<HeatRegistration, Short> divisionLaneCol;
+	@FXML
 	private Menu swapMenu;
 
 	// injections
@@ -110,6 +112,7 @@ public class HeatsController extends AbstractRegattaDAOController {
 		});
 
 		this.divisionTbl.setItems(this.divisionList);
+		this.divisionTbl.getSortOrder().add(this.divisionLaneCol);
 
 		this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
 		this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
