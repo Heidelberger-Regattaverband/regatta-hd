@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.table.TableFilter;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -85,6 +87,9 @@ public class RacesController extends AbstractRegattaDAOController {
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
 		this.regsTbl.getSortOrder().add(this.regsBibCol);
+
+		TableFilter<Race> racesTblFilter = TableFilter.forTableView(this.racesTbl).apply();
+		racesTblFilter.setSearchStrategy((input, target) -> target.contains(input));
 
 		loadRaces(true);
 	}
