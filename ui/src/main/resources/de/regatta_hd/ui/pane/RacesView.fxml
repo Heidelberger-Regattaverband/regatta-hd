@@ -92,6 +92,16 @@
                 <CheckBoxTableCellFactory fx:factory="readonly" />
               </cellFactory>
             </TableColumn>
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.cancelledAbr" prefWidth="60">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>cancelled</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+              <cellFactory>
+                <CheckBoxTableCellFactory fx:factory="readonly" />
+              </cellFactory>
+            </TableColumn>
             <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%OffersView.setCol.text" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>

@@ -211,6 +211,10 @@ public class Race {
 		return new SimpleBooleanProperty(isSet());
 	}
 
+	public ObservableBooleanValue cancelledProperty() {
+		return new SimpleBooleanProperty(isCancelled());
+	}
+
 	/**
 	 * Returns a stream with active registrations, cancelled registrations are removed.
 	 *
