@@ -1,6 +1,7 @@
 package de.regatta_hd.ui.pane;
 
 import java.net.URL;
+import java.time.Instant;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -37,6 +39,8 @@ public class ErrorLogController extends PaneController {
 
 	@FXML
 	private TableView<LogRecord> logRecordsTbl;
+	@FXML
+	private TableColumn<LogRecord, Instant> instantCol;
 	@FXML
 	private TextArea stackTraceTar;
 	@FXML
@@ -69,6 +73,7 @@ public class ErrorLogController extends PaneController {
 		super.initialize(location, resources);
 
 		this.logRecordsTbl.setItems(this.logRecordsList);
+		this.logRecordsTbl.getSortOrder().add(this.instantCol);
 		this.hostNameCbx.setItems(this.hostNamesList);
 
 		this.logRecordsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {

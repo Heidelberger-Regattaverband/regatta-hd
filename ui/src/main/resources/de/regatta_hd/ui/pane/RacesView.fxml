@@ -141,7 +141,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.signedOff" prefWidth="80">
+            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.signedOffAbr" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>signedOff</property>
@@ -151,7 +151,7 @@
                 <CheckBoxTableCellFactory fx:factory="readonly" />
               </cellFactory>
             </TableColumn>
-            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.alternativeTo" prefWidth="80">
+            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.alternativeAbr" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>alternativeTo</property>

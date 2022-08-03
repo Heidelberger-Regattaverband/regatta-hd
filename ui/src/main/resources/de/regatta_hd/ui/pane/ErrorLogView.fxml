@@ -40,17 +40,17 @@
             <Label text="%common.loadData" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" sortType="DESCENDING" text="%common.time">
+            <TableColumn fx:id="instantCol" reorderable="false" resizable="false" sortType="DESCENDING" text="%common.time" prefWidth="220">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>instant</property>
                 </PropertyValueFactory>
               </cellValueFactory>
               <cellFactory>
-                <DateTimeTableCellFactory fx:factory="createLong" />
+                <DateTimeTableCellFactory fx:factory="createISOLocalDateTime" />
               </cellFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.level">
+            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.level" prefWidth="80">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>levelName</property>
