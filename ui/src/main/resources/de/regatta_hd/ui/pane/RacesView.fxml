@@ -92,6 +92,16 @@
                 <CheckBoxTableCellFactory fx:factory="readonly" />
               </cellFactory>
             </TableColumn>
+            <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.cancelledAbr" prefWidth="60">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>cancelled</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+              <cellFactory>
+                <CheckBoxTableCellFactory fx:factory="readonly" />
+              </cellFactory>
+            </TableColumn>
             <TableColumn reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%OffersView.setCol.text" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>
@@ -141,7 +151,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.signedOff" prefWidth="80">
+            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.signedOffAbr" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>signedOff</property>
@@ -151,7 +161,7 @@
                 <CheckBoxTableCellFactory fx:factory="readonly" />
               </cellFactory>
             </TableColumn>
-            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.alternativeTo" prefWidth="80">
+            <TableColumn reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.alternativeAbr" prefWidth="60">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>alternativeTo</property>

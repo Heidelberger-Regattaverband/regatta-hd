@@ -39,4 +39,9 @@ public class DateTimeTableCellFactory {
 		return column -> new DateTimeTableCell<>(
 				DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(Locale.GERMANY));
 	}
+
+	public static <S> Callback<TableColumn<S, Instant>, TableCell<S, Instant>> createISOLocalDateTime() {
+		return column -> new DateTimeTableCell<>(
+				DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+	}
 }
