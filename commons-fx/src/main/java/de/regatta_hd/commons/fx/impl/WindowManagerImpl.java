@@ -49,10 +49,10 @@ public class WindowManagerImpl implements WindowManager {
 	}
 
 	@Override
-	public Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle) {
+	public Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles) {
 		Pair<Stage, Boolean> stage = this.stages.computeIfAbsent(fxmlResourceUrl, key -> {
 			try {
-				return new Pair<>(newStageImpl(fxmlResourceUrl, title, bundle), Boolean.FALSE);
+				return new Pair<>(newStageImpl(fxmlResourceUrl, title, bundle, styles), Boolean.FALSE);
 			} catch (IOException e) {
 				throw new IllegalArgumentException(e);
 			}
@@ -61,11 +61,11 @@ public class WindowManagerImpl implements WindowManager {
 		return stage.getKey();
 	}
 
-	private Stage newStageImpl(URL fxmlResourceUrl, String title, ResourceBundle bundle) throws IOException {
+	private Stage newStageImpl(URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles) throws IOException {
 		FXMLLoader loader = createFXMLLoader(fxmlResourceUrl, bundle);
 
 		Stage stage = new Stage();
-		initializeStage(stage, title, loader);
+		initializeStage(stage, title, loader, styles);
 
 		FxUtils.loadSizeAndPos(fxmlResourceUrl.getPath(), stage);
 		stage.show();
@@ -73,11 +73,11 @@ public class WindowManagerImpl implements WindowManager {
 		return stage;
 	}
 
-	private void loadStageImpl(Stage stage, URL fxmlResourceUrl, String title, ResourceBundle bundle)
+	private void loadStageImpl(Stage stage, URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles)
 			throws IOException {
 		FXMLLoader loader = createFXMLLoader(fxmlResourceUrl, bundle);
 
-		initializeStage(stage, title, loader);
+		initializeStage(stage, title, loader, styles);
 
 		FxUtils.loadSizeAndPos(fxmlResourceUrl.getPath(), stage);
 		stage.show();
@@ -90,9 +90,11 @@ public class WindowManagerImpl implements WindowManager {
 		return loader;
 	}
 
-	private void initializeStage(Stage stage, String title, FXMLLoader loader) throws IOException {
+	private void initializeStage(Stage stage, String title, FXMLLoader loader, String... styles) throws IOException {
 		stage.setTitle(title);
-		stage.setScene(new Scene(loader.load()));
+		Scene scene = new Scene(loader.load());
+		scene.getStylesheets().addAll(styles);
+		stage.setScene(scene);
 		try (InputStream in = WindowManager.class.getClassLoader().getResourceAsStream("icon.png")) {
 			stage.getIcons().add(new Image(in));
 		}

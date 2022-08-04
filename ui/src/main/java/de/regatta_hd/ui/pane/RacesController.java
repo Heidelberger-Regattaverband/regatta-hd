@@ -103,6 +103,11 @@ public class RacesController extends AbstractRegattaDAOController {
 //				}
 //			}
 		});
+//		this.racesTbl.setRowFactory(tableView -> {
+//			TableRow<Race> row = new TableRow<>();
+//			row.pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), row.getItem() != null && row.getItem().isCancelled());
+//			return row;
+//		});
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
 		this.regsTbl.getSortOrder().add(this.regsBibCol);
