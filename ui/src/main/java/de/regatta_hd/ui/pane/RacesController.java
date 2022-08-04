@@ -94,6 +94,13 @@ public class RacesController extends AbstractRegattaDAOController {
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
 		this.regsTbl.getSortOrder().add(this.regsBibCol);
+		this.regsTbl.setRowFactory(row -> new TableRow<>() {
+			@Override
+			public void updateItem(Registration item, boolean empty) {
+				super.updateItem(item, empty);
+				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
+			}
+		});
 
 		loadRaces(true);
 	}

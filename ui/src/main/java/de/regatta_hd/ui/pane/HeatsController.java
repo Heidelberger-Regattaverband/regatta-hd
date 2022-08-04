@@ -35,6 +35,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,6 +43,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 
@@ -108,6 +110,13 @@ public class HeatsController extends AbstractRegattaDAOController {
 				this.divisionTbl.sort();
 			} else {
 				this.divisionList.clear();
+			}
+		});
+		this.heatsTbl.setRowFactory(row -> new TableRow<>() {
+			@Override
+			public void updateItem(Heat item, boolean empty) {
+				super.updateItem(item, empty);
+				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
 			}
 		});
 
