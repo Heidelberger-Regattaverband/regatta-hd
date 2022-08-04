@@ -20,6 +20,7 @@ import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -86,28 +87,10 @@ public class RacesController extends AbstractRegattaDAOController {
 			@Override
 			public void updateItem(Race item, boolean empty) {
 				super.updateItem(item, empty);
-				if (item != null && item.isCancelled()) {
-					setStyle("-fx-background-color: LightCoral; -fx-table-cell-border-color: LightCoral; -fx-accent: LightCoral;");
-				} else {
-					setStyle(null);
-				}
+				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
 			}
-
-//			@Override
-//			public void updateSelected(boolean selected) {
-//				super.updateSelected(selected);
-//				if (getItem() != null && getItem().isCancelled()) {
-//					RacesController.this.racesTbl.setStyle("-fx-selection-bar: Red;");
-//				} else {
-//					RacesController.this.racesTbl.setStyle(null);
-//				}
-//			}
 		});
-//		this.racesTbl.setRowFactory(tableView -> {
-//			TableRow<Race> row = new TableRow<>();
-//			row.pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), row.getItem() != null && row.getItem().isCancelled());
-//			return row;
-//		});
+
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
 		this.regsTbl.getSortOrder().add(this.regsBibCol);
