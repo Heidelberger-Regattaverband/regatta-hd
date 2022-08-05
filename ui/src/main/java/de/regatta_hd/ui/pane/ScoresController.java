@@ -104,7 +104,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.getSelectionModel().select(selectedScore);
 				this.scoresTbl.sort();
-				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
@@ -154,7 +153,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 				this.scoresList.setAll(scores.getResult());
 				this.scoresTbl.sort();
 				this.scoresTbl.getSelectionModel().select(selectedScore);
-				FxUtils.autoResizeColumns(this.scoresTbl);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
