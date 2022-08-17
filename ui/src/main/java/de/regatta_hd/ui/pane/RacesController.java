@@ -23,11 +23,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 public class RacesController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
@@ -70,10 +73,24 @@ public class RacesController extends AbstractRegattaDAOController {
 
 		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
-
+		ObservableList<Node> header = this.racesTbl.getChildrenUnmodifiable();
 		// races table
 		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
+//		this.racesTbl.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+//			if (e.getButton() == MouseButton.SECONDARY) {
+//				e.consume();
+//			}
+//		});
+		// setRowFactory(tv -> {
+//			TableRow<Race> row = new TableRow<>();
+//			row.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+//				if (e.getButton() == MouseButton.SECONDARY) {
+//					e.consume();
+//				}
+//			});
+//			return row;
+//		});
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
