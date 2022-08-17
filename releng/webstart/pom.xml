@@ -93,6 +93,7 @@
       <!-- additional deploy steps -->
       <!-- ======================= -->
       <plugin>
+      <!-- keytool -genkey -keyalg RSA -keysize 2048 -alias selfsigned -validity 9999 -dname "CN=Markus Ofterdinger, OU=EDV, O=Heidelberger Regatta-Verband, L=Heidelberg, ST=Germany, C=DE" -keystore keystore.jks -storepass password -keypass password -->
         <artifactId>maven-jarsigner-plugin</artifactId>
         <configuration>
           <archiveDirectory>${archives.directory}</archiveDirectory>
