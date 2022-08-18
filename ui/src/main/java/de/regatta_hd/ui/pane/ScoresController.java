@@ -21,11 +21,11 @@ import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.WorkbookUtils;
+import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,19 +33,23 @@ import javafx.scene.control.TableView;
 public class ScoresController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(ScoresController.class.getName());
 
-	// UI controls
+	// toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
 	private Button calculateBtn;
 	@FXML
 	private Button exportXslBtn;
+
+	// scores table
 	@FXML
 	private TableView<Score> scoresTbl;
 	@FXML
 	private TableColumn<Score, Integer> rankCol;
 	@FXML
 	private TableColumn<Score, Float> pointsCol;
+	@FXML
+	private TableColumn<Score, String> clubCol;
 
 	// fields
 	private final ObservableList<Score> scoresList = FXCollections.observableArrayList();
@@ -68,6 +72,9 @@ public class ScoresController extends AbstractRegattaDAOController {
 				}
 			}
 		});
+
+		DoubleBinding usedWidth = this.rankCol.widthProperty().add(this.pointsCol.widthProperty());
+		this.clubCol.prefWidthProperty().bind(this.scoresTbl.widthProperty().subtract(usedWidth).subtract(18));
 
 		loadScores(false);
 	}
@@ -96,7 +103,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 	@FXML
 	void handleCalculateOnAction() {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Score selectedScore = this.scoresTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.runInTransaction(progress -> this.regattaDAO.calculateScores(), scores -> {
@@ -108,7 +114,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -140,7 +145,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 
 	private void loadScores(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Score selectedScore = this.scoresTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -157,7 +161,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -203,10 +206,6 @@ public class ScoresController extends AbstractRegattaDAOController {
 			progress.update(j, this.scoresList.size(), getText("scores.xsl.progress", Short.valueOf(heat.getRank())));
 		}
 		return workbook;
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.scoresTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {

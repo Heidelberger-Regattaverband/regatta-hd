@@ -38,7 +38,7 @@
             <PropertyValueFactory property="points" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn prefWidth="300.0" reorderable="false" text="%common.club">
+        <TableColumn fx:id="clubCol" prefWidth="300.0" reorderable="false" sortable="false" text="%common.club">
           <cellValueFactory>
             <PropertyValueFactory property="clubName" />
           </cellValueFactory>
