@@ -22,6 +22,7 @@ import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -73,24 +74,31 @@ public class RacesController extends AbstractRegattaDAOController {
 
 		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
-		ObservableList<Node> header = this.racesTbl.getChildrenUnmodifiable();
+
 		// races table
 		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
-//		this.racesTbl.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-//			if (e.getButton() == MouseButton.SECONDARY) {
-//				e.consume();
-//			}
-//		});
-		// setRowFactory(tv -> {
-//			TableRow<Race> row = new TableRow<>();
-//			row.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-//				if (e.getButton() == MouseButton.SECONDARY) {
-//					e.consume();
-//				}
-//			});
-//			return row;
-//		});
+		this.racesTbl.setOnSort(sortEvent -> {
+			TableView<Race> source = sortEvent.getSource();
+			EventTarget target = sortEvent.getTarget();
+			sortEvent.consume();
+		});
+		this.racesTbl.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+			if (e.getButton() == MouseButton.SECONDARY) {
+				e.consume();
+			}
+		});
+
+		// show the context menu when the user right clicks on the table header row.
+		// needs to be invoked after the stage containing the table has been shown.
+		final Node header = this.racesTbl.lookup("TableHeaderRow");
+		if (header != null) {
+			header.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+				if (e.getButton() == MouseButton.SECONDARY) {
+					e.consume();
+				}
+			});
+		}
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
