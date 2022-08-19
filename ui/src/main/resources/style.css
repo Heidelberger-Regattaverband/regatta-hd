@@ -1,3 +1,5 @@
+/* https://developer.mozilla.org/de/docs/Web/CSS/color_value#werte */
+
 .table-row-cell:highlighted {
   -fx-accent: lightcoral;
   -fx-background-color: lightcoral;
