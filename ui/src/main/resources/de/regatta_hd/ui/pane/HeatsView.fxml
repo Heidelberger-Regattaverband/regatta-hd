@@ -119,7 +119,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="45" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
+            <TableColumn fx:id="divisionLaneCol" prefWidth="45" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;"
               text="%common.lane">
               <cellValueFactory>
                 <PropertyValueFactory>

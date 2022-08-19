@@ -17,8 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="de.regatta_hd.ui.pane.ErrorLogController">
+<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.ErrorLogController">
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" />
   </padding>
@@ -32,25 +31,24 @@
       </items>
     </ToolBar>
 
-    <SplitPane dividerPositions="0.8" orientation="VERTICAL" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
-      GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.8" orientation="VERTICAL" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <TableView fx:id="logRecordsTbl">
           <placeholder>
             <Label text="%common.loadData" />
           </placeholder>
           <columns>
-            <TableColumn reorderable="false" sortType="DESCENDING" text="%common.time">
+            <TableColumn fx:id="instantCol" prefWidth="210" reorderable="false" resizable="false" sortType="DESCENDING" text="%common.time">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>instant</property>
                 </PropertyValueFactory>
               </cellValueFactory>
               <cellFactory>
-                <DateTimeTableCellFactory fx:factory="createLong" />
+                <DateTimeTableCellFactory fx:factory="createISOLocalDateTime" />
               </cellFactory>
             </TableColumn>
-            <TableColumn reorderable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.level">
+            <TableColumn prefWidth="75" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.level">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>levelName</property>

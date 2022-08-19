@@ -13,6 +13,7 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,29 +28,31 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AgeClass {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "AgeClass_ID")
 	@ToString.Include(rank = 1)
+	@EqualsAndHashCode.Include
 	private int id;
 
-	@Column(name = "AgeClass_Abbr", nullable = false, length = 8)
+	@Column(name = "AgeClass_Abbr")
 	@ToString.Include(rank = 10)
 	private String abbreviation;
 
-	@Column(name = "AgeClass_AbbrSuffix", length = 8)
+	@Column(name = "AgeClass_AbbrSuffix")
 	@ToString.Include(rank = 9)
 	private String abbreviationSuffix;
 
 	@Column(name = "AgeClass_AllowYounger")
 	private boolean allowYounger;
 
-	@Column(name = "AgeClass_Caption", nullable = false, length = 48)
+	@Column(name = "AgeClass_Caption")
 	private String caption;
 
-	@Column(name = "AgeClass_Gender", nullable = false, length = 1)
+	@Column(name = "AgeClass_Gender")
 	@ToString.Include(rank = 8)
 	private String gender;
 
@@ -74,14 +77,14 @@ public class AgeClass {
 	@Column(name = "AgeClass_NumSubClasses")
 	private byte numSubClasses;
 
-	@Column(name = "AgeClass_Suffix", length = 16)
+	@Column(name = "AgeClass_Suffix")
 	private String suffix;
 
 	@OneToMany(targetEntity = Race.class, mappedBy = "ageClass")
 	@OrderBy("number")
 	private List<Race> races;
 
-	@Column(name = "distance", table="HRV_AgeClass")
+	@Column(name = "distance", table = "HRV_AgeClass")
 	private short distance;
 
 	// transient fields
@@ -100,7 +103,8 @@ public class AgeClass {
 		if (this.isMasters == null) {
 			String abbrevation = getAbbreviation();
 			if (abbrevation != null) {
-				this.isMasters = Boolean.valueOf(abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W"));
+				this.isMasters = Boolean
+						.valueOf(abbrevation.equals("MM") || abbrevation.equals("MW") || abbrevation.equals("MM/W"));
 			}
 		}
 		return this.isMasters.booleanValue();

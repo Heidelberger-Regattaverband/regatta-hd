@@ -9,7 +9,8 @@ import lombok.Data;
  */
 @Data
 public class ResultId implements Serializable {
-	private static final long serialVersionUID = 1140277898086880875L;
+
+	private static final long serialVersionUID = -8395173645471651953L;
 
 	static {
 		// register persistent class in JVM

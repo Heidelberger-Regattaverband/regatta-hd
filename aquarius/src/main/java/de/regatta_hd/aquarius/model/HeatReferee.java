@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,12 +23,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HeatReferee {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CompReferee_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@ManyToOne(fetch = FetchType.LAZY)

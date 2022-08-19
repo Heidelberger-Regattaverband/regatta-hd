@@ -23,7 +23,8 @@ public interface WindowManager {
 	 * @param fxmlResourceUrl URL of FXML resource
 	 * @param title           the window title
 	 * @param bundle          the resource bundle
+	 * @param styles          optional styles
 	 * @return the newly created {@link Stage}
 	 */
-	Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle);
+	Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles);
 }

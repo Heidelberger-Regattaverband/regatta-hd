@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,6 +26,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Label {
 
 	/**
@@ -33,6 +35,7 @@ public class Label {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Label_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	/**
@@ -64,14 +67,14 @@ public class Label {
 	/**
 	 * The long label text.
 	 */
-	@Column(name = "Label_Long", nullable = false, length = 512)
+	@Column(name = "Label_Long")
 	@ToString.Include(rank = 9)
 	private String labelLong;
 
 	/**
 	 * The short label text.
 	 */
-	@Column(name = "Label_Short", nullable = false, length = 256)
+	@Column(name = "Label_Short")
 	@ToString.Include(rank = 10)
 	private String labelShort;
 
