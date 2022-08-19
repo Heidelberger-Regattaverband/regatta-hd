@@ -1,25 +1,30 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.27</version>
   </parent>
 
   <artifactId>ui</artifactId>
   <name>Regatta HD - User Interface</name>
 
   <properties>
-    <mainClass>de.regatta_hd.ui.Main</mainClass>
+    <mainClass>de.regatta_hd.ui.RegattaHD</mainClass>
   </properties>
 
   <dependencies>
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>aquarius</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>commons-fx</artifactId>
     </dependency>
 
     <!-- =========== -->
@@ -38,64 +43,53 @@
       <artifactId>javafx-fxml</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
     </dependency>
-
-    <!-- Uncomment for cross-platform fat jar -->
-    <!-- <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId> 
-      <version>${javafx.version}</version> <classifier>win</classifier> </dependency> 
-      <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId> 
-      <version>${javafx.version}</version> <classifier>linux</classifier> </dependency> 
-      <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-graphics</artifactId> 
-      <version>${javafx.version}</version> <classifier>mac</classifier> </dependency> -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fazecast</groupId>
+      <artifactId>jSerialComm</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>${mainClass}</mainClass>
+            </manifest>
+            <manifestEntries>
+              <Permissions>all-permissions</Permissions>
+              <Codebase>*</Codebase>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <mainClass>${mainClass}</mainClass>
           <options>
-            <option>--add-opens</option>
-            <option>java.base/java.lang=com.google.guice</option>
+            <option>--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls</option>
           </options>
         </configuration>
       </plugin>
 
-      <plugin>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <shadedArtifactAttached>true</shadedArtifactAttached>
-              <shadedClassifierName>full</shadedClassifierName>
-              <filters>
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <transformers>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>${mainClass}</mainClass>
-                </transformer>
-              </transformers>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>

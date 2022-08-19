@@ -46,5 +46,5 @@ public class Cup {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Race_ID_FK")
-	private Offer offer;
+	private Race race;
 }

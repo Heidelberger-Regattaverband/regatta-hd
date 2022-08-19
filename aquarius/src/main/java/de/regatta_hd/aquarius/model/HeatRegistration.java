@@ -1,19 +1,27 @@
 package de.regatta_hd.aquarius.model;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.List;
-import java.util.Optional;
+import jakarta.persistence.Transient;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -23,30 +31,42 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "CompEntries")
 //lombok
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HeatRegistration {
-	@Basic
-	@Column(name = "CE_Lane")
-	@ToString.Include(rank = 10)
-	private Short lane;
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	@Id
-	@Column(name = "CE_ID", columnDefinition = "int identity")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "CE_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@Column(name = "CE_Lane")
+	@ToString.Include(rank = 10)
+	private short lane;
+
+	@ManyToOne
 	@JoinColumn(name = "CE_Comp_ID_FK")
 	private Heat heat;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne
 	@JoinColumn(name = "CE_Entry_ID_FK", nullable = false)
 	private Registration registration;
 
-	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration", cascade = CascadeType.MERGE)
+	@OneToMany(targetEntity = Result.class, mappedBy = "heatRegistration")
 	@OrderBy("rank")
-	private List<Result> results;
+	private Set<Result> results;
+
+	@Transient
+	@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)
+	private Result finalResult;
 
 	/**
 	 * Returns result of final race.
@@ -54,9 +74,52 @@ public class HeatRegistration {
 	 * @return {@link Result} of final or <code>null</code> if not available
 	 */
 	public Result getFinalResult() {
-		Optional<Result> resultOpt = getResults().stream().filter((Result::isFinalResult)).findFirst();
-		if (resultOpt.isPresent()) {
-			return resultOpt.get();
+		if (this.finalResult == null) {
+			this.finalResult = getResults().stream().filter((Result::isFinalResult)).findFirst().orElseGet(() -> null);
+		}
+		return this.finalResult;
+	}
+
+	public String getBib() {
+		if (getRegistration().getBib() != null) {
+			return getRegistration().getBib().toString();
+		}
+		return null;
+	}
+
+	public String getBoatLabel() {
+		Registration reg = getRegistration();
+		short round = getHeat().getRound();
+		Optional<RegistrationLabel> optional = reg.getLabel(round);
+		if (optional.isPresent()) {
+			String boatLabel = optional.get().getLabel().getLabelShort();
+			if (reg.getBoatNumber() != null) {
+				boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + reg.getBoatNumber();
+			}
+			return boatLabel;
+		}
+		return reg.getBoatLabel();
+	}
+
+	public String getResultDisplayValue() {
+		if (getFinalResult() != null) {
+			return getFinalResult().getDisplayValue();
+		}
+		return null;
+	}
+
+	public String getResultRank() {
+		Result result = getFinalResult();
+		if (result != null && result.getRank() > 0) {
+			return Byte.toString(getFinalResult().getRank());
+		}
+		return null;
+	}
+
+	public String getPoints() {
+		Result result = getFinalResult();
+		if (result != null && result.getPoints() != null) {
+			return result.getPoints().toString();
 		}
 		return null;
 	}

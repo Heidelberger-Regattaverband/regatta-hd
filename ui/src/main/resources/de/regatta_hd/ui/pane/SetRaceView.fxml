@@ -1,65 +1,192 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.*?>
+<?import de.regatta_hd.commons.fx.control.CheckBoxTableCellFactory?>
+<?import de.regatta_hd.ui.util.RaceStringConverter?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import de.regatta_hd.ui.control.FilterComboBox?>
-<?import de.regatta_hd.ui.pane.OfferStringConverter?>
-<?import de.regatta_hd.ui.pane.RegattaStringConverter?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
-<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
+<GridPane fx:id="rootPane" hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="de.regatta_hd.ui.pane.SetRaceController">
   <padding>
-    <Insets top="10" right="10" bottom="10" left="10" />
+    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
   </padding>
 
   <children>
-    <Label text="%SetRaceView.EventLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <ComboBox fx:id="regattaCombo" promptText="%SetRaceView.EventComboBox.promptText" maxWidth="Infinity"
-      GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#handleEventOnAction">
+    <Label text="%SetRaceView.raceLbl.text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <SearchableComboBox fx:id="racesCbo" maxWidth="Infinity" onAction="#handleRaceSelectedOnAction"
+      promptText="%SetRaceView.raceCbo.promptText" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <converter>
-        <RegattaStringConverter />
+        <RaceStringConverter />
       </converter>
-    </ComboBox>
+    </SearchableComboBox>
 
-    <Label text="%SetRaceView.TargetOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <FilterComboBox fx:id="targetOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
-      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleTargetOfferOnAction">
-      <converter>
-        <OfferStringConverter />
-      </converter>
-    </FilterComboBox>
-
-    <Label text="%SetRaceView.SourceOfferLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-    <ComboBox fx:id="sourceOfferCombo" promptText="%SetRaceView.TargetOfferComboBox.promptText"
-      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#handleSourceOfferOnAction">
-      <converter>
-        <OfferStringConverter />
-      </converter>
-    </ComboBox>
-
-    <SplitPane orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <SplitPane dividerPositions="0.25,0.75" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
+      GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
-        <VBox fx:id="sourceVBox" spacing="5">
+        <VBox>
+          <children>
+            <ToolBar>
+              <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+            </ToolBar>
+            <VBox fx:id="srcRaceVBox" spacing="5" />
+          </children>
         </VBox>
-        <VBox fx:id="targetVBox" spacing="5">
+        <SplitPane dividerPositions="0.8" orientation="VERTICAL">
+          <VBox spacing="5.0">
+            <children>
+              <ToolBar>
+                <Button fx:id="createSetListBtn" onAction="#handleCreateSetListOnAction" text="%SetRaceView.createSetListBtn.text" />
+                <Button fx:id="deleteSetListBtn" onAction="#handleDeleteSetListOnAction" text="%SetRaceView.deleteSetListBtn.text" />
+              </ToolBar>
+              <TableView fx:id="seedingListTbl" VBox.vgrow="ALWAYS">
+                <placeholder>
+                  <Label text="%SetRaceView.noSeedingList" />
+                </placeholder>
+                <columns>
+                  <TableColumn fx:id="seedingListPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="rank" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListBibCol" style="-fx-alignment: CENTER;" text="%common.bibAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="bib" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListBoatCol" text="%common.boat" sortable="false" resizable="false" reorderable="false">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="boat" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListRankCol" style="-fx-alignment: CENTER;" text="%common.rank" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="heatRank" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListDivisionNumberCol" style="-fx-alignment: CENTER;" text="%common.divisionAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="divisionNumber" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListResultCol" style="-fx-alignment: CENTER_RIGHT;" text="%common.result" sortable="false" resizable="false" reorderable="false" maxWidth="60">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="result" />
+                    </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="seedingListEqualCrewCol" style="-fx-alignment: CENTER;" text="%SetRaceView.equalCrew" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                    <cellValueFactory>
+                      <PropertyValueFactory property="equalCrew" />
+                    </cellValueFactory>
+                    <cellFactory>
+                      <CheckBoxTableCellFactory fx:factory="readonly" />
+                    </cellFactory>
+                  </TableColumn>
+                </columns>
+              </TableView>
+            </children>
+          </VBox>
+          <SplitPane dividerPositions="0.5">
+            <items>
+              <VBox>
+                <children>
+                  <Label fx:id="srcCrewLbl" />
+                  <TableView fx:id="srcCrewTbl">
+                    <placeholder>
+                      <Label text="%SetRaceView.noCrew" />
+                    </placeholder>
+                    <columns>
+                      <TableColumn fx:id="srcCrewPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="pos" />
+                        </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn fx:id="srcCrewCoxCol" style="-fx-alignment: CENTER;" text="%common.coxAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                        <cellValueFactory>
+                          <PropertyValueFactory>
+                            <property>cox</property>
+                          </PropertyValueFactory>
+                        </cellValueFactory>
+                        <cellFactory>
+                          <CheckBoxTableCellFactory fx:factory="readonly" />
+                        </cellFactory>
+                      </TableColumn>
+                      <TableColumn fx:id="srcCrewNameCol" text="%SetRaceView.crewsTbl.nameCol.text" sortable="false" reorderable="false">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="name" />
+                        </cellValueFactory>
+                      </TableColumn>
+                    </columns>
+                  </TableView>
+                </children>
+              </VBox>
+              <VBox>
+                <children>
+                  <Label fx:id="crewLbl" />
+                  <TableView fx:id="crewTbl">
+                    <placeholder>
+                      <Label text="%SetRaceView.noCrew" />
+                    </placeholder>
+                    <columns>
+                      <TableColumn fx:id="crewPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="pos" />
+                        </cellValueFactory>
+                      </TableColumn>
+                      <TableColumn fx:id="crewCoxCol" style="-fx-alignment: CENTER;" text="%common.coxAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                        <cellValueFactory>
+                          <PropertyValueFactory>
+                            <property>cox</property>
+                          </PropertyValueFactory>
+                        </cellValueFactory>
+                        <cellFactory>
+                          <CheckBoxTableCellFactory fx:factory="readonly" />
+                        </cellFactory>
+                      </TableColumn>
+                      <TableColumn fx:id="crewNameCol" text="%SetRaceView.crewsTbl.nameCol.text" sortable="false" reorderable="false">
+                        <cellValueFactory>
+                          <PropertyValueFactory property="name" />
+                        </cellValueFactory>
+                      </TableColumn>
+                    </columns>
+                  </TableView>
+                </children>
+              </VBox>
+            </items>
+          </SplitPane>
+        </SplitPane>
+        <VBox>
+          <children>
+            <ToolBar>
+              <Button fx:id="setRaceBtn" onAction="#handleSetRaceOnAction" text="%SetRaceView.setRaceBtn.text" />
+              <Button fx:id="deleteBtn" onAction="#handleDeleteOnAction" text="%SetRaceView.deleteBtn.text" />
+            </ToolBar>
+            <VBox fx:id="raceVBox" spacing="5">
+              <children>
+              </children>
+            </VBox>
+          </children>
         </VBox>
       </items>
     </SplitPane>
 
-    <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
-      <children>
-        <Button fx:id="setRaceButton" prefWidth="100" defaultButton="true" text="%SetRaceView.SetRaceButton.text"
-          alignment="CENTER" onAction="#handleSetRaceOnAction" />
-      </children>
-    </HBox>
   </children>
   <columnConstraints>
-    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-    <ColumnConstraints hgrow="ALWAYS" fillWidth="true" />
+    <ColumnConstraints />
+    <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints vgrow="ALWAYS" />
+  </rowConstraints>
 </GridPane>

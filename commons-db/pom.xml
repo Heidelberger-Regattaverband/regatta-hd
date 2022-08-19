@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.regatta-hd</groupId>
+    <artifactId>regatta-hd</artifactId>
+    <version>0.1.27</version>
+  </parent>
+
+  <artifactId>commons-db</artifactId>
+  <name>Regatta HD - Commons DB</name>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>commons-core</artifactId>
+    </dependency>
+
+    <!-- ============== -->
+    <!-- Database & JPA -->
+    <!-- ============== -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+    </dependency>
+
+  </dependencies>
+</project>

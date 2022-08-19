@@ -1,53 +1,50 @@
 package de.regatta_hd.aquarius;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.util.Modules;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.AgeClassExt;
-import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
 import de.regatta_hd.aquarius.model.Result;
 import jakarta.persistence.EntityNotFoundException;
 
-class AquariusDBTests {
+@ExtendWith(BaseDBTest.class)
+class AquariusDBTests extends BaseDBTest {
 
-	private static AquariusDB aquariusDb;
+	private static final int regattaId = 4;
 
 	private static RegattaDAO regattaDAO;
 
 	private static MasterDataDAO masterData;
 
-	private static DBConfig connectionData;
-
 	@BeforeAll
-	static void setUpBeforeClass() throws IOException {
-		com.google.inject.Module testModules = Modules.override(new AquariusDBModule()).with(new TestModule());
-		Injector injector = Guice.createInjector(testModules);
-
-		DBConfigStore connStore = injector.getInstance(DBConfigStore.class);
-		connectionData = connStore.getLastSuccessful();
-
-		aquariusDb = injector.getInstance(AquariusDB.class);
-		aquariusDb.open(connectionData);
-
+	static void setUpBeforeClass() throws InterruptedException, ExecutionException {
 		regattaDAO = injector.getInstance(RegattaDAO.class);
 		masterData = injector.getInstance(MasterDataDAO.class);
+
+		aquariusDb.getExecutor().submit(() -> {
+			Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
+			assertEquals(regattaId, regatta.getId());
+			assertNotNull(regatta);
+			regattaDAO.setActiveRegatta(regatta);
+		}).get();
 	}
 
 	@AfterAll
@@ -59,53 +56,53 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testOpen() {
-		aquariusDb.open(connectionData);
-		Assertions.assertTrue(aquariusDb.isOpen());
+	void testGetVersion() {
+		assertNotNull(aquariusDb.getVersion());
+	}
+
+	@Test
+	void testGetOfficialHeats() throws InterruptedException, ExecutionException {
+		List<ResultEntry> results = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getOfficialResults();
+		}).get();
+		assertFalse(results.isEmpty());
 	}
 
 	@Test
 	void testIsOpen() {
-		Assertions.assertTrue(aquariusDb.isOpen());
+		assertTrue(aquariusDb.isOpen());
 	}
 
 	@Test
-	void testGetEvents() {
-		List<Regatta> events = regattaDAO.getRegattas();
-		Assertions.assertFalse(events.isEmpty());
+	void testGetEvents() throws InterruptedException, ExecutionException {
+		List<Regatta> events = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getRegattas();
+		}).get();
+		assertFalse(events.isEmpty());
 	}
 
 	@Test
-	void testFindOffers() {
-		BoatClass boatClass = masterData.getBoatClass(1);
-		AgeClass ageClass = masterData.getAgeClass(11);
-
-		Regatta event = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
-		regattaDAO.setActiveRegatta(event);
-		List<Offer> offers = regattaDAO.findOffers("1%", boatClass, ageClass, true);
-		Assertions.assertFalse(offers.isEmpty());
-
-		offers.forEach(offer -> trace(offer, 0));
-	}
-
-	@Test
-	void testGetEventOK() {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 2);
-		Assertions.assertEquals(2, regatta.getId());
-		Assertions.assertNotNull(regatta);
-
+	void testGetEventOK() throws InterruptedException, ExecutionException {
+		Regatta regatta = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getActiveRegatta();
+		}).get();
 		System.out.println(regatta.toString());
-		regattaDAO.setActiveRegatta(regatta);
-		Offer offer = regattaDAO.getOffer("104");
-		Assertions.assertEquals("104", offer.getRaceNumber());
 
+		Race offer = aquariusDb.getExecutor().submit(() -> {
+			return regattaDAO.getRace("104", null);
+		}).get();
+
+		assertEquals("104", offer.getNumber());
 		trace(offer, 1);
 	}
 
 	@Test
-	void testGetEventFailed() {
-		Regatta regatta = aquariusDb.getEntityManager().getReference(Regatta.class, 10);
-		Assertions.assertThrows(EntityNotFoundException.class, () -> {
+	void testGetEventFailed() throws InterruptedException, ExecutionException {
+		Regatta regatta = aquariusDb.getExecutor().submit(() -> {
+			return aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(10));
+		}).get();
+
+		assertThrows(EntityNotFoundException.class, () -> {
 			// as event with ID == 10 doesn't exist, calling any getter causes an
 			// EntityNotFoundException
 			regatta.getClub();
@@ -113,16 +110,19 @@ class AquariusDBTests {
 	}
 
 	@Test
-	void testGetAgeClasses() {
-		List<AgeClass> ageClasses = masterData.getAgeClasses();
-		Assertions.assertFalse(ageClasses.isEmpty());
+	void testGetAgeClasses() throws InterruptedException, ExecutionException {
+		aquariusDb.getExecutor().submit(() -> {
+			List<AgeClass> ageClasses = masterData.getAgeClasses();
+			assertFalse(ageClasses.isEmpty());
 
-		AgeClass ageClass = ageClasses.get(0);
-		AgeClassExt ageClassExt = ageClass.getExtension();
-		Assertions.assertNull(ageClassExt);
+			AgeClass ageClass = ageClasses.get(0);
+			assertEquals(1500, ageClass.getDistance());
+		}).get();
 	}
 
-	private static void trace(Offer offer, int indent) {
+	// static helpers
+
+	private static void trace(Race offer, int indent) {
 		indent(indent);
 		System.out.println(offer.toString());
 
@@ -134,7 +134,7 @@ class AquariusDBTests {
 		indent(indent);
 		System.out.println(heat.toString());
 
-		heat.getHeatRegistrationsOrderedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
+		heat.getEntriesSortedByRank().forEach(compEntries -> trace(compEntries, indent + 1));
 	}
 
 	private static void trace(Registration registration, int indent) {

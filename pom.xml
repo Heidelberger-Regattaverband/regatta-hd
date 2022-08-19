@@ -1,17 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>de.ofterdinger</groupId>
-    <artifactId>parent</artifactId>
-    <version>0.0.13</version>
+    <groupId>de.ofterdinger.parents</groupId>
+    <artifactId>build</artifactId>
+    <version>0.1.2</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.1.27</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -28,38 +26,66 @@
     <url>https://github.com/Heidelberger-Regattaverband/regatta-hd</url>
   </scm>
 
+  <repositories>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <properties>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>11</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>17.0.0.1</openjfx.version>
+    <openjfx.version>18.0.2</openjfx.version>
+
+    <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
+    <controlsfx.version>11.1.1</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.20</lombok.version>
+    <lombok.version>1.18.24</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
-    <guice.version>5.0.1</guice.version>
+    <guice.version>5.1.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
-    <hibernate.version>5.5.7.Final</hibernate.version>
+    <hibernate.version>6.1.2.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>9.4.0.jre16</mssql.version>
+    <mssql.version>11.2.0.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.8.1</junit.version>
+    <junit.version>5.9.0</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.4.3</liquibase.version>
+    <liquibase.version>4.15.0</liquibase.version>
+
+    <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
+    <poi.version>5.2.2</poi.version>
+
+    <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
+    <jSerialComm.version>2.9.2</jSerialComm.version>
   </properties>
 
   <modules>
-    <module>common</module>
+    <module>commons-core</module>
+    <module>commons-db</module>
+    <module>commons-fx</module>
     <module>aquarius</module>
     <module>ui</module>
+    <module>schemas</module>
+    <module>releng/appassembler</module>
+    <module>releng/nativeapp</module>
+    <module>releng/webstart</module>
   </modules>
 
   <prerequisites>
@@ -73,13 +99,27 @@
       <!-- ========== -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>common</artifactId>
+        <artifactId>commons-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>commons-db</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>commons-fx</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>aquarius</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>schemas</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -88,7 +128,7 @@
       <!-- ============== -->
       <dependency>
         <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core-jakarta</artifactId>
+        <artifactId>hibernate-core</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
       <dependency>
@@ -125,6 +165,45 @@
         <artifactId>javafx-graphics</artifactId>
         <version>${openjfx.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${openjfx.version}</version>
+        <classifier>win</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${openjfx.version}</version>
+        <classifier>linux</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${openjfx.version}</version>
+        <classifier>mac</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.controlsfx</groupId>
+        <artifactId>controlsfx</artifactId>
+        <version>${controlsfx.version}</version>
+      </dependency>
+
+      <!-- ============== -->
+      <!-- JAXB & XML     -->
+      <!-- ============== -->
+      <!-- https://search.maven.org/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+      <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>4.0.0</version>
+      </dependency>
 
       <!-- ============ -->
       <!-- Google Guice -->
@@ -147,6 +226,16 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fazecast</groupId>
+        <artifactId>jSerialComm</artifactId>
+        <version>${jSerialComm.version}</version>
       </dependency>
 
       <!-- ========== -->
@@ -211,7 +300,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <annotationProcessorPaths>
@@ -225,13 +313,59 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>--add-opens java.base/java.lang=com.google.guice</argLine>
           <includes>
             <include>**/*Tests</include>
           </includes>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <skip>true</skip>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>COMPLEXITY</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.60</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Deploy configuration-->
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>

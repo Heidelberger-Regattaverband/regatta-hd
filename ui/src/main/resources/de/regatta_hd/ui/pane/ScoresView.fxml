@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.ScoresController">
+
+  <padding>
+    <Insets bottom="10.0" left="10.0" right="10.0" />
+  </padding>
+
+  <children>
+    <ToolBar>
+      <items>
+        <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+        <Button fx:id="calculateBtn" onAction="#handleCalculateOnAction" text="%common.calculate" />
+        <Button fx:id="exportXslBtn" onAction="#handleExportXslOnAction" text="%scores.xsl.export" />
+      </items>
+    </ToolBar>
+    <TableView fx:id="scoresTbl" VBox.vgrow="ALWAYS">
+      <placeholder>
+        <Label text="%common.noDataAvailable" />
+      </placeholder>
+      <columns>
+        <TableColumn fx:id="rankCol" prefWidth="50" reorderable="false" style="-fx-alignment: CENTER;" text="%common.rank">
+          <cellValueFactory>
+            <PropertyValueFactory property="rank" />
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn fx:id="pointsCol" prefWidth="60" reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
+          <cellValueFactory>
+            <PropertyValueFactory property="points" />
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn fx:id="clubCol" prefWidth="300.0" reorderable="false" sortable="false" text="%common.club">
+          <cellValueFactory>
+            <PropertyValueFactory property="clubName" />
+          </cellValueFactory>
+        </TableColumn>
+      </columns>
+    </TableView>
+  </children>
+</VBox>

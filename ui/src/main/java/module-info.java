@@ -1,18 +1,22 @@
-open module de.regatta_hd.ui {
-	requires javafx.base;
-	requires javafx.controls;
-	requires transitive javafx.fxml;
+module de.regatta_hd.ui {
+
+	// JavaFX modules
+	requires javafx.fxml;
 	requires transitive javafx.graphics;
 
-	requires java.sql;
-
-	requires transitive com.google.guice;
-	requires com.microsoft.sqlserver.jdbc;
-	requires org.hibernate.orm.core;
-
-	requires transitive de.regatta_hd.aquarius;
 	requires org.apache.commons.lang3;
-	requires de.regatta_hd.common;
+	requires org.apache.poi.poi;
+	requires com.fazecast.jSerialComm;
+
+	// regatta_hd modules
+	requires de.regatta_hd.aquarius;
+	requires de.regatta_hd.commons.core;
+	requires de.regatta_hd.commons.db;
+	requires de.regatta_hd.commons.fx;
+
+	opens de.regatta_hd.ui to javafx.graphics, com.google.guice;
+	opens de.regatta_hd.ui.util to javafx.fxml, com.google.guice;
+	opens de.regatta_hd.ui.pane to javafx.fxml, com.google.guice;
 
 	exports de.regatta_hd.ui;
 }

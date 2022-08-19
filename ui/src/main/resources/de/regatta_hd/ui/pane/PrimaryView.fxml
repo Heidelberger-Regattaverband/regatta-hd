@@ -1,35 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.regatta_hd.ui.util.RegattaStringConverter?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml"
+<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="de.regatta_hd.ui.pane.PrimaryController">
   <top>
-    <MenuBar fx:id="menuBar">
-      <menus>
-        <Menu text="%PrimaryView.Menu.Database.text">
+    <VBox>
+      <children>
+        <MenuBar fx:id="mainMbar">
+          <menus>
+            <Menu text="%PrimaryView.dbMenu.text">
+              <items>
+                <MenuItem fx:id="dbConnectMitm" onAction="#handleConnectOnAction" text="%PrimaryView.dbConnectMitm.text" />
+                <MenuItem fx:id="dbDisconnectMitm" onAction="#handleDatabaseDisconnect" text="%PrimaryView.dbDisconnectMitm.text" />
+                <SeparatorMenuItem />
+                <MenuItem onAction="#handleExit" text="%PrimaryView.MenuItem.Exit.text" />
+              </items>
+            </Menu>
+            <Menu text="%PrimaryView.adminMenu.text">
+              <items>
+                <MenuItem fx:id="eventsMitm" onAction="#handleEvents" text="%PrimaryView.regattasMitm.text" />
+                <MenuItem fx:id="refereesMitm" onAction="#handleRefereesOnAction" text="%common.referees" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem id="configMitm" mnemonicParsing="false" onAction="#handleConfigOnAction" text="%common.config" />
+              </items>
+            </Menu>
+            <Menu text="%common.regatta">
+              <items>
+                <MenuItem fx:id="racesMitm" onAction="#handleRacesOnAction" text="%PrimaryView.racesMitm.text" />
+                <MenuItem fx:id="heatsMitm" onAction="#handleHeatsOnAction" text="%heats.title" />
+                <MenuItem fx:id="setRaceMitm" onAction="#handleSetRaceOnAction" text="%PrimaryView.setRaceMitm.text" />
+                <MenuItem fx:id="resultsMitm" onAction="#handleResultsOnAction" text="%common.results" />
+                <MenuItem fx:id="scoreMitm" onAction="#handleScore" text="%PrimaryView.scoresMitm.text" />
+              </items>
+            </Menu>
+            <Menu text="%common.help">
+              <items>
+                <MenuItem fx:id="errorLogMitm" onAction="#handleLogRecordsOnAction" text="%PrimaryView.errorLogMitm.text" />
+                <MenuItem onAction="#handleAboutOnAction" text="%common.about" />
+              </items>
+            </Menu>
+          </menus>
+        </MenuBar>
+        <ToolBar>
           <items>
-            <MenuItem fx:id="databaseConnect" text="%PrimaryView.MenuItem.DatabaseConnect.text"
-              onAction="#handleDatabaseConnect" />
-            <MenuItem fx:id="databaseDisconnect" text="%PrimaryView.MenuItem.DatabaseDisconnect.text"
-              onAction="#handleDatabaseDisconnect" />
-            <SeparatorMenuItem />
-            <MenuItem text="%PrimaryView.MenuItem.Exit.text" onAction="#handleExit" />
+            <Label text="%PrimaryView.activeRegatta" />
+            <ComboBox fx:id="activeRegattaCBox" onAction="#handleActiveRegattaOnAction" prefWidth="300">
+              <converter>
+                <RegattaStringConverter />
+              </converter>
+            </ComboBox>
+            <Label text="%PrimaryView.database" />
+            <Label fx:id="dbNameLbl" />
           </items>
-        </Menu>
-        <Menu text="%PrimaryView.Menu.Administration.text">
-          <items>
-            <MenuItem fx:id="eventsMitm" text="%PrimaryView.MenuItem.Events.text" onAction="#handleEvents" />
-            <MenuItem fx:id="offersMitm" text="%PrimaryView.MenuItem.Offers.text" onAction="#handleOffers" />
-            <MenuItem fx:id="divisionsMitm" text="%PrimaryView.MenuItem.SetRace.text"
-              onAction="#handleSetRace" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
+        </ToolBar>
+      </children>
+    </VBox>
   </top>
 
   <left>

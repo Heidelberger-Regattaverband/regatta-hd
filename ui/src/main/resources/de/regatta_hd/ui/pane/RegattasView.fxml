@@ -1,65 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import de.regatta_hd.commons.fx.control.CheckBoxTableCellFactory?>
+<?import de.regatta_hd.commons.fx.control.DateTableCellFactory?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.Object?>
-<?import de.regatta_hd.ui.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml"
-  fx:controller="de.regatta_hd.ui.pane.RegattasController">
+<GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.RegattasController">
   <padding>
-    <Insets top="10" right="10" bottom="10" left="10" />
+    <Insets bottom="10.0" left="10.0" right="10.0" />
   </padding>
 
   <children>
-    <TableView fx:id="regattasTable" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <items>
+        <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+      </items>
+    </ToolBar>
+    <TableView fx:id="regattasTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <placeholder>
+        <Label text="%common.noDataAvailable" />
+      </placeholder>
       <columns>
-        <TableColumn text="%RegattasView.title">
+        <TableColumn fx:id="idCol" prefWidth="45" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>id</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn fx:id="activeCol" prefWidth="50" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.active">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>active</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+          <cellFactory>
+            <CheckBoxTableCellFactory fx:factory="readonly" />
+          </cellFactory>
+        </TableColumn>
+        <TableColumn fx:id="titleCol" reorderable="false" sortable="false" text="%common.title">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>title</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.begin">
+        <TableColumn fx:id="beginCol" prefWidth="90" reorderable="false" resizable="false" sortType="DESCENDING" style="-fx-alignment: CENTER;" text="%common.begin">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>startDate</property>
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <DateTableCellFactory />
+            <DateTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
-        <TableColumn text="%RegattasView.end">
+        <TableColumn fx:id="endCol" prefWidth="90" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.end">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>endDate</property>
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
-            <DateTableCellFactory />
+            <DateTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
       </columns>
       <columnResizePolicy>
         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
-      <contextMenu>
-        <ContextMenu>
-          <items>
-            <MenuItem text="Auswählen" onAction="#selectRegatta" />
-          </items>
-        </ContextMenu>
-      </contextMenu>
     </TableView>
   </children>
+
   <columnConstraints>
-    <ColumnConstraints hgrow="ALWAYS" fillWidth="true" />
+    <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
   </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints />
+  </rowConstraints>
 </GridPane>

@@ -1,11 +1,13 @@
 package de.regatta_hd.aquarius;
 
+import java.util.EventListener;
 import java.util.List;
 
-import de.regatta_hd.aquarius.model.AgeClass;
-import de.regatta_hd.aquarius.model.BoatClass;
-import de.regatta_hd.aquarius.model.Offer;
+import de.regatta_hd.aquarius.model.Heat;
+import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Score;
 
 /**
  * Provides access to regatta related data like offers, heats and further.
@@ -13,20 +15,19 @@ import de.regatta_hd.aquarius.model.Regatta;
 public interface RegattaDAO {
 
 	/**
-	 * @return a {@link List} with all available {@link Regatta regattas} in
-	 *         Aquarius database.
+	 * @return a {@link List} with all available {@link Regatta regattas} in Aquarius database.
 	 */
 	List<Regatta> getRegattas();
 
-	List<Offer> getOffers();
+	List<Race> getRaces();
 
-	Offer getOffer(String raceNumber);
+	List<Race> getRaces(String graphName);
 
-	List<Offer> findOffers(String raceNumberFilter, BoatClass boatClass, AgeClass ageClass, boolean lightweight);
+	Race getRace(String raceNumber, String graphName);
 
-	List<Offer> findOffers(String raceNumberFilter);
+	List<Heat> getHeats(String graphName);
 
-	void setRace(Offer targetOffer, Offer sourceOffer);
+	List<ResultEntry> getOfficialResults();
 
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
@@ -38,8 +39,40 @@ public interface RegattaDAO {
 	/**
 	 * Returns active regatta.
 	 *
-	 * @return the active {@link Regatta regatta} or <code>null</code> if not
-	 *         selected.
+	 * @return the active {@link Regatta regatta} or <code>null</code> if not selected.
 	 */
 	Regatta getActiveRegatta();
+
+	List<Race> enableMastersAgeClasses();
+
+	List<Race> setDistances();
+
+	// seeding list and setting race
+
+	List<SeedingListEntry> createSeedingList(Race race, Race srcRace);
+
+	void setRaceHeats(Race race, List<SeedingListEntry> seedingList);
+
+	void cleanRaceHeats(Race race);
+
+	// score
+	Heat swapResults(HeatRegistration source, HeatRegistration target);
+
+	List<Score> calculateScores();
+
+	List<Score> getScores();
+
+	interface RegattaChangedEvent {
+
+		Regatta getActiveRegatta();
+	}
+
+	/**
+	 * An event listener interface for regatta changed events.
+	 */
+	@FunctionalInterface
+	interface RegattaChangedEventListener extends EventListener {
+
+		void regattaChanged(RegattaChangedEvent event);
+	}
 }
