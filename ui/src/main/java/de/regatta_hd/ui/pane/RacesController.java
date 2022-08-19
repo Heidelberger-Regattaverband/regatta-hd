@@ -26,7 +26,6 @@ import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -188,7 +187,6 @@ public class RacesController extends AbstractRegattaDAOController {
 
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -205,14 +203,9 @@ public class RacesController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.racesTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
