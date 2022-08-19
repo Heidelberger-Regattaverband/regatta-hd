@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -30,6 +29,7 @@ import javafx.scene.control.TextField;
 public class ErrorLogController extends PaneController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());
 
+	// toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -37,6 +37,7 @@ public class ErrorLogController extends PaneController {
 	@FXML
 	private Button deleteBtn;
 
+	// log records table
 	@FXML
 	private TableView<LogRecord> logRecordsTbl;
 	@FXML
@@ -46,6 +47,7 @@ public class ErrorLogController extends PaneController {
 	@FXML
 	private TextField throwableTxf;
 
+	// injections
 	@Inject
 	private ListenerManager listenerManager;
 	@Inject
@@ -54,6 +56,7 @@ public class ErrorLogController extends PaneController {
 	@Named("hostName")
 	private String hostName;
 
+	// fields
 	private final ObservableList<LogRecord> logRecordsList = FXCollections.observableArrayList();
 	private final ObservableList<String> hostNamesList = FXCollections.observableArrayList();
 
@@ -162,7 +165,6 @@ public class ErrorLogController extends PaneController {
 
 		if (selectedHostName != null) {
 			disableButtons(true);
-			updatePlaceholder(getText("common.loadData"));
 
 			super.dbTaskRunner.run(progress -> {
 				EntityManager entityManager = super.db.getEntityManager();
@@ -174,26 +176,23 @@ public class ErrorLogController extends PaneController {
 				try {
 					this.logRecordsList.setAll(dbResult.getResult());
 					this.logRecordsTbl.getSelectionModel().select(selectedItem);
+					this.logRecordsTbl.sort();
 					FxUtils.autoResizeColumns(this.logRecordsTbl);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 					FxUtils.showErrorMessage(getWindow(), e);
 				} finally {
-					updatePlaceholder(getText("common.noDataAvailable"));
 					disableButtons(false);
 				}
 			});
 		}
 	}
 
-	private void updatePlaceholder(String text) {
-		((Label) this.logRecordsTbl.getPlaceholder()).setText(text);
-	}
-
 	private void disableButtons(boolean disabled) {
 		this.refreshBtn.setDisable(disabled);
 		this.hostNameCbx.setDisable(disabled);
 		this.deleteBtn.setDisable(disabled);
+		this.logRecordsTbl.setDisable(disabled);
 	}
 
 }
