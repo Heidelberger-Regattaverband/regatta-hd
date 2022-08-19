@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.controlsfx.control.table.TableFilter;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
@@ -116,6 +117,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 		this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
 		this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
+
+		TableFilter<Heat> heatsTblFilter = TableFilter.forTableView(this.heatsTbl).apply();
+		heatsTblFilter.setSearchStrategy((input, target) -> target.contains(input));
 
 		loadHeats(false);
 	}
