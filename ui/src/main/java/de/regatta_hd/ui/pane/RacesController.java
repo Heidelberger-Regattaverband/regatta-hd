@@ -22,15 +22,11 @@ import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 
 public class RacesController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
@@ -77,27 +73,7 @@ public class RacesController extends AbstractRegattaDAOController {
 		// races table
 		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
-		this.racesTbl.setOnSort(sortEvent -> {
-			TableView<Race> source = sortEvent.getSource();
-			EventTarget target = sortEvent.getTarget();
-			sortEvent.consume();
-		});
-		this.racesTbl.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-			if (e.getButton() == MouseButton.SECONDARY) {
-				e.consume();
-			}
-		});
 
-		// show the context menu when the user right clicks on the table header row.
-		// needs to be invoked after the stage containing the table has been shown.
-		final Node header = this.racesTbl.lookup("TableHeaderRow");
-		if (header != null) {
-			header.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-				if (e.getButton() == MouseButton.SECONDARY) {
-					e.consume();
-				}
-			});
-		}
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
