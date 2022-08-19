@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import javafx.beans.binding.DoubleBinding;
@@ -25,7 +26,6 @@ import javafx.scene.control.TableView;
 
 public class RegattasController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RegattasController.class.getName());
-	private static final int TABLE_BORDER_WIDTH = 5;
 
 	// toolbar
 	@FXML
@@ -63,8 +63,8 @@ public class RegattasController extends AbstractRegattaDAOController {
 				usedWidth = usedWidth.add(this.idCol.widthProperty());
 			}
 
-			this.titleCol.prefWidthProperty()
-					.bind(this.regattasTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+			this.titleCol.prefWidthProperty().bind(
+					this.regattasTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 		});
 		this.idCol.visibleProperty().bind(this.showIdColumn);
 
