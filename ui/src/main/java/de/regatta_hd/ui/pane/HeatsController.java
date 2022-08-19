@@ -27,6 +27,7 @@ import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.SerialPortUtils;
@@ -36,7 +37,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -117,7 +117,18 @@ public class HeatsController extends AbstractRegattaDAOController {
 			@Override
 			public void updateItem(Heat item, boolean empty) {
 				super.updateItem(item, empty);
-				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
+				pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
+			}
+
+			@Override
+			public void updateSelected(boolean selected) {
+				super.updateSelected(selected);
+				if (selected && getItem().isCancelled()) {
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
+				} else {
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
+				}
 			}
 		});
 

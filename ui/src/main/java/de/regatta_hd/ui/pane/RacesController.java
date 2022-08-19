@@ -16,13 +16,13 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -87,9 +87,20 @@ public class RacesController extends AbstractRegattaDAOController {
 		});
 		this.racesTbl.setRowFactory(row -> new TableRow<>() {
 			@Override
+			public void updateSelected(boolean selected) {
+				super.updateSelected(selected);
+				if (selected && getItem().isCancelled()) {
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
+				} else {
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
+				}
+			}
+
+			@Override
 			public void updateItem(Race item, boolean empty) {
 				super.updateItem(item, empty);
-				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
+				pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
 			}
 		});
 
@@ -100,7 +111,18 @@ public class RacesController extends AbstractRegattaDAOController {
 			@Override
 			public void updateItem(Registration item, boolean empty) {
 				super.updateItem(item, empty);
-				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
+				pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
+			}
+
+			@Override
+			public void updateSelected(boolean selected) {
+				super.updateSelected(selected);
+				if (selected && getItem().isCancelled()) {
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
+				} else {
+					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
+				}
 			}
 		});
 
