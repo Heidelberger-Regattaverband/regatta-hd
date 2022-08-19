@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.26</version>
+    <version>0.1.27</version>
   </parent>
 
   <artifactId>ui</artifactId>
@@ -84,6 +84,9 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <mainClass>${mainClass}</mainClass>
+          <options>
+            <option>--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls</option>
+          </options>
         </configuration>
       </plugin>
 

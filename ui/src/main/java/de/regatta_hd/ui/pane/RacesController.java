@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.table.TableFilter;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -23,7 +25,6 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -74,6 +75,7 @@ public class RacesController extends AbstractRegattaDAOController {
 		// races table
 		this.racesTbl.setItems(this.racesList);
 		this.racesTbl.getSortOrder().add(this.idCol);
+
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			if (newSelection != null) {
@@ -101,6 +103,9 @@ public class RacesController extends AbstractRegattaDAOController {
 				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
 			}
 		});
+
+		TableFilter<Race> racesTblFilter = TableFilter.forTableView(this.racesTbl).apply();
+		racesTblFilter.setSearchStrategy((input, target) -> target.contains(input));
 
 		loadRaces(true);
 	}
@@ -174,7 +179,6 @@ public class RacesController extends AbstractRegattaDAOController {
 
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -191,14 +195,9 @@ public class RacesController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.racesTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
