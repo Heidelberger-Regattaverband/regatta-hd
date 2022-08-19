@@ -2,6 +2,9 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,8 +21,10 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
+import jakarta.xml.bind.JAXBException;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,6 +45,8 @@ public class RacesController extends AbstractRegattaDAOController {
 	private Button setDistancesBtn;
 	@FXML
 	private Button setMastersAgeClassesBtn;
+	@FXML
+	private Button importAltRegsBtn;
 
 	// races table
 	@FXML
@@ -149,6 +156,18 @@ public class RacesController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleImportAltRegsBtnOnAction() {
+		File file = FxUtils.showOpenDialog(getWindow(), null, null, null);
+
+		try (FileInputStream fileIn = new FileInputStream(file)) {
+			XMLDataLoader.loadRegattaMeldungen(fileIn);
+		} catch (IOException | JAXBException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			FxUtils.showErrorMessage(getWindow(), e);
+		}
+	}
+
+	@FXML
 	private void refresh() {
 		loadRaces(true);
 	}
@@ -226,6 +245,7 @@ public class RacesController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
+		this.importAltRegsBtn.setDisable(disabled);
 		this.racesTbl.setDisable(disabled);
 		this.regsTbl.setDisable(disabled);
 	}
