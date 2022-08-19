@@ -1,13 +1,11 @@
+/* https://developer.mozilla.org/de/docs/Web/CSS/color_value#werte */
+
 .table-row-cell:highlighted {
-  -fx-background-color: LightCoral;
-  -fx-table-cell-border-color: LightCoral;
-  -fx-accent: LightCoral;
+  -fx-accent: lightcoral;
+  -fx-background-color: lightcoral;
 }
 
 .table-row-cell:highlighted-selected {
-  -fx-background-color: LightCoral;
-}
-
-.table-row-cell:highlighted-selected .text {
-  -fx-fill: red ;
+  -fx-accent: firebrick;
+  -fx-background-color: firebrick;
 }
