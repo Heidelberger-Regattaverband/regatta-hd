@@ -22,9 +22,11 @@ import de.regatta_hd.ui.util.GroupModeStringConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 
@@ -83,10 +85,24 @@ public class RacesController extends AbstractRegattaDAOController {
 				this.regsList.clear();
 			}
 		});
+		this.racesTbl.setRowFactory(row -> new TableRow<>() {
+			@Override
+			public void updateItem(Race item, boolean empty) {
+				super.updateItem(item, empty);
+				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
+			}
+		});
 
 		// registrations table
 		this.regsTbl.setItems(this.regsList);
 		this.regsTbl.getSortOrder().add(this.regsBibCol);
+		this.regsTbl.setRowFactory(row -> new TableRow<>() {
+			@Override
+			public void updateItem(Registration item, boolean empty) {
+				super.updateItem(item, empty);
+				pseudoClassStateChanged(PseudoClass.getPseudoClass("highlighted"), item != null && item.isCancelled());
+			}
+		});
 
 		TableFilter<Race> racesTblFilter = TableFilter.forTableView(this.racesTbl).apply();
 		racesTblFilter.setSearchStrategy((input, target) -> target.contains(input));

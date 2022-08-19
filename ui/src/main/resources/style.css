@@ -1,0 +1,13 @@
+.table-row-cell:highlighted {
+  -fx-background-color: LightCoral;
+  -fx-table-cell-border-color: LightCoral;
+  -fx-accent: LightCoral;
+}
+
+.table-row-cell:highlighted-selected {
+  -fx-background-color: LightCoral;
+}
+
+.table-row-cell:highlighted-selected .text {
+  -fx-fill: red ;
+}
