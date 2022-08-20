@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 import de.regatta_hd.schemas.xml.XMLDataLoader;
 import jakarta.xml.bind.JAXBException;
 
-class ListeTests {
+class WkrListeTests {
 
 	private static Liste liste;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws IOException, JAXBException {
-		try (InputStream input = ListeTests.class.getResourceAsStream("/wkr-2022-05-18.xml")) {
+		try (InputStream input = WkrListeTests.class.getResourceAsStream("/wkr-2022-05-18.xml")) {
 			liste = XMLDataLoader.loadWkrListe(input);
 		}
 	}

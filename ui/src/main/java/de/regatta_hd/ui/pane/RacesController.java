@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.table.TableFilter;
 
 import com.google.inject.Inject;
@@ -24,6 +27,9 @@ import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
+import de.rudern.schemas.service.meldungen._2010.RegattaMeldungen;
+import de.rudern.schemas.service.meldungen._2010.TMeldung;
+import de.rudern.schemas.service.meldungen._2010.TRennen;
 import jakarta.xml.bind.JAXBException;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
@@ -157,13 +163,26 @@ public class RacesController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleImportAltRegsBtnOnAction() {
-		File file = FxUtils.showOpenDialog(getWindow(), null, null, null);
+		File file = FxUtils.showOpenDialog(getWindow(), null, "Meldungen XML Datei", "*.xml");
 
-		try (FileInputStream fileIn = new FileInputStream(file)) {
-			XMLDataLoader.loadRegattaMeldungen(fileIn);
-		} catch (IOException | JAXBException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			FxUtils.showErrorMessage(getWindow(), e);
+		List<TRennen> altRennen = new ArrayList<>();
+
+		if (file != null) {
+			try (FileInputStream fileIn = new FileInputStream(file)) {
+				RegattaMeldungen regattaMeldungen = XMLDataLoader.loadRegattaMeldungen(fileIn);
+				List<TRennen> tRennenList = regattaMeldungen.getMeldungen().getRennen();
+				for (int i = 0; i < tRennenList.size(); i++) {
+					TRennen tRennen = tRennenList.get(i);
+					List<TMeldung> altMeldungen = tRennen.getMeldung().stream().filter(rennen -> StringUtils.isNotBlank(rennen.getAlternativeZu()))
+							.collect(Collectors.toList());
+					if (!altMeldungen.isEmpty()) {
+						altRennen.add(tRennen);
+					}
+				}
+			} catch (IOException | JAXBException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			}
 		}
 	}
 
