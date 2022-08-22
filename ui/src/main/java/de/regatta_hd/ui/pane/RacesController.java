@@ -7,7 +7,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -165,18 +167,21 @@ public class RacesController extends AbstractRegattaDAOController {
 	void handleImportAltRegsBtnOnAction() {
 		File file = FxUtils.showOpenDialog(getWindow(), null, "Meldungen XML Datei", "*.xml");
 
-		List<TRennen> altRennen = new ArrayList<>();
-
 		if (file != null) {
 			try (FileInputStream fileIn = new FileInputStream(file)) {
+				Map<String, List<TMeldung>> altMeldungenByRace = new HashMap<>();
+
 				RegattaMeldungen regattaMeldungen = XMLDataLoader.loadRegattaMeldungen(fileIn);
 				List<TRennen> tRennenList = regattaMeldungen.getMeldungen().getRennen();
 				for (int i = 0; i < tRennenList.size(); i++) {
 					TRennen tRennen = tRennenList.get(i);
-					List<TMeldung> altMeldungen = tRennen.getMeldung().stream().filter(rennen -> StringUtils.isNotBlank(rennen.getAlternativeZu()))
+					List<TMeldung> altMeldungen = tRennen.getMeldung().stream()
+							.filter(rennen -> StringUtils.isNotBlank(rennen.getAlternativeZu()))
 							.collect(Collectors.toList());
+
 					if (!altMeldungen.isEmpty()) {
-						altRennen.add(tRennen);
+						altMeldungenByRace.computeIfAbsent(tRennen.getNummer(), raceNr -> new ArrayList<>())
+								.addAll(altMeldungen);
 					}
 				}
 			} catch (IOException | JAXBException e) {
