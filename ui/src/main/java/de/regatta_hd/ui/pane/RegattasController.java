@@ -50,6 +50,7 @@ public class RegattasController extends AbstractRegattaDAOController {
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
 
+	// fields
 	private final ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	@Override

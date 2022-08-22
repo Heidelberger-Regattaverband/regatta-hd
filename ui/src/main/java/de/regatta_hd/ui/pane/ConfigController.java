@@ -37,7 +37,7 @@ public class ConfigController extends BaseController {
 	private StringProperty serialPortTrafficLights;
 
 	private final ObservableList<SerialPort> serialPortsStartSignalList = SerialPortUtils.getAllSerialPorts(true);
-	private final ObservableList<SerialPort> serialPortsTrafficLightList = SerialPortUtils.getAllSerialPorts(true);
+	private final ObservableList<SerialPort> serialPortsTrafficLightsList = SerialPortUtils.getAllSerialPorts(true);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -47,8 +47,8 @@ public class ConfigController extends BaseController {
 		int index = SerialPortUtils.findByPortPath(this.serialPortsStartSignalList, this.serialPortStartSignal.get());
 		this.serialPortStartSignalCBox.getSelectionModel().select(index);
 
-		this.serialPortTrafficLightCBox.setItems(this.serialPortsTrafficLightList);
-		index = SerialPortUtils.findByPortPath(this.serialPortsTrafficLightList, this.serialPortTrafficLights.get());
+		this.serialPortTrafficLightCBox.setItems(this.serialPortsTrafficLightsList);
+		index = SerialPortUtils.findByPortPath(this.serialPortsTrafficLightsList, this.serialPortTrafficLights.get());
 		this.serialPortTrafficLightCBox.getSelectionModel().select(index);
 	}
 

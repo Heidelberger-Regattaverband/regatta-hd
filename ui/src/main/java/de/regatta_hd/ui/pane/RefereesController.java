@@ -29,7 +29,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -42,6 +41,7 @@ public class RefereesController extends PaneController {
 	@Inject
 	private ListenerManager listenerManager;
 
+	// toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -52,6 +52,8 @@ public class RefereesController extends PaneController {
 	private TextField filterTxf;
 	@FXML
 	private Button importBtn;
+
+	// referees table
 	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
@@ -61,10 +63,12 @@ public class RefereesController extends PaneController {
 	@FXML
 	private TableColumn<Referee, String> lastNameCol;
 
+	// injections
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
 
+	// fields
 	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
@@ -205,7 +209,6 @@ public class RefereesController extends PaneController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -213,7 +216,6 @@ public class RefereesController extends PaneController {
 
 	private void loadReferees(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Referee selectedItem = this.refereesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -230,14 +232,9 @@ public class RefereesController extends PaneController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.refereesTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
@@ -248,4 +245,5 @@ public class RefereesController extends PaneController {
 		this.importBtn.setDisable(disabled);
 		this.refereesTbl.setDisable(disabled);
 	}
+
 }

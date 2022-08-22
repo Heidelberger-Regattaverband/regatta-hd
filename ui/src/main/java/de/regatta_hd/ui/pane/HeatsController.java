@@ -40,7 +40,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -358,7 +357,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -375,7 +373,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -396,10 +393,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.exportXslBtn.setDisable(disabled);
 		this.heatsTbl.setDisable(disabled);
 		this.divisionTbl.setDisable(disabled);
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.heatsTbl.getPlaceholder()).setText(text);
 	}
 
 }
