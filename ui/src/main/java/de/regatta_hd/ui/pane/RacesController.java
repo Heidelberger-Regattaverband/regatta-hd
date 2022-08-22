@@ -192,21 +192,21 @@ public class RacesController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void refresh() {
+	void handleRefreshOnAction() {
 		loadRaces(true);
 	}
 
 	@FXML
-	private void setDistances() {
+	void handleSetDistancesOnAction() {
 		disableButtons(true);
 
-		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.setDistances(), dbResult -> {
+		super.dbTaskRunner.runInTransaction(monitor -> this.regattaDAO.setDistances(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
 					FxUtils.showInfoDialog(getWindow(), "Keine Rennen geändert.");
 				} else {
-					refresh();
+					loadRaces(true);
 					FxUtils.showInfoDialog(getWindow(),
 							String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
 				}
@@ -220,16 +220,16 @@ public class RacesController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	private void setMastersAgeClasses() {
+	void handleSetMastersAgeClassesOnAction() {
 		disableButtons(true);
 
-		super.dbTaskRunner.runInTransaction(em -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
+		super.dbTaskRunner.runInTransaction(monitor -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
 			try {
 				List<Race> races = dbResult.getResult();
 				if (races.isEmpty()) {
 					FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
 				} else {
-					refresh();
+					loadRaces(true);
 					FxUtils.showInfoDialog(getWindow(),
 							String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
 				}
@@ -246,7 +246,7 @@ public class RacesController extends AbstractRegattaDAOController {
 		disableButtons(true);
 		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
 
-		super.dbTaskRunner.run(progress -> {
+		super.dbTaskRunner.run(monitor -> {
 			if (refresh) {
 				this.db.getEntityManager().clear();
 			}

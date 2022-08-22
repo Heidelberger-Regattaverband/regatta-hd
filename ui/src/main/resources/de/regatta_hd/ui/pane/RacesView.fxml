@@ -20,9 +20,9 @@
 
   <children>
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
-      <Button fx:id="refreshBtn" onAction="#refresh" text="%common.refresh" />
-      <Button fx:id="setDistancesBtn" onAction="#setDistances" text="%OffersView.setDistances" />
-      <Button fx:id="setMastersAgeClassesBtn" onAction="#setMastersAgeClasses" text="%OffersView.setMastersAgeClasses" />
+      <Button fx:id="refreshBtn" onAction="#handleRefreshOnAction" text="%common.refresh" />
+      <Button fx:id="setDistancesBtn" onAction="#handleSetDistancesOnAction" text="%OffersView.setDistances" />
+      <Button fx:id="setMastersAgeClassesBtn" onAction="#handleSetMastersAgeClassesOnAction" text="%OffersView.setMastersAgeClasses" />
       <Button fx:id="importAltRegsBtn" onAction="#handleImportAltRegsBtnOnAction" text="%races.importAltRegs" />
     </ToolBar>
     <SplitPane dividerPositions="0.6" orientation="VERTICAL" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
