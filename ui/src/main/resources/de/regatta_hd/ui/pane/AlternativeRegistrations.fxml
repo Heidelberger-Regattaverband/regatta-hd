@@ -21,13 +21,25 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="openAltRegsBtn" onAction="#handleOpenAltRegsBtnOnAction" text="%altRegs.openAltRegs" />
+        <Button fx:id="importBtn" onAction="#handleImportBtnOnAction" text="%common.import" />
       </items>
     </ToolBar>
-    <TableView fx:id="altRegsTbl" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+
+    <TableView fx:id="altRegsTbl" editable="true" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <placeholder>
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
+        <TableColumn prefWidth="60" reorderable="false" style="-fx-alignment: CENTER;" text="%common.importCol">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>doImport</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+          <cellFactory>
+            <CheckBoxTableCellFactory fx:factory="editable" />
+          </cellFactory>
+        </TableColumn>
         <TableColumn fx:id="altRaceNumberCol" prefWidth="60.0" reorderable="false" style="-fx-alignment: CENTER;" text="%common.race">
           <cellValueFactory>
             <PropertyValueFactory>

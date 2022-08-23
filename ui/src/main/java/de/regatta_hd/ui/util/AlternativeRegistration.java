@@ -24,6 +24,8 @@ public class AlternativeRegistration {
 
 	private Club club;
 
+	private boolean doImport;
+
 	// alternative race
 
 	public String getAltRaceNumber() {

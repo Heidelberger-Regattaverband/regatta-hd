@@ -49,6 +49,9 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 	// fields
 	private final ObservableList<AlternativeRegistration> altRegsList = FXCollections.observableArrayList();
 
+	@FXML
+	Button importBtn;
+
 	@Override
 
 	public void initialize(URL location, ResourceBundle resources) {
@@ -115,8 +118,13 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 		}
 	}
 
+	@FXML
+	void handleImportBtnOnAction() {
+	}
+
 	private void disableButtons(boolean disabled) {
 		this.openAltRegsBtn.setDisable(disabled);
+		this.importBtn.setDisable(disabled);
 		this.altRegsTbl.setDisable(disabled);
 	}
 
