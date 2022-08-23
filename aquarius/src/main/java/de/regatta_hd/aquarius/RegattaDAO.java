@@ -14,20 +14,7 @@ import de.regatta_hd.aquarius.model.Score;
  */
 public interface RegattaDAO {
 
-	/**
-	 * @return a {@link List} with all available {@link Regatta regattas} in Aquarius database.
-	 */
-	List<Regatta> getRegattas();
-
-	List<Race> getRaces();
-
-	List<Race> getRaces(String graphName);
-
-	Race getRace(String raceNumber, String graphName);
-
-	List<Heat> getHeats(String graphName);
-
-	List<ResultEntry> getOfficialResults();
+	// active regatta
 
 	/**
 	 * Sets the active regatta that is used for all DB accesses.
@@ -43,12 +30,27 @@ public interface RegattaDAO {
 	 */
 	Regatta getActiveRegatta();
 
+	/**
+	 * @return a {@link List} with all available {@link Regatta regattas} in Aquarius database.
+	 */
+	List<Regatta> getRegattas();
+
+	// races
+	List<Race> getRaces();
+
+	List<Race> getRaces(String graphName);
+
+	Race getRace(String raceNumber, String graphName);
+
+	List<Heat> getHeats(String graphName);
+
+	List<ResultEntry> getOfficialResults();
+
 	List<Race> enableMastersAgeClasses();
 
 	List<Race> setDistances();
 
 	// seeding list and setting race
-
 	List<SeedingListEntry> createSeedingList(Race race, Race srcRace);
 
 	void setRaceHeats(Race race, List<SeedingListEntry> seedingList);
@@ -62,7 +64,12 @@ public interface RegattaDAO {
 
 	List<Score> getScores();
 
-	interface RegattaChangedEvent {
+	// regatta changed event and listener
+
+	/**
+	 * This event signals a changed active regatta.
+	 */
+	interface ActiveRegattaChangedEvent {
 
 		Regatta getActiveRegatta();
 	}
@@ -73,6 +80,6 @@ public interface RegattaDAO {
 	@FunctionalInterface
 	interface RegattaChangedEventListener extends EventListener {
 
-		void regattaChanged(RegattaChangedEvent event);
+		void regattaChanged(ActiveRegattaChangedEvent event);
 	}
 }
