@@ -21,7 +21,7 @@ public interface WindowManager {
 	/**
 	 * Creates a new stage and loads given FXML resource into it.
 	 *
-	 * @param fxmlResourceUrl URL of FXML resource
+	 * @param fxmlResourceUrl URL of FXML resource to load
 	 * @param title           the window title
 	 * @param bundle          the resource bundle
 	 * @param styles          optional styles
@@ -32,9 +32,10 @@ public interface WindowManager {
 	/**
 	 * Creates a new stage and loads given FXML resource into it.
 	 *
-	 * @param fxmlResourceUrl URL of FXML resource
+	 * @param fxmlResourceUrl URL of FXML resource to load
 	 * @param title           the window title
 	 * @param bundle          the resource bundle
+	 * @param owner           an optional owner, if set the stage is opened window modal
 	 * @param styles          optional styles
 	 * @return the newly created {@link Stage}
 	 */
