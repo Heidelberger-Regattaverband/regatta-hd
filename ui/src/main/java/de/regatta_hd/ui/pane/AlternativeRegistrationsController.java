@@ -5,24 +5,23 @@ import static java.util.Objects.nonNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
+import de.regatta_hd.aquarius.MasterDataDAO;
+import de.regatta_hd.aquarius.model.Club;
+import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.UIModule;
+import de.regatta_hd.ui.util.AlternativeRegistration;
 import de.regatta_hd.ui.util.RegistrationUtils;
 import de.rudern.schemas.service.meldungen._2010.TRennen;
 import jakarta.xml.bind.JAXBException;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -39,44 +38,24 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 	// regattas table
 	@FXML
-	private TableView<Regatta> altRegsTbl;
+	private TableView<AlternativeRegistration> altRegsTbl;
 	@FXML
-	private TableColumn<Regatta, Integer> idCol;
-	@FXML
-	private TableColumn<Regatta, Boolean> activeCol;
-	@FXML
-	private TableColumn<Regatta, String> titleCol;
-	@FXML
-	private TableColumn<Regatta, Instant> beginCol;
-	@FXML
-	private TableColumn<Regatta, Instant> endCol;
+	private TableColumn<AlternativeRegistration, String> altRaceNumberCol;
 
 	// injections
 	@Inject
-	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
-	private BooleanProperty showIdColumn;
+	private MasterDataDAO masterDAO;
 
 	// fields
-	private final ObservableList<Regatta> altRegsList = FXCollections.observableArrayList();
+	private final ObservableList<AlternativeRegistration> altRegsList = FXCollections.observableArrayList();
 
 	@Override
+
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.idCol.visibleProperty().addListener((obs, newVal, oldVal) -> {
-			DoubleBinding usedWidth = this.activeCol.widthProperty().add(this.beginCol.widthProperty())
-					.add(this.endCol.widthProperty());
-			if (this.idCol.isVisible()) {
-				usedWidth = usedWidth.add(this.idCol.widthProperty());
-			}
-
-			this.titleCol.prefWidthProperty()
-					.bind(this.altRegsTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
-		});
-		this.idCol.visibleProperty().bind(this.showIdColumn);
-
 		this.altRegsTbl.setItems(this.altRegsList);
-		this.altRegsTbl.getSortOrder().add(this.beginCol);
+		this.altRegsTbl.getSortOrder().add(this.altRaceNumberCol);
 	}
 
 	@Override
@@ -100,20 +79,38 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 		File regsFile = FxUtils.showOpenDialog(getWindow(), null, "Meldungen XML Datei", "*.xml");
 
 		if (regsFile != null) {
-			try {
-				disableButtons(true);
 
+			try {
 				List<TRennen> altRegs = RegistrationUtils.getAlternativeRegistrations(regsFile);
 				if (!altRegs.isEmpty()) {
-					// TODO show in table
+					disableButtons(true);
+
+					super.dbTaskRunner.run(progMon -> {
+						return altRegs.stream().flatMap(tRennen -> tRennen.getMeldung().stream().map(tMeldung -> {
+							Club club = this.masterDAO.getClubViaExternalId(tMeldung.getVerein());
+							Race primaryRace = super.regattaDAO.getRace(tMeldung.getAlternativeZu(), null);
+							Race alternativeRace = super.regattaDAO.getRace(tRennen.getNummer(), null);
+
+							return AlternativeRegistration.builder().alternativeRace(alternativeRace)
+									.primaryRace(primaryRace).registration(tMeldung).club(club).build();
+						})).collect(Collectors.toList());
+					}, dbResult -> {
+						try {
+							this.altRegsList.setAll(dbResult.getResult());
+							this.altRegsTbl.sort();
+						} catch (Exception e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+							FxUtils.showErrorMessage(getWindow(), e);
+						} finally {
+							disableButtons(false);
+						}
+					});
 				} else {
 					FxUtils.showInfoDialog(getWindow(), getText("altRegs.notFound"));
 				}
 			} catch (IOException | JAXBException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.regatta_hd.commons.fx.control.CheckBoxTableCellFactory?>
-<?import de.regatta_hd.commons.fx.control.DateTableCellFactory?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -29,48 +28,49 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn fx:id="idCol" prefWidth="45" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.id">
+        <TableColumn fx:id="altRaceNumberCol" prefWidth="60.0" reorderable="false" style="-fx-alignment: CENTER;" text="%common.race">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>id</property>
+              <property>altRaceNumber</property>
             </PropertyValueFactory>
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="activeCol" prefWidth="50" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.active">
+        <TableColumn prefWidth="120" reorderable="false" text="%common.shortLabelAbr">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>active</property>
+              <property>altRaceShortLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn prefWidth="250" reorderable="false" text="%common.club">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>clubAbbreviation</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn prefWidth="60.0" reorderable="false" style="-fx-alignment: CENTER;" text="%common.alternativeToAbr">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>primaryRaceNumber</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn prefWidth="130" reorderable="false" text="%common.shortLabelAbr">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>primaryRaceShortLabel</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn prefWidth="60" reorderable="false" style="-fx-alignment: CENTER;" text="%common.cancelledAbr">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>primaryRaceCancelled</property>
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>
             <CheckBoxTableCellFactory fx:factory="readonly" />
-          </cellFactory>
-        </TableColumn>
-        <TableColumn fx:id="titleCol" reorderable="false" sortable="false" text="%common.title">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>title</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-        </TableColumn>
-        <TableColumn fx:id="beginCol" prefWidth="90" reorderable="false" resizable="false" sortType="DESCENDING" style="-fx-alignment: CENTER;" text="%common.begin">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>startDate</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-          <cellFactory>
-            <DateTableCellFactory fx:factory="createMedium" />
-          </cellFactory>
-        </TableColumn>
-        <TableColumn fx:id="endCol" prefWidth="90" reorderable="false" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="%common.end">
-          <cellValueFactory>
-            <PropertyValueFactory>
-              <property>endDate</property>
-            </PropertyValueFactory>
-          </cellValueFactory>
-          <cellFactory>
-            <DateTableCellFactory fx:factory="createMedium" />
           </cellFactory>
         </TableColumn>
       </columns>

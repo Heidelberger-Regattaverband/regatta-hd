@@ -38,10 +38,16 @@ public interface MasterDataDAO {
 	 */
 	List<BoatClass> getBoatClasses();
 
+	// clubs
+
 	/**
 	 * @return a {@link List} with all known {@link Club clubs}
 	 */
 	List<Club> getClubs();
+
+	Club getClubViaExternalId(int extId);
+
+	// log records
 
 	List<LogRecord> getLogRecords(String hostName);
 
@@ -64,4 +70,5 @@ public interface MasterDataDAO {
 	int updateAllRefereesLicenceState(boolean licenceState);
 
 	int importReferees(InputStream inpute, ProgressMonitor progress) throws JAXBException;
+
 }
