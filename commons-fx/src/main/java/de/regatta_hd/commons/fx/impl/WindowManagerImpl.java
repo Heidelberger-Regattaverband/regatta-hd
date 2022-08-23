@@ -19,7 +19,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
@@ -39,7 +41,10 @@ public class WindowManagerImpl implements WindowManager {
 	public void loadPrimaryStage(Stage primaryStage, URL fxmlResourceUrl, String title, ResourceBundle bundle) {
 		this.stages.computeIfAbsent(fxmlResourceUrl, key -> {
 			try {
-				loadStageImpl(primaryStage, fxmlResourceUrl, title, bundle);
+				FXMLLoader loader = createFXMLLoader(fxmlResourceUrl, bundle);
+				initializeStage(primaryStage, title, loader);
+				FxUtils.loadSizeAndPos(fxmlResourceUrl.getPath(), primaryStage);
+				primaryStage.show();
 				return new Pair<>(primaryStage, Boolean.TRUE);
 			} catch (IOException e) {
 				throw new IllegalArgumentException(e);
@@ -50,9 +55,15 @@ public class WindowManagerImpl implements WindowManager {
 
 	@Override
 	public Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles) {
+		return newStage(fxmlResourceUrl, title, bundle, null, styles);
+	}
+
+	@Override
+	public Stage newStage(URL fxmlResourceUrl, String title, ResourceBundle bundle, Window owner, String... styles) {
 		Pair<Stage, Boolean> stage = this.stages.computeIfAbsent(fxmlResourceUrl, key -> {
 			try {
-				return new Pair<>(newStageImpl(fxmlResourceUrl, title, bundle, styles), Boolean.FALSE);
+				Stage newStage = newStageImpl(fxmlResourceUrl, title, bundle, owner, styles);
+				return new Pair<>(newStage, Boolean.FALSE);
 			} catch (IOException e) {
 				throw new IllegalArgumentException(e);
 			}
@@ -61,26 +72,20 @@ public class WindowManagerImpl implements WindowManager {
 		return stage.getKey();
 	}
 
-	private Stage newStageImpl(URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles) throws IOException {
+	private Stage newStageImpl(URL fxmlResourceUrl, String title, ResourceBundle bundle, Window owner, String... styles)
+			throws IOException {
 		FXMLLoader loader = createFXMLLoader(fxmlResourceUrl, bundle);
 
 		Stage stage = new Stage();
+		if (owner != null) {
+			stage.initOwner(owner);
+			stage.initModality(Modality.WINDOW_MODAL);
+		}
 		initializeStage(stage, title, loader, styles);
-
 		FxUtils.loadSizeAndPos(fxmlResourceUrl.getPath(), stage);
 		stage.show();
 
 		return stage;
-	}
-
-	private void loadStageImpl(Stage stage, URL fxmlResourceUrl, String title, ResourceBundle bundle, String... styles)
-			throws IOException {
-		FXMLLoader loader = createFXMLLoader(fxmlResourceUrl, bundle);
-
-		initializeStage(stage, title, loader, styles);
-
-		FxUtils.loadSizeAndPos(fxmlResourceUrl.getPath(), stage);
-		stage.show();
 	}
 
 	private FXMLLoader createFXMLLoader(URL fxmlResourceUrl, ResourceBundle bundle) {

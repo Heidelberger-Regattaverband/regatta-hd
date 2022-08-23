@@ -2,20 +2,12 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.table.TableFilter;
 
 import com.google.inject.Inject;
@@ -24,15 +16,11 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.commons.fx.stage.WindowManager;
 import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
-import de.rudern.schemas.service.meldungen._2010.RegattaMeldungen;
-import de.rudern.schemas.service.meldungen._2010.TMeldung;
-import de.rudern.schemas.service.meldungen._2010.TRennen;
-import jakarta.xml.bind.JAXBException;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -72,9 +60,12 @@ public class RacesController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Registration, Short> regsBibCol;
 
+	// injections
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
+	@Inject
+	private WindowManager windowManager;
 
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
@@ -165,30 +156,9 @@ public class RacesController extends AbstractRegattaDAOController {
 
 	@FXML
 	void handleImportAltRegsBtnOnAction() {
-		File file = FxUtils.showOpenDialog(getWindow(), null, "Meldungen XML Datei", "*.xml");
-
-		if (file != null) {
-			try (FileInputStream fileIn = new FileInputStream(file)) {
-				Map<String, List<TMeldung>> altMeldungenByRace = new HashMap<>();
-
-				RegattaMeldungen regattaMeldungen = XMLDataLoader.loadRegattaMeldungen(fileIn);
-				List<TRennen> tRennenList = regattaMeldungen.getMeldungen().getRennen();
-				for (int i = 0; i < tRennenList.size(); i++) {
-					TRennen tRennen = tRennenList.get(i);
-					List<TMeldung> altMeldungen = tRennen.getMeldung().stream()
-							.filter(rennen -> StringUtils.isNotBlank(rennen.getAlternativeZu()))
-							.collect(Collectors.toList());
-
-					if (!altMeldungen.isEmpty()) {
-						altMeldungenByRace.computeIfAbsent(tRennen.getNummer(), raceNr -> new ArrayList<>())
-								.addAll(altMeldungen);
-					}
-				}
-			} catch (IOException | JAXBException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			}
-		}
+		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
+		this.windowManager.newStage(getClass().getResource("AlternativeRegistrations.fxml"), getText("altRegs.title"),
+				super.resources, getWindow(), styleLocation);
 	}
 
 	@FXML
