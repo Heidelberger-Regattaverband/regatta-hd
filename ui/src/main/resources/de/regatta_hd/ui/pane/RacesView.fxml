@@ -46,7 +46,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="140" reorderable="false" resizable="false" sortable="false" text="%common.labelShort">
+            <TableColumn prefWidth="140" reorderable="false" resizable="false" sortable="false" text="%common.shortLabel">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>shortLabel</property>
