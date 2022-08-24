@@ -50,6 +50,8 @@ public class RacesController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Race, Integer> idCol;
 	@FXML
+	private TableColumn<Race, String> numberCol;
+	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
 	@FXML
 	private TableColumn<Race, Integer> regsIdCol;
@@ -80,7 +82,7 @@ public class RacesController extends AbstractRegattaDAOController {
 
 		// races table
 		this.racesTbl.setItems(this.racesList);
-		this.racesTbl.getSortOrder().add(this.idCol);
+		this.racesTbl.getSortOrder().add(this.numberCol);
 
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -95,7 +97,7 @@ public class RacesController extends AbstractRegattaDAOController {
 			@Override
 			public void updateSelected(boolean selected) {
 				super.updateSelected(selected);
-				if (selected && getItem().isCancelled()) {
+				if (selected && getItem() != null && getItem().isCancelled()) {
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
 				} else {
@@ -123,7 +125,7 @@ public class RacesController extends AbstractRegattaDAOController {
 			@Override
 			public void updateSelected(boolean selected) {
 				super.updateSelected(selected);
-				if (selected && getItem().isCancelled()) {
+				if (selected && getItem() != null && getItem().isCancelled()) {
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
 				} else {

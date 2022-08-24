@@ -39,7 +39,7 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="45" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.numberAbr">
+            <TableColumn fx:id="numberCol" prefWidth="45" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.numberAbr">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>number</property>

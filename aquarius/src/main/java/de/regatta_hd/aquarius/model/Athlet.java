@@ -64,10 +64,10 @@ public class Athlet {
 	private Date dob;
 
 	@Column(name = "Athlet_ExternID_A")
-	private String externIDA;
+	private String externalIdA;
 
 	@Column(name = "Athlet_ExternID_B")
-	private String externIDB;
+	private String externalIdB;
 
 	@Column(name = "Athlet_ExternState")
 	private Byte externState;

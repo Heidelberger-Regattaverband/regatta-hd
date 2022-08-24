@@ -10,6 +10,7 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <GridPane fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.AlternativeRegistrationsController">
@@ -21,6 +22,8 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="openAltRegsBtn" onAction="#handleOpenAltRegsBtnOnAction" text="%altRegs.openAltRegs" />
+        <Button fx:id="deselectAllBtn" disable="true" onAction="#handleDeselectAllOnHandler" text="%altRegs.deselectAll" />
+        <HBox HBox.hgrow="ALWAYS" />
         <Button fx:id="importBtn" disable="true" onAction="#handleImportBtnOnAction" text="%common.import" />
       </items>
     </ToolBar>

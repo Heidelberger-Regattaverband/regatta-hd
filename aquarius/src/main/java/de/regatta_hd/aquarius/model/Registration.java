@@ -22,8 +22,11 @@ import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -38,6 +41,9 @@ import lombok.ToString;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Registration {
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
@@ -97,7 +103,7 @@ public class Registration {
 	private String comment;
 
 	@Column(name = "Entry_ExternID")
-	private Integer externId;
+	private Integer externalId;
 
 	@Column(name = "Entry_GroupValue")
 	private Short groupValue;

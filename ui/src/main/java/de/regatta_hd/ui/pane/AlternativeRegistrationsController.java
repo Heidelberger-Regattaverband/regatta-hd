@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -14,13 +15,21 @@ import java.util.stream.Collectors;
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
+import de.regatta_hd.aquarius.model.Athlet;
 import de.regatta_hd.aquarius.model.Club;
+import de.regatta_hd.aquarius.model.Crew;
+import de.regatta_hd.aquarius.model.Label;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.RegistrationLabel;
+import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.AlternativeRegistration;
 import de.regatta_hd.ui.util.RegistrationUtils;
+import de.rudern.schemas.service.meldungen._2010.TBootsPosition;
 import de.rudern.schemas.service.meldungen._2010.TRennen;
+import jakarta.persistence.EntityManager;
 import jakarta.xml.bind.JAXBException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,6 +44,8 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 	// toolbar
 	@FXML
 	private Button openAltRegsBtn;
+	@FXML
+	private Button deselectAllBtn;
 	@FXML
 	private Button importBtn;
 
@@ -120,14 +131,61 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 	}
 
 	@FXML
+	void handleDeselectAllOnHandler() {
+		disableButtons(true);
+
+		this.altRegsList.forEach(altReg -> altReg.importProperty().set(false));
+
+		disableButtons(false);
+	}
+
+	@FXML
 	void handleImportBtnOnAction() {
 		disableButtons(true);
+
+		super.dbTaskRunner.runInTransaction(progMon -> {
+			return this.altRegsList.stream().filter(altReg -> altReg.importProperty().get()).map(altReg -> {
+				EntityManager em = super.db.getEntityManager();
+
+				List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
+
+				Set<Crew> crews = mannschaft.stream().map(pos -> {
+					Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
+					Crew crew = Crew.builder().athlet(athlet).build();
+					return crew;
+				}).collect(Collectors.toSet());
+
+				// create new alternative registration
+				Registration newReg = Registration.builder().club(altReg.getClub()).race(altReg.getAlternativeRace())
+						.regatta(altReg.getAlternativeRace().getRegatta()).alternativeTo(altReg.getPrimaryRaceNumber())
+						.crews(crews).externalId(Integer.valueOf(altReg.getRegistration().getId())).build();
+				newReg = em.merge(newReg);
+
+				Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
+						.labelShort(altReg.getClub().getName()).build();
+				label = em.merge(label);
+
+				RegistrationLabel regLabel = RegistrationLabel.builder().registration(newReg).roundFrom((short) 0)
+						.roundTo((short) 64).label(label).build();
+				em.merge(regLabel);
+
+				return newReg;
+			}).collect(Collectors.toList());
+		}, dbResult -> {
+			try {
+				dbResult.getResult();
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+				FxUtils.showErrorMessage(getWindow(), e);
+			}
+		});
 
 		disableButtons(false);
 	}
 
 	private void disableButtons(boolean disabled) {
 		this.openAltRegsBtn.setDisable(disabled);
+		this.deselectAllBtn.setDisable(disabled || this.altRegsList.isEmpty());
 		this.importBtn.setDisable(disabled || this.altRegsList.isEmpty());
 		this.altRegsTbl.setDisable(disabled);
 	}
