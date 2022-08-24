@@ -128,7 +128,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 	private void disableButtons(boolean disabled) {
 		this.openAltRegsBtn.setDisable(disabled);
-		this.importBtn.setDisable(disabled);
+		this.importBtn.setDisable(disabled || this.altRegsList.isEmpty());
 		this.altRegsTbl.setDisable(disabled);
 	}
 

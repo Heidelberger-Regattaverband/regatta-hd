@@ -21,7 +21,7 @@
     <ToolBar GridPane.columnIndex="0" GridPane.rowIndex="0">
       <items>
         <Button fx:id="openAltRegsBtn" onAction="#handleOpenAltRegsBtnOnAction" text="%altRegs.openAltRegs" />
-        <Button fx:id="importBtn" onAction="#handleImportBtnOnAction" text="%common.import" />
+        <Button fx:id="importBtn" disable="true" onAction="#handleImportBtnOnAction" text="%common.import" />
       </items>
     </ToolBar>
 
@@ -30,7 +30,7 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn prefWidth="60" reorderable="false" style="-fx-alignment: CENTER;" text="%common.importCol">
+        <TableColumn prefWidth="60" reorderable="false" style="-fx-alignment: CENTER;" text="%common.importAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>import</property>
