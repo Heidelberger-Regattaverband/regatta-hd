@@ -160,13 +160,6 @@
                 <CheckBoxTableCellFactory fx:factory="readonly" />
               </cellFactory>
             </TableColumn>
-            <TableColumn prefWidth="60" reorderable="false" resizable="false" sortable="true" style="-fx-alignment: CENTER;" text="%common.alternativeAbr">
-              <cellValueFactory>
-                <PropertyValueFactory>
-                  <property>alternativeTo</property>
-                </PropertyValueFactory>
-              </cellValueFactory>
-            </TableColumn>
           </columns>
         </TableView>
       </items>

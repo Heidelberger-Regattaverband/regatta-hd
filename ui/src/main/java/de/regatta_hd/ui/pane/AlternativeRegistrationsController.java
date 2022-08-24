@@ -23,7 +23,6 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
-import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.AlternativeRegistration;
 import de.regatta_hd.ui.util.RegistrationUtils;
@@ -151,18 +150,17 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 				Set<Crew> crews = mannschaft.stream().map(pos -> {
 					Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
-					Crew crew = Crew.builder().athlet(athlet).build();
-					return crew;
+					return Crew.builder().athlet(athlet).pos((byte) pos.getNr()).build();
 				}).collect(Collectors.toSet());
 
 				// create new alternative registration
 				Registration newReg = Registration.builder().club(altReg.getClub()).race(altReg.getAlternativeRace())
-						.regatta(altReg.getAlternativeRace().getRegatta()).alternativeTo(altReg.getPrimaryRaceNumber())
-						.crews(crews).externalId(Integer.valueOf(altReg.getRegistration().getId())).build();
+						.regatta(altReg.getAlternativeRace().getRegatta()).crews(crews)
+						.externalId(Integer.valueOf(altReg.getRegistration().getId())).build();
 				newReg = em.merge(newReg);
 
 				Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
-						.labelShort(altReg.getClub().getName()).build();
+						.labelShort(altReg.getClub().getAbbreviation()).build();
 				label = em.merge(label);
 
 				RegistrationLabel regLabel = RegistrationLabel.builder().registration(newReg).roundFrom((short) 0)

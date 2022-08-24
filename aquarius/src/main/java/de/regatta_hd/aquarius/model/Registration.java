@@ -17,8 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -35,7 +33,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Entry")
-@SecondaryTable(name = "HRV_Entry", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
@@ -122,11 +119,6 @@ public class Registration {
 	@ToString.Include(rank = 8)
 	private Label manualLabel;
 
-	// Second table columns
-
-	@Column(name = "alternativeTo", table = "HRV_Entry")
-	private String alternativeTo;
-
 	/**
 	 * Returns the final crews assigned to this registration, previous changes are filtered out.
 	 *
@@ -148,9 +140,8 @@ public class Registration {
 	}
 
 	public String getBoatLabel() {
-		String boatLabel = null;
 		Optional<RegistrationLabel> boatLabelOpt = getLabel((short) 0);
-		boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
+		String boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
 				: getClub().getAbbreviation();
 		if (getBoatNumber() != null) {
 			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();
