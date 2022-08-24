@@ -144,20 +144,21 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 		super.dbTaskRunner.runInTransaction(progMon -> {
 			return this.altRegsList.stream().filter(altReg -> altReg.importProperty().get()).map(altReg -> {
-				EntityManager em = super.db.getEntityManager();
+				final EntityManager em = super.db.getEntityManager();
 
 				List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
 
+				// create new alternative registration
+				final Registration newReg = em.merge(Registration.builder().club(altReg.getClub())
+						.race(altReg.getAlternativeRace()).regatta(altReg.getAlternativeRace().getRegatta())
+						.externalId(Integer.valueOf(altReg.getRegistration().getId())).build());
+
+				// create crew to registration
 				Set<Crew> crews = mannschaft.stream().map(pos -> {
 					Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
-					return Crew.builder().athlet(athlet).pos((byte) pos.getNr()).build();
+					return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub()).registration(newReg).build());
 				}).collect(Collectors.toSet());
-
-				// create new alternative registration
-				Registration newReg = Registration.builder().club(altReg.getClub()).race(altReg.getAlternativeRace())
-						.regatta(altReg.getAlternativeRace().getRegatta()).crews(crews)
-						.externalId(Integer.valueOf(altReg.getRegistration().getId())).build();
-				newReg = em.merge(newReg);
+				newReg.setCrews(crews);
 
 				Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
 						.labelShort(altReg.getClub().getAbbreviation()).build();
