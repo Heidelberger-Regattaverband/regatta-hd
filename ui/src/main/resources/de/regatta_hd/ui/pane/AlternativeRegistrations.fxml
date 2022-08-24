@@ -33,7 +33,7 @@
         <TableColumn prefWidth="60" reorderable="false" style="-fx-alignment: CENTER;" text="%common.importCol">
           <cellValueFactory>
             <PropertyValueFactory>
-              <property>doImport</property>
+              <property>import</property>
             </PropertyValueFactory>
           </cellValueFactory>
           <cellFactory>

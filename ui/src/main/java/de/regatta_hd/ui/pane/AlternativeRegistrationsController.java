@@ -35,8 +35,10 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 	// toolbar
 	@FXML
 	private Button openAltRegsBtn;
+	@FXML
+	private Button importBtn;
 
-	// regattas table
+	// alt. registrations table
 	@FXML
 	private TableView<AlternativeRegistration> altRegsTbl;
 	@FXML
@@ -49,11 +51,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 	// fields
 	private final ObservableList<AlternativeRegistration> altRegsList = FXCollections.observableArrayList();
 
-	@FXML
-	Button importBtn;
-
 	@Override
-
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
@@ -94,8 +92,11 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 							Race primaryRace = super.regattaDAO.getRace(tMeldung.getAlternativeZu(), null);
 							Race alternativeRace = super.regattaDAO.getRace(tRennen.getNummer(), null);
 
-							return AlternativeRegistration.builder().alternativeRace(alternativeRace)
-									.primaryRace(primaryRace).registration(tMeldung).club(club).build();
+							AlternativeRegistration altReg = AlternativeRegistration.builder()
+									.alternativeRace(alternativeRace).primaryRace(primaryRace).registration(tMeldung)
+									.club(club).build();
+							altReg.getImportProperty().set(primaryRace.isCancelled());
+							return altReg;
 						})).collect(Collectors.toList());
 					}, dbResult -> {
 						try {
@@ -120,6 +121,9 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 	@FXML
 	void handleImportBtnOnAction() {
+		disableButtons(true);
+
+		disableButtons(false);
 	}
 
 	private void disableButtons(boolean disabled) {
