@@ -129,6 +129,13 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
+            <TableColumn fx:id="regsExtIdCol" prefWidth="70" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.externalId">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>externalId</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
             <TableColumn fx:id="regsBibCol" prefWidth="45" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.bibAbr">
               <cellValueFactory>
                 <PropertyValueFactory>
@@ -136,10 +143,17 @@
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="350" reorderable="false" resizable="true" sortable="true" text="%common.club">
+            <TableColumn prefWidth="350" reorderable="false" resizable="true" sortable="true" text="%common.boat">
               <cellValueFactory>
                 <PropertyValueFactory>
                   <property>boatLabel</property>
+                </PropertyValueFactory>
+              </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="200" reorderable="false" resizable="true" sortable="true" text="%common.reportingClub">
+              <cellValueFactory>
+                <PropertyValueFactory>
+                  <property>clubNameAbr</property>
                 </PropertyValueFactory>
               </cellValueFactory>
             </TableColumn>

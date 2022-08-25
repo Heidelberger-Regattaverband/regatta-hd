@@ -99,6 +99,10 @@ public class Registration {
 	@Column(name = "Entry_Comment", length = 50)
 	private String comment;
 
+	/**
+	 * The external ID provided by the DRV registration portal. If this ID is null, the registration is done manually
+	 * and not imported.
+	 */
 	@Column(name = "Entry_ExternID")
 	private Integer externalId;
 

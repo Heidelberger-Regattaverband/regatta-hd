@@ -50,6 +50,8 @@ public class RacesController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Race, Integer> idCol;
 	@FXML
+	private TableColumn<Race, Integer> regsExtIdCol;
+	@FXML
 	private TableColumn<Race, String> numberCol;
 	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
@@ -79,6 +81,7 @@ public class RacesController extends AbstractRegattaDAOController {
 
 		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
+		this.regsExtIdCol.visibleProperty().bind(this.showIdColumn);
 
 		// races table
 		this.racesTbl.setItems(this.racesList);

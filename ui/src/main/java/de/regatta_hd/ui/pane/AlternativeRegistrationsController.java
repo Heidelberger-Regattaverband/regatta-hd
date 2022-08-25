@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Athlet;
@@ -24,12 +25,14 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.AlternativeRegistration;
 import de.regatta_hd.ui.util.RegistrationUtils;
 import de.rudern.schemas.service.meldungen._2010.TBootsPosition;
 import de.rudern.schemas.service.meldungen._2010.TRennen;
 import jakarta.persistence.EntityManager;
 import jakarta.xml.bind.JAXBException;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,11 +55,16 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 	@FXML
 	private TableView<AlternativeRegistration> altRegsTbl;
 	@FXML
+	private TableColumn<AlternativeRegistration, Integer> extIdCol;
+	@FXML
 	private TableColumn<AlternativeRegistration, String> altRaceNumberCol;
 
 	// injections
 	@Inject
 	private MasterDataDAO masterDAO;
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
 
 	// fields
 	private final ObservableList<AlternativeRegistration> altRegsList = FXCollections.observableArrayList();
@@ -67,6 +75,8 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 		this.altRegsTbl.setItems(this.altRegsList);
 		this.altRegsTbl.getSortOrder().add(this.altRaceNumberCol);
+
+		this.extIdCol.visibleProperty().bind(this.showIdColumn);
 	}
 
 	@Override
@@ -149,26 +159,27 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 				List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
 
 				// create new alternative registration
-				final Registration newReg = em.merge(Registration.builder().club(altReg.getClub())
+				final Registration registration = em.merge(Registration.builder().club(altReg.getClub())
 						.race(altReg.getAlternativeRace()).regatta(altReg.getAlternativeRace().getRegatta())
 						.externalId(Integer.valueOf(altReg.getRegistration().getId())).build());
 
 				// create crew to registration
 				Set<Crew> crews = mannschaft.stream().map(pos -> {
 					Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
-					return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub()).registration(newReg).build());
+					return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub())
+							.registration(registration).build());
 				}).collect(Collectors.toSet());
-				newReg.setCrews(crews);
+				registration.setCrews(crews);
 
 				Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
 						.labelShort(altReg.getClub().getAbbreviation()).build();
 				label = em.merge(label);
 
-				RegistrationLabel regLabel = RegistrationLabel.builder().registration(newReg).roundFrom((short) 0)
+				RegistrationLabel regLabel = RegistrationLabel.builder().registration(registration).roundFrom((short) 0)
 						.roundTo((short) 64).label(label).build();
 				em.merge(regLabel);
 
-				return newReg;
+				return registration;
 			}).collect(Collectors.toList());
 		}, dbResult -> {
 			try {

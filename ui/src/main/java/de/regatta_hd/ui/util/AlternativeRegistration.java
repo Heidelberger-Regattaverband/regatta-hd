@@ -28,6 +28,10 @@ public class AlternativeRegistration {
 
 	private final SimpleBooleanProperty importProperty = new SimpleBooleanProperty();
 
+	public int getExternalId() {
+		return this.registration.getId();
+	}
+
 	public BooleanProperty importProperty() {
 		return this.importProperty;
 	}

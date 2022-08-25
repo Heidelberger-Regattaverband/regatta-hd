@@ -33,7 +33,14 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn prefWidth="60" reorderable="false" style="-fx-alignment: CENTER;" text="%common.importAbr">
+        <TableColumn fx:id="extIdCol" prefWidth="70" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.externalId">
+          <cellValueFactory>
+            <PropertyValueFactory>
+              <property>externalId</property>
+            </PropertyValueFactory>
+          </cellValueFactory>
+        </TableColumn>
+        <TableColumn prefWidth="60" reorderable="false" resizable="false" style="-fx-alignment: CENTER;" text="%common.importAbr">
           <cellValueFactory>
             <PropertyValueFactory>
               <property>import</property>
