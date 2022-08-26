@@ -158,10 +158,11 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 				List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
 
+				String comment = getText("altRegs.comment", altReg.getPrimaryRaceNumber());
 				// create new alternative registration
 				final Registration registration = em.merge(Registration.builder().club(altReg.getClub())
 						.race(altReg.getAlternativeRace()).regatta(altReg.getAlternativeRace().getRegatta())
-						.externalId(Integer.valueOf(altReg.getRegistration().getId())).build());
+						.externalId(Integer.valueOf(altReg.getRegistration().getId())).comment(comment).build());
 
 				// create crew to registration
 				Set<Crew> crews = mannschaft.stream().map(pos -> {
@@ -183,7 +184,9 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 			}).collect(Collectors.toList());
 		}, dbResult -> {
 			try {
-				dbResult.getResult();
+				List<Registration> importedRegs = dbResult.getResult();
+
+				FxUtils.showInfoDialog(getWindow(), getText("altRegs.import.succeeded", Integer.valueOf(importedRegs.size())));
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);

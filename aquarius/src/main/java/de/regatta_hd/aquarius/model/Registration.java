@@ -89,6 +89,10 @@ public class Registration {
 	@ToString.Include(rank = 10)
 	private Short bib;
 
+	/**
+	 * An optional boat number, if a club registers multiple boats to the same race. In such a case, each boat gets a
+	 * unique boot number assigned, otherwise the boat number is {@code null}.
+	 */
 	@Column(name = "Entry_BoatNumber")
 	@ToString.Include(rank = 7)
 	private Short boatNumber;
@@ -96,7 +100,10 @@ public class Registration {
 	@Column(name = "Entry_CancelValue")
 	private byte cancelValue;
 
-	@Column(name = "Entry_Comment", length = 50)
+	/**
+	 * An optional comment to this registration.
+	 */
+	@Column(name = "Entry_Comment")
 	private String comment;
 
 	/**

@@ -21,6 +21,7 @@ import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
+import jakarta.persistence.EntityManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -215,6 +216,38 @@ public class RacesController extends AbstractRegattaDAOController {
 				disableButtons(false);
 			}
 		});
+	}
+
+	@FXML
+	void handleDeleteRegistrationOnAction() {
+		Registration selectedRegistration = this.regsTbl.getSelectionModel().getSelectedItem();
+		if (selectedRegistration != null
+				&& FxUtils.showConfirmDialog(getWindow(), getText("races.confirmDeleteRegistration.title"),
+						getText("races.confirmDeleteRegistration.question"))) {
+
+			disableButtons(true);
+
+			super.dbTaskRunner.runInTransaction(progMon -> {
+				EntityManager em = super.db.getEntityManager();
+				selectedRegistration.getLabels().forEach(regLabel -> {
+					em.remove(regLabel);
+					em.remove(regLabel.getLabel());
+				});
+				em.remove(selectedRegistration);
+				return selectedRegistration;
+			}, dbResult -> {
+				try {
+					Registration deletedReg = dbResult.getResult();
+					this.racesTbl.getSelectionModel().getSelectedItem().getRegistrations().remove(deletedReg);
+					this.regsList.remove(deletedReg);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			});
+		}
 	}
 
 	private void loadRaces(boolean refresh) {
