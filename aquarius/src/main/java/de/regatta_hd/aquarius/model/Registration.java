@@ -17,13 +17,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -32,12 +33,14 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Entry")
-@SecondaryTable(name = "HRV_Entry", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Registration {
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
@@ -86,6 +89,10 @@ public class Registration {
 	@ToString.Include(rank = 10)
 	private Short bib;
 
+	/**
+	 * An optional boat number, if a club registers multiple boats to the same race. In such a case, each boat gets a
+	 * unique boot number assigned, otherwise the boat number is {@code null}.
+	 */
 	@Column(name = "Entry_BoatNumber")
 	@ToString.Include(rank = 7)
 	private Short boatNumber;
@@ -93,11 +100,18 @@ public class Registration {
 	@Column(name = "Entry_CancelValue")
 	private byte cancelValue;
 
-	@Column(name = "Entry_Comment", length = 50)
+	/**
+	 * An optional comment to this registration.
+	 */
+	@Column(name = "Entry_Comment")
 	private String comment;
 
+	/**
+	 * The external ID provided by the DRV registration portal. If this ID is null, the registration is done manually
+	 * and not imported.
+	 */
 	@Column(name = "Entry_ExternID")
-	private Integer externId;
+	private Integer externalId;
 
 	@Column(name = "Entry_GroupValue")
 	private Short groupValue;
@@ -115,11 +129,6 @@ public class Registration {
 	@JoinColumn(name = "Entry_ManualLabel_ID_FK")
 	@ToString.Include(rank = 8)
 	private Label manualLabel;
-
-	// Second table columns
-
-	@Column(name = "alternativeTo", table = "HRV_Entry")
-	private String alternativeTo;
 
 	/**
 	 * Returns the final crews assigned to this registration, previous changes are filtered out.
@@ -142,9 +151,8 @@ public class Registration {
 	}
 
 	public String getBoatLabel() {
-		String boatLabel = null;
 		Optional<RegistrationLabel> boatLabelOpt = getLabel((short) 0);
-		boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
+		String boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
 				: getClub().getAbbreviation();
 		if (getBoatNumber() != null) {
 			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();

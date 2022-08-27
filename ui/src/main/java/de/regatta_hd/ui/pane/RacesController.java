@@ -16,10 +16,12 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.commons.fx.stage.WindowManager;
 import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
+import jakarta.persistence.EntityManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,12 +42,18 @@ public class RacesController extends AbstractRegattaDAOController {
 	private Button setDistancesBtn;
 	@FXML
 	private Button setMastersAgeClassesBtn;
+	@FXML
+	private Button importAltRegsBtn;
 
 	// races table
 	@FXML
 	private TableView<Race> racesTbl;
 	@FXML
 	private TableColumn<Race, Integer> idCol;
+	@FXML
+	private TableColumn<Race, Integer> regsExtIdCol;
+	@FXML
+	private TableColumn<Race, String> numberCol;
 	@FXML
 	private TableColumn<Race, Race.GroupMode> groupModeCol;
 	@FXML
@@ -57,9 +65,12 @@ public class RacesController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<Registration, Short> regsBibCol;
 
+	// injections
 	@Inject
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
+	@Inject
+	private WindowManager windowManager;
 
 	// fields
 	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
@@ -71,10 +82,11 @@ public class RacesController extends AbstractRegattaDAOController {
 
 		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
+		this.regsExtIdCol.visibleProperty().bind(this.showIdColumn);
 
 		// races table
 		this.racesTbl.setItems(this.racesList);
-		this.racesTbl.getSortOrder().add(this.idCol);
+		this.racesTbl.getSortOrder().add(this.numberCol);
 
 		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
 		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -89,7 +101,7 @@ public class RacesController extends AbstractRegattaDAOController {
 			@Override
 			public void updateSelected(boolean selected) {
 				super.updateSelected(selected);
-				if (selected && getItem().isCancelled()) {
+				if (selected && getItem() != null && getItem().isCancelled()) {
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
 				} else {
@@ -117,7 +129,7 @@ public class RacesController extends AbstractRegattaDAOController {
 			@Override
 			public void updateSelected(boolean selected) {
 				super.updateSelected(selected);
-				if (selected && getItem().isCancelled()) {
+				if (selected && getItem() != null && getItem().isCancelled()) {
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
 					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
 				} else {
@@ -146,6 +158,13 @@ public class RacesController extends AbstractRegattaDAOController {
 	protected String getTitle(Regatta activeRegatta) {
 		return nonNull(activeRegatta) ? getText("PrimaryView.racesMitm.text") + " - " + activeRegatta.getTitle()
 				: getText("PrimaryView.racesMitm.text");
+	}
+
+	@FXML
+	void handleImportAltRegsBtnOnAction() {
+		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
+		this.windowManager.newStage(getClass().getResource("AlternativeRegistrations.fxml"), getText("altRegs.title"),
+				super.resources, getWindow(), styleLocation);
 	}
 
 	@FXML
@@ -199,6 +218,38 @@ public class RacesController extends AbstractRegattaDAOController {
 		});
 	}
 
+	@FXML
+	void handleDeleteRegistrationOnAction() {
+		Registration selectedRegistration = this.regsTbl.getSelectionModel().getSelectedItem();
+		if (selectedRegistration != null
+				&& FxUtils.showConfirmDialog(getWindow(), getText("races.confirmDeleteRegistration.title"),
+						getText("races.confirmDeleteRegistration.question"))) {
+
+			disableButtons(true);
+
+			super.dbTaskRunner.runInTransaction(progMon -> {
+				EntityManager em = super.db.getEntityManager();
+				selectedRegistration.getLabels().forEach(regLabel -> {
+					em.remove(regLabel);
+					em.remove(regLabel.getLabel());
+				});
+				em.remove(selectedRegistration);
+				return selectedRegistration;
+			}, dbResult -> {
+				try {
+					Registration deletedReg = dbResult.getResult();
+					this.racesTbl.getSelectionModel().getSelectedItem().getRegistrations().remove(deletedReg);
+					this.regsList.remove(deletedReg);
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				} finally {
+					disableButtons(false);
+				}
+			});
+		}
+	}
+
 	private void loadRaces(boolean refresh) {
 		disableButtons(true);
 		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
@@ -226,6 +277,7 @@ public class RacesController extends AbstractRegattaDAOController {
 		this.refreshBtn.setDisable(disabled);
 		this.setDistancesBtn.setDisable(disabled);
 		this.setMastersAgeClassesBtn.setDisable(disabled);
+		this.importAltRegsBtn.setDisable(disabled);
 		this.racesTbl.setDisable(disabled);
 		this.regsTbl.setDisable(disabled);
 	}

@@ -154,7 +154,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			this.activeRegatta = null;
 		}
 
-		notifyListeners(new RegattaDAORegattaChangedEventImpl(this, this.activeRegatta));
+		notifyListeners(new ActiveRegattaChangedEventImpl(this, this.activeRegatta));
 	}
 
 	@Override
@@ -429,7 +429,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		return source.getHeat();
 	}
 
-	private void notifyListeners(RegattaDAO.RegattaChangedEvent event) {
+	private void notifyListeners(RegattaDAO.ActiveRegattaChangedEvent event) {
 		List<RegattaChangedEventListener> listeners = this.listenerManager
 				.getListeners(RegattaChangedEventListener.class);
 		for (RegattaChangedEventListener listener : listeners) {

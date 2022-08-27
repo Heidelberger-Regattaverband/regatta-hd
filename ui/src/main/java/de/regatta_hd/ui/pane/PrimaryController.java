@@ -39,6 +39,7 @@ import javafx.util.Pair;
 public class PrimaryController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
+	// injections
 	@Inject
 	private WindowManager windowManager;
 	@Inject
@@ -82,7 +83,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	private Stage openStage(String resource, String title) {
 		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
-		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources, styleLocation);
+		return this.windowManager.newStage(getClass().getResource(resource), title, super.resources, styleLocation);
 	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
