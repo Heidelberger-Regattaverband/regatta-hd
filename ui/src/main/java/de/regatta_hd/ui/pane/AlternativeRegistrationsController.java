@@ -150,50 +150,54 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 	@FXML
 	void handleImportBtnOnAction() {
-		disableButtons(true);
+		if (FxUtils.showConfirmDialog(getWindow(), getText("altRegs.confirmImport.title"),
+				getText("altRegs.confirmImport.question"))) {
+			disableButtons(true);
 
-		super.dbTaskRunner.runInTransaction(progMon -> {
-			return this.altRegsList.stream().filter(altReg -> altReg.importProperty().get()).map(altReg -> {
-				final EntityManager em = super.db.getEntityManager();
+			super.dbTaskRunner.runInTransaction(progMon -> {
+				return this.altRegsList.stream().filter(altReg -> altReg.importProperty().get()).map(altReg -> {
+					final EntityManager em = super.db.getEntityManager();
 
-				List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
+					List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
 
-				String comment = getText("altRegs.comment", altReg.getPrimaryRaceNumber());
-				// create new alternative registration
-				final Registration registration = em.merge(Registration.builder().club(altReg.getClub())
-						.race(altReg.getAlternativeRace()).regatta(altReg.getAlternativeRace().getRegatta())
-						.externalId(Integer.valueOf(altReg.getRegistration().getId())).comment(comment).build());
+					String comment = getText("altRegs.comment", altReg.getPrimaryRaceNumber());
+					// create new alternative registration
+					final Registration registration = em.merge(Registration.builder().club(altReg.getClub())
+							.race(altReg.getAlternativeRace()).regatta(altReg.getAlternativeRace().getRegatta())
+							.externalId(Integer.valueOf(altReg.getRegistration().getId())).comment(comment).build());
 
-				// create crew to registration
-				Set<Crew> crews = mannschaft.stream().map(pos -> {
-					Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
-					return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub())
-							.registration(registration).build());
-				}).collect(Collectors.toSet());
-				registration.setCrews(crews);
+					// create crew to registration
+					Set<Crew> crews = mannschaft.stream().map(pos -> {
+						Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
+						return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub())
+								.registration(registration).build());
+					}).collect(Collectors.toSet());
+					registration.setCrews(crews);
 
-				Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
-						.labelShort(altReg.getClub().getAbbreviation()).build();
-				label = em.merge(label);
+					Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
+							.labelShort(altReg.getClub().getAbbreviation()).build();
+					label = em.merge(label);
 
-				RegistrationLabel regLabel = RegistrationLabel.builder().registration(registration).roundFrom((short) 0)
-						.roundTo((short) 64).label(label).build();
-				em.merge(regLabel);
+					RegistrationLabel regLabel = RegistrationLabel.builder().registration(registration)
+							.roundFrom((short) 0).roundTo((short) 64).label(label).build();
+					em.merge(regLabel);
 
-				return registration;
-			}).collect(Collectors.toList());
-		}, dbResult -> {
-			try {
-				List<Registration> importedRegs = dbResult.getResult();
+					return registration;
+				}).collect(Collectors.toList());
+			}, dbResult -> {
+				try {
+					List<Registration> importedRegs = dbResult.getResult();
 
-				FxUtils.showInfoDialog(getWindow(), getText("altRegs.import.succeeded", Integer.valueOf(importedRegs.size())));
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			}
-		});
+					FxUtils.showInfoDialog(getWindow(),
+							getText("altRegs.import.succeeded", Integer.valueOf(importedRegs.size())));
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+					FxUtils.showErrorMessage(getWindow(), e);
+				}
+			});
 
-		disableButtons(false);
+			disableButtons(false);
+		}
 	}
 
 	private void disableButtons(boolean disabled) {
