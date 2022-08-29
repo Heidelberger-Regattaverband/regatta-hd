@@ -48,7 +48,7 @@ public class Label {
 	 * An association to the corresponding {@link RegistrationLabel}.
 	 */
 	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "label")
-	private Set<RegistrationLabel> labels;
+	private Set<RegistrationLabel> registrationLabels;
 
 	/**
 	 * The club to which this identifier belongs.

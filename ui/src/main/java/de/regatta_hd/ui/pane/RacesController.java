@@ -231,7 +231,10 @@ public class RacesController extends AbstractRegattaDAOController {
 				EntityManager em = super.db.getEntityManager();
 				selectedRegistration.getLabels().forEach(regLabel -> {
 					em.remove(regLabel);
-					em.remove(regLabel.getLabel());
+					// don't delete label if it's used at several registrations
+					if (regLabel.getLabel().getRegistrationLabels().size() == 1) {
+						em.remove(regLabel.getLabel());
+					}
 				});
 				em.remove(selectedRegistration);
 				return selectedRegistration;
