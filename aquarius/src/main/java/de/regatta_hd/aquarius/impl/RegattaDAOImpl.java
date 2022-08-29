@@ -20,7 +20,6 @@ import de.regatta_hd.aquarius.RegattaDAO;
 import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.SeedingListEntry;
 import de.regatta_hd.aquarius.model.Club;
-import de.regatta_hd.aquarius.model.Crew;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
@@ -29,6 +28,7 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
 import de.regatta_hd.aquarius.model.Score;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.core.ConfigService;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
@@ -205,7 +205,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			for (Registration srcRegistration : srcRegistrations) {
 
 				// look for equal crew in the source registration
-				if (isEqualCrews(srcRegistration, registration)) {
+				if (ModelUtils.isEqualCrews(srcRegistration, registration)) {
 					SeedingListEntry equalCrewEntry = diffCrews.remove(registration.getId());
 					// mark crews as equal
 					equalCrewEntry.setEqualCrew(true);
@@ -438,32 +438,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	// static helpers
-
-	private static boolean isEqualCrews(Registration reg1, Registration reg2) {
-		// remove cox from comparison
-		List<Crew> crews1 = reg1.getFinalCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
-				.collect(Collectors.toList());
-		List<Crew> crews2 = reg2.getFinalCrews().stream().filter(crew -> !crew.isCox()).sorted(RegattaDAOImpl::compare)
-				.collect(Collectors.toList());
-
-		if (crews1.size() != crews2.size()) {
-			return false;
-		}
-
-		for (int i = 0; i < crews1.size(); i++) {
-			if (crews1.get(i).getAthlet().getId() != crews2.get(i).getAthlet().getId()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private static int compare(Crew crew1, Crew crew2) {
-		if (crew1.getAthlet().getId() == crew2.getAthlet().getId()) {
-			return 0;
-		}
-		return crew1.getAthlet().getId() > crew2.getAthlet().getId() ? 1 : -1;
-	}
 
 	private static void findBestMatch(SeedingListEntry entry, Set<Registration> srcRegistrations) {
 		Registration registration = entry.getRegistration();

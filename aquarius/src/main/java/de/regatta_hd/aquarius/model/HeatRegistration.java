@@ -1,10 +1,8 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Set;
 
+import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +37,6 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HeatRegistration {
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,17 +85,7 @@ public class HeatRegistration {
 	}
 
 	public String getBoatLabel() {
-		Registration reg = getRegistration();
-		short round = getHeat().getRound();
-		Optional<RegistrationLabel> optional = reg.getLabel(round);
-		if (optional.isPresent()) {
-			String boatLabel = optional.get().getLabel().getLabelShort();
-			if (reg.getBoatNumber() != null) {
-				boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + reg.getBoatNumber();
-			}
-			return boatLabel;
-		}
-		return reg.getBoatLabel();
+		return ModelUtils.getBoatLabel(this);
 	}
 
 	public String getResultDisplayValue() {

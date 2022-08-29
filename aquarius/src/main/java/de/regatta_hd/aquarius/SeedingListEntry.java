@@ -3,6 +3,7 @@ package de.regatta_hd.aquarius;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import lombok.Builder;
@@ -36,7 +37,7 @@ public class SeedingListEntry {
 	}
 
 	public String getBoat() {
-		return getRegistration().getBoatLabel();
+		return ModelUtils.getBoatLabel(getRegistration());
 	}
 
 	public Short getDivisionNumber() {

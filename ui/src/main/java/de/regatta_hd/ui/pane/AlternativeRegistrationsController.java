@@ -24,6 +24,7 @@ import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.AlternativeRegistration;
@@ -170,16 +171,14 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 					Set<Crew> crews = mannschaft.stream().map(pos -> {
 						Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
 						return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub())
-								.registration(registration).build());
+								.registration(registration).roundFrom((short) 0).roundTo(ModelUtils.FINAL_ROUND).build());
 					}).collect(Collectors.toSet());
 					registration.setCrews(crews);
 
-					Label label = Label.builder().club(altReg.getClub()).labelLong(altReg.getClub().getName())
-							.labelShort(altReg.getClub().getAbbreviation()).build();
-					label = em.merge(label);
+					Label label = em.merge(ModelUtils.createLabel(registration));
 
 					RegistrationLabel regLabel = RegistrationLabel.builder().registration(registration)
-							.roundFrom((short) 0).roundTo((short) 64).label(label).build();
+							.roundFrom((short) 0).roundTo(ModelUtils.FINAL_ROUND).label(label).build();
 					em.merge(regLabel);
 
 					return registration;

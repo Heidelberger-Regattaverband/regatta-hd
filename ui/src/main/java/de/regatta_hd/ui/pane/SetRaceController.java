@@ -25,6 +25,7 @@ import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
@@ -510,7 +511,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		boatCol.setReorderable(false);
 		boatCol.setSortable(false);
 		boatCol.setCellValueFactory(row -> {
-			return new SimpleStringProperty(row.getValue().getBoatLabel());
+			return new SimpleStringProperty(ModelUtils.getBoatLabel(row.getValue()));
 		});
 
 		TableColumn<HeatRegistration, Number> rankCol = null;
@@ -670,7 +671,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	// static helpers
 
 	private static String createCrewsLabel(Registration registration) {
-		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + registration.getBoatLabel();
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + ModelUtils.getBoatLabel(registration);
 	}
 
 	private static String getSrcRaceNumber(Race race) {

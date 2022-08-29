@@ -26,6 +26,7 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
@@ -322,11 +323,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
 
 			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
-				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + heatReg.getBoatLabel());
+				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + ModelUtils.getBoatLabel(heatReg));
 				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
 					// confirm swapping the results
 					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), getText(
-							"heats.confirmSwapRsult.question", selectedItem.getBoatLabel(), heatReg.getBoatLabel()))) {
+							"heats.confirmSwapRsult.question", ModelUtils.getBoatLabel(selectedItem), ModelUtils.getBoatLabel(heatReg)))) {
 						// swapping results requires a transaction
 						this.dbTaskRunner.runInTransaction(progress -> {
 							return this.regattaDAO.swapResults(heatReg, selectedItem);

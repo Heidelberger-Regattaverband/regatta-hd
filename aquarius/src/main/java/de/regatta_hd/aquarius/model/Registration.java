@@ -1,12 +1,11 @@
 package de.regatta_hd.aquarius.model;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,7 +41,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Registration {
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	/**
 	 * Unique identifier of this {@link Registration registration}.
@@ -136,8 +134,8 @@ public class Registration {
 	 * @return a list with final crews
 	 */
 	public List<Crew> getFinalCrews() {
-		return getCrews().stream()
-				.filter(crew -> crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo())
+		return getCrews().stream().filter(
+				crew -> crew.getRoundFrom() <= ModelUtils.FINAL_ROUND && ModelUtils.FINAL_ROUND <= crew.getRoundTo())
 				.collect(Collectors.toList());
 	}
 
@@ -151,32 +149,12 @@ public class Registration {
 	}
 
 	public String getBoatLabel() {
-		Optional<RegistrationLabel> boatLabelOpt = getLabel((short) 0);
-		String boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
-				: getClub().getAbbreviation();
-		if (getBoatNumber() != null) {
-			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();
-		}
-		return boatLabel;
-	}
-
-	public String getClubName() {
-		if (getClub() != null) {
-			return getClub().getName();
-		}
-		return null;
+		return ModelUtils.getBoatLabel(this);
 	}
 
 	public String getClubNameAbr() {
 		if (getClub() != null) {
 			return getClub().getAbbreviation();
-		}
-		return null;
-	}
-
-	public String getClubCity() {
-		if (getClub() != null) {
-			return getClub().getCity();
 		}
 		return null;
 	}
@@ -192,7 +170,7 @@ public class Registration {
 	 * @param the round
 	 * @return a stream with final labels
 	 */
-	Optional<RegistrationLabel> getLabel(short round) {
+	public Optional<RegistrationLabel> getLabel(short round) {
 		return getLabels().stream()
 				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo()).findFirst();
 	}
