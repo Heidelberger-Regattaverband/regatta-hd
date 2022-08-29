@@ -161,17 +161,18 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 
 					List<TBootsPosition> mannschaft = altReg.getRegistration().getMannschaft().getPosition();
 
-					String comment = getText("altRegs.comment", altReg.getPrimaryRaceNumber());
+					String note = getText("altRegs.comment", altReg.getPrimaryRaceNumber());
 					// create new alternative registration
 					final Registration registration = em.merge(Registration.builder().club(altReg.getClub())
 							.race(altReg.getAlternativeRace()).regatta(altReg.getAlternativeRace().getRegatta())
-							.externalId(Integer.valueOf(altReg.getRegistration().getId())).comment(comment).build());
+							.externalId(Integer.valueOf(altReg.getRegistration().getId())).note(note).build());
 
 					// create crew to registration
 					Set<Crew> crews = mannschaft.stream().map(pos -> {
 						Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
 						return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub())
-								.registration(registration).roundFrom((short) 0).roundTo(ModelUtils.FINAL_ROUND).build());
+								.registration(registration).roundFrom((short) 0).roundTo(ModelUtils.FINAL_ROUND)
+								.build());
 					}).collect(Collectors.toSet());
 					registration.setCrews(crews);
 
