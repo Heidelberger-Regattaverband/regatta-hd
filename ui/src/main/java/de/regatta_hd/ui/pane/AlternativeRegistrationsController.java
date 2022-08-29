@@ -172,7 +172,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 						Athlet athlet = this.masterDAO.getAthletViaExternalId(pos.getAthlet().getId());
 						return em.merge(Crew.builder().athlet(athlet).pos((byte) pos.getNr()).club(athlet.getClub())
 								.registration(registration).roundFrom((short) 0).roundTo(ModelUtils.FINAL_ROUND)
-								.build());
+								.cox(pos.isSt()).build());
 					}).collect(Collectors.toSet());
 					registration.setCrews(crews);
 
