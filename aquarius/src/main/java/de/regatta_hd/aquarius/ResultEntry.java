@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,7 +82,7 @@ public class ResultEntry {
 	private String getRegistrationName(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getRegistration() != null) {
-			return heatResult.get(index).getBoatLabel();
+			return ModelUtils.getBoatLabel(heatResult.get(index));
 		}
 		return null;
 	}

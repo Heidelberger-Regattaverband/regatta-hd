@@ -1,12 +1,11 @@
 package de.regatta_hd.aquarius.model;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,13 +16,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -32,14 +32,15 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Entry")
-@SecondaryTable(name = "HRV_Entry", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 // lombok
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Registration {
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("aquarius_messages", Locale.GERMANY);
 
 	/**
 	 * Unique identifier of this {@link Registration registration}.
@@ -86,6 +87,10 @@ public class Registration {
 	@ToString.Include(rank = 10)
 	private Short bib;
 
+	/**
+	 * An optional boat number, if a club registers multiple boats to the same race. In such a case, each boat gets a
+	 * unique boot number assigned, otherwise the boat number is {@code null}.
+	 */
 	@Column(name = "Entry_BoatNumber")
 	@ToString.Include(rank = 7)
 	private Short boatNumber;
@@ -93,11 +98,18 @@ public class Registration {
 	@Column(name = "Entry_CancelValue")
 	private byte cancelValue;
 
-	@Column(name = "Entry_Comment", length = 50)
+	/**
+	 * An optional comment to this registration.
+	 */
+	@Column(name = "Entry_Comment")
 	private String comment;
 
+	/**
+	 * The external ID provided by the DRV registration portal. If this ID is null, the registration is done manually
+	 * and not imported.
+	 */
 	@Column(name = "Entry_ExternID")
-	private Integer externId;
+	private Integer externalId;
 
 	@Column(name = "Entry_GroupValue")
 	private Short groupValue;
@@ -116,19 +128,14 @@ public class Registration {
 	@ToString.Include(rank = 8)
 	private Label manualLabel;
 
-	// Second table columns
-
-	@Column(name = "alternativeTo", table = "HRV_Entry")
-	private String alternativeTo;
-
 	/**
 	 * Returns the final crews assigned to this registration, previous changes are filtered out.
 	 *
 	 * @return a list with final crews
 	 */
 	public List<Crew> getFinalCrews() {
-		return getCrews().stream()
-				.filter(crew -> crew.getRoundFrom() <= Result.FINAL && Result.FINAL <= crew.getRoundTo())
+		return getCrews().stream().filter(
+				crew -> crew.getRoundFrom() <= ModelUtils.FINAL_ROUND && ModelUtils.FINAL_ROUND <= crew.getRoundTo())
 				.collect(Collectors.toList());
 	}
 
@@ -142,33 +149,12 @@ public class Registration {
 	}
 
 	public String getBoatLabel() {
-		String boatLabel = null;
-		Optional<RegistrationLabel> boatLabelOpt = getLabel((short) 0);
-		boatLabel = boatLabelOpt.isPresent() ? boatLabelOpt.get().getLabel().getLabelShort()
-				: getClub().getAbbreviation();
-		if (getBoatNumber() != null) {
-			boatLabel += " - " + bundle.getString("registration.boatLabel") + " " + getBoatNumber();
-		}
-		return boatLabel;
-	}
-
-	public String getClubName() {
-		if (getClub() != null) {
-			return getClub().getName();
-		}
-		return null;
+		return ModelUtils.getBoatLabel(this);
 	}
 
 	public String getClubNameAbr() {
 		if (getClub() != null) {
 			return getClub().getAbbreviation();
-		}
-		return null;
-	}
-
-	public String getClubCity() {
-		if (getClub() != null) {
-			return getClub().getCity();
 		}
 		return null;
 	}
@@ -184,7 +170,7 @@ public class Registration {
 	 * @param the round
 	 * @return a stream with final labels
 	 */
-	Optional<RegistrationLabel> getLabel(short round) {
+	public Optional<RegistrationLabel> getLabel(short round) {
 		return getLabels().stream()
 				.filter(regLabel -> regLabel.getRoundFrom() <= round && round <= regLabel.getRoundTo()).findFirst();
 	}

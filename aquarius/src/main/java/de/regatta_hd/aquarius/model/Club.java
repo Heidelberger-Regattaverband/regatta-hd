@@ -79,7 +79,7 @@ public class Club {
 	private Nation nation;
 
 	@Column(name = "Club_ExternID")
-	private Integer externID;
+	private Integer externalId;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "club")
 	private Set<Crew> crews;

@@ -17,7 +17,11 @@ public class CheckBoxTableCellFactory {
 	}
 
 	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> readonly() {
-		return column -> new CheckBoxTableCell<>();
+		return column -> {
+			CheckBoxTableCell<S, T> checkBoxTableCell = new CheckBoxTableCell<>();
+			checkBoxTableCell.setEditable(false);
+			return checkBoxTableCell;
+		};
 	}
 
 	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> editable() {
@@ -27,4 +31,5 @@ public class CheckBoxTableCellFactory {
 			return checkBoxTableCell;
 		};
 	}
+
 }

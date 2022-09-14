@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import de.regatta_hd.aquarius.model.AgeClass;
+import de.regatta_hd.aquarius.model.Athlet;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
@@ -38,10 +39,17 @@ public interface MasterDataDAO {
 	 */
 	List<BoatClass> getBoatClasses();
 
+	Athlet getAthletViaExternalId(String extId);
+
+	// clubs
 	/**
 	 * @return a {@link List} with all known {@link Club clubs}
 	 */
 	List<Club> getClubs();
+
+	Club getClubViaExternalId(int extId);
+
+	// log records
 
 	List<LogRecord> getLogRecords(String hostName);
 
@@ -64,4 +72,5 @@ public interface MasterDataDAO {
 	int updateAllRefereesLicenceState(boolean licenceState);
 
 	int importReferees(InputStream inpute, ProgressMonitor progress) throws JAXBException;
+
 }

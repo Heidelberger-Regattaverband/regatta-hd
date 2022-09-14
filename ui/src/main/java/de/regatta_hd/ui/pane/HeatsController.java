@@ -26,6 +26,7 @@ import com.google.inject.name.Named;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
@@ -40,7 +41,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -323,11 +323,11 @@ public class HeatsController extends AbstractRegattaDAOController {
 			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
 
 			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
-				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + heatReg.getBoatLabel());
+				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + ModelUtils.getBoatLabel(heatReg));
 				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
 					// confirm swapping the results
 					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), getText(
-							"heats.confirmSwapRsult.question", selectedItem.getBoatLabel(), heatReg.getBoatLabel()))) {
+							"heats.confirmSwapRsult.question", ModelUtils.getBoatLabel(selectedItem), ModelUtils.getBoatLabel(heatReg)))) {
 						// swapping results requires a transaction
 						this.dbTaskRunner.runInTransaction(progress -> {
 							return this.regattaDAO.swapResults(heatReg, selectedItem);
@@ -358,7 +358,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 
 	private void loadHeats(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -375,7 +374,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -396,10 +394,6 @@ public class HeatsController extends AbstractRegattaDAOController {
 		this.exportXslBtn.setDisable(disabled);
 		this.heatsTbl.setDisable(disabled);
 		this.divisionTbl.setDisable(disabled);
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.heatsTbl.getPlaceholder()).setText(text);
 	}
 
 }

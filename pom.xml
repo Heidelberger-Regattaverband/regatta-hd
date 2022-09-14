@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.27</version>
+  <version>0.1.28</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -43,7 +43,7 @@
     <maven.compiler.release>17</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>18.0.2</openjfx.version>
+    <openjfx.version>19</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.1.1</controlsfx.version>
@@ -58,7 +58,7 @@
     <hibernate.version>6.1.2.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>11.2.0.jre11</mssql.version>
+    <mssql.version>11.2.1.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -67,7 +67,7 @@
     <junit.version>5.9.0</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.15.0</liquibase.version>
+    <liquibase.version>4.16.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.2</poi.version>

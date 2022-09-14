@@ -117,4 +117,12 @@
     </createTable>
   </changeSet>
 
+  <changeSet id="8" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="HRV_Entry" />
+    </preConditions>
+    <dropTable tableName="HRV_Entry" />
+  </changeSet>
+
+
 </databaseChangeLog>

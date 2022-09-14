@@ -101,15 +101,15 @@ public class Race {
 	@EqualsAndHashCode.Include
 	private int id;
 
-	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
+	@Column(name = "Offer_RaceNumber", nullable = false)
 	@ToString.Include(rank = 9)
 	private String number;
 
-	@Column(name = "Offer_LongLabel", length = 64)
+	@Column(name = "Offer_LongLabel")
 	@ToString.Include(rank = 8)
 	private String longLabel;
 
-	@Column(name = "Offer_ShortLabel", length = 32)
+	@Column(name = "Offer_ShortLabel")
 	private String shortLabel;
 
 	@Column(name = "Offer_Distance")

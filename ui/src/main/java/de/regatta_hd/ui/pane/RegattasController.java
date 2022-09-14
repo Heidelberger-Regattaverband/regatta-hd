@@ -50,28 +50,34 @@ public class RegattasController extends AbstractRegattaDAOController {
 	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
 	private BooleanProperty showIdColumn;
 
+	// fields
 	private final ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 
-		this.idCol.visibleProperty().addListener((obs, newVal, oldVal) -> {
-			DoubleBinding usedWidth = this.activeCol.widthProperty().add(this.beginCol.widthProperty())
-					.add(this.endCol.widthProperty());
-			if (this.idCol.isVisible()) {
-				usedWidth = usedWidth.add(this.idCol.widthProperty());
-			}
-
-			this.titleCol.prefWidthProperty().bind(
-					this.regattasTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
-		});
-		this.idCol.visibleProperty().bind(this.showIdColumn);
-
+		// Initialise and sort regattas table
 		this.regattasTbl.setItems(this.regattasList);
 		this.regattasTbl.getSortOrder().add(this.beginCol);
 
+		this.idCol.visibleProperty().bind(this.showIdColumn);
+		this.idCol.visibleProperty().addListener((obs, newVal, oldVal) -> calculateTitleColumnWidth());
+
+		calculateTitleColumnWidth();
+
 		loadRegattas(false);
+	}
+
+	private void calculateTitleColumnWidth() {
+		DoubleBinding usedWidth = this.activeCol.widthProperty().add(this.beginCol.widthProperty())
+				.add(this.endCol.widthProperty());
+		if (this.idCol.isVisible()) {
+			usedWidth = usedWidth.add(this.idCol.widthProperty());
+		}
+
+		this.titleCol.prefWidthProperty().bind(
+				this.regattasTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 	}
 
 	@FXML

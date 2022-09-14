@@ -37,14 +37,14 @@ public class BoatClass {
 	/**
 	 * The abbreviation of this boat class.
 	 */
-	@Column(name = "BoatClass_Abbr", nullable = false, length = 8)
+	@Column(name = "BoatClass_Abbr")
 	@ToString.Include(rank = 10)
 	private String abbreviation;
 
 	/**
 	 * The name of this boat class.
 	 */
-	@Column(name = "BoatClass_Caption", nullable = false, length = 50)
+	@Column(name = "BoatClass_Caption")
 	@ToString.Include(rank = 9)
 	private String name;
 

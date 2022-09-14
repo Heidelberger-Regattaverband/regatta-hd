@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
+import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,8 +26,6 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Result {
-
-	static final byte FINAL = 64;
 
 	@Id
 	@Column(name = "Result_CE_ID_FK", insertable = false, updatable = false)
@@ -85,7 +84,7 @@ public class Result {
 	private Integer sortValue;
 
 	public boolean isFinalResult() {
-		return getSplitNr() == FINAL;
+		return getSplitNr() == ModelUtils.FINAL_ROUND;
 	}
 
 	public Integer getPoints() {
