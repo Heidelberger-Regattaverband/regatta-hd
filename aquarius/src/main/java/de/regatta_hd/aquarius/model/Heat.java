@@ -173,6 +173,10 @@ public class Heat {
 	@ToString.Include(rank = 7)
 	private short round;
 
+	/**
+	 * Contains the round code of this heat, possible values are: "A" for a division, "R" for a single race, "F" for a
+	 * final and "V" for a forerun.
+	 */
 	@Column(name = "Comp_RoundCode", length = 8)
 	@ToString.Include(rank = 6)
 	private String roundCode;
