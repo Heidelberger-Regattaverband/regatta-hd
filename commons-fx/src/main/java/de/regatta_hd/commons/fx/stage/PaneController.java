@@ -36,7 +36,7 @@ public abstract class PaneController extends BaseController {
 	}
 
 	protected void setTitle(String title) {
-		((Stage) getWindow()).setTitle(title);
+		Platform.runLater(() -> ((Stage) getWindow()).setTitle(title));
 	}
 
 }
