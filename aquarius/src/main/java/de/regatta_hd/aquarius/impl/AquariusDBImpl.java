@@ -55,7 +55,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 				Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(),
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
-			} catch (LiquibaseException e) {
+			} catch (LiquibaseException e) { // NOSONAR
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				close();
 				throw new SQLException(e);
