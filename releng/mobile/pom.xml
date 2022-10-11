@@ -12,8 +12,8 @@
   <name>Regatta HD - Mobile</name>
 
   <properties>
-    <charm.version>6.1.1</charm.version>
-    <attach.version>4.0.14</attach.version>
+    <charm.version>6.2.1</charm.version>
+    <attach.version>4.0.16</attach.version>
     <main.class>de.regatta_hd.mobile.Main</main.class>
   </properties>
 
