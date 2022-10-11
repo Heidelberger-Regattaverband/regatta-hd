@@ -23,4 +23,5 @@ module de.regatta_hd.commons.fx {
 
 	opens de.regatta_hd.commons.fx.db to com.google.guice;
 	opens de.regatta_hd.commons.fx.impl to com.google.guice;
+	opens de.regatta_hd.commons.fx.stage to com.google.guice, javafx.fxml;
 }

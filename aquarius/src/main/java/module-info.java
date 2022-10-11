@@ -18,4 +18,5 @@ open module de.regatta_hd.aquarius {
 	// exports
 	exports de.regatta_hd.aquarius;
 	exports de.regatta_hd.aquarius.model;
+	exports de.regatta_hd.aquarius.util;
 }

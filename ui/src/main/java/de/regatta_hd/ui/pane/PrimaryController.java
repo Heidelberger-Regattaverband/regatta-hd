@@ -39,6 +39,7 @@ import javafx.util.Pair;
 public class PrimaryController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
+	// injections
 	@Inject
 	private WindowManager windowManager;
 	@Inject
@@ -81,7 +82,8 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
 	private Stage openStage(String resource, String title) {
-		return this.windowManager.newStage(getClass().getResource(resource), title, this.resources);
+		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
+		return this.windowManager.newStage(getClass().getResource(resource), title, super.resources, styleLocation);
 	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
@@ -185,8 +187,13 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
+	void handleConfigOnAction() {
+		openStage("ConfigView.fxml", getText("common.config"));
+	}
+
+	@FXML
 	void handleRacesOnAction() {
-		openStage("OffersView.fxml", getText("PrimaryView.racesMitm.text"));
+		openStage("RacesView.fxml", getText("PrimaryView.racesMitm.text"));
 	}
 
 	@FXML

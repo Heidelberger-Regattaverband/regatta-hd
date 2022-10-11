@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.24</version>
+  <version>0.1.30</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -43,7 +43,7 @@
     <maven.compiler.release>11</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>18.0.1</openjfx.version>
+    <openjfx.version>19</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.1.1</controlsfx.version>
@@ -55,22 +55,25 @@
     <guice.version>5.1.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
-    <hibernate.version>5.6.10.Final</hibernate.version>
+    <hibernate.version>6.1.4.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>11.1.2.jre11-preview</mssql.version>
+    <mssql.version>11.2.1.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.8.2</junit.version>
+    <junit.version>5.9.1</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.13.0</liquibase.version>
+    <liquibase.version>4.16.1</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
-    <poi.version>5.2.2</poi.version>
+    <poi.version>5.2.3</poi.version>
+
+    <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
+    <jSerialComm.version>2.9.2</jSerialComm.version>
   </properties>
 
   <modules>
@@ -80,8 +83,9 @@
     <module>aquarius</module>
     <module>ui</module>
     <module>schemas</module>
-    <module>releng/app</module>
+    <module>releng/appassembler</module>
     <module>releng/mobile</module>
+    <module>releng/nativeapp</module>
     <module>releng/webstart</module>
   </modules>
 
@@ -125,7 +129,7 @@
       <!-- ============== -->
       <dependency>
         <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core-jakarta</artifactId>
+        <artifactId>hibernate-core</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
       <dependency>
@@ -199,7 +203,7 @@
       <dependency>
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
       </dependency>
 
       <!-- ============ -->
@@ -228,6 +232,11 @@
         <groupId>org.apache.poi</groupId>
         <artifactId>poi</artifactId>
         <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fazecast</groupId>
+        <artifactId>jSerialComm</artifactId>
+        <version>${jSerialComm.version}</version>
       </dependency>
 
       <!-- ========== -->

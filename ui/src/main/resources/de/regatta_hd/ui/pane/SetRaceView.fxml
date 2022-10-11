@@ -31,7 +31,7 @@
       </converter>
     </SearchableComboBox>
 
-    <SplitPane dividerPositions="0.3, 0.7" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
+    <SplitPane dividerPositions="0.25,0.75" orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.columnSpan="2"
       GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
       <items>
         <VBox>
@@ -51,7 +51,7 @@
               </ToolBar>
               <TableView fx:id="seedingListTbl" VBox.vgrow="ALWAYS">
                 <placeholder>
-                  <Label text="%SetRaceView.noSetList" />
+                  <Label text="%SetRaceView.noSeedingList" />
                 </placeholder>
                 <columns>
                   <TableColumn fx:id="seedingListPosCol" style="-fx-alignment: CENTER;" text="%common.posAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
@@ -74,9 +74,9 @@
                       <PropertyValueFactory property="heatRank" />
                     </cellValueFactory>
                   </TableColumn>
-                  <TableColumn fx:id="seedingListDevisionNumberCol" style="-fx-alignment: CENTER;" text="%common.devisionAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
+                  <TableColumn fx:id="seedingListDivisionNumberCol" style="-fx-alignment: CENTER;" text="%common.divisionAbr" sortable="false" resizable="false" reorderable="false" maxWidth="35">
                     <cellValueFactory>
-                      <PropertyValueFactory property="devisionNumber" />
+                      <PropertyValueFactory property="divisionNumber" />
                     </cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="seedingListResultCol" style="-fx-alignment: CENTER_RIGHT;" text="%common.result" sortable="false" resizable="false" reorderable="false" maxWidth="60">

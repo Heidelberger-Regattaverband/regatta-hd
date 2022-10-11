@@ -25,6 +25,8 @@ import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
+import de.regatta_hd.aquarius.util.ModelUtils;
+import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.binding.DoubleBinding;
@@ -47,7 +49,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 public class SetRaceController extends AbstractRegattaDAOController {
-	private static final int TABLE_BORDER_WIDTH = 5;
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
 	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
@@ -68,7 +69,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	@FXML
 	private TableColumn<SeedingListEntry, Integer> seedingListRankCol;
 	@FXML
-	private TableColumn<SeedingListEntry, Integer> seedingListDevisionNumberCol;
+	private TableColumn<SeedingListEntry, Integer> seedingListDivisionNumberCol;
 	@FXML
 	private TableColumn<SeedingListEntry, String> seedingListResultCol;
 	@FXML
@@ -129,18 +130,18 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 		DoubleBinding usedWidth = this.srcCrewPosCol.widthProperty().add(this.srcCrewCoxCol.widthProperty());
 		this.srcCrewNameCol.prefWidthProperty()
-				.bind(this.srcCrewTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+				.bind(this.srcCrewTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 
 		usedWidth = this.crewPosCol.widthProperty().add(this.crewCoxCol.widthProperty());
 		this.crewNameCol.prefWidthProperty()
-				.bind(this.crewTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+				.bind(this.crewTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 
 		usedWidth = this.seedingListPosCol.widthProperty().add(this.seedingListBibCol.widthProperty())
 				.add(this.seedingListRankCol.widthProperty())
-				.add(this.seedingListDevisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
+				.add(this.seedingListDivisionNumberCol.widthProperty().add(this.seedingListResultCol.widthProperty())
 						.add(this.seedingListEqualCrewCol.widthProperty()));
 		this.seedingListBoatCol.prefWidthProperty()
-				.bind(this.seedingListTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+				.bind(this.seedingListTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 
 		loadRaces();
 	}
@@ -187,7 +188,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					.filter(race -> !race.getAgeClass().isOpen() // don't set open races
 							&& !race.getAgeClass().isMasters() // don't set master races
 							&& race.getGroupMode() == GroupMode.NONE // don't set races with age groups
-							// don't set races with only one devision
+			// don't set races with only one devision
 							&& race.getActiveRegistrations().count() > race.getRaceMode().getLaneCount())
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
@@ -448,7 +449,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		// loops over all heats of race and reads required data from DB
 		race.getDrivenHeats().forEach(heat -> {
 			Label heatNrLabel = new Label(
-					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDevisionNumber())));
+					getText("SetRaceView.heatNrLabel.text", Short.valueOf(heat.getDivisionNumber())));
 			TableView<HeatRegistration> compEntriesTable = createTableView(withResult);
 
 			ObservableList<HeatRegistration> items = FXCollections
@@ -510,7 +511,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 		boatCol.setReorderable(false);
 		boatCol.setSortable(false);
 		boatCol.setCellValueFactory(row -> {
-			return new SimpleStringProperty(row.getValue().getBoatLabel());
+			return new SimpleStringProperty(ModelUtils.getBoatLabel(row.getValue()));
 		});
 
 		TableColumn<HeatRegistration, Number> rankCol = null;
@@ -550,7 +551,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 			DoubleBinding usedWidth = bibCol.widthProperty().add(rankCol.widthProperty())
 					.add(resultCol.widthProperty());
 			boatCol.prefWidthProperty()
-					.bind(heatRegsTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+					.bind(heatRegsTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 		} else {
 			TableColumn<HeatRegistration, Number> laneCol = null;
 			laneCol = new TableColumn<>(getText("common.lane"));
@@ -566,7 +567,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 
 			DoubleBinding usedWidth = bibCol.widthProperty().add(laneCol.widthProperty());
 			boatCol.prefWidthProperty()
-					.bind(heatRegsTbl.widthProperty().subtract(usedWidth).subtract(TABLE_BORDER_WIDTH));
+					.bind(heatRegsTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 		}
 
 		heatRegsTbl.getColumns().add(bibCol);
@@ -670,7 +671,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	// static helpers
 
 	private static String createCrewsLabel(Registration registration) {
-		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + registration.getBoatLabel();
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + ModelUtils.getBoatLabel(registration);
 	}
 
 	private static String getSrcRaceNumber(Race race) {

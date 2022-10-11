@@ -9,6 +9,7 @@ import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.AgeClass;
+import de.regatta_hd.aquarius.model.Athlet;
 import de.regatta_hd.aquarius.model.BoatClass;
 import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
@@ -34,8 +35,20 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 	}
 
 	@Override
+	public Athlet getAthletViaExternalId(String externalId) {
+		return super.db.getEntityManager().createQuery("SELECT a FROM Athlet a WHERE a.externalIdA = :externalId", Athlet.class)
+				.setParameter("externalId", externalId).getSingleResult();
+	}
+
+	@Override
 	public List<Club> getClubs() {
 		return getEntities(Club.class);
+	}
+
+	@Override
+	public Club getClubViaExternalId(int externalId) {
+		return super.db.getEntityManager().createQuery("SELECT c FROM Club c WHERE c.externalId = :externalId", Club.class)
+				.setParameter("externalId", Integer.valueOf(externalId)).getSingleResult();
 	}
 
 	@Override

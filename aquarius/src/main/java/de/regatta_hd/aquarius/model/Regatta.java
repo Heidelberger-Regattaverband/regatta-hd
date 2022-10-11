@@ -7,6 +7,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -19,7 +21,6 @@ import jakarta.persistence.Transient;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,24 +33,25 @@ import lombok.ToString;
 // lombok
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Regatta {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Event_ID")
 	@ToString.Include(rank = 20)
-	@Include
+	@EqualsAndHashCode.Include
 	private int id;
 
-	@Column(name = "Event_Title", nullable = false, length = 64)
+	@Column(name = "Event_Title")
 	@ToString.Include(rank = 18)
 	private String title;
 
-	@Column(name = "Event_StartDate", nullable = false)
+	@Column(name = "Event_StartDate")
 	private Instant startDate;
 
-	@Column(name = "Event_EndDate", nullable = false)
+	@Column(name = "Event_EndDate")
 	private Instant endDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)

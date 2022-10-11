@@ -1,12 +1,10 @@
 package de.regatta_hd.aquarius;
 
 import java.util.List;
-import java.util.Optional;
 
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Registration;
-import de.regatta_hd.aquarius.model.RegistrationLabel;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,12 +27,12 @@ public class ResultEntry {
 		return this.heat.getNumber();
 	}
 
-	public short getDevisionNumber() {
-		return this.heat.getDevisionNumber();
+	public short getDivisionNumber() {
+		return this.heat.getDivisionNumber();
 	}
 
-	public String getDevisionLabel() {
-		return this.heat.getDevisionLabel();
+	public String getDivisionLabel() {
+		return this.heat.getDivisionLabel();
 	}
 
 	public String getRaceNumber() {
@@ -84,7 +82,7 @@ public class ResultEntry {
 	private String getRegistrationName(int index) {
 		List<HeatRegistration> heatResult = getEntriesSortedByRank();
 		if (heatResult.size() > index && heatResult.get(index).getRegistration() != null) {
-			return getRegistrationLabel(heatResult.get(index).getRegistration());
+			return ModelUtils.getBoatLabel(heatResult.get(index));
 		}
 		return null;
 	}
@@ -104,8 +102,4 @@ public class ResultEntry {
 		return this.result;
 	}
 
-	private String getRegistrationLabel(Registration registration) {
-		Optional<RegistrationLabel> label = registration.getLabels(this.heat.getRound()).findFirst();
-		return label.isPresent() ? label.get().getLabel().getLabelShort() : null;
-	}
 }

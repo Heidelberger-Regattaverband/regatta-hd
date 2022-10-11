@@ -12,6 +12,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import de.rudern.schemas.service.meldungen._2010.RegattaMeldungen;
 import de.rudern.schemas.service.wettkampfrichter._2017.Liste;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -30,9 +31,9 @@ public class XMLDataLoader {
 		SAXParserFactory saxFactory = SAXParserFactory.newInstance();
 		saxFactory.setNamespaceAware(true);
 		saxFactory.setValidating(false);
-		XMLReader xmlReader;
+
 		try {
-			xmlReader = saxFactory.newSAXParser().getXMLReader();
+			XMLReader xmlReader = saxFactory.newSAXParser().getXMLReader();
 
 			// Create the filter (to add namespace) and set the xmlReader as its parent.
 			NamespaceFilter namespaceFilter = new NamespaceFilter(Set.of("Liste", "Wettkampfrichter"),
@@ -48,5 +49,25 @@ public class XMLDataLoader {
 		} catch (SAXException | ParserConfigurationException e) {
 			throw new JAXBException(e);
 		}
+	}
+
+	public static RegattaMeldungen loadRegattaMeldungen(InputStream input) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(RegattaMeldungen.class);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+		SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+		saxFactory.setNamespaceAware(true);
+		saxFactory.setValidating(false);
+
+		try {
+			XMLReader xmlReader = saxFactory.newSAXParser().getXMLReader();
+
+			Source source = new SAXSource(xmlReader, new InputSource(input));
+
+			return (RegattaMeldungen) unmarshaller.unmarshal(source);
+		} catch (SAXException | ParserConfigurationException e) {
+			throw new JAXBException(e);
+		}
+
 	}
 }

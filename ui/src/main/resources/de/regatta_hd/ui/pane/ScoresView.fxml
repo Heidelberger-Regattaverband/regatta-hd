@@ -9,8 +9,7 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="de.regatta_hd.ui.pane.ScoresController">
+<VBox fx:id="rootPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.regatta_hd.ui.pane.ScoresController">
 
   <padding>
     <Insets bottom="10.0" left="10.0" right="10.0" />
@@ -29,17 +28,17 @@
         <Label text="%common.noDataAvailable" />
       </placeholder>
       <columns>
-        <TableColumn fx:id="rankCol" reorderable="false" style="-fx-alignment: CENTER;" text="%common.rank">
+        <TableColumn fx:id="rankCol" prefWidth="50" reorderable="false" style="-fx-alignment: CENTER;" text="%common.rank">
           <cellValueFactory>
             <PropertyValueFactory property="rank" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn fx:id="pointsCol" reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
+        <TableColumn fx:id="pointsCol" prefWidth="60" reorderable="false" style="-fx-alignment: CENTER-RIGHT;" text="%common.points">
           <cellValueFactory>
             <PropertyValueFactory property="points" />
           </cellValueFactory>
         </TableColumn>
-        <TableColumn reorderable="false" text="%common.club">
+        <TableColumn fx:id="clubCol" prefWidth="300.0" reorderable="false" sortable="false" text="%common.club">
           <cellValueFactory>
             <PropertyValueFactory property="clubName" />
           </cellValueFactory>

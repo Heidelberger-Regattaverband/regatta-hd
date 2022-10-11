@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.24</version>
+    <version>0.1.30</version>
     <relativePath>../..</relativePath>
   </parent>
 
@@ -26,6 +26,25 @@
       <artifactId>ui</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- ============================= -->
+    <!-- JavaFX cross-platform support -->
+    <!-- ============================= -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
+    </dependency>
   </dependencies>
 
   <build>
@@ -38,10 +57,6 @@
             <manifest>
               <mainClass>${mainClass}</mainClass>
             </manifest>
-            <manifestEntries>
-              <Permissions>all-permissions</Permissions>
-              <Codebase>*</Codebase>
-            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
@@ -78,6 +93,7 @@
       <!-- additional deploy steps -->
       <!-- ======================= -->
       <plugin>
+      <!-- keytool -genkey -keyalg RSA -keysize 2048 -alias selfsigned -validity 9999 -dname "CN=Markus Ofterdinger, OU=EDV-Team, O=Heidelberger Regatta-Verband, L=Heidelberg, ST=Baden-Württemberg, C=DE" -keystore keystore.jks -storepass password -keypass password -->
         <artifactId>maven-jarsigner-plugin</artifactId>
         <configuration>
           <archiveDirectory>${archives.directory}</archiveDirectory>

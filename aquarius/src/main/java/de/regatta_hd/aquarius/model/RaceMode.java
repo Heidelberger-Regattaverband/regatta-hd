@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,10 +22,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class RaceMode {
 
 	@Id
 	@Column(name = "RaceMode_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@OneToMany(targetEntity = Regatta.class, mappedBy = "raceMode")

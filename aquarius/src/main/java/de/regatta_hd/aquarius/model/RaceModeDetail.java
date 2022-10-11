@@ -51,7 +51,7 @@ public class RaceModeDetail {
 	@ToString.Include(rank = 9)
 	private Short number;
 
-	@Column(name = "RMLap_QRText", length = 64)
+	@Column(name = "RMLap_QRText")
 	@ToString.Include(rank = 8)
 	private String qrText;
 

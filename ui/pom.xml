@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.24</version>
+    <version>0.1.30</version>
   </parent>
 
   <artifactId>ui</artifactId>
@@ -15,6 +15,9 @@
   </properties>
 
   <dependencies>
+    <!-- ========== -->
+    <!-- Regatta HD -->
+    <!-- ========== -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>aquarius</artifactId>
@@ -39,8 +42,6 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
     </dependency>
-
-    <!-- cross-platform fat jar -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
@@ -60,7 +61,10 @@
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.fazecast</groupId>
+      <artifactId>jSerialComm</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -86,6 +90,9 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <configuration>
           <mainClass>${mainClass}</mainClass>
+          <options>
+            <option>--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls</option>
+          </options>
         </configuration>
       </plugin>
 

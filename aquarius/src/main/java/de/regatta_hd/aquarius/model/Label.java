@@ -12,7 +12,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -25,6 +29,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Label {
 
 	/**
@@ -33,18 +41,19 @@ public class Label {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Label_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	/**
 	 * An association to the corresponding {@link RegistrationLabel}.
 	 */
 	@OneToMany(targetEntity = RegistrationLabel.class, mappedBy = "label")
-	private Set<RegistrationLabel> labels;
+	private Set<RegistrationLabel> registrationLabels;
 
 	/**
 	 * The club to which this identifier belongs.
 	 */
-	@OneToMany(targetEntity = Registration.class, mappedBy = "label")
+	@OneToMany(targetEntity = Registration.class, mappedBy = "manualLabel")
 	private Set<Registration> registrations;
 
 	/**
@@ -64,14 +73,14 @@ public class Label {
 	/**
 	 * The long label text.
 	 */
-	@Column(name = "Label_Long", nullable = false, length = 512)
+	@Column(name = "Label_Long")
 	@ToString.Include(rank = 9)
 	private String labelLong;
 
 	/**
 	 * The short label text.
 	 */
-	@Column(name = "Label_Short", nullable = false, length = 256)
+	@Column(name = "Label_Short")
 	@ToString.Include(rank = 10)
 	private String labelShort;
 

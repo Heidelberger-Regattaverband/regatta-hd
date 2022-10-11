@@ -2,9 +2,9 @@ package de.regatta_hd.aquarius.model;
 
 import java.util.Set;
 
+import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,8 +14,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,22 +35,24 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HeatRegistration {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CE_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
 	@Column(name = "CE_Lane")
 	@ToString.Include(rank = 10)
 	private short lane;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "CE_Comp_ID_FK")
 	private Heat heat;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "CE_Entry_ID_FK", nullable = false)
 	private Registration registration;
 
@@ -57,6 +61,8 @@ public class HeatRegistration {
 	private Set<Result> results;
 
 	@Transient
+	@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)
 	private Result finalResult;
 
 	/**
@@ -72,15 +78,14 @@ public class HeatRegistration {
 	}
 
 	public String getBib() {
-		Registration reg = getRegistration();
-		if (reg.getBib() != null) {
-			return reg.getBib().toString();
+		if (getRegistration().getBib() != null) {
+			return getRegistration().getBib().toString();
 		}
 		return null;
 	}
 
 	public String getBoatLabel() {
-		return getRegistration().getBoatLabel();
+		return ModelUtils.getBoatLabel(this);
 	}
 
 	public String getResultDisplayValue() {

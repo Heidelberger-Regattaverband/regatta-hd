@@ -1,5 +1,6 @@
 package de.regatta_hd.aquarius.model;
 
+import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +9,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,17 +24,18 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Result {
-
-	static final byte FINAL = 64;
 
 	@Id
 	@Column(name = "Result_CE_ID_FK", insertable = false, updatable = false)
+	@EqualsAndHashCode.Include
 	private int heatRegistrationId;
 
 	@Id
 	@Column(name = "Result_SplitNr")
 	@ToString.Include
+	@EqualsAndHashCode.Include
 	private byte splitNr;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -50,11 +53,11 @@ public class Result {
 	@ToString.Include
 	private Integer delta;
 
-	@Column(name = "Result_DisplayType", nullable = false, length = 1)
+	@Column(name = "Result_DisplayType")
 	@ToString.Include
 	private String displayType;
 
-	@Column(name = "Result_DisplayValue", length = 64)
+	@Column(name = "Result_DisplayValue")
 	@ToString.Include
 	private String displayValue;
 
@@ -62,7 +65,7 @@ public class Result {
 	@ToString.Include
 	private Integer netTime;
 
-	@Column(name = "Result_Params", length = 64)
+	@Column(name = "Result_Params")
 	@ToString.Include
 	private String params;
 
@@ -81,7 +84,7 @@ public class Result {
 	private Integer sortValue;
 
 	public boolean isFinalResult() {
-		return getSplitNr() == FINAL;
+		return getSplitNr() == ModelUtils.FINAL_ROUND;
 	}
 
 	public Integer getPoints() {

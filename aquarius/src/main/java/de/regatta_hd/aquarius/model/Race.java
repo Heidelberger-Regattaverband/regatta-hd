@@ -25,7 +25,6 @@ import jakarta.persistence.Table;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,14 +43,24 @@ import lombok.ToString;
 				@NamedSubgraph(name = "heatreg.results", //
 						attributeNodes = { //
 								@NamedAttributeNode("results"), //
-								@NamedAttributeNode(value = "registration", subgraph = "registration.crews") //
+								@NamedAttributeNode(value = "registration", subgraph = "registration") //
 						} //
 				), //
-				@NamedSubgraph(name = "registration.crews", //
-						attributeNodes = { @NamedAttributeNode(value = "crews", subgraph = "crew.club") } //
+				@NamedSubgraph(name = "registration", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "crews", subgraph = "crew.club"), //
+								@NamedAttributeNode(value = "labels", subgraph = "labels") //
+						} //
 				), //
+				@NamedSubgraph(name = "labels", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "label") //
+						}), //
 				@NamedSubgraph(name = "crew.club", //
-						attributeNodes = { @NamedAttributeNode("club"), @NamedAttributeNode("athlet") } //
+						attributeNodes = { //
+								@NamedAttributeNode("club"), //
+								@NamedAttributeNode("athlet") //
+						} //
 				) }, //
 		attributeNodes = { //
 				@NamedAttributeNode(value = "heats", subgraph = "heat.heatregs"), //
@@ -61,8 +70,21 @@ import lombok.ToString;
 				@NamedAttributeNode("registrations") //
 		} //
 ), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
-		subgraphs = { @NamedSubgraph(name = "registration.club", attributeNodes = { @NamedAttributeNode("club") }) }, //
-		attributeNodes = { @NamedAttributeNode(value = "registrations", subgraph = "registration.club") }) })
+		subgraphs = { //
+				@NamedSubgraph(name = "registration.club", //
+						attributeNodes = { //
+								@NamedAttributeNode("club"), //
+								@NamedAttributeNode(value = "labels", subgraph = "labels") //
+						}), //
+				@NamedSubgraph(name = "labels", //
+						attributeNodes = { //
+								@NamedAttributeNode(value = "label") //
+						}) //
+		}, //
+		attributeNodes = { //
+				@NamedAttributeNode(value = "registrations", subgraph = "registration.club") //
+		}) //
+})
 // lombok
 @Getter
 @Setter
@@ -76,18 +98,18 @@ public class Race {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Offer_ID")
-	@Include
+	@EqualsAndHashCode.Include
 	private int id;
 
-	@Column(name = "Offer_RaceNumber", nullable = false, length = 8)
+	@Column(name = "Offer_RaceNumber", nullable = false)
 	@ToString.Include(rank = 9)
 	private String number;
 
-	@Column(name = "Offer_LongLabel", length = 64)
+	@Column(name = "Offer_LongLabel")
 	@ToString.Include(rank = 8)
 	private String longLabel;
 
-	@Column(name = "Offer_ShortLabel", length = 32)
+	@Column(name = "Offer_ShortLabel")
 	private String shortLabel;
 
 	@Column(name = "Offer_Distance")
@@ -107,7 +129,7 @@ public class Race {
 	private BoatClass boatClass;
 
 	@OneToMany(targetEntity = Heat.class, mappedBy = "race")
-	@OrderBy("devisionNumber")
+	@OrderBy("divisionNumber")
 	private Set<Heat> heats;
 
 	@OneToMany(targetEntity = Cup.class, mappedBy = "race")
@@ -189,6 +211,10 @@ public class Race {
 		return new SimpleBooleanProperty(isSet());
 	}
 
+	public ObservableBooleanValue cancelledProperty() {
+		return new SimpleBooleanProperty(isCancelled());
+	}
+
 	/**
 	 * Returns a stream with active registrations, cancelled registrations are removed.
 	 *
@@ -225,7 +251,7 @@ public class Race {
 
 	private Stream<Heat> getSortedHeats() {
 		return getHeats().stream()
-				.sorted((entry1, entry2) -> entry1.getDevisionNumber() > entry2.getDevisionNumber() ? 1 : -1);
+				.sorted((entry1, entry2) -> entry1.getDivisionNumber() > entry2.getDivisionNumber() ? 1 : -1);
 	}
 
 	public enum GroupMode {

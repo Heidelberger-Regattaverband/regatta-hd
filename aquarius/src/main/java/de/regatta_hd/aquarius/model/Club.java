@@ -1,11 +1,9 @@
 package de.regatta_hd.aquarius.model;
 
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,43 +25,70 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Club {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Club_ID")
+	@EqualsAndHashCode.Include
 	private int id;
 
-	@OneToMany(targetEntity = Athlet.class, mappedBy = "club")
-	private Set<Athlet> athlets;
-
-	@Column(name = "Club_Abbr", length = 50)
-	private String abbreviation;
-
-	@Column(name = "Club_City", length = 64)
-	private String city;
-
-	@Column(name = "Club_Discount")
-	private Double discount;
-
-	@Column(name = "Club_ExternID")
-	private Integer externID;
-
-	@Column(name = "Club_Name", length = 128)
+	/**
+	 * The name of the rowing club.
+	 */
+	@Column(name = "Club_Name")
 	@ToString.Include
 	private String name;
 
-	@Column(name = "Club_UltraAbbr", length = 16)
+	/**
+	 * An abbreviation of the rowing club.
+	 */
+	@Column(name = "Club_Abbr")
+	private String abbreviation;
+
+	/**
+	 * A very short abbreviation of the rowing club.
+	 */
+	@Column(name = "Club_UltraAbbr")
 	private String ultraAbbr;
+
+	/**
+	 * The city where the rowing club is based.
+	 */
+	@Column(name = "Club_City")
+	private String city;
+
+	/**
+	 * All registered {@link Athlet athlets} of this rowing club.
+	 */
+	@OneToMany(targetEntity = Athlet.class, mappedBy = "club")
+	private Set<Athlet> athlets;
+
+	/**
+	 * An optional discount this club gets.
+	 */
+	@Column(name = "Club_Discount")
+	private Double discount;
+
+	/**
+	 * The nationality of the rowing club.
+	 */
+	@ManyToOne
+	@JoinColumn(name = "Club_Nation_ID_FK")
+	private Nation nation;
+
+	@Column(name = "Club_ExternID")
+	private Integer externalId;
 
 	@OneToMany(targetEntity = Crew.class, mappedBy = "club")
 	private Set<Crew> crews;
 
 	/**
-	 * Contains all {@link Registration registrations} of this {@link Club club} to available {@link Race offers}.
+	 * All {@link Registration registrations} of this {@link Club rowing club} to available {@link Race offers}.
 	 */
 	@OneToMany(targetEntity = Registration.class, mappedBy = "club")
-	private List<Registration> registrations;
+	private Set<Registration> registrations;
 
 	@OneToMany(targetEntity = Regatta.class, mappedBy = "club")
 	private Set<Regatta> regattas;
@@ -70,7 +96,4 @@ public class Club {
 	@OneToMany(targetEntity = Label.class, mappedBy = "club")
 	private Set<Label> labels;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Club_Nation_ID_FK")
-	private Nation nation;
 }

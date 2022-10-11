@@ -3,6 +3,7 @@ package de.regatta_hd.aquarius;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
+import de.regatta_hd.aquarius.util.ModelUtils;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class SeedingListEntry {
 	private int rank;
 	private boolean equalCrew;
 	private Registration registration;
-	private HeatRegistration srcHeatRregistration;
+	private HeatRegistration srcHeatRegistration;
 	private Registration srcRegistration;
 
 	// JavaFX properties
@@ -36,28 +37,28 @@ public class SeedingListEntry {
 	}
 
 	public String getBoat() {
-		return getRegistration().getBoatLabel();
+		return ModelUtils.getBoatLabel(getRegistration());
 	}
 
-	public Short getDevisionNumber() {
-		return this.srcHeatRregistration != null
-				? Short.valueOf(this.srcHeatRregistration.getHeat().getDevisionNumber())
+	public Short getDivisionNumber() {
+		return this.srcHeatRegistration != null
+				? Short.valueOf(this.srcHeatRegistration.getHeat().getDivisionNumber())
 				: null;
 	}
 
 	public Byte getHeatRank() {
-		Result result = this.srcHeatRregistration != null ? this.srcHeatRregistration.getFinalResult() : null;
+		Result result = this.srcHeatRegistration != null ? this.srcHeatRegistration.getFinalResult() : null;
 		return result != null ? Byte.valueOf(result.getRank()) : null;
 	}
 
 	public String getResult() {
-		Result result = this.srcHeatRregistration != null ? this.srcHeatRregistration.getFinalResult() : null;
+		Result result = this.srcHeatRegistration != null ? this.srcHeatRegistration.getFinalResult() : null;
 		return result != null ? result.getDisplayValue() : null;
 	}
 
 	public Registration getSrcRegistration() {
-		if (this.srcHeatRregistration != null) {
-			return this.srcHeatRregistration.getRegistration();
+		if (this.srcHeatRegistration != null) {
+			return this.srcHeatRegistration.getRegistration();
 		}
 		return this.srcRegistration;
 	}

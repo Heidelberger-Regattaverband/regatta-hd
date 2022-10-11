@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
 import de.regatta_hd.aquarius.model.Referee;
@@ -18,7 +19,9 @@ import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
 import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.stage.PaneController;
 import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,12 +29,11 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class RefereesController extends AbstractBaseController {
+public class RefereesController extends PaneController {
 	private static final Logger logger = Logger.getLogger(RefereesController.class.getName());
 
 	@Inject
@@ -39,6 +41,7 @@ public class RefereesController extends AbstractBaseController {
 	@Inject
 	private ListenerManager listenerManager;
 
+	// toolbar
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -49,13 +52,23 @@ public class RefereesController extends AbstractBaseController {
 	private TextField filterTxf;
 	@FXML
 	private Button importBtn;
+
+	// referees table
 	@FXML
 	private TableView<Referee> refereesTbl;
 	@FXML
 	private TableColumn<Referee, String> idCol;
 	@FXML
 	private TableColumn<Referee, Boolean> activeCol;
+	@FXML
+	private TableColumn<Referee, String> lastNameCol;
 
+	// injections
+	@Inject
+	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+	private BooleanProperty showIdColumn;
+
+	// fields
 	private final ObservableList<Referee> refereesList = FXCollections.observableArrayList();
 
 	private final StateChangedEventListener stateChangedEventListener = event -> {
@@ -74,6 +87,7 @@ public class RefereesController extends AbstractBaseController {
 
 		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class, this.stateChangedEventListener);
 
+		this.idCol.visibleProperty().bind(this.showIdColumn);
 		this.activeCol.setCellValueFactory(cellData -> {
 			BooleanProperty property = cellData.getValue().activeProperty();
 			property.addListener((observable, newValue, oldValue) -> {
@@ -91,7 +105,7 @@ public class RefereesController extends AbstractBaseController {
 			return property;
 		});
 
-		this.refereesTbl.getSortOrder().add(this.idCol);
+		this.refereesTbl.getSortOrder().add(this.lastNameCol);
 
 		// table sorting and filtering: https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
 
@@ -195,7 +209,6 @@ public class RefereesController extends AbstractBaseController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
@@ -203,7 +216,6 @@ public class RefereesController extends AbstractBaseController {
 
 	private void loadReferees(boolean refresh) {
 		disableButtons(true);
-		updatePlaceholder(getText("common.loadData"));
 		Referee selectedItem = this.refereesTbl.getSelectionModel().getSelectedItem();
 
 		super.dbTaskRunner.run(progress -> {
@@ -220,14 +232,9 @@ public class RefereesController extends AbstractBaseController {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				FxUtils.showErrorMessage(getWindow(), e);
 			} finally {
-				updatePlaceholder(getText("common.noDataAvailable"));
 				disableButtons(false);
 			}
 		});
-	}
-
-	private void updatePlaceholder(String text) {
-		((Label) this.refereesTbl.getPlaceholder()).setText(text);
 	}
 
 	private void disableButtons(boolean disabled) {
@@ -238,4 +245,5 @@ public class RefereesController extends AbstractBaseController {
 		this.importBtn.setDisable(disabled);
 		this.refereesTbl.setDisable(disabled);
 	}
+
 }
