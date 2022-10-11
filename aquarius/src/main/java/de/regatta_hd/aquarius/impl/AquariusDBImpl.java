@@ -3,6 +3,8 @@ package de.regatta_hd.aquarius.impl;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -28,6 +30,8 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl extends AbstractDBConnection {
 
+	private static final Logger logger = Logger.getLogger(AquariusDBImpl.class.getName());
+
 	private String version;
 
 	@Inject
@@ -52,6 +56,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 						database);
 				liquibase.update(new Contexts(), new LabelExpression());
 			} catch (LiquibaseException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				close();
 				throw new SQLException(e);
 			}
