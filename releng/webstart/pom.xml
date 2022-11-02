@@ -116,7 +116,7 @@
       <plugin>
         <groupId>de.ofterdinger.maven.plugins</groupId>
         <artifactId>site-maven-plugin</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.2-SNAPSHOT</version>
         <configuration>
           <server>github-upload</server>
           <message>Creating site for ${project.version}</message>
