@@ -25,6 +25,7 @@ hs_err_pid*
 # Eclipse & Maven
 .project
 .classpath
+.factorypath
 .settings
 target
 .apt_generated/

@@ -10,7 +10,6 @@ import de.regatta_hd.aquarius.RegattaDAO.RegattaChangedEventListener;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.fx.stage.PaneController;
-import javafx.application.Platform;
 
 abstract class AbstractRegattaDAOController extends PaneController {
 
@@ -31,9 +30,7 @@ abstract class AbstractRegattaDAOController extends PaneController {
 
 		this.listenerManager.addListener(RegattaChangedEventListener.class, this.regattaChangedEventListener);
 
-		Platform.runLater(() -> {
-			setTitle(getTitle(this.db.isOpen() ? this.regattaDAO.getActiveRegatta() : null));
-		});
+		setTitle(getTitle(this.db.isOpen() ? this.regattaDAO.getActiveRegatta() : null));
 	}
 
 	@Override
