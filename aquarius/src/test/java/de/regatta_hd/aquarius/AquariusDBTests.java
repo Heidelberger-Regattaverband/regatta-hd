@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,6 @@ import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.RegistrationLabel;
 import de.regatta_hd.aquarius.model.Result;
-import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(BaseDBTest.class)
 class AquariusDBTests extends BaseDBTest {

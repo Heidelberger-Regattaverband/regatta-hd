@@ -3,6 +3,13 @@ package de.regatta_hd.ui.pane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+
 import com.fazecast.jSerialComm.SerialPort;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -10,12 +17,6 @@ import com.google.inject.name.Named;
 import de.regatta_hd.commons.fx.stage.BaseController;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.SerialPortUtils;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 
 public class ConfigController extends BaseController {
 

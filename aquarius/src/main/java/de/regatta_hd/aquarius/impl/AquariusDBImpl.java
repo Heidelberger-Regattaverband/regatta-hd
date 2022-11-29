@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.persistence.PersistenceException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
 
@@ -17,7 +19,7 @@ import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.AbstractDBConnection;
 import de.regatta_hd.commons.db.DBConfig;
-import jakarta.persistence.PersistenceException;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;

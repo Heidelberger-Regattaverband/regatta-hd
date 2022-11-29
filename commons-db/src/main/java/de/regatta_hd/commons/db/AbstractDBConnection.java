@@ -9,11 +9,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import de.regatta_hd.commons.core.ListenerManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
+
+import de.regatta_hd.commons.core.ListenerManager;
 
 public abstract class AbstractDBConnection implements DBConnection {
 

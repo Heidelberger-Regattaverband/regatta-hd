@@ -2,9 +2,10 @@ package de.regatta_hd.commons.fx.db;
 
 import java.util.function.Consumer;
 
+import javafx.concurrent.Task;
+
 import de.regatta_hd.commons.core.concurrent.AsyncCallable;
 import de.regatta_hd.commons.core.concurrent.AsyncResult;
-import javafx.concurrent.Task;
 
 public interface DBTaskRunner {
 

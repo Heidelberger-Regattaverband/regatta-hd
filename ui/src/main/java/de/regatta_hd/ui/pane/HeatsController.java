@@ -14,6 +14,20 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.controlsfx.control.table.TableFilter;
 
@@ -34,19 +48,6 @@ import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.SerialPortUtils;
 import de.regatta_hd.ui.util.TrafficLightsStartList;
 import de.regatta_hd.ui.util.WorkbookUtils;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
 
 public class HeatsController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
@@ -281,10 +282,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 		if (selectedHeat != null) {
 			int currentState = selectedHeat.getState();
 			byte[] allowedStates = Heat.getAllowedStates();
-			for (int i = 0; i < allowedStates.length; i++) {
-				if (currentState != allowedStates[i]) {
-					final byte newState = allowedStates[i];
-					String newStateLabel = Heat.getStateLabel(allowedStates[i]);
+			for (final byte newState : allowedStates) {
+				if (currentState != newState) {
+					String newStateLabel = Heat.getStateLabel(newState);
 					MenuItem menuItem = new MenuItem(newStateLabel);
 					menuItem.addEventHandler(ActionEvent.ACTION, event -> {
 						// confirm changing the state
@@ -326,8 +326,9 @@ public class HeatsController extends AbstractRegattaDAOController {
 				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + ModelUtils.getBoatLabel(heatReg));
 				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
 					// confirm swapping the results
-					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"), getText(
-							"heats.confirmSwapRsult.question", ModelUtils.getBoatLabel(selectedItem), ModelUtils.getBoatLabel(heatReg)))) {
+					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"),
+							getText("heats.confirmSwapRsult.question", ModelUtils.getBoatLabel(selectedItem),
+									ModelUtils.getBoatLabel(heatReg)))) {
 						// swapping results requires a transaction
 						this.dbTaskRunner.runInTransaction(progress -> {
 							return this.regattaDAO.swapResults(heatReg, selectedItem);

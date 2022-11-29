@@ -3,6 +3,9 @@ package de.regatta_hd.aquarius.model;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,8 +25,7 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

@@ -2,10 +2,10 @@ package de.regatta_hd.aquarius.impl;
 
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+
+import com.google.inject.Inject;
 
 abstract class AbstractDAOImpl {
 

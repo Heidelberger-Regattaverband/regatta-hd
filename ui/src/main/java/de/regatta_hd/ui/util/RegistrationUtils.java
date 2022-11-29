@@ -5,13 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import jakarta.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.StringUtils;
 
 import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.rudern.schemas.service.meldungen._2010.RegattaMeldungen;
 import de.rudern.schemas.service.meldungen._2010.TMeldung;
 import de.rudern.schemas.service.meldungen._2010.TRennen;
-import jakarta.xml.bind.JAXBException;
 
 public class RegistrationUtils {
 

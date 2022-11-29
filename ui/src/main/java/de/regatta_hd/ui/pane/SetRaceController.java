@@ -15,20 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.controlsfx.control.SearchableComboBox;
-
-import de.regatta_hd.aquarius.SeedingListEntry;
-import de.regatta_hd.aquarius.model.Crew;
-import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Race;
-import de.regatta_hd.aquarius.model.Race.GroupMode;
-import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.aquarius.model.Registration;
-import de.regatta_hd.aquarius.model.Result;
-import de.regatta_hd.aquarius.util.ModelUtils;
-import de.regatta_hd.commons.fx.util.FxConstants;
-import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,6 +33,21 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+
+import org.controlsfx.control.SearchableComboBox;
+
+import de.regatta_hd.aquarius.SeedingListEntry;
+import de.regatta_hd.aquarius.model.Crew;
+import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Race.GroupMode;
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.Result;
+import de.regatta_hd.aquarius.util.ModelUtils;
+import de.regatta_hd.commons.fx.util.FxConstants;
+import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.util.RaceStringConverter;
 
 public class SetRaceController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
@@ -671,7 +672,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	// static helpers
 
 	private static String createCrewsLabel(Registration registration) {
-		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + ModelUtils.getBoatLabel(registration);
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " "
+				+ ModelUtils.getBoatLabel(registration);
 	}
 
 	private static String getSrcRaceNumber(Race race) {

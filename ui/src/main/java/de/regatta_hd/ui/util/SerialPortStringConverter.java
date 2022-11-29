@@ -1,8 +1,8 @@
 package de.regatta_hd.ui.util;
 
-import com.fazecast.jSerialComm.SerialPort;
-
 import javafx.util.StringConverter;
+
+import com.fazecast.jSerialComm.SerialPort;
 
 public class SerialPortStringConverter extends StringConverter<SerialPort> {
 

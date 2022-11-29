@@ -2,6 +2,8 @@ package de.regatta_hd.commons.fx.impl;
 
 import java.util.function.Consumer;
 
+import javafx.concurrent.Task;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -10,7 +12,6 @@ import de.regatta_hd.commons.core.concurrent.AsyncResult;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.db.DBTaskRunner;
-import javafx.concurrent.Task;
 
 @Singleton
 public class DBTaskRunnerImpl implements DBTaskRunner {

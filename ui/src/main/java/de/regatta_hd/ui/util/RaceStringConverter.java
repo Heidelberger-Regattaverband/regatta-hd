@@ -3,8 +3,9 @@ package de.regatta_hd.ui.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.regatta_hd.aquarius.model.Race;
 import javafx.util.StringConverter;
+
+import de.regatta_hd.aquarius.model.Race;
 
 public class RaceStringConverter extends StringConverter<Race> {
 
