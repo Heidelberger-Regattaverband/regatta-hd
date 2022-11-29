@@ -41,8 +41,7 @@ public class SeedingListEntry {
 	}
 
 	public Short getDivisionNumber() {
-		return this.srcHeatRegistration != null
-				? Short.valueOf(this.srcHeatRegistration.getHeat().getDivisionNumber())
+		return this.srcHeatRegistration != null ? Short.valueOf(this.srcHeatRegistration.getHeat().getDivisionNumber())
 				: null;
 	}
 

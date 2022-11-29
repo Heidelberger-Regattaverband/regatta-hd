@@ -93,7 +93,7 @@ public class LogRecord implements Serializable {
 	 * ID of the thread that issued logging call.
 	 */
 	@Column(name = "threadId")
-	private int threadID;
+	private long threadID;
 
 	/**
 	 * Name of the thread that issued logging call.
@@ -111,14 +111,14 @@ public class LogRecord implements Serializable {
 		setInstant(logRecord.getInstant());
 		setLogger(logRecord.getLoggerName());
 		setMessage(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
-		setThreadID(logRecord.getThreadID());
+		setThreadID(logRecord.getLongThreadID());
 		setHostName(hostName);
 		setHostAddress(hostAddr);
 		setSourceClass(logRecord.getSourceClassName());
 		setSourceMethod(logRecord.getSourceMethodName());
 
 		Optional<Thread> threadOpt = Thread.getAllStackTraces().keySet().stream()
-				.filter(thread -> thread.getId() == logRecord.getThreadID()).findFirst();
+				.filter(thread -> thread.getId() == logRecord.getLongThreadID()).findFirst();
 		if (threadOpt.isPresent()) {
 			setThreadName(threadOpt.get().getName());
 		}

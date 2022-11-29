@@ -70,6 +70,7 @@ public class FxUtils {
 		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.showAndWait();
 	}
+
 	public static void showErrorMessage(Window window, String header, String errMsg) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.initOwner(window);

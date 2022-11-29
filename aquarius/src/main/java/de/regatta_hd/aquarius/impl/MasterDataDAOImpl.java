@@ -36,7 +36,8 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public Athlet getAthletViaExternalId(String externalId) {
-		return super.db.getEntityManager().createQuery("SELECT a FROM Athlet a WHERE a.externalIdA = :externalId", Athlet.class)
+		return super.db.getEntityManager()
+				.createQuery("SELECT a FROM Athlet a WHERE a.externalIdA = :externalId", Athlet.class)
 				.setParameter("externalId", externalId).getSingleResult();
 	}
 
@@ -47,7 +48,8 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public Club getClubViaExternalId(int externalId) {
-		return super.db.getEntityManager().createQuery("SELECT c FROM Club c WHERE c.externalId = :externalId", Club.class)
+		return super.db.getEntityManager()
+				.createQuery("SELECT c FROM Club c WHERE c.externalId = :externalId", Club.class)
 				.setParameter("externalId", Integer.valueOf(externalId)).getSingleResult();
 	}
 

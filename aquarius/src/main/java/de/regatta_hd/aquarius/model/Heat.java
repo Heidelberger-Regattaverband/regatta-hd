@@ -279,51 +279,33 @@ public class Heat {
 	}
 
 	private String getGroupValueLabel() {
-		switch (getGroupValue()) {
-		case 0:
-			return "A";
-		case 4:
-			return "B";
-		case 8:
-			return "C";
-		case 12:
-			return "D";
-		case 16:
-			return "E";
-		case 20:
-			return "F";
-		case 24:
-			return "G";
-		case 28:
-			return "H";
-		case 32:
-			return "I";
-		case 36:
-			return "J";
-		default:
-			return null;
-		}
+		return switch (getGroupValue()) {
+		case 0 -> "A";
+		case 4 -> "B";
+		case 8 -> "C";
+		case 12 -> "D";
+		case 16 -> "E";
+		case 20 -> "F";
+		case 24 -> "G";
+		case 28 -> "H";
+		case 32 -> "I";
+		case 36 -> "J";
+		default -> null;
+		};
 	}
 
 	// static helpers
 
 	public static String getStateLabel(byte state) {
-		switch (state) {
-		case 0:
-			return bundle.getString("heat.state.initial");
-		case 1:
-			return bundle.getString("heat.state.scheduled");
-		case 2:
-			return bundle.getString("heat.state.started");
-		case 4:
-			return bundle.getString("heat.state.official");
-		case 5:
-			return bundle.getString("heat.state.finished");
-		case 6:
-			return bundle.getString("heat.state.photoFinish");
-		default:
-			return Byte.toString(state);
-		}
+		return switch (state) {
+		case 0 -> bundle.getString("heat.state.initial");
+		case 1 -> bundle.getString("heat.state.scheduled");
+		case 2 -> bundle.getString("heat.state.started");
+		case 4 -> bundle.getString("heat.state.official");
+		case 5 -> bundle.getString("heat.state.finished");
+		case 6 -> bundle.getString("heat.state.photoFinish");
+		default -> Byte.toString(state);
+		};
 	}
 
 	public static byte[] getAllowedStates() {
