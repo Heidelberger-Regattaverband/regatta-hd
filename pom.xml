@@ -55,7 +55,7 @@
     <guice.version>5.1.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
-    <hibernate.version>6.1.5.Final</hibernate.version>
+    <hibernate.version>6.1.6.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>11.2.1.jre11</mssql.version>
@@ -67,7 +67,7 @@
     <junit.version>5.9.1</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.17.2</liquibase.version>
+    <liquibase.version>4.18.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.3</poi.version>
