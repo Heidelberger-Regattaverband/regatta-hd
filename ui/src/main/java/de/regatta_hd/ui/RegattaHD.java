@@ -8,15 +8,16 @@ import java.util.ResourceBundle;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javafx.application.Application;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+
 import com.google.inject.Inject;
 
 import de.regatta_hd.aquarius.AquariusModule;
 import de.regatta_hd.aquarius.DBLogHandler;
 import de.regatta_hd.commons.fx.guice.GuiceContext;
 import de.regatta_hd.commons.fx.stage.WindowManager;
-import javafx.application.Application;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 
 /**
  * Regatta HD JavaFX application.

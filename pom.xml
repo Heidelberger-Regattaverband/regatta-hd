@@ -4,12 +4,12 @@
   <parent>
     <groupId>de.ofterdinger.parents</groupId>
     <artifactId>build</artifactId>
-    <version>0.1.3</version>
+    <version>0.1.4-SNAPSHOT</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.34</version>
+  <version>0.1.35</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -40,7 +40,7 @@
   </repositories>
 
   <properties>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
     <openjfx.version>19</openjfx.version>

@@ -3,10 +3,10 @@ package de.regatta_hd.ui.util;
 import java.util.Arrays;
 import java.util.Optional;
 
-import com.fazecast.jSerialComm.SerialPort;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import com.fazecast.jSerialComm.SerialPort;
 
 public class SerialPortUtils {
 

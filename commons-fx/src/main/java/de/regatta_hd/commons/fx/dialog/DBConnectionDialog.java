@@ -4,8 +4,6 @@ import static de.regatta_hd.commons.fx.util.FxUtils.bundle;
 
 import java.util.Objects;
 
-import de.regatta_hd.commons.db.DBConfig;
-import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -19,6 +17,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Window;
+
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.fx.util.FxUtils;
 
 public class DBConnectionDialog extends Dialog<DBConfig> {
 

@@ -13,6 +13,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -32,9 +36,6 @@ import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.core.ConfigService;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 
 @Singleton
 public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {

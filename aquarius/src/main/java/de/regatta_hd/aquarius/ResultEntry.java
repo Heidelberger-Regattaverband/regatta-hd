@@ -5,6 +5,7 @@ import java.util.List;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.util.ModelUtils;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

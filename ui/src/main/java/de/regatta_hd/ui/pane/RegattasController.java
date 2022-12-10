@@ -8,13 +8,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.commons.fx.util.FxConstants;
-import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.UIModule;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
@@ -23,6 +16,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.commons.fx.util.FxConstants;
+import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
 
 public class RegattasController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RegattasController.class.getName());
@@ -76,8 +77,8 @@ public class RegattasController extends AbstractRegattaDAOController {
 			usedWidth = usedWidth.add(this.idCol.widthProperty());
 		}
 
-		this.titleCol.prefWidthProperty().bind(
-				this.regattasTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
+		this.titleCol.prefWidthProperty()
+				.bind(this.regattasTbl.widthProperty().subtract(usedWidth).subtract(FxConstants.TABLE_BORDER_WIDTH));
 	}
 
 	@FXML

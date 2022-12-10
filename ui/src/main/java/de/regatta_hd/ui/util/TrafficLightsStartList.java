@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.collections.ObservableList;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,7 +23,6 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
-import javafx.collections.ObservableList;
 
 public class TrafficLightsStartList {
 	private static final Logger logger = Logger.getLogger(TrafficLightsStartList.class.getName());

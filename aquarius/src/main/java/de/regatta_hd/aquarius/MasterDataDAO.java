@@ -3,6 +3,8 @@ package de.regatta_hd.aquarius;
 import java.io.InputStream;
 import java.util.List;
 
+import jakarta.xml.bind.JAXBException;
+
 import de.regatta_hd.aquarius.model.AgeClass;
 import de.regatta_hd.aquarius.model.Athlet;
 import de.regatta_hd.aquarius.model.BoatClass;
@@ -10,7 +12,6 @@ import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.aquarius.model.Referee;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
-import jakarta.xml.bind.JAXBException;
 
 /**
  * Provides access to the master data of the Aquarius database.
