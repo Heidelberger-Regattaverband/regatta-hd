@@ -54,7 +54,7 @@
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>5.1.0</guice.version>
 
-    <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
+    <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
     <hibernate.version>6.1.6.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
@@ -127,7 +127,7 @@
       <!-- Database & JPA -->
       <!-- ============== -->
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
