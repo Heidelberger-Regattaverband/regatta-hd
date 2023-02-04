@@ -189,8 +189,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					.filter(race -> !race.getAgeClass().isOpen() // don't set open races
 							&& !race.getAgeClass().isMasters() // don't set master races
 							&& race.getGroupMode() == GroupMode.NONE // don't set races with age groups
-			// don't set races with only one devision
-							&& race.getActiveRegistrations().count() > race.getRaceMode().getLaneCount())
+							&& race.getActiveRegistrations() // don't set races with only one devision
+									.count() > (race.getRaceMode() != null ? race.getRaceMode().getLaneCount() : 4))
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
