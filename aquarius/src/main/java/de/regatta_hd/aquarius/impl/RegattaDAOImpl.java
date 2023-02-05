@@ -292,7 +292,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 				return 0;
 			}
 			return score1.getPoints() > score2.getPoints() ? -1 : 1;
-		}).collect(Collectors.toList());
+		}).toList();
 
 		for (int i = 0; i < scoresResult.size(); i++) {
 			Score score = scoresResult.get(i);
@@ -354,8 +354,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 
 	@Override
 	public List<ResultEntry> getOfficialResults() {
-		return getOfficialHeats().stream().map(heat -> ResultEntry.builder().heat(heat).build())
-				.collect(Collectors.toList());
+		return getOfficialHeats().stream().map(heat -> ResultEntry.builder().heat(heat).build()).toList();
 	}
 
 	@Override
@@ -377,7 +376,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = this.db.getEntityManager();
 
 		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND h.state = 4", Heat.class)
-				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph("heat-all"))
+				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph(Heat.GRAPH_ALL))
 				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 

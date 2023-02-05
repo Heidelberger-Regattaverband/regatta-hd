@@ -17,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -36,7 +35,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Comp")
-@NamedEntityGraphs({ @NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
+@NamedEntityGraph(name = Heat.GRAPH_ALL, attributeNodes = { //
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race.ageClass"), //
 		@NamedAttributeNode(value = "raceModeDetail") //
@@ -70,7 +69,8 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "boatClass"), //
 						@NamedAttributeNode(value = "raceMode") //
 				}) //
-}), @NamedEntityGraph(name = Heat.GRAPH_ENTRIES, attributeNodes = {
+})
+@NamedEntityGraph(name = Heat.GRAPH_ENTRIES, attributeNodes = {
 		@NamedAttributeNode(value = "entries", subgraph = "heat.entries"), //
 		@NamedAttributeNode(value = "race", subgraph = "race") //
 }, subgraphs = { @NamedSubgraph(name = "heat.entries", //
@@ -93,7 +93,7 @@ import lombok.ToString;
 						@NamedAttributeNode(value = "boatClass"), //
 						@NamedAttributeNode(value = "raceMode") //
 				}) //
-}) })
+})
 //lombok
 @Getter
 @Setter

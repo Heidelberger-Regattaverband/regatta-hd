@@ -120,7 +120,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 									.club(club).build();
 							altReg.getImportProperty().set(primaryRace.isCancelled());
 							return altReg;
-						})).collect(Collectors.toList());
+						})).toList();
 					}, dbResult -> {
 						try {
 							this.altRegsList.setAll(dbResult.getResult());
@@ -185,7 +185,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 					em.merge(regLabel);
 
 					return registration;
-				}).collect(Collectors.toList());
+				}).toList();
 			}, dbResult -> {
 				try {
 					List<Registration> importedRegs = dbResult.getResult();

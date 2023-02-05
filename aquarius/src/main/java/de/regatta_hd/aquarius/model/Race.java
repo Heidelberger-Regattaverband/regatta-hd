@@ -18,7 +18,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -37,7 +36,7 @@ import lombok.ToString;
 @Entity
 @Table(schema = "dbo", name = "Offer")
 @SecondaryTable(name = "HRV_Offer", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
-@NamedEntityGraphs({ @NamedEntityGraph(name = Race.GRAPH_RESULTS, //
+@NamedEntityGraph(name = Race.GRAPH_RESULTS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
 						attributeNodes = { @NamedAttributeNode(value = "entries", subgraph = "heatreg.results") } //
@@ -70,8 +69,8 @@ import lombok.ToString;
 				@NamedAttributeNode("boatClass"), //
 				@NamedAttributeNode("raceMode"), //
 				@NamedAttributeNode("registrations") //
-		} //
-), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
+		})
+@NamedEntityGraph(name = Race.GRAPH_CLUBS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "registration.club", //
 						attributeNodes = { //
@@ -86,7 +85,6 @@ import lombok.ToString;
 		attributeNodes = { //
 				@NamedAttributeNode(value = "registrations", subgraph = "registration.club") //
 		}) //
-})
 // lombok
 @Getter
 @Setter

@@ -76,10 +76,14 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getDbHost(),
 				dbConfig.getDbName(), Boolean.toString(dbConfig.isEncrypt()));
 
-		if (dbConfig.isEncrypt() && dbConfig.isTrustServerCertificate()) {
-			url += ";trustServerCertificate=true;sslProtocol=TLSv1.2";
-		}
+		if (dbConfig.isEncrypt()) {
+			url += ";sslProtocol=TLSv1.2";
 
+			if (dbConfig.isTrustServerCertificate()) {
+				url += ";trustServerCertificate=true";
+			}
+		}
+		logger.log(Level.INFO, "JDBC URL: {0}", url);
 		properties.put("javax.persistence.jdbc.url", url);
 		properties.put("javax.persistence.jdbc.user", dbConfig.getUsername());
 		properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
@@ -94,8 +98,8 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	@Override
 	protected void convertException(PersistenceException ex) throws SQLException {
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
-		if (rootCause instanceof SQLServerException) {
-			throw (SQLServerException) rootCause;
+		if (rootCause instanceof SQLServerException sqlEx) {
+			throw sqlEx;
 		}
 		throw ex;
 	}

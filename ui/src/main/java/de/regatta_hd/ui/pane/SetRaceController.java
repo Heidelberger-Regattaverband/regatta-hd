@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -197,7 +196,7 @@ public class SetRaceController extends AbstractRegattaDAOController {
 						Race srcRace = srcRaces.get(getSrcRaceNumber(race));
 						// the source race needs to be driven with an official result
 						return srcRace != null && srcRace.isOfficial() && !srcRace.isCancelled();
-					}).collect(Collectors.toList());
+					}).toList();
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
 			try {
