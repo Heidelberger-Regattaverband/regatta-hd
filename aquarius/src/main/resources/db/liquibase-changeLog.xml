@@ -145,4 +145,11 @@
     </update>
   </changeSet>
 
+  <changeSet id="11" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="HRV_Offer" />
+    </preConditions>
+    <dropTable tableName="HRV_Offer" />
+  </changeSet>
+
 </databaseChangeLog>
