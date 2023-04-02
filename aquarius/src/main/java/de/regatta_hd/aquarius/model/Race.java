@@ -21,8 +21,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 
 import lombok.EqualsAndHashCode;
@@ -35,7 +33,6 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Offer")
-@SecondaryTable(name = "HRV_Offer", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 @NamedEntityGraph(name = Race.GRAPH_RESULTS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
@@ -199,7 +196,7 @@ public class Race {
 
 	// Second table columns
 
-	@Column(name = "isSet", table = "HRV_Offer")
+	@Column(name = "Offer_HRV_Seeded")
 	private Boolean set;
 
 	// JavaFX properties
