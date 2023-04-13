@@ -1,27 +1,57 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <title>Heidelberger Regattaverband</title>
-  </head>
 
-  <body>
-    <h2>Heidelberger Regatta Software</h2>
-    <ol>
-      <li>OpenWebStart <a href="https://openwebstart.com/download/" target="_blank">herunterladen</a> und installieren.</li>
-      <li><a href="java.policy" download=".java.policy">Java Konfiguration</a> herunterladen und im Benutzer Verzeichnis (<strong>C:\users\&lt;Benutzername&gt;\.java.policy</strong>) mit dem Dateiname <strong>.java.policy</strong> speichern.</li>
-      <li>Heidelberger Regatta Software <a href="regatta-hd.jnlp" download="regatta-hd.jnlp">herunterladen</a> und durch öffnen mit OpenWebStart starten.</li>
-      <li><a href="http://8e835d.online-server.cloud/infoportal/" target="_blank">Infoportal</a> zur Heidelberger Ruderregatta</li>
-    </ol>
+<head>
+  <title>Heidelberger Regattaverband</title>
+</head>
 
-    <h2>Aquarius MMX Software</h2>
-    <ol>
-      <li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a></li>
-      <li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Dokumentation</a></li>
-      <li><a href="R_RE.xsl" download="R_RE.xsl">Modifizierten Aquarius Report</a> herunterladen und in Verzeichnis <strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP</strong> kopieren.</li>
-      <li>Pfad zur Konfigurationsdatei: C:\Users\&lt;Benutzername&gt;\AppData\Roaming\Aquarius\aquarius.ini</li>
-    </ol>
+<body>
+  <h2>Heidelberger Regatta Software</h2>
+  <ol>
+    <li>OpenWebStart <a href="https://openwebstart.com/download/" target="_blank">herunterladen</a> und installieren.
+    </li>
+    <li><a href="java.policy" download=".java.policy">Java Konfiguration</a> herunterladen und im Benutzer Verzeichnis
+      (<strong>C:\users\&lt;Benutzername&gt;\.java.policy</strong>) mit dem Dateiname <strong>.java.policy</strong>
+      speichern.</li>
+    <li>Heidelberger Regatta Software <a href="regatta-hd.jnlp" download="regatta-hd.jnlp">herunterladen</a> und durch
+      öffnen mit OpenWebStart starten.</li>
+    <li><a href="http://8e835d.online-server.cloud/infoportal/" target="_blank">Infoportal</a> zur Heidelberger
+      Ruderregatta</li>
+  </ol>
 
-    <h2><a href="https://8e835d.online-server.cloud/" target="_blank">Infoportal</a></h2>
-    <iframe src="https://8e835d.online-server.cloud/" title="Infoportal" height="500" width="100%" frameborder="0" />
-  </body>
+  <h2>Aquarius MMX Software</h2>
+  <ol>
+    <li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a></li>
+    <li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Dokumentation</a></li>
+    <li><a href="R_RE.xsl" download="R_RE.xsl">Modifizierten Aquarius Report</a> herunterladen und in Verzeichnis
+      <strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP</strong> kopieren.
+    </li>
+    <li>Pfad zur Konfigurationsdatei: C:\Users\&lt;Benutzername&gt;\AppData\Roaming\Aquarius\aquarius.ini</li>
+  </ol>
+
+  <h2>Wireguard</h2>
+  <ol>
+    <li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-20-04/"
+        target="_blank">How To Set Up WireGuard on Ubuntu 20.04</a></li>
+    <li>Peer configuration:
+      <pre><code>
+[Interface]
+PrivateKey = base64_encoded_private_key_goes_here
+Address = 10.8.0.*/24
+
+[Peer]
+PublicKey = cMefo85mDgZlDrQKT9kOf1cWReFE5v1TvUp7D+3Y4WI=
+AllowedIPs = 10.8.0.0/24
+Endpoint = 217.160.56.230:51820
+      </code>
+    </pre>
+    </li>
+    <li>Adding the Peer’s Public Key to the WireGuard Server:
+      <code>wg set wg0 peer base64_encoded_public_key_goes_here allowed-ips 10.8.0.0/24</code></li>
+  </ol>
+
+  <h2><a href="https://8e835d.online-server.cloud/" target="_blank">Infoportal</a></h2>
+  <iframe src="https://8e835d.online-server.cloud/" title="Infoportal" height="500" width="100%" frameborder="0" />
+</body>
+
 </html>
