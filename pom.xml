@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.40</version>
+  <version>0.1.41</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -55,7 +55,7 @@
     <guice.version>5.1.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.2.0.Final</hibernate.version>
+    <hibernate.version>6.2.1.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>11.2.3.jre17</mssql.version>
@@ -87,10 +87,6 @@
     <module>releng/nativeapp</module>
     <module>releng/webstart</module>
   </modules>
-
-  <prerequisites>
-    <maven>3.6.3</maven>
-  </prerequisites>
 
   <dependencyManagement>
     <dependencies>
