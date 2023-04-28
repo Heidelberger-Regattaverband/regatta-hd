@@ -92,13 +92,14 @@
   </changeSet>
 
   <changeSet id="6" author="markus@ofterdinger.de">
+    <validCheckSum>8:0725bad2d1ec8109a640f361314de7ff</validCheckSum>
     <preConditions onFail="MARK_RAN">
       <not>
         <columnExists tableName="HRV_LogRecord" columnName="threadName" />
       </not>
     </preConditions>
     <addColumn tableName="HRV_LogRecord">
-      <column name="threadName" type="VARCHAR(256)" afterColumn="threadId" />
+      <column name="threadName" type="VARCHAR(256)" />
     </addColumn>
   </changeSet>
 
