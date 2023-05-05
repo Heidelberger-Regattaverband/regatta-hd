@@ -166,7 +166,7 @@ public class RacesController extends AbstractRegattaDAOController {
 	void handleImportAltRegsBtnOnAction() {
 		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
 		this.windowManager.newStage(getClass().getResource("AlternativeRegistrations.fxml"), getText("altRegs.title"),
-				super.resources, getWindow(), styleLocation);
+				super.bundle, getWindow(), styleLocation);
 	}
 
 	@FXML

@@ -84,7 +84,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	private Stage openStage(String resource, String title) {
 		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
-		return this.windowManager.newStage(getClass().getResource(resource), title, super.resources, styleLocation);
+		return this.windowManager.newStage(getClass().getResource(resource), title, super.bundle, styleLocation);
 	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
@@ -223,9 +223,9 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		if (aquariusVersion == null) {
 			aquariusVersion = getText("about.unknown");
 		}
-		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
-				this.resources.getString("about.header"),
-				MessageFormat.format(this.resources.getString("about.text"), this.version, aquariusVersion));
+		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.bundle.getString("about.title"),
+				this.bundle.getString("about.header"),
+				MessageFormat.format(this.bundle.getString("about.text"), this.version, aquariusVersion));
 		aboutDlg.showAndWait();
 	}
 
