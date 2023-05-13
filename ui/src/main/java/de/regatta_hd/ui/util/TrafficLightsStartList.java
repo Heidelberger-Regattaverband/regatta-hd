@@ -27,7 +27,7 @@ import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 public class TrafficLightsStartList {
 	private static final Logger logger = Logger.getLogger(TrafficLightsStartList.class.getName());
 
-	private static final Pattern delayPattern = Pattern.compile("\\d*[\\.,]?\\d+");
+	private static final Pattern delayPattern = Pattern.compile("[-+]?\\d*[\\.,]?\\d+");
 
 	private static final String HEADER_INDEX = "Index";
 	private static final String HEADER_RENN_NR = "RennNr";
