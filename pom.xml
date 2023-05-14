@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.ofterdinger.parents</groupId>
     <artifactId>build</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6-SNAPSHOT</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
@@ -52,7 +52,7 @@
     <lombok.version>1.18.26</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
-    <guice.version>5.1.0</guice.version>
+    <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
     <hibernate.version>6.2.2.Final</hibernate.version>
@@ -67,7 +67,7 @@
     <junit.version>5.9.3</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.21.1</liquibase.version>
+    <liquibase.version>4.22.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.3</poi.version>
