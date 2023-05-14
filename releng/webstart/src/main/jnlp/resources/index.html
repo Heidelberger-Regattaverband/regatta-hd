@@ -8,25 +8,38 @@
 <body>
   <h2>Heidelberger Regatta Software</h2>
   <ol>
-    <li>OpenWebStart <a href="https://openwebstart.com/download/" target="_blank">herunterladen</a> und installieren.
-    </li>
+    <li>OpenWebStart <a href="https://openwebstart.com/download/" target="_blank">herunterladen</a> und installieren.</li>
     <li><a href="java.policy" download=".java.policy">Java Konfiguration</a> herunterladen und im Benutzer Verzeichnis
       (<strong>C:\users\&lt;Benutzername&gt;\.java.policy</strong>) mit dem Dateiname <strong>.java.policy</strong>
       speichern.</li>
-    <li>Heidelberger Regatta Software <a href="regatta-hd.jnlp" download="regatta-hd.jnlp">herunterladen</a> und durch
-      öffnen mit OpenWebStart starten.</li>
-    <li><a href="http://8e835d.online-server.cloud/infoportal/" target="_blank">Infoportal</a> zur Heidelberger
-      Ruderregatta</li>
+    <li>Heidelberger Regatta Software <a href="regatta-hd.jnlp" download="regatta-hd.jnlp">herunterladen</a> und durch öffnen mit OpenWebStart starten.</li>
   </ol>
 
-  <h2>Aquarius MMX Software</h2>
+  <h2>Aquarius MMX Software Installation</h2>
   <ol>
     <li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a></li>
     <li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Dokumentation</a></li>
     <li><a href="R_RE.xsl" download="R_RE.xsl">Modifizierten Aquarius Report</a> herunterladen und in Verzeichnis
-      <strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP</strong> kopieren.
+      <strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP</strong> kopieren.</li>
+    <li>Pfad zur Konfigurationsdatei: <b>C:\Users\&lt;Benutzername&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:</li>
+<pre><code>[Timing]
+ShortcutStart=+ (ZEHNERTASTATUR)
+ShortcutFinish=Leertaste
+</code></pre>
+  </ol>
+
+  <h2>Regatta Notebook Konfiguration</h2>
+  <ol>
+    <li>Konfiguriere hosts Datei: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
+<pre><code>217.160.56.230	mssql-aquarius
+82.165.106.228	mssql-aquarius2</code></pre>
+  </ol>
+  <h2>Infoportal zur Heidelberger Ruder-Regatta</h2>
+  <ol>
+    <li>Link zum <a href="https://b3eb6e9.online-server.cloud/infoportal/" target="_blank">Infoportal</a></li>
+    <li>Infoportal in HTML einbetten:
+    <pre><code>&lt;iframe src="https://b3eb6e9.online-server.cloud/infoportal/" title="Infoportal" height="500" width="100%" /></code></pre>
     </li>
-    <li>Pfad zur Konfigurationsdatei: C:\Users\&lt;Benutzername&gt;\AppData\Roaming\Aquarius\aquarius.ini</li>
   </ol>
 
   <h2>Wireguard</h2>
@@ -51,8 +64,6 @@ Endpoint = 217.160.56.230:51820
     </li>
   </ol>
 
-  <!-- <h2><a href="https://8e835d.online-server.cloud/" target="_blank">Infoportal</a></h2>
-  <iframe src="https://8e835d.online-server.cloud/" title="Infoportal" height="500" width="100%" frameborder="0" /> -->
 </body>
 
 </html>
