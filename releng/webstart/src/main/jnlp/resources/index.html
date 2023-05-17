@@ -1,51 +1,73 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
-  <title>Heidelberger Regattaverband</title>
+	<title>Heidelberger Regatta-Verband</title>
 </head>
 
 <body>
-  <h2>Heidelberger Regatta Software</h2>
-  <ol>
-    <li>OpenWebStart <a href="https://openwebstart.com/download/" target="_blank">herunterladen</a> und installieren.</li>
-    <li><a href="java.policy" download=".java.policy">Java Konfiguration</a> herunterladen und im Benutzer Verzeichnis
-      (<strong>C:\users\&lt;Benutzername&gt;\.java.policy</strong>) mit dem Dateiname <strong>.java.policy</strong>
-      speichern.</li>
-    <li>Heidelberger Regatta Software <a href="regatta-hd.jnlp" download="regatta-hd.jnlp">herunterladen</a> und durch öffnen mit OpenWebStart starten.</li>
-  </ol>
+	<h2>Install Heidelberger Regatta software</h2>
+	<ol>
+		<li><a href="https://openwebstart.com/download/" target="_blank">Download</a> and install OpenWebStart (x64
+			version).</li>
 
-  <h2>Aquarius MMX Software Installation</h2>
-  <ol>
-    <li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a></li>
-    <li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Dokumentation</a></li>
-    <li><a href="R_RE.xsl" download="R_RE.xsl">Modifizierten Aquarius Report</a> herunterladen und in Verzeichnis
-      <strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP</strong> kopieren.</li>
-    <li>Pfad zur Konfigurationsdatei: <b>C:\Users\&lt;Benutzername&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:</li>
-<pre><code>[Timing]
+		<li>Download <a href="java.policy" download=".java.policy">Java policy file</a> and save it in user's homer
+			directory (<strong>C:\users\&lt;user&gt;\.java.policy</strong>) with file name <strong>.java.policy</strong>.</li>
+
+		<li><a href="regatta-hd.jnlp" download="regatta-hd.jnlp">Download</a> Heidelberger Regatta software and open it with
+			OpenWebStart to install.</li>
+	</ol>
+
+
+	<h2>Install Aquarius MMX software</h2>
+	<ol>
+		<li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a> and extract ZIP archive</li>
+
+		<li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Dokumentation</a></li>
+
+		<li><a href="R_RE.xsl" download="R_RE.xsl">Download</a> modified Aquarius report <b>(R_RE.xsl)</b> for
+			<b>Einteilung</b> and replace existing report at this location:
+			<strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP\R_RE.xsl</strong>.<br>Rename existing report to
+			<b>R_RE.xsl.bak</b>
+		</li>
+
+		<li>Configure keyboard setting for start and stop in Aquarius's config file:
+			<b>C:\Users\&lt;user&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:
+		</li>
+		<pre><code>[Timing]
 ShortcutStart=+ (ZEHNERTASTATUR)
 ShortcutFinish=Leertaste
 </code></pre>
-<b>Optional steps (required to enable encryption):</b>
-    <li>Install <a href="https://learn.microsoft.com/de-de/cpp/windows/latest-supported-vc-redist?view=msvc-170" target="_blank">Microsoft Visual C++ Redistributable (X64 + X86)</a> as prerequisite of the OLE DB-Driver</li>
-    <li>Install <a href="https://learn.microsoft.com/de-de/sql/connect/oledb/download-oledb-driver-for-sql-server?view=sql-server-ver16" target="_blank">OLE DB-Driver</a> to support encrypted connections to MS-SQL Server</li>
-  </ol>
 
-  <h2>Additional Regatta Notebook configurations</h2>
-  <ol>
-    <li>Configure hosts file: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
-<pre><code>217.160.56.230	mssql-aquarius		# 8e835d.online-server.cloud
-82.165.106.228	mssql-aquarius2		# b3eb6e9.online-server.cloud</code></pre>The hosts file requires administrator permission to be modified. Follow this <a href="https://www.hostinger.com/tutorials/how-to-edit-hosts-file#Change_the_File_Manually" target="_blank">guide</a> to edit it.
-  </ol>
-  <h2>Infoportal zur Heidelberger Ruder-Regatta</h2>
-  <ol>
-    <li>Link zum <a href="https://b3eb6e9.online-server.cloud/infoportal/" target="_blank">Infoportal</a></li>
-    <li>Infoportal in HTML einbetten:
-    <pre><code>&lt;iframe src="https://b3eb6e9.online-server.cloud/infoportal/" title="Infoportal" height="500" width="100%" /></code></pre>
-    </li>
-  </ol>
+		<b>Optional steps to enable encrypted connections to MS-SQL server</b>
+		<li>Install <a href="https://learn.microsoft.com/de-de/cpp/windows/latest-supported-vc-redist?view=msvc-170"
+				target="_blank">Microsoft Visual C++ Redistributable (x64 + x86)</a> as prerequisite of the OLE DB-driver</li>
 
-<!--
+		<li>Install <a
+				href="https://learn.microsoft.com/de-de/sql/connect/oledb/download-oledb-driver-for-sql-server?view=sql-server-ver16"
+				target="_blank">OLE DB-driver</a> to support encrypted connections to MS-SQL server</li>
+	</ol>
+
+	<h2>Additional notebook configurations</h2>
+	<ol>
+		<li>Configure hosts file: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
+		<pre><code>217.160.56.230	mssql-aquarius		# 8e835d.online-server.cloud
+82.165.106.228	mssql-aquarius2		# b3eb6e9.online-server.cloud</code></pre>The hosts file requires administrator
+		permission to be modified. Follow this <a
+			href="https://www.hostinger.com/tutorials/how-to-edit-hosts-file#Change_the_File_Manually"
+			target="_blank">guide</a> to edit it.
+	</ol>
+
+	<h2>Infoportal zur Heidelberger Ruder-Regatta</h2>
+	<ol>
+		<li>Link to <a href="https://b3eb6e9.online-server.cloud/infoportal/" target="_blank">Infoportal</a></li>
+
+		<li>Embed Infoportal into HTML:
+			<pre><code>&lt;iframe src="https://b3eb6e9.online-server.cloud/infoportal/" title="Infoportal" height="500" width="100%" /></code></pre>
+		</li>
+	</ol>
+
+	<!--
   <h2>Wireguard</h2>
   <ol>
     <li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-20-04/"
@@ -68,6 +90,7 @@ Endpoint = 217.160.56.230:51820
     </li>
   </ol>
 -->
+
 </body>
 
 </html>
