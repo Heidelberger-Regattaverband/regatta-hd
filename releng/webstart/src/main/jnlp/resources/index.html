@@ -11,8 +11,9 @@
 		<li><a href="https://openwebstart.com/download/" target="_blank">Download</a> and install OpenWebStart (x64
 			version).</li>
 
-		<li>Download <a href="java.policy" download=".java.policy">Java policy file</a> and save it in user's home
-			directory (<strong>C:\users\&lt;user&gt;\.java.policy</strong>) with file name <strong>.java.policy</strong>.</li>
+		<li>Download <a href="java.policy" download=".java.policy">Java policy file</a> and save it in user's home directory
+			(<b><code>C:\users\&lt;user&gt;\.java.policy</code></b>) with file name <b><code>.java.policy</code></b>.
+		</li>
 
 		<li><a href="regatta-hd.jnlp" download="regatta-hd.jnlp">Download</a> Heidelberger Regatta software and open it with
 			OpenWebStart to install.</li>
@@ -21,17 +22,20 @@
 
 	<h2>Install Aquarius MMX software</h2>
 	<ol>
-		<li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a> and extract ZIP archive</li>
+		<li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a> and extract Aquarius ZIP archive</li>
 
-		<li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Dokumentation</a></li>
+		<li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Documentation</a> for Aquarius</li>
 
-		<li><a href="R_RE.xsl" download="R_RE.xsl">Download</a> modified Aquarius report <b>(R_RE.xsl)</b> for
-			<b>Einteilung</b> and replace existing report at this location:
-			<strong>&lt;Aquarius-Installation&gt;\Reporting\XSL\FOP\R_RE.xsl</strong>.<br>Rename existing report to
-			<b>R_RE.xsl.bak</b>
+		<li>Rename existing report <b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b> to
+			<b><code>R_RE.xsl.bak</code></b> as backup.
 		</li>
 
-		<li>Configure keyboard setting for start and stop in Aquarius's config file:
+		<li>Then <a href="R_RE.xsl" download="R_RE.xsl">download</a> modified
+			Aquarius report (<b><code>R_RE.xsl</code></b>) for <b>Einteilung am Sonntag</b> and save it at location
+			<b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b>.
+		</li>
+
+		<li>Configure keyboard shortcuts for start and stop in Aquarius's config file:
 			<b>C:\Users\&lt;user&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:
 		</li>
 		<pre><code>[Timing]
