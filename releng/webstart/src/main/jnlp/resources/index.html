@@ -26,15 +26,16 @@
 ShortcutStart=+ (ZEHNERTASTATUR)
 ShortcutFinish=Leertaste
 </code></pre>
-    <li>Installiere <a href="https://learn.microsoft.com/de-de/cpp/windows/latest-supported-vc-redist?view=msvc-170" target="_blank">Microsoft Visual C++ Redistributable</a> als Vorraussetzung für den OLE DB-Treiber</li>
-    <li>Installiere <a href="https://learn.microsoft.com/de-de/sql/connect/oledb/download-oledb-driver-for-sql-server?view=sql-server-ver16" target="_blank">OLE DB-Treiber</a> für verschlüsselte Verbindung zu MS-SQL Server</li>
+<b>Optional steps (required to enable encryption):</b>
+    <li>Install <a href="https://learn.microsoft.com/de-de/cpp/windows/latest-supported-vc-redist?view=msvc-170" target="_blank">Microsoft Visual C++ Redistributable (X64 + X86)</a> as prerequisite of the OLE DB-Driver</li>
+    <li>Install <a href="https://learn.microsoft.com/de-de/sql/connect/oledb/download-oledb-driver-for-sql-server?view=sql-server-ver16" target="_blank">OLE DB-Driver</a> to support encrypted connections to MS-SQL Server</li>
   </ol>
 
-  <h2>Regatta Notebook Konfiguration</h2>
+  <h2>Additional Regatta Notebook configurations</h2>
   <ol>
-    <li>Konfiguriere hosts Datei: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
+    <li>Configure hosts file: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
 <pre><code>217.160.56.230	mssql-aquarius		# 8e835d.online-server.cloud
-82.165.106.228	mssql-aquarius2		# b3eb6e9.online-server.cloud</code></pre>
+82.165.106.228	mssql-aquarius2		# b3eb6e9.online-server.cloud</code></pre>The hosts file requires administrator permission to be modified. Follow this <a href="https://www.hostinger.com/tutorials/how-to-edit-hosts-file#Change_the_File_Manually" target="_blank">guide</a> to edit it.
   </ol>
   <h2>Infoportal zur Heidelberger Ruder-Regatta</h2>
   <ol>
