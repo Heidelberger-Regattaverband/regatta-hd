@@ -4,6 +4,7 @@ import static de.regatta_hd.commons.fx.util.FxUtils.bundle;
 
 import java.util.Objects;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -97,5 +98,15 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 			}
 			return null;
 		});
+
+		if (hostNameFld.getText() == null || hostNameFld.getText().isBlank()) {
+			Platform.runLater(hostNameFld::requestFocus);
+		} else if (dbNameFld.getText() == null || dbNameFld.getText().isBlank()) {
+			Platform.runLater(dbNameFld::requestFocus);
+		} else if (userNameFld.getText() == null || userNameFld.getText().isBlank()) {
+			Platform.runLater(userNameFld::requestFocus);
+		} else if (passwordFld.getText() == null || passwordFld.getText().isBlank()) {
+			Platform.runLater(passwordFld::requestFocus);
+		}
 	}
 }
