@@ -25,7 +25,7 @@ public class DBConfigStoreImpl implements DBConfigStore {
 
 	@Override
 	public DBConfig getLastSuccessful() throws IOException {
-		String password = System.getenv("DB_PASSWORD");
+		String password = System.getenv("password");
 		return DBConfig.builder() //
 				.dbHost(this.cfgService.getProperty(DB_HOST)) //
 				.dbName(this.cfgService.getProperty(DB_NAME)) //
