@@ -17,7 +17,6 @@ public class DBConfigStoreImpl implements DBConfigStore {
 	private static final String DB_HOST = "dbHost";
 	private static final String DB_NAME = "dbName";
 	private static final String USERNAME = "username";
-	private static final String PASSWORD = "password";
 	private static final String ENCRYPT = "encrypt";
 	private static final String TRUST_SERVER_CERTIFICATE = "trustServerCertificate";
 	private static final String UPDATE_SCHEMA = "updateSchema";
@@ -26,10 +25,12 @@ public class DBConfigStoreImpl implements DBConfigStore {
 
 	@Override
 	public DBConfig getLastSuccessful() throws IOException {
+		String password = System.getenv("DB_PASSWORD");
 		return DBConfig.builder() //
 				.dbHost(this.cfgService.getProperty(DB_HOST)) //
 				.dbName(this.cfgService.getProperty(DB_NAME)) //
 				.username(this.cfgService.getProperty(USERNAME)) //
+				.password(password) //
 				.encrypt(this.cfgService.getBooleanProperty(ENCRYPT)) //
 				.trustServerCertificate(this.cfgService.getBooleanProperty(TRUST_SERVER_CERTIFICATE))
 				.updateSchema(this.cfgService.getBooleanProperty(UPDATE_SCHEMA)).build();
@@ -46,6 +47,6 @@ public class DBConfigStoreImpl implements DBConfigStore {
 		this.cfgService.setProperty(TRUST_SERVER_CERTIFICATE, dbConfig.isTrustServerCertificate());
 		this.cfgService.setProperty(UPDATE_SCHEMA, dbConfig.isUpdateSchema());
 
-		this.cfgService.removeProperty(PASSWORD);
+		this.cfgService.removeProperty("password");
 	}
 }
