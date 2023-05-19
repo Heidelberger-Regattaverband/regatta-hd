@@ -66,7 +66,7 @@ public class TrafficLightsStartList {
 				divisionNr = 1;
 			}
 
-			builder.append(heat.getNumber()).append(DELIMITER);
+			builder.append(j + 1).append(DELIMITER);
 			builder.append(heat.getRaceNumber()).append(DELIMITER);
 			// if it's a masters heat use self calculated division number
 			builder.append(isMasters ? divisionNr : heat.getDivisionNumber()).append(DELIMITER);
@@ -131,7 +131,7 @@ public class TrafficLightsStartList {
 				divisionNr = 1;
 			}
 
-			row.createCell(cellIdx++).setCellValue(heat.getNumber());
+			row.createCell(cellIdx++).setCellValue(j + 1);
 			row.createCell(cellIdx++).setCellValue(heat.getRaceNumber());
 			// if it's a masters heat use self calculated division number
 			row.createCell(cellIdx++).setCellValue(isMasters ? divisionNr : heat.getDivisionNumber());
