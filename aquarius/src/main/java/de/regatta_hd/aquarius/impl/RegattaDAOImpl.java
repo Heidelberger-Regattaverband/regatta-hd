@@ -362,7 +362,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		EntityManager entityManager = this.db.getEntityManager();
 
 		TypedQuery<Heat> query = entityManager
-				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta", Heat.class)
+				.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta ORDER BY h.race.number ASC, h.time ASC", Heat.class)
 				.setParameter(PARAM_REGATTA, getActiveRegatta());
 		if (graphName != null) {
 			EntityGraph<?> entityGraph = this.db.getEntityManager().getEntityGraph(graphName);

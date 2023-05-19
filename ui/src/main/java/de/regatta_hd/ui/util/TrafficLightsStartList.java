@@ -52,19 +52,31 @@ public class TrafficLightsStartList {
 		// add header line
 		addCsvHeader(builder);
 
+		int divisionNr = 1;
+		String currentRace = "0";
+
 		for (int j = 0; j < heatsList.size(); j++) {
 			Heat heat = heatsList.get(j);
+			boolean isMasters = heat.getRace().getAgeClass().isMasters();
+
+			if (currentRace.equals(heat.getRaceNumber())) {
+				divisionNr++;
+			} else {
+				currentRace = heat.getRaceNumber();
+				divisionNr = 1;
+			}
 
 			builder.append(heat.getNumber()).append(DELIMITER);
 			builder.append(heat.getRaceNumber()).append(DELIMITER);
-			builder.append(heat.getDivisionNumber()).append(DELIMITER);
+			// if it's a masters heat use self calculated division number
+			builder.append(isMasters ? divisionNr : heat.getDivisionNumber()).append(DELIMITER);
 
 			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			short laneCount = heat.getRace().getRaceMode().getLaneCount();
 			short diff = (short) (laneCount - heatRegs.size());
 
 			// add delays
-			if (heat.getRace().getAgeClass().isMasters()) {
+			if (isMasters) {
 				for (HeatRegistration heatReg : heatRegs) {
 					builder.append(getDelay(heatReg)).append(DELIMITER);
 				}
@@ -101,22 +113,35 @@ public class TrafficLightsStartList {
 		Row row = sheet.createRow(0);
 		addHeader(workbook, row);
 
+		int divisionNr = 1;
+		String currentRace = "0";
+
 		for (int j = 0; j < heatsList.size(); j++) {
 			int cellIdx = 0;
 
 			Heat heat = heatsList.get(j);
+			boolean isMasters = heat.getRace().getAgeClass().isMasters();
+
 			row = sheet.createRow(j + 1);
+
+			if (currentRace.equals(heat.getRaceNumber())) {
+				divisionNr++;
+			} else {
+				currentRace = heat.getRaceNumber();
+				divisionNr = 1;
+			}
 
 			row.createCell(cellIdx++).setCellValue(heat.getNumber());
 			row.createCell(cellIdx++).setCellValue(heat.getRaceNumber());
-			row.createCell(cellIdx++).setCellValue(heat.getDivisionNumber());
+			// if it's a masters heat use self calculated division number
+			row.createCell(cellIdx++).setCellValue(isMasters ? divisionNr : heat.getDivisionNumber());
 
 			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			short laneCount = heat.getRace().getRaceMode().getLaneCount();
 			short diff = (short) (laneCount - heatRegs.size());
 
 			// add delays
-			if (heat.getRace().getAgeClass().isMasters()) {
+			if (isMasters) {
 				for (HeatRegistration heatReg : heatRegs) {
 					row.createCell(cellIdx++).setCellValue(getDelay(heatReg));
 				}
