@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.50</version>
+  <version>0.1.51</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
