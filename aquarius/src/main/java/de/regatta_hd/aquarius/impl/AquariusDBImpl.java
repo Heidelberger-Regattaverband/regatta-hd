@@ -1,7 +1,5 @@
 package de.regatta_hd.aquarius.impl;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +20,6 @@ import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.AbstractDBConnection;
 import de.regatta_hd.commons.db.DBConfig;
 
-import liquibase.Contexts;
-import liquibase.LabelExpression;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -43,14 +39,14 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		super("aquarius", listenerManager);
 	}
 
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public void updateSchema() {
 		ensureOpen();
 
 		Session session = getEntityManager().unwrap(Session.class);
 		session.doWork(connection -> {
-			try (StringWriter writer = new StringWriter()) {
+			try {
 				Database database = DatabaseFactory.getInstance()
 						.findCorrectDatabaseImplementation(new JdbcConnection(connection));
 				database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
@@ -58,9 +54,8 @@ public class AquariusDBImpl extends AbstractDBConnection {
 
 				Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(),
 						database);
-				liquibase.update(new Contexts(), new LabelExpression(), writer);
-				logger.info(writer.toString());
-			} catch (LiquibaseException | IOException e) { // NOSONAR
+				liquibase.update();
+			} catch (LiquibaseException e) { // NOSONAR
 				logger.log(Level.SEVERE, e.getMessage(), e);
 				close();
 				throw new SQLException(e);
