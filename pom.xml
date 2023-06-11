@@ -55,7 +55,7 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.2.3.Final</hibernate.version>
+    <hibernate.version>6.2.4.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>12.3.0.jre17-preview</mssql.version>
@@ -74,6 +74,9 @@
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
     <jSerialComm.version>2.9.3</jSerialComm.version>
+
+    <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+    <jaxb-impl.version>4.0.3</jaxb-impl.version>
   </properties>
 
   <modules>
@@ -194,11 +197,10 @@
         <artifactId>jakarta.xml.bind-api</artifactId>
         <version>4.0.0</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
       <dependency>
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
-        <version>4.0.2</version>
+        <version>${jaxb-impl.version}</version>
       </dependency>
 
       <!-- ============ -->
