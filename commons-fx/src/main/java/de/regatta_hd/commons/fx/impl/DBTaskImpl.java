@@ -24,7 +24,7 @@ class DBTaskImpl<V> extends DBTask<V> {
 	private final DBConnection db;
 	private final boolean inTransaction;
 	private final Consumer<AsyncResult<V>> resultConsumer;
-	private volatile Consumer<String> progressMessageConsumer;
+	private Consumer<String> progressMessageConsumer;
 
 	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {
