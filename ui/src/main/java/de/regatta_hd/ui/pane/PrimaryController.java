@@ -71,8 +71,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private MenuItem errorLogMitm;
 	@FXML
-	private MenuItem resultsMitm;
-	@FXML
 	private MenuItem heatsMitm;
 	@FXML
 	private ComboBox<Regatta> activeRegattaCBox;
@@ -203,11 +201,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	void handleResultsOnAction() {
-		openStage("ResultsView.fxml", getText("common.results"));
-	}
-
-	@FXML
 	void handleLogRecordsOnAction() {
 		openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
 	}
@@ -289,7 +282,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 					this.racesMitm.setDisable(!hasActiveRegatta);
 					this.setRaceMitm.setDisable(!hasActiveRegatta);
 					this.scoreMitm.setDisable(!hasActiveRegatta);
-					this.resultsMitm.setDisable(!hasActiveRegatta);
 					this.heatsMitm.setDisable(!hasActiveRegatta);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
@@ -299,7 +291,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 			this.racesMitm.setDisable(!isOpen);
 			this.setRaceMitm.setDisable(!isOpen);
 			this.scoreMitm.setDisable(!isOpen);
-			this.resultsMitm.setDisable(!isOpen);
 			this.heatsMitm.setDisable(!isOpen);
 		}
 
