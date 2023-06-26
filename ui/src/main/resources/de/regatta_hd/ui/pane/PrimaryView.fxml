@@ -39,7 +39,6 @@
                 <MenuItem fx:id="racesMitm" onAction="#handleRacesOnAction" text="%PrimaryView.racesMitm.text" />
                 <MenuItem fx:id="heatsMitm" onAction="#handleHeatsOnAction" text="%heats.title" />
                 <MenuItem fx:id="setRaceMitm" onAction="#handleSetRaceOnAction" text="%PrimaryView.setRaceMitm.text" />
-                <MenuItem fx:id="scoreMitm" onAction="#handleScore" text="%PrimaryView.scoresMitm.text" />
               </items>
             </Menu>
             <Menu text="%common.help">
