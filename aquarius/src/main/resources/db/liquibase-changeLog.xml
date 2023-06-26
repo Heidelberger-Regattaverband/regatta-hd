@@ -153,4 +153,11 @@
     <dropTable tableName="HRV_Offer" />
   </changeSet>
 
+  <changeSet id="12" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="HRV_Score" />
+    </preConditions>
+    <dropTable tableName="HRV_Score" />
+  </changeSet>
+
 </databaseChangeLog>
