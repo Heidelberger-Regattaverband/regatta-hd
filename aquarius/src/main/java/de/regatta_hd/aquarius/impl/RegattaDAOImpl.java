@@ -2,7 +2,6 @@ package de.regatta_hd.aquarius.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,9 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.RegattaDAO;
-import de.regatta_hd.aquarius.ResultEntry;
 import de.regatta_hd.aquarius.SeedingListEntry;
-import de.regatta_hd.aquarius.model.Club;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
@@ -31,7 +28,6 @@ import de.regatta_hd.aquarius.model.Race.GroupMode;
 import de.regatta_hd.aquarius.model.Regatta;
 import de.regatta_hd.aquarius.model.Registration;
 import de.regatta_hd.aquarius.model.Result;
-import de.regatta_hd.aquarius.model.Score;
 import de.regatta_hd.aquarius.util.ModelUtils;
 import de.regatta_hd.commons.core.ConfigService;
 import de.regatta_hd.commons.core.ListenerManager;
@@ -237,86 +233,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<Score> calculateScores() {
-		EntityManager entityManager = this.db.getEntityManager();
-
-		// first clear persistence context
-		entityManager.clear();
-
-		Map<Club, Score> scores = new HashMap<>();
-		Regatta regatta = getActiveRegatta();
-
-		for (ResultEntry resultEntry : getOfficialResults()) {
-			Race race = resultEntry.getHeat().getRace();
-			boolean raceIsSet = race.isSet();
-			// gets the number of rowers without the cox
-			byte numRowers = race.getBoatClass().getNumRowers();
-
-			for (HeatRegistration heatReg : resultEntry.getHeat().getEntries()) {
-				if (heatReg.getFinalResult() != null) {
-					Integer pointsBoat = heatReg.getFinalResult().getPoints();
-
-					if (pointsBoat != null) {
-						// duplicate points if it's the first heat of a set race
-						if (raceIsSet && heatReg.getHeat().getDivisionNumber() == 1) {
-							pointsBoat = Integer.valueOf(pointsBoat.intValue() * 2);
-						}
-
-						float pointsPerCrew = (float) pointsBoat.intValue() / (float) numRowers;
-
-						// ignore cox of boat
-						heatReg.getRegistration().getCrews().stream().filter(crew -> !crew.isCox()).forEach(crew -> {
-							Score score = scores.computeIfAbsent(crew.getAthlet().getClub(),
-									key -> Score.builder().clubId(key.getId()).regattaId(regatta.getId()).club(key)
-											.regatta(regatta).points(0.0f).build());
-							score.addPoints(pointsPerCrew);
-
-//						System.out.println("Heat=" + heatReg.getHeat().getNumber() + "', Club=" + score.getClubName()
-//								+ ", points=" + pointsPerCrew);
-						});
-					}
-				}
-			}
-		}
-
-		return updateScores(scores.values(), entityManager);
-	}
-
-	private List<Score> updateScores(Collection<Score> scores, EntityManager entityManager) {
-		entityManager.createQuery("DELETE FROM Score s WHERE s.regatta = :regatta")
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).executeUpdate();
-		entityManager.clear();
-
-		List<Score> scoresResult = scores.stream().sorted((score1, score2) -> {
-			if (score1.getPoints() == score2.getPoints()) {
-				return 0;
-			}
-			return score1.getPoints() > score2.getPoints() ? -1 : 1;
-		}).toList();
-
-		for (int i = 0; i < scoresResult.size(); i++) {
-			Score score = scoresResult.get(i);
-			score.setRank((short) (i + 1));
-			score.getClubName(); // get club in current session
-			entityManager.persist(score);
-		}
-
-		entityManager.flush();
-
-		return scoresResult;
-	}
-
-	@Override
-	public List<Score> getScores() {
-		EntityManager entityManager = this.db.getEntityManager();
-
-		return entityManager
-				.createQuery("SELECT s FROM Score s WHERE s.regatta = :regatta ORDER BY s.rank ASC", Score.class)
-				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph(Score.GRAPH_ALL))
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
-	}
-
-	@Override
 	public List<Race> enableMastersAgeClasses() {
 		List<Race> races = new ArrayList<>();
 
@@ -353,11 +269,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 	}
 
 	@Override
-	public List<ResultEntry> getOfficialResults() {
-		return getOfficialHeats().stream().map(heat -> ResultEntry.builder().heat(heat).build()).toList();
-	}
-
-	@Override
 	public List<Heat> getHeats(String graphName) {
 		EntityManager entityManager = this.db.getEntityManager();
 
@@ -370,14 +281,6 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 		}
 
 		return query.getResultList();
-	}
-
-	private List<Heat> getOfficialHeats() {
-		EntityManager entityManager = this.db.getEntityManager();
-
-		return entityManager.createQuery("SELECT h FROM Heat h WHERE h.regatta = :regatta AND h.state = 4", Heat.class)
-				.setHint(JAVAX_PERSISTENCE_FETCHGRAPH, entityManager.getEntityGraph(Heat.GRAPH_ALL))
-				.setParameter(PARAM_REGATTA, getActiveRegatta()).getResultList();
 	}
 
 	@Override

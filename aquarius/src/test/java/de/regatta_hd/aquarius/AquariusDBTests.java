@@ -62,14 +62,6 @@ class AquariusDBTests extends BaseDBTest {
 	}
 
 	@Test
-	void testGetOfficialHeats() throws InterruptedException, ExecutionException {
-		List<ResultEntry> results = aquariusDb.getExecutor().submit(() -> {
-			return regattaDAO.getOfficialResults();
-		}).get();
-		assertFalse(results.isEmpty());
-	}
-
-	@Test
 	void testIsOpen() {
 		assertTrue(aquariusDb.isOpen());
 	}

@@ -55,7 +55,7 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.2.5.Final</hibernate.version>
+    <hibernate.version>6.2.6.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>12.3.0.jre17-preview</mssql.version>
@@ -67,13 +67,13 @@
     <junit.version>5.9.3</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.21.1</liquibase.version>
+    <liquibase.version>4.23.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.2.3</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
-    <jSerialComm.version>2.9.3</jSerialComm.version>
+    <jSerialComm.version>2.10.1</jSerialComm.version>
 
     <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
     <jaxb-impl.version>4.0.3</jaxb-impl.version>

@@ -37,4 +37,4 @@ jobs:
         dbName: ${{ secrets.DB_NAME }}
         username: ${{ secrets.DB_USER_NAME }}
         password: ${{ secrets.DB_PASSWORD }}
-      run: mvn clean verify -B
+      run: mvn clean verify -B --ntp
