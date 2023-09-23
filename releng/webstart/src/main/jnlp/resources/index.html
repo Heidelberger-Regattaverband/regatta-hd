@@ -25,14 +25,14 @@
 
 		<li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Documentation</a> for Aquarius</li>
 
-		<li>Rename existing report <b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b> to
+		<!-- <li>Rename existing report <b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b> to
 			<b><code>R_RE.xsl.bak</code></b> as backup.
 		</li>
 
 		<li>Then <a href="R_RE.xsl" download="R_RE.xsl">download</a> modified
 			Aquarius report (<b><code>R_RE.xsl</code></b>) for <b>Einteilung am Sonntag</b> and save it at location
 			<b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b>.
-		</li>
+		</li> -->
 
 		<li>Configure keyboard shortcuts for start and stop in Aquarius's config file:
 			<b>C:\Users\&lt;user&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:
@@ -42,16 +42,16 @@ ShortcutStart=+ (ZEHNERTASTATUR)
 ShortcutFinish=Leertaste
 </code></pre>
 
-		<b>Optional steps to enable encrypted connections to MS-SQL server</b>
+		<!-- <b>Optional steps to enable encrypted connections to MS-SQL server</b>
 		<li>Install <a href="https://learn.microsoft.com/de-de/cpp/windows/latest-supported-vc-redist?view=msvc-170"
 				target="_blank">Microsoft Visual C++ Redistributable (x64 + x86)</a> as prerequisite of the OLE DB-driver</li>
 
 		<li>Install <a
 				href="https://learn.microsoft.com/de-de/sql/connect/oledb/download-oledb-driver-for-sql-server?view=sql-server-ver16"
-				target="_blank">OLE DB-driver</a> to support encrypted connections to MS-SQL server</li>
+				target="_blank">OLE DB-driver</a> to support encrypted connections to MS-SQL server</li> -->
 	</ol>
 
-	<h2>Additional notebook configurations</h2>
+	<!-- <h2>Additional notebook configurations</h2>
 	<ol>
 		<li>Configure hosts file: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
 		<pre><code>217.160.56.230	mssql-aquarius		# 8e835d.online-server.cloud
@@ -59,14 +59,14 @@ ShortcutFinish=Leertaste
 		permission to be modified. Follow this <a
 			href="https://www.hostinger.com/tutorials/how-to-edit-hosts-file#Change_the_File_Manually"
 			target="_blank">guide</a> to edit it.
-	</ol>
+	</ol> -->
 
 	<h2>Infoportal Heidelberger Ruder-Regatta</h2>
 	<ol>
-		<li>Link to <a href="https://b3eb6e9.online-server.cloud/infoportal/" target="_blank">Infoportal</a></li>
+		<li>Link to <a href="https://info.regatta-hd.de/infoportal/" target="_blank">Infoportal</a></li>
 
 		<li>Embed Infoportal into HTML:
-			<pre><code>&lt;iframe src="https://b3eb6e9.online-server.cloud/infoportal/" title="Infoportal" height="500" width="100%" /></code></pre>
+			<pre><code>&lt;iframe src="https://info.regatta-hd.de/infoportal/" title="Infoportal" height="500" width="100%" /></code></pre>
 		</li>
 	</ol>
 
