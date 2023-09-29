@@ -70,7 +70,7 @@
     <liquibase.version>4.23.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
-    <poi.version>5.2.3</poi.version>
+    <poi.version>5.2.4</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
     <jSerialComm.version>2.10.2</jSerialComm.version>
