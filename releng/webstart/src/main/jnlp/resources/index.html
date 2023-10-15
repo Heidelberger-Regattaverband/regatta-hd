@@ -10,11 +10,9 @@
 	<ol>
 		<li><a href="https://openwebstart.com/download/" target="_blank">Download</a> and install OpenWebStart (x64
 			version).</li>
-
 		<li>Download <a href="java.policy" download=".java.policy">Java policy file</a> and save it in user's home directory
 			(<b><code>C:\users\&lt;user&gt;\.java.policy</code></b>) with file name <b><code>.java.policy</code></b>.
 		</li>
-
 		<li><a href="regatta-hd.jnlp" download="regatta-hd.jnlp">Download</a> Heidelberger Regatta software and open it with
 			OpenWebStart to install.</li>
 	</ol>
@@ -22,26 +20,8 @@
 	<h2>Install Aquarius MMX software</h2>
 	<ol>
 		<li><a href="https://s14u.de/download/aquarius/" target="_blank">Download</a> and extract Aquarius ZIP archive</li>
-		<li><a href="aquarius_info_logo.zip">Alternative download</a> of Aquarius + Infoportal + Logos</li>
-
+		<li><a href="aquarius_info_logo.zip">Alternative download</a> of Aquarius with Infoportal + Logos</li>
 		<li><a href="https://redmine.s14u.de/projects/aquarius/wiki" target="_blank">Documentation</a> for Aquarius</li>
-
-		<!-- <li>Rename existing report <b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b> to
-			<b><code>R_RE.xsl.bak</code></b> as backup.
-		</li>
-
-		<li>Then <a href="R_RE.xsl" download="R_RE.xsl">download</a> modified
-			Aquarius report (<b><code>R_RE.xsl</code></b>) for <b>Einteilung am Sonntag</b> and save it at location
-			<b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b>.
-		</li> -->
-
-		<li>Configure keyboard shortcuts for start and stop in Aquarius's config file:
-			<b>C:\Users\&lt;user&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:
-		</li>
-		<pre><code>[Timing]
-ShortcutStart=+ (ZEHNERTASTATUR)
-ShortcutFinish=Leertaste
-</code></pre>
 
 		<!-- <b>Optional steps to enable encrypted connections to MS-SQL server</b>
 		<li>Install <a href="https://learn.microsoft.com/de-de/cpp/windows/latest-supported-vc-redist?view=msvc-170"
@@ -52,20 +32,27 @@ ShortcutFinish=Leertaste
 				target="_blank">OLE DB-driver</a> to support encrypted connections to MS-SQL server</li> -->
 	</ol>
 
-	<!-- <h2>Additional notebook configurations</h2>
+	<h2>Configure Aquarius MMX for Heidelberg Regatta</h2>
 	<ol>
-		<li>Configure hosts file: <b>C:\Windows\System32\drivers\etc\hosts</b>:</li>
-		<pre><code>217.160.56.230	mssql-aquarius		# 8e835d.online-server.cloud
-82.165.106.228	mssql-aquarius2		# b3eb6e9.online-server.cloud</code></pre>The hosts file requires administrator
-		permission to be modified. Follow this <a
-			href="https://www.hostinger.com/tutorials/how-to-edit-hosts-file#Change_the_File_Manually"
-			target="_blank">guide</a> to edit it.
-	</ol> -->
+		<li>Rename existing report <b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b> to
+			<b><code>R_RE.xsl.bak</code></b> as backup.
+		</li>
+		<li>Then <a href="R_RE.xsl" download="R_RE.xsl">download</a> modified
+			Aquarius report (<b><code>R_RE.xsl</code></b>) for <b>Einteilung am Sonntag</b> and save it at location
+			<b><code>&lt;aquarius_install_dir&gt;\Reporting\XSL\FOP\R_RE.xsl</code></b>.
+		</li>
+		<li>Configure keyboard shortcuts for start and stop in Aquarius's config file:
+			<b>C:\Users\&lt;user&gt;\AppData\Roaming\Aquarius\aquarius.ini</b>:
+		</li>
+		<pre><code>[Timing]
+ShortcutStart=+ (ZEHNERTASTATUR)
+ShortcutFinish=Leertaste
+</code></pre>
+	</ol>
 
 	<h2>Infoportal Heidelberger Ruder-Regatta</h2>
 	<ol>
 		<li>Link to <a href="https://info.regatta-hd.de/infoportal/" target="_blank">Infoportal</a></li>
-
 		<li>Embed Infoportal into HTML:
 			<pre><code>&lt;iframe src="https://info.regatta-hd.de/infoportal/" title="Infoportal" height="500" width="100%" /></code></pre>
 		</li>
@@ -74,34 +61,9 @@ ShortcutFinish=Leertaste
 	<h2>Install Ampelkoffer software</h2>
 	<ol>
 		<li><a href="RRC868F.zip" target="_blank">Download</a> ZIP archive and extract.</li>
-
 		<li>Start the extracted file <b><code>rrc868f.exe</code></b> and open <a href="http://localhost:8080"
 				target="_blank">http://localhost:8080</a> in a browser.</li>
 	</ol>
-
-	<!--
-  <h2>Wireguard</h2>
-  <ol>
-    <li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-20-04/"
-        target="_blank">How To Set Up WireGuard on Ubuntu 20.04</a></li>
-    <li>Peer configuration:
-      <pre><code>
-[Interface]
-PrivateKey = base64_encoded_private_key_goes_here
-Address = 10.8.0._host_/32
-
-[Peer]
-PublicKey = cMefo85mDgZlDrQKT9kOf1cWReFE5v1TvUp7D+3Y4WI=
-AllowedIPs = 10.8.0.1/32
-Endpoint = 217.160.56.230:51820
-      </code>
-    </pre>
-    </li>
-    <li>Adding the Peer’s Public Key to the WireGuard Server:
-      <code>wg set wg0 peer base64_encoded_public_key_goes_here allowed-ips 10.8.0._host_/32</code>
-    </li>
-  </ol>
--->
 
 </body>
 
