@@ -9,7 +9,7 @@
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.53</version>
+  <version>0.1.55</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -46,7 +46,7 @@
     <openjfx.version>21.0.1</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
-    <controlsfx.version>11.1.2</controlsfx.version>
+    <controlsfx.version>11.2.0</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.30</lombok.version>
@@ -55,28 +55,28 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.3.1.Final</hibernate.version>
+    <hibernate.version>6.4.0.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>12.5.0.jre11-preview</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
-    <commons-lang3.version>3.13.0</commons-lang3.version>
+    <commons-lang3.version>3.14.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.10.0</junit.version>
+    <junit.version>5.10.1</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.24.0</liquibase.version>
+    <liquibase.version>4.25.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
-    <poi.version>5.2.4</poi.version>
+    <poi.version>5.2.5</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
-    <jSerialComm.version>2.10.3</jSerialComm.version>
+    <jSerialComm.version>2.10.4</jSerialComm.version>
 
     <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
-    <jaxb-impl.version>4.0.3</jaxb-impl.version>
+    <jaxb-impl.version>4.0.4</jaxb-impl.version>
   </properties>
 
   <modules>
@@ -195,7 +195,7 @@
       <dependency>
         <groupId>jakarta.xml.bind</groupId>
         <artifactId>jakarta.xml.bind-api</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.sun.xml.bind</groupId>
