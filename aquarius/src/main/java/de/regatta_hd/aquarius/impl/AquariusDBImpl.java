@@ -71,8 +71,8 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	protected Map<String, String> getProperties(DBConfig dbConfig) {
 		Map<String, String> properties = new HashMap<>();
 
-		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getDbHost(),
-				dbConfig.getDbName(), Boolean.toString(dbConfig.isEncrypt()));
+		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getHost(),
+				dbConfig.getName(), Boolean.toString(dbConfig.isEncrypt()));
 
 		if (dbConfig.isEncrypt()) {
 			url += ";sslProtocol=TLSv1.2";
@@ -83,7 +83,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		}
 		logger.log(Level.INFO, "JDBC URL: {0}", url);
 		properties.put("javax.persistence.jdbc.url", url);
-		properties.put("javax.persistence.jdbc.user", dbConfig.getUsername());
+		properties.put("javax.persistence.jdbc.user", dbConfig.getUser());
 		properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
 		return properties;
 	}

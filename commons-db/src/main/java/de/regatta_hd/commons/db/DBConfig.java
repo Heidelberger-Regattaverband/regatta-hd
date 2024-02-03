@@ -13,17 +13,17 @@ public class DBConfig {
 	/**
 	 * The database host name or IP address.
 	 */
-	private String dbHost;
+	private String host;
 
 	/**
 	 * The database name in SQL Server.
 	 */
-	private String dbName;
+	private String name;
 
 	/**
 	 * The user name credential.
 	 */
-	private String username;
+	private String user;
 
 	/**
 	 * The user's password.

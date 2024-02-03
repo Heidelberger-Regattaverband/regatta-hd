@@ -28,9 +28,9 @@ public class DBConfigStoreImpl implements DBConfigStore {
 	@Override
 	public DBConfig getLastSuccessful() throws IOException {
 		return DBConfig.builder() //
-				.dbHost(this.cfgService.getProperty(DB_HOST)) //
-				.dbName(this.cfgService.getProperty(DB_NAME)) //
-				.username(this.cfgService.getProperty(USERNAME)) //
+				.host(this.cfgService.getProperty(DB_HOST)) //
+				.name(this.cfgService.getProperty(DB_NAME)) //
+				.user(this.cfgService.getProperty(USERNAME)) //
 				.password(this.cfgService.getProperty(PASSWORD)) //
 				.encrypt(this.cfgService.getBooleanProperty(ENCRYPT)) //
 				.trustServerCertificate(this.cfgService.getBooleanProperty(TRUST_SERVER_CERTIFICATE))
@@ -41,9 +41,9 @@ public class DBConfigStoreImpl implements DBConfigStore {
 	public void setLastSuccessful(DBConfig dbConfig) throws IOException {
 		requireNonNull(dbConfig, "dbConfig");
 
-		this.cfgService.setProperty(DB_HOST, dbConfig.getDbHost());
-		this.cfgService.setProperty(DB_NAME, dbConfig.getDbName());
-		this.cfgService.setProperty(USERNAME, dbConfig.getUsername());
+		this.cfgService.setProperty(DB_HOST, dbConfig.getHost());
+		this.cfgService.setProperty(DB_NAME, dbConfig.getName());
+		this.cfgService.setProperty(USERNAME, dbConfig.getUser());
 		this.cfgService.setProperty(ENCRYPT, dbConfig.isEncrypt());
 		this.cfgService.setProperty(TRUST_SERVER_CERTIFICATE, dbConfig.isTrustServerCertificate());
 		this.cfgService.setProperty(UPDATE_SCHEMA, dbConfig.isUpdateSchema());

@@ -52,7 +52,7 @@ public abstract class AbstractDBConnection implements DBConnection {
 
 			openImpl();
 
-			this.name = dbConfig.getDbName();
+			this.name = dbConfig.getName();
 
 			// notify listeners about changed DB connection state
 			notifyListeners(new StateChangedEventImplementation());
