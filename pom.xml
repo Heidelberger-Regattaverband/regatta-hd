@@ -76,7 +76,7 @@
     <jSerialComm.version>2.10.4</jSerialComm.version>
 
     <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
-    <jaxb-impl.version>4.0.4</jaxb-impl.version>
+    <jaxb-impl.version>4.0.5</jaxb-impl.version>
   </properties>
 
   <modules>
