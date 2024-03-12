@@ -46,7 +46,7 @@
     <openjfx.version>21.0.2</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
-    <controlsfx.version>11.2.0</controlsfx.version>
+    <controlsfx.version>11.2.1</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.30</lombok.version>
