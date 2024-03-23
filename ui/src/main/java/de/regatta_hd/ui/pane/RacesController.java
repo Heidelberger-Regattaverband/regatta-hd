@@ -186,7 +186,7 @@ public class RacesController extends AbstractRegattaDAOController {
 				} else {
 					loadRaces(true);
 					FxUtils.showInfoDialog(getWindow(),
-							String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
+							"%d Rennen geändert.".formatted(Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -209,7 +209,7 @@ public class RacesController extends AbstractRegattaDAOController {
 				} else {
 					loadRaces(true);
 					FxUtils.showInfoDialog(getWindow(),
-							String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+							"%d Masters Rennen geändert.".formatted(Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
