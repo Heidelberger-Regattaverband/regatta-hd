@@ -5,12 +5,12 @@
   <parent>
     <groupId>de.ofterdinger.parents</groupId>
     <artifactId>build</artifactId>
-    <version>0.1.6-SNAPSHOT</version>
+    <version>0.1.6</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.56</version>
+  <version>0.1.57</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
