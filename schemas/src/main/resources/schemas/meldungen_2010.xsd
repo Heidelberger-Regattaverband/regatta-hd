@@ -35,7 +35,7 @@
     	<element name="email" type="string" minOccurs="1" maxOccurs="1" />
     	<element name="phone" type="string" minOccurs="0" maxOccurs="1"></element>
     </sequence>
-    <attribute name="id" type="int" use="required"/>
+    <attribute name="id" type="string" use="required"/>
   </complexType>
 
   <simpleType name="tVereinsID">
@@ -94,10 +94,10 @@
   			minOccurs="0">
   		</element>
   	</sequence>
-  	<attribute name="id" type="int" use="required"/>
+  	<attribute name="id" type="string" use="required"/>
   	<attribute name="alternative-zu" type="drvra:tRennNummer" use="optional"></attribute>
   	<attribute name="verein" type="drvrm:tVereinsID" use="required"/>
-  	<attribute name="obmann" type="int" use="required">
+  	<attribute name="obmann" type="string" use="required">
   		<annotation>
   			<documentation>
   				Verweis auf Obmann aus der Obleute-Liste
