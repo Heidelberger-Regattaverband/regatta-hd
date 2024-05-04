@@ -30,7 +30,7 @@ public class AlternativeRegistration {
 
 	private final SimpleBooleanProperty importProperty = new SimpleBooleanProperty();
 
-	public int getExternalId() {
+	public String getExternalId() {
 		return this.registration.getId();
 	}
 
