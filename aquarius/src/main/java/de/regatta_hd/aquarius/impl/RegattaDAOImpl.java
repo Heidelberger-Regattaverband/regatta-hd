@@ -369,7 +369,7 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
 			}).forEach(srcHeatReg -> {
 				SeedingListEntry entry;
 				// ensure the result contains a valid rank, if rank == 0 the boat did not finish
-				if (srcHeatReg.getFinalResult().getRank() > 0) {
+				if (srcHeatReg.getFinalResult() != null && srcHeatReg.getFinalResult().getRank() > 0) {
 					entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
 					if (entry != null) {
 						entry.setRank(setList.size() + 1);
