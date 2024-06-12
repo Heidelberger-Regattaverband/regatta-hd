@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.21.xsd">
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd">
 
   <changeSet id="1" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
@@ -158,6 +158,32 @@
       <tableExists tableName="HRV_Score" />
     </preConditions>
     <dropTable tableName="HRV_Score" />
+  </changeSet>
+
+  <changeSet id="13" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <and>
+        <not>
+          <columnExists tableName="Club" columnName="Club_HRV_Latitude" />
+        </not>
+        <not>
+          <columnExists tableName="Club" columnName="Club_HRV_Longitude" />
+        </not>
+      </and>
+    </preConditions>
+    <addColumn tableName="Club">
+      <column name="Club_HRV_Latitude" type="DECIMAL(8,6)" />
+      <column name="Club_HRV_Longitude" type="DECIMAL(9,6)" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="14" author="markus@ofterdinger.de" runOnChange="true">
+    <loadUpdateData encoding="UTF-8" file="Club.csv" quotchar="&quot;" relativeToChangelogFile="true"
+      separator="," tableName="Club" primaryKey="Club_ExternID" >
+      <column header="Club_ExternID" name="Club_ExternID" type="NUMERIC" />
+      <column header="Club_HRV_Latitude" name="Club_HRV_Latitude" type="DECIMAL(8,6)" />
+      <column header="Club_HRV_Longitude" name="Club_HRV_Longitude" type="DECIMAL(9,6)" />
+    </loadUpdateData>
   </changeSet>
 
 </databaseChangeLog>
