@@ -50,7 +50,7 @@
     <controlsfx.version>11.2.1</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.32</lombok.version>
+    <lombok.version>1.18.34</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>7.0.0</guice.version>
@@ -65,13 +65,13 @@
     <commons-lang3.version>3.14.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.10.2</junit.version>
+    <junit.version>5.10.3</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>4.28.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
-    <poi.version>5.2.5</poi.version>
+    <poi.version>5.3.0</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
     <jSerialComm.version>2.11.0</jSerialComm.version>
