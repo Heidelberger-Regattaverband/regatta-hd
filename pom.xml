@@ -59,7 +59,7 @@
     <hibernate.version>6.5.2.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>12.6.2.jre11</mssql.version>
+    <mssql.version>12.6.3.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.14.0</commons-lang3.version>
