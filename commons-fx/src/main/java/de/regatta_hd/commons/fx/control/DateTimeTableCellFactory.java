@@ -41,7 +41,6 @@ public class DateTimeTableCellFactory {
 	}
 
 	public static <S> Callback<TableColumn<S, Instant>, TableCell<S, Instant>> createISOLocalDateTime() {
-		return column -> new DateTimeTableCell<>(
-				DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		return column -> new DateTimeTableCell<>(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 	}
 }

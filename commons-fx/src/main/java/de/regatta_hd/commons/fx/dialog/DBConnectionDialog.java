@@ -4,8 +4,7 @@ import static de.regatta_hd.commons.fx.util.FxUtils.bundle;
 
 import java.util.Objects;
 
-import de.regatta_hd.commons.db.DBConfig;
-import de.regatta_hd.commons.fx.util.FxUtils;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -19,6 +18,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Window;
+
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.fx.util.FxUtils;
 
 public class DBConnectionDialog extends Dialog<DBConfig> {
 
@@ -69,12 +71,12 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 		encryptCbox.addEventHandler(ActionEvent.ACTION,
 				event -> trustServerCertificateCbox.setDisable(!encryptCbox.isSelected()));
 
-		TextField hostNameFld = new TextField(this.connectionData.getDbHost());
-		gridpane.add(hostNameFld, 1, 1);
-		TextField dbNameFld = new TextField(this.connectionData.getDbName());
-		gridpane.add(dbNameFld, 1, 2);
-		TextField userNameFld = new TextField(this.connectionData.getUsername());
-		gridpane.add(userNameFld, 1, 3);
+		TextField hostFld = new TextField(this.connectionData.getHost());
+		gridpane.add(hostFld, 1, 1);
+		TextField nameFld = new TextField(this.connectionData.getName());
+		gridpane.add(nameFld, 1, 2);
+		TextField userFld = new TextField(this.connectionData.getUser());
+		gridpane.add(userFld, 1, 3);
 		PasswordField passwordFld = new PasswordField();
 		passwordFld.setText(this.connectionData.getPassword());
 		gridpane.add(passwordFld, 1, 4);
@@ -85,9 +87,9 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 
 		setResultConverter(dialogButton -> {
 			if (dialogButton.getButtonData() == ButtonData.OK_DONE) {
-				this.connectionData.setDbHost(hostNameFld.getText());
-				this.connectionData.setDbName(dbNameFld.getText());
-				this.connectionData.setUsername(userNameFld.getText());
+				this.connectionData.setHost(hostFld.getText());
+				this.connectionData.setName(nameFld.getText());
+				this.connectionData.setUser(userFld.getText());
 				this.connectionData.setPassword(passwordFld.getText());
 				this.connectionData.setUpdateSchema(updateSchemaCbox.isSelected());
 				this.connectionData.setEncrypt(encryptCbox.isSelected());
@@ -96,5 +98,15 @@ public class DBConnectionDialog extends Dialog<DBConfig> {
 			}
 			return null;
 		});
+
+		if (hostFld.getText() == null || hostFld.getText().isBlank()) {
+			Platform.runLater(hostFld::requestFocus);
+		} else if (nameFld.getText() == null || nameFld.getText().isBlank()) {
+			Platform.runLater(nameFld::requestFocus);
+		} else if (userFld.getText() == null || userFld.getText().isBlank()) {
+			Platform.runLater(userFld::requestFocus);
+		} else if (passwordFld.getText() == null || passwordFld.getText().isBlank()) {
+			Platform.runLater(passwordFld::requestFocus);
+		}
 	}
 }

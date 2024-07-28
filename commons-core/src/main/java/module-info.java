@@ -6,7 +6,7 @@ module de.regatta_hd.commons.core {
 
 	// tools modules
 	requires transitive com.google.guice;
-	requires transitive javax.inject;
+	requires transitive jakarta.inject;
 
 	// exports
 	exports de.regatta_hd.commons.core;

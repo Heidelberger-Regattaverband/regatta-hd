@@ -1,11 +1,13 @@
 package de.regatta_hd.ui.util;
 
-import de.regatta_hd.aquarius.model.Club;
-import de.regatta_hd.aquarius.model.Race;
-import de.rudern.schemas.service.meldungen._2010.TMeldung;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
+
+import de.regatta_hd.aquarius.model.Club;
+import de.regatta_hd.aquarius.model.Race;
+import de.rudern.schemas.service.meldungen._2010.TMeldung;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +30,7 @@ public class AlternativeRegistration {
 
 	private final SimpleBooleanProperty importProperty = new SimpleBooleanProperty();
 
-	public int getExternalId() {
+	public String getExternalId() {
 		return this.registration.getId();
 	}
 

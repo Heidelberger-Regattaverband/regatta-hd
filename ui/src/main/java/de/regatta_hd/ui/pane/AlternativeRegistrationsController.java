@@ -12,6 +12,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+import jakarta.persistence.EntityManager;
+import jakarta.xml.bind.JAXBException;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -31,15 +42,6 @@ import de.regatta_hd.ui.util.AlternativeRegistration;
 import de.regatta_hd.ui.util.RegistrationUtils;
 import de.rudern.schemas.service.meldungen._2010.TBootsPosition;
 import de.rudern.schemas.service.meldungen._2010.TRennen;
-import jakarta.persistence.EntityManager;
-import jakarta.xml.bind.JAXBException;
-import javafx.beans.property.BooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 
 public class AlternativeRegistrationsController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(AlternativeRegistrationsController.class.getName());
@@ -118,7 +120,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 									.club(club).build();
 							altReg.getImportProperty().set(primaryRace.isCancelled());
 							return altReg;
-						})).collect(Collectors.toList());
+						})).toList();
 					}, dbResult -> {
 						try {
 							this.altRegsList.setAll(dbResult.getResult());
@@ -183,7 +185,7 @@ public class AlternativeRegistrationsController extends AbstractRegattaDAOContro
 					em.merge(regLabel);
 
 					return registration;
-				}).collect(Collectors.toList());
+				}).toList();
 			}, dbResult -> {
 				try {
 					List<Registration> importedRegs = dbResult.getResult();

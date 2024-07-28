@@ -3,6 +3,9 @@ package de.regatta_hd.aquarius.model;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,15 +18,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +33,7 @@ import lombok.ToString;
  */
 @Entity
 @Table(schema = "dbo", name = "Offer")
-@SecondaryTable(name = "HRV_Offer", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
-@NamedEntityGraphs({ @NamedEntityGraph(name = Race.GRAPH_RESULTS, //
+@NamedEntityGraph(name = Race.GRAPH_RESULTS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "heat.heatregs", //
 						attributeNodes = { @NamedAttributeNode(value = "entries", subgraph = "heatreg.results") } //
@@ -68,8 +66,8 @@ import lombok.ToString;
 				@NamedAttributeNode("boatClass"), //
 				@NamedAttributeNode("raceMode"), //
 				@NamedAttributeNode("registrations") //
-		} //
-), @NamedEntityGraph(name = Race.GRAPH_CLUBS, //
+		})
+@NamedEntityGraph(name = Race.GRAPH_CLUBS, //
 		subgraphs = { //
 				@NamedSubgraph(name = "registration.club", //
 						attributeNodes = { //
@@ -84,7 +82,6 @@ import lombok.ToString;
 		attributeNodes = { //
 				@NamedAttributeNode(value = "registrations", subgraph = "registration.club") //
 		}) //
-})
 // lombok
 @Getter
 @Setter
@@ -199,7 +196,7 @@ public class Race {
 
 	// Second table columns
 
-	@Column(name = "isSet", table = "HRV_Offer")
+	@Column(name = "Offer_HRV_Seeded")
 	private Boolean set;
 
 	// JavaFX properties

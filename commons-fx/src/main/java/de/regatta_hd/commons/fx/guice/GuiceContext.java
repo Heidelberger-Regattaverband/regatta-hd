@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provides;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 
 /**
  * Implementation of dependency injection context for Guice

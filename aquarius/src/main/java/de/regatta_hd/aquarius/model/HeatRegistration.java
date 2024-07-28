@@ -2,7 +2,6 @@ package de.regatta_hd.aquarius.model;
 
 import java.util.Set;
 
-import de.regatta_hd.aquarius.util.ModelUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +13,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+
+import de.regatta_hd.aquarius.util.ModelUtils;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

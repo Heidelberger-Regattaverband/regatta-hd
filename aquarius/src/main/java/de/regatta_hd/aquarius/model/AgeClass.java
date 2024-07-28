@@ -13,6 +13,7 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

@@ -8,6 +8,18 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+
+import jakarta.persistence.EntityManager;
+
 import org.controlsfx.control.table.TableFilter;
 
 import com.google.inject.Inject;
@@ -21,16 +33,6 @@ import de.regatta_hd.commons.fx.util.FxConstants;
 import de.regatta_hd.commons.fx.util.FxUtils;
 import de.regatta_hd.ui.UIModule;
 import de.regatta_hd.ui.util.GroupModeStringConverter;
-import jakarta.persistence.EntityManager;
-import javafx.beans.property.BooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
 
 public class RacesController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
@@ -164,7 +166,7 @@ public class RacesController extends AbstractRegattaDAOController {
 	void handleImportAltRegsBtnOnAction() {
 		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
 		this.windowManager.newStage(getClass().getResource("AlternativeRegistrations.fxml"), getText("altRegs.title"),
-				super.resources, getWindow(), styleLocation);
+				super.bundle, getWindow(), styleLocation);
 	}
 
 	@FXML
@@ -184,7 +186,7 @@ public class RacesController extends AbstractRegattaDAOController {
 				} else {
 					loadRaces(true);
 					FxUtils.showInfoDialog(getWindow(),
-							String.format("%d Rennen geändert.", Integer.valueOf(races.size())));
+							"%d Rennen geändert.".formatted(Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -207,7 +209,7 @@ public class RacesController extends AbstractRegattaDAOController {
 				} else {
 					loadRaces(true);
 					FxUtils.showInfoDialog(getWindow(),
-							String.format("%d Masters Rennen geändert.", Integer.valueOf(races.size())));
+							"%d Masters Rennen geändert.".formatted(Integer.valueOf(races.size())));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);

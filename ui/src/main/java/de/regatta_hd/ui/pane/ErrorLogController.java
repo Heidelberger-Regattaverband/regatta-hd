@@ -6,16 +6,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.regatta_hd.aquarius.MasterDataDAO;
-import de.regatta_hd.aquarius.model.LogRecord;
-import de.regatta_hd.commons.core.ListenerManager;
-import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
-import de.regatta_hd.commons.fx.stage.PaneController;
-import de.regatta_hd.commons.fx.util.FxUtils;
-import jakarta.persistence.EntityManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,6 +15,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import jakarta.persistence.EntityManager;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import de.regatta_hd.aquarius.MasterDataDAO;
+import de.regatta_hd.aquarius.model.LogRecord;
+import de.regatta_hd.commons.core.ListenerManager;
+import de.regatta_hd.commons.db.DBConnection.StateChangedEventListener;
+import de.regatta_hd.commons.fx.stage.PaneController;
+import de.regatta_hd.commons.fx.util.FxUtils;
 
 public class ErrorLogController extends PaneController {
 	private static final Logger logger = Logger.getLogger(ErrorLogController.class.getName());

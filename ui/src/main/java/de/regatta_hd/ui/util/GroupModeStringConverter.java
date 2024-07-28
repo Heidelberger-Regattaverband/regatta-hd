@@ -1,7 +1,8 @@
 package de.regatta_hd.ui.util;
 
-import de.regatta_hd.aquarius.model.Race;
 import javafx.util.StringConverter;
+
+import de.regatta_hd.aquarius.model.Race;
 
 public class GroupModeStringConverter extends StringConverter<Race.GroupMode> {
 
@@ -10,18 +11,13 @@ public class GroupModeStringConverter extends StringConverter<Race.GroupMode> {
 		if (groupMode == null) {
 			return null;
 		}
-		switch (groupMode) {
-		case NONE:
-			return "-";
-		case AGE:
-			return "AK";
-		case PERFORMANCE:
-			return "LG";
-		case PERFORMANCE_AGE:
-			return "LG/AK";
-		default:
-			return null;
-		}
+		return switch (groupMode) {
+		case NONE -> "-";
+		case AGE -> "AK";
+		case PERFORMANCE -> "LG";
+		case PERFORMANCE_AGE -> "LG/AK";
+		default -> null;
+		};
 	}
 
 	@Override

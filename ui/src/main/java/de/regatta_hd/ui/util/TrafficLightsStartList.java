@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.collections.ObservableList;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,12 +23,11 @@ import com.google.inject.Inject;
 import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
-import javafx.collections.ObservableList;
 
 public class TrafficLightsStartList {
 	private static final Logger logger = Logger.getLogger(TrafficLightsStartList.class.getName());
 
-	private static final Pattern delayPattern = Pattern.compile("\\d*[\\.,]?\\d+");
+	private static final Pattern delayPattern = Pattern.compile("[-+]?\\d*[\\.,]?\\d+");
 
 	private static final String HEADER_INDEX = "Index";
 	private static final String HEADER_RENN_NR = "RennNr";
@@ -51,19 +52,31 @@ public class TrafficLightsStartList {
 		// add header line
 		addCsvHeader(builder);
 
+		int divisionNr = 1;
+		String currentRace = "0";
+
 		for (int j = 0; j < heatsList.size(); j++) {
 			Heat heat = heatsList.get(j);
+			boolean isMasters = heat.getRace().getAgeClass().isMasters();
 
-			builder.append(heat.getNumber()).append(DELIMITER);
+			if (currentRace.equals(heat.getRaceNumber())) {
+				divisionNr++;
+			} else {
+				currentRace = heat.getRaceNumber();
+				divisionNr = 1;
+			}
+
+			builder.append(j + 1).append(DELIMITER);
 			builder.append(heat.getRaceNumber()).append(DELIMITER);
-			builder.append(heat.getDivisionNumber()).append(DELIMITER);
+			// if it's a masters heat use self calculated division number
+			builder.append(isMasters ? divisionNr : heat.getDivisionNumber()).append(DELIMITER);
 
 			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			short laneCount = heat.getRace().getRaceMode().getLaneCount();
 			short diff = (short) (laneCount - heatRegs.size());
 
 			// add delays
-			if (heat.getRace().getAgeClass().isMasters()) {
+			if (isMasters) {
 				for (HeatRegistration heatReg : heatRegs) {
 					builder.append(getDelay(heatReg)).append(DELIMITER);
 				}
@@ -100,22 +113,35 @@ public class TrafficLightsStartList {
 		Row row = sheet.createRow(0);
 		addHeader(workbook, row);
 
+		int divisionNr = 1;
+		String currentRace = "0";
+
 		for (int j = 0; j < heatsList.size(); j++) {
 			int cellIdx = 0;
 
 			Heat heat = heatsList.get(j);
+			boolean isMasters = heat.getRace().getAgeClass().isMasters();
+
 			row = sheet.createRow(j + 1);
 
-			row.createCell(cellIdx++).setCellValue(heat.getNumber());
+			if (currentRace.equals(heat.getRaceNumber())) {
+				divisionNr++;
+			} else {
+				currentRace = heat.getRaceNumber();
+				divisionNr = 1;
+			}
+
+			row.createCell(cellIdx++).setCellValue(j + 1);
 			row.createCell(cellIdx++).setCellValue(heat.getRaceNumber());
-			row.createCell(cellIdx++).setCellValue(heat.getDivisionNumber());
+			// if it's a masters heat use self calculated division number
+			row.createCell(cellIdx++).setCellValue(isMasters ? divisionNr : heat.getDivisionNumber());
 
 			List<HeatRegistration> heatRegs = heat.getEntriesSortedByLane();
 			short laneCount = heat.getRace().getRaceMode().getLaneCount();
 			short diff = (short) (laneCount - heatRegs.size());
 
 			// add delays
-			if (heat.getRace().getAgeClass().isMasters()) {
+			if (isMasters) {
 				for (HeatRegistration heatReg : heatRegs) {
 					row.createCell(cellIdx++).setCellValue(getDelay(heatReg));
 				}

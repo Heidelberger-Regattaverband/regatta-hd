@@ -1,5 +1,11 @@
 package de.regatta_hd.commons.fx.stage;
 
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
 import org.controlsfx.dialog.ProgressDialog;
 
 import com.google.inject.Inject;
@@ -8,11 +14,6 @@ import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
 import de.regatta_hd.commons.fx.db.DBTaskRunner;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 public abstract class PaneController extends BaseController {
 
@@ -36,7 +37,7 @@ public abstract class PaneController extends BaseController {
 	}
 
 	protected void setTitle(String title) {
-		((Stage) getWindow()).setTitle(title);
+		Platform.runLater(() -> ((Stage) getWindow()).setTitle(title));
 	}
 
 }

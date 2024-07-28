@@ -7,7 +7,6 @@ import de.regatta_hd.aquarius.model.Heat;
 import de.regatta_hd.aquarius.model.HeatRegistration;
 import de.regatta_hd.aquarius.model.Race;
 import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.aquarius.model.Score;
 
 /**
  * Provides access to regatta related data like offers, heats and further.
@@ -44,8 +43,6 @@ public interface RegattaDAO {
 
 	List<Heat> getHeats(String graphName);
 
-	List<ResultEntry> getOfficialResults();
-
 	List<Race> enableMastersAgeClasses();
 
 	List<Race> setDistances();
@@ -57,12 +54,7 @@ public interface RegattaDAO {
 
 	void cleanRaceHeats(Race race);
 
-	// score
 	Heat swapResults(HeatRegistration source, HeatRegistration target);
-
-	List<Score> calculateScores();
-
-	List<Score> getScores();
 
 	// regatta changed event and listener
 

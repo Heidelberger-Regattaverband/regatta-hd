@@ -7,8 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import org.controlsfx.dialog.ProgressDialog;
-
 import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -20,6 +18,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import org.controlsfx.dialog.ProgressDialog;
 
 public class FxUtils {
 	private static final Logger logger = Logger.getLogger(FxUtils.class.getName());
@@ -70,6 +70,7 @@ public class FxUtils {
 		alert.getDialogPane().setPrefWidth(DIALOG_WIDTH);
 		alert.showAndWait();
 	}
+
 	public static void showErrorMessage(Window window, String header, String errMsg) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.initOwner(window);

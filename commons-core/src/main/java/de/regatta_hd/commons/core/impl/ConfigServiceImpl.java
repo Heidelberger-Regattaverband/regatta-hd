@@ -105,7 +105,7 @@ public class ConfigServiceImpl implements ConfigService {
 
 	private void storeProperties() throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(this.propertiesPath, StandardCharsets.UTF_8)) {
-			this.properties.store(writer, "Last succesful database connection settings.");
+			this.properties.store(writer, "Last successful database connection settings.");
 		}
 	}
 }

@@ -7,13 +7,15 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
+
+import jakarta.persistence.EntityTransaction;
+
 import de.regatta_hd.commons.core.concurrent.AsyncCallable;
 import de.regatta_hd.commons.core.concurrent.AsyncResult;
 import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.fx.db.DBTask;
-import jakarta.persistence.EntityTransaction;
-import javafx.application.Platform;
 
 class DBTaskImpl<V> extends DBTask<V> {
 	private static final Logger logger = Logger.getLogger(DBTaskImpl.class.getName());
@@ -22,7 +24,7 @@ class DBTaskImpl<V> extends DBTask<V> {
 	private final DBConnection db;
 	private final boolean inTransaction;
 	private final Consumer<AsyncResult<V>> resultConsumer;
-	private volatile Consumer<String> progressMessageConsumer;
+	private Consumer<String> progressMessageConsumer;
 
 	DBTaskImpl(AsyncCallable<V> callable, Consumer<AsyncResult<V>> resultConsumer, boolean inTransaction,
 			DBConnection db) {

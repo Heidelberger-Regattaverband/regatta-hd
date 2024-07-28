@@ -3,6 +3,10 @@ package de.regatta_hd.aquarius.impl;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jakarta.persistence.PersistenceException;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -15,9 +19,7 @@ import de.regatta_hd.aquarius.model.MetaData;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.AbstractDBConnection;
 import de.regatta_hd.commons.db.DBConfig;
-import jakarta.persistence.PersistenceException;
-import liquibase.Contexts;
-import liquibase.LabelExpression;
+
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -28,6 +30,8 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 @Singleton
 public class AquariusDBImpl extends AbstractDBConnection {
 
+	private static final Logger logger = Logger.getLogger(AquariusDBImpl.class.getName());
+
 	private String version;
 
 	@Inject
@@ -35,7 +39,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		super("aquarius", listenerManager);
 	}
 
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public void updateSchema() {
 		ensureOpen();
@@ -50,8 +54,9 @@ public class AquariusDBImpl extends AbstractDBConnection {
 
 				Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(),
 						database);
-				liquibase.update(new Contexts(), new LabelExpression());
-			} catch (LiquibaseException e) {
+				liquibase.update();
+			} catch (LiquibaseException e) { // NOSONAR
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				close();
 				throw new SQLException(e);
 			}
@@ -66,15 +71,19 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	protected Map<String, String> getProperties(DBConfig dbConfig) {
 		Map<String, String> properties = new HashMap<>();
 
-		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getDbHost(),
-				dbConfig.getDbName(), Boolean.toString(dbConfig.isEncrypt()));
+		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getHost(),
+				dbConfig.getName(), Boolean.toString(dbConfig.isEncrypt()));
 
-		if (dbConfig.isEncrypt() && dbConfig.isTrustServerCertificate()) {
-			url += ";trustServerCertificate=true;sslProtocol=TLSv1.2";
+		if (dbConfig.isEncrypt()) {
+			url += ";sslProtocol=TLSv1.2";
+
+			if (dbConfig.isTrustServerCertificate()) {
+				url += ";trustServerCertificate=true";
+			}
 		}
-
+		logger.log(Level.INFO, "JDBC URL: {0}", url);
 		properties.put("javax.persistence.jdbc.url", url);
-		properties.put("javax.persistence.jdbc.user", dbConfig.getUsername());
+		properties.put("javax.persistence.jdbc.user", dbConfig.getUser());
 		properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
 		return properties;
 	}
@@ -87,8 +96,8 @@ public class AquariusDBImpl extends AbstractDBConnection {
 	@Override
 	protected void convertException(PersistenceException ex) throws SQLException {
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
-		if (rootCause instanceof SQLServerException) {
-			throw (SQLServerException) rootCause;
+		if (rootCause instanceof SQLServerException sqlEx) {
+			throw sqlEx;
 		}
 		throw ex;
 	}

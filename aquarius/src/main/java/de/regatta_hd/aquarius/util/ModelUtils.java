@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.regatta_hd.aquarius.model.Club;
@@ -47,9 +46,9 @@ public class ModelUtils {
 	public static boolean isEqualCrews(Registration reg1, Registration reg2) {
 		// remove cox from comparison
 		List<Crew> crews1 = reg1.getFinalCrews().stream().filter(crew -> !crew.isCox()).sorted(ModelUtils::compare)
-				.collect(Collectors.toList());
+				.toList();
 		List<Crew> crews2 = reg2.getFinalCrews().stream().filter(crew -> !crew.isCox()).sorted(ModelUtils::compare)
-				.collect(Collectors.toList());
+				.toList();
 
 		if (crews1.size() != crews2.size()) {
 			return false;
@@ -73,8 +72,8 @@ public class ModelUtils {
 		String longLabel;
 		String shortLabel;
 		if (community) {
-			List<String> clubAbbrs = getClubs(registration).map(Club::getAbbreviation).collect(Collectors.toList());
-			List<String> clubNames = getClubs(registration).map(Club::getName).collect(Collectors.toList());
+			List<String> clubAbbrs = getClubs(registration).map(Club::getAbbreviation).toList();
+			List<String> clubNames = getClubs(registration).map(Club::getName).toList();
 			longLabel = "Rgm. " + String.join(" / ", clubNames);
 			shortLabel = "Rgm. " + String.join(" / ", clubAbbrs);
 		} else {

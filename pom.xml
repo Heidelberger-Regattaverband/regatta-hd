@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>de.ofterdinger.parents</groupId>
     <artifactId>build</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.6</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
   <artifactId>regatta-hd</artifactId>
-  <version>0.1.30</version>
+  <version>0.1.61</version>
   <packaging>pom</packaging>
 
   <name>Heidelberger Regatta Software</name>
@@ -40,40 +41,43 @@
   </repositories>
 
   <properties>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
 
     <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
-    <openjfx.version>19</openjfx.version>
+    <openjfx.version>22.0.2</openjfx.version>
 
     <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
-    <controlsfx.version>11.1.1</controlsfx.version>
+    <controlsfx.version>11.2.1</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.24</lombok.version>
+    <lombok.version>1.18.34</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
-    <guice.version>5.1.0</guice.version>
+    <guice.version>7.0.0</guice.version>
 
-    <!-- https://search.maven.org/artifact/org.hibernate/hibernate-core -->
-    <hibernate.version>6.1.4.Final</hibernate.version>
+    <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
+    <hibernate.version>6.5.2.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>11.2.1.jre11</mssql.version>
+    <mssql.version>12.6.3.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
-    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <commons-lang3.version>3.15.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.9.1</junit.version>
+    <junit.version>5.10.3</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.16.1</liquibase.version>
+    <liquibase.version>4.29.0</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
-    <poi.version>5.2.3</poi.version>
+    <poi.version>5.3.0</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
-    <jSerialComm.version>2.9.2</jSerialComm.version>
+    <jSerialComm.version>2.11.0</jSerialComm.version>
+
+    <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+    <jaxb-impl.version>4.0.5</jaxb-impl.version>
   </properties>
 
   <modules>
@@ -88,10 +92,6 @@
     <module>releng/nativeapp</module>
     <module>releng/webstart</module>
   </modules>
-
-  <prerequisites>
-    <maven>3.6.3</maven>
-  </prerequisites>
 
   <dependencyManagement>
     <dependencies>
@@ -128,7 +128,7 @@
       <!-- Database & JPA -->
       <!-- ============== -->
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${hibernate.version}</version>
       </dependency>
@@ -197,13 +197,12 @@
       <dependency>
         <groupId>jakarta.xml.bind</groupId>
         <artifactId>jakarta.xml.bind-api</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.2</version>
       </dependency>
-      <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
       <dependency>
-        <groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-impl</artifactId>
-        <version>4.0.1</version>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>4.0.5</version>
       </dependency>
 
       <!-- ============ -->

@@ -12,6 +12,17 @@ import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
+import javafx.util.Pair;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -25,16 +36,6 @@ import de.regatta_hd.commons.fx.dialog.AboutDialog;
 import de.regatta_hd.commons.fx.dialog.DBConnectionDialog;
 import de.regatta_hd.commons.fx.stage.WindowManager;
 import de.regatta_hd.commons.fx.util.FxUtils;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.stage.Stage;
-import javafx.util.Pair;
 
 public class PrimaryController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
@@ -66,11 +67,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	@FXML
 	private MenuItem setRaceMitm;
 	@FXML
-	private MenuItem scoreMitm;
-	@FXML
 	private MenuItem errorLogMitm;
-	@FXML
-	private MenuItem resultsMitm;
 	@FXML
 	private MenuItem heatsMitm;
 	@FXML
@@ -83,7 +80,7 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 	private Stage openStage(String resource, String title) {
 		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
-		return this.windowManager.newStage(getClass().getResource(resource), title, super.resources, styleLocation);
+		return this.windowManager.newStage(getClass().getResource(resource), title, super.bundle, styleLocation);
 	}
 
 	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
@@ -197,16 +194,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 	}
 
 	@FXML
-	void handleScore() {
-		openStage("ScoresView.fxml", getText("PrimaryView.scoresMitm.text"));
-	}
-
-	@FXML
-	void handleResultsOnAction() {
-		openStage("ResultsView.fxml", getText("common.results"));
-	}
-
-	@FXML
 	void handleLogRecordsOnAction() {
 		openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
 	}
@@ -222,9 +209,9 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		if (aquariusVersion == null) {
 			aquariusVersion = getText("about.unknown");
 		}
-		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.resources.getString("about.title"),
-				this.resources.getString("about.header"),
-				MessageFormat.format(this.resources.getString("about.text"), this.version, aquariusVersion));
+		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.bundle.getString("about.title"),
+				this.bundle.getString("about.header"),
+				MessageFormat.format(this.bundle.getString("about.text"), this.version, aquariusVersion));
 		aboutDlg.showAndWait();
 	}
 
@@ -287,8 +274,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 
 					this.racesMitm.setDisable(!hasActiveRegatta);
 					this.setRaceMitm.setDisable(!hasActiveRegatta);
-					this.scoreMitm.setDisable(!hasActiveRegatta);
-					this.resultsMitm.setDisable(!hasActiveRegatta);
 					this.heatsMitm.setDisable(!hasActiveRegatta);
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
@@ -297,8 +282,6 @@ public class PrimaryController extends AbstractRegattaDAOController {
 		} else {
 			this.racesMitm.setDisable(!isOpen);
 			this.setRaceMitm.setDisable(!isOpen);
-			this.scoreMitm.setDisable(!isOpen);
-			this.resultsMitm.setDisable(!isOpen);
 			this.heatsMitm.setDisable(!isOpen);
 		}
 

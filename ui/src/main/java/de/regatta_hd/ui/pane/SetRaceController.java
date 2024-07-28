@@ -13,22 +13,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-import org.controlsfx.control.SearchableComboBox;
-
-import de.regatta_hd.aquarius.SeedingListEntry;
-import de.regatta_hd.aquarius.model.Crew;
-import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Race;
-import de.regatta_hd.aquarius.model.Race.GroupMode;
-import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.aquarius.model.Registration;
-import de.regatta_hd.aquarius.model.Result;
-import de.regatta_hd.aquarius.util.ModelUtils;
-import de.regatta_hd.commons.fx.util.FxConstants;
-import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.util.RaceStringConverter;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,6 +32,21 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+
+import org.controlsfx.control.SearchableComboBox;
+
+import de.regatta_hd.aquarius.SeedingListEntry;
+import de.regatta_hd.aquarius.model.Crew;
+import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Race.GroupMode;
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.aquarius.model.Result;
+import de.regatta_hd.aquarius.util.ModelUtils;
+import de.regatta_hd.commons.fx.util.FxConstants;
+import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.util.RaceStringConverter;
 
 public class SetRaceController extends AbstractRegattaDAOController {
 	private static final Logger logger = Logger.getLogger(SetRaceController.class.getName());
@@ -188,15 +188,15 @@ public class SetRaceController extends AbstractRegattaDAOController {
 					.filter(race -> !race.getAgeClass().isOpen() // don't set open races
 							&& !race.getAgeClass().isMasters() // don't set master races
 							&& race.getGroupMode() == GroupMode.NONE // don't set races with age groups
-			// don't set races with only one devision
-							&& race.getActiveRegistrations().count() > race.getRaceMode().getLaneCount())
+							&& race.getActiveRegistrations() // don't set races with only one devision
+									.count() > (race.getRaceMode() != null ? race.getRaceMode().getLaneCount() : 4))
 					// remove races whose source race result isn't official yet
 					.filter(race -> {
 						// create race number of source race -> replace 2 with 1
 						Race srcRace = srcRaces.get(getSrcRaceNumber(race));
 						// the source race needs to be driven with an official result
 						return srcRace != null && srcRace.isOfficial() && !srcRace.isCancelled();
-					}).collect(Collectors.toList());
+					}).toList();
 			return FXCollections.observableArrayList(filteredRaces);
 		}, dbResult -> {
 			try {
@@ -671,7 +671,8 @@ public class SetRaceController extends AbstractRegattaDAOController {
 	// static helpers
 
 	private static String createCrewsLabel(Registration registration) {
-		return registration.getRace().getNumber() + " - " + registration.getBib() + " " + ModelUtils.getBoatLabel(registration);
+		return registration.getRace().getNumber() + " - " + registration.getBib() + " "
+				+ ModelUtils.getBoatLabel(registration);
 	}
 
 	private static String getSrcRaceNumber(Race race) {

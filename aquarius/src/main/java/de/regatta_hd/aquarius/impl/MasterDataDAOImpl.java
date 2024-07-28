@@ -5,6 +5,9 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.xml.bind.JAXBException;
+
 import com.google.inject.Singleton;
 
 import de.regatta_hd.aquarius.MasterDataDAO;
@@ -18,8 +21,6 @@ import de.regatta_hd.commons.core.concurrent.ProgressMonitor;
 import de.regatta_hd.schemas.xml.XMLDataLoader;
 import de.rudern.schemas.service.wettkampfrichter._2017.Liste;
 import de.rudern.schemas.service.wettkampfrichter._2017.TWKR;
-import jakarta.persistence.EntityManager;
-import jakarta.xml.bind.JAXBException;
 
 @Singleton
 public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO {
@@ -36,7 +37,8 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public Athlet getAthletViaExternalId(String externalId) {
-		return super.db.getEntityManager().createQuery("SELECT a FROM Athlet a WHERE a.externalIdA = :externalId", Athlet.class)
+		return super.db.getEntityManager()
+				.createQuery("SELECT a FROM Athlet a WHERE a.externalIdA = :externalId", Athlet.class)
 				.setParameter("externalId", externalId).getSingleResult();
 	}
 
@@ -47,7 +49,8 @@ public class MasterDataDAOImpl extends AbstractDAOImpl implements MasterDataDAO 
 
 	@Override
 	public Club getClubViaExternalId(int externalId) {
-		return super.db.getEntityManager().createQuery("SELECT c FROM Club c WHERE c.externalId = :externalId", Club.class)
+		return super.db.getEntityManager()
+				.createQuery("SELECT c FROM Club c WHERE c.externalId = :externalId", Club.class)
 				.setParameter("externalId", Integer.valueOf(externalId)).getSingleResult();
 	}
 

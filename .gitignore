@@ -15,7 +15,6 @@
 *.war
 *.nar
 *.ear
-*.zip
 *.tar.gz
 *.rar
 
@@ -25,6 +24,7 @@ hs_err_pid*
 # Eclipse & Maven
 .project
 .classpath
+.factorypath
 .settings
 target
 .apt_generated/
@@ -33,5 +33,5 @@ pom.xml.versionsBackup
 dependency-reduced-pom.xml
 
 .DS_Store
-
 native-image
+.vscode

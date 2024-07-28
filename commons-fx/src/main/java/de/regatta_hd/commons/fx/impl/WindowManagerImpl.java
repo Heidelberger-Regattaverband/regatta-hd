@@ -8,13 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import de.regatta_hd.commons.fx.guice.FXMLLoaderFactory;
-import de.regatta_hd.commons.fx.stage.Controller;
-import de.regatta_hd.commons.fx.stage.WindowManager;
-import de.regatta_hd.commons.fx.util.FxUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,6 +17,14 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import javafx.util.Pair;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import de.regatta_hd.commons.fx.guice.FXMLLoaderFactory;
+import de.regatta_hd.commons.fx.stage.Controller;
+import de.regatta_hd.commons.fx.stage.WindowManager;
+import de.regatta_hd.commons.fx.util.FxUtils;
 
 @Singleton
 public class WindowManagerImpl implements WindowManager {

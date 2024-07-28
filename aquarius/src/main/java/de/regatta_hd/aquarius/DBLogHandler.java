@@ -6,6 +6,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Handler;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.inject.Inject;
@@ -17,8 +20,6 @@ import de.regatta_hd.aquarius.model.LogRecord;
 import de.regatta_hd.commons.core.ListenerManager;
 import de.regatta_hd.commons.db.DBConnection;
 import de.regatta_hd.commons.db.DBThreadPoolExecutor;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 @Singleton
 public class DBLogHandler extends Handler {
