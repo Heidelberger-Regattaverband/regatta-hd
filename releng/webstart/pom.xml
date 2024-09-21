@@ -97,6 +97,9 @@
         <artifactId>maven-jarsigner-plugin</artifactId>
         <configuration>
           <archiveDirectory>${archives.directory}</archiveDirectory>
+<!--          <excludes>-->
+<!--            <exclude>com.microsoft.sqlserver-mssql-jdbc*.jar</exclude>-->
+<!--          </excludes>-->
           <keystore>keystore.jks</keystore>
           <alias>selfsigned</alias>
           <storepass>password</storepass>
@@ -125,6 +128,7 @@
         </configuration>
         <executions>
           <execution>
+            <id>deploy</id>
             <goals>
               <goal>site</goal>
             </goals>
