@@ -56,7 +56,7 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.6.3.Final</hibernate.version>
+    <hibernate.version>6.6.4.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>12.9.0.jre11-preview</mssql.version>
@@ -65,7 +65,7 @@
     <commons-lang3.version>3.17.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.11.3</junit.version>
+    <junit.version>5.11.4</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>4.30.0</liquibase.version>
