@@ -104,6 +104,7 @@
           <alias>selfsigned</alias>
           <storepass>password</storepass>
           <keypass>password</keypass>
+          <removeExistingSignatures>true</removeExistingSignatures>
         </configuration>
         <executions>
           <execution>
