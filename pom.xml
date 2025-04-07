@@ -56,7 +56,7 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.6.12.Final</hibernate.version>
+    <hibernate.version>6.6.13.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>12.10.0.jre11</mssql.version>
