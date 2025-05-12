@@ -39,7 +39,7 @@ public class AquariusDBImpl extends AbstractDBConnection {
 		super("aquarius", listenerManager);
 	}
 
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource" })
 	@Override
 	public void updateSchema() {
 		ensureOpen();

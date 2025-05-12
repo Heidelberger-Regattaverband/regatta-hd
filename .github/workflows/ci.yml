@@ -15,26 +15,26 @@ jobs:
 
     steps:
     - name: Tailscale
-      uses: tailscale/github-action@v2
+      uses: tailscale/github-action@v3
       with:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-        version: 1.58.2
+        version: 1.80.2
         tags: tag:ci
   
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup JDK 17
+    - name: Setup JDK 21
       uses: actions/setup-java@v4
       with:
-        distribution: 'temurin'
-        java-version: 17
+        distribution: sapmachine
+        java-version: 21
 
     - name: Setup Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: 3.9.6
+        maven-version: 3.9.9
 
     - name: Cache Maven Repository
       uses: actions/cache@v4

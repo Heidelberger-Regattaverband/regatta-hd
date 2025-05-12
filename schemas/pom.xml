@@ -6,7 +6,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.61</version>
+    <version>0.1.62</version>
   </parent>
 
   <artifactId>schemas</artifactId>

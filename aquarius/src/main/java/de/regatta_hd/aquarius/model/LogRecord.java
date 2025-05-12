@@ -119,7 +119,7 @@ public class LogRecord implements Serializable {
 		setSourceMethod(logRecord.getSourceMethodName());
 
 		Optional<Thread> threadOpt = Thread.getAllStackTraces().keySet().stream()
-				.filter(thread -> thread.getId() == logRecord.getLongThreadID()).findFirst();
+				.filter(thread -> thread.threadId() == logRecord.getLongThreadID()).findFirst();
 		if (threadOpt.isPresent()) {
 			setThreadName(threadOpt.get().getName());
 		}

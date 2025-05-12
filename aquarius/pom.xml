@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.61</version>
+    <version>0.1.62</version>
   </parent>
 
   <artifactId>aquarius</artifactId>
@@ -97,7 +97,7 @@
           <dependency>
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-all</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0</version>
           </dependency>
         </dependencies>
       </plugin>

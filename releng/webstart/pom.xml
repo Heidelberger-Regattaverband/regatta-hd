@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.regatta-hd</groupId>
     <artifactId>regatta-hd</artifactId>
-    <version>0.1.61</version>
+    <version>0.1.62</version>
     <relativePath>../..</relativePath>
   </parent>
 
@@ -97,10 +97,14 @@
         <artifactId>maven-jarsigner-plugin</artifactId>
         <configuration>
           <archiveDirectory>${archives.directory}</archiveDirectory>
+<!--          <excludes>-->
+<!--            <exclude>com.microsoft.sqlserver-mssql-jdbc*.jar</exclude>-->
+<!--          </excludes>-->
           <keystore>keystore.jks</keystore>
           <alias>selfsigned</alias>
           <storepass>password</storepass>
           <keypass>password</keypass>
+          <removeExistingSignatures>true</removeExistingSignatures>
         </configuration>
         <executions>
           <execution>
@@ -125,6 +129,7 @@
         </configuration>
         <executions>
           <execution>
+            <id>deploy</id>
             <goals>
               <goal>site</goal>
             </goals>

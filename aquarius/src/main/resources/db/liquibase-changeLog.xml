@@ -183,6 +183,7 @@
       <column header="Club_ExternID" name="Club_ExternID" type="NUMERIC" />
       <column header="Club_HRV_Latitude" name="Club_HRV_Latitude" type="DECIMAL(8,6)" />
       <column header="Club_HRV_Longitude" name="Club_HRV_Longitude" type="DECIMAL(9,6)" />
+      <column header="Club_ShortName" type="skip" />
     </loadUpdateData>
   </changeSet>
 
