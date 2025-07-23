@@ -9,6 +9,9 @@ updates:
   - dependency-name:  org.hibernate.orm:*
     versions:
     - ">=7"
+  - dependency-name:  org.openjfx.orm:*
+    versions:
+    - ">=24"
 
 - package-ecosystem: github-actions
   directory: "/"
