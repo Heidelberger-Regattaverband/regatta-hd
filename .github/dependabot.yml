@@ -6,7 +6,7 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   ignore:
-  - dependency-name:  org.hibernate.orm/*
+  - dependency-name:  org.hibernate.orm:*
     versions:
     - ">6"
 
