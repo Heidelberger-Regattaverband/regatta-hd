@@ -9,7 +9,7 @@ updates:
   - dependency-name:  org.hibernate.orm:*
     versions:
     - ">=7"
-  - dependency-name:  org.openjfx.orm:*
+  - dependency-name:  org.openjfx:*
     versions:
     - ">=24"
 
