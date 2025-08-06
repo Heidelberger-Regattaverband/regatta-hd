@@ -187,4 +187,23 @@
     </loadUpdateData>
   </changeSet>
 
+  <changeSet id="15" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="HRV_Timestrip" />
+      </not>
+    </preConditions>
+    <createTable tableName="HRV_Timestrip" remarks="Table for storing timestrip events, such as start and finish timestamps.">
+      <column name="timestamp" type="TIMESTAMP" remarks="Timestamp of the event, e.g., start or finish timestamp.">
+        <constraints nullable="false" />
+      </column>
+      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestrip event.">
+        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestrip_Event" />
+      </column>
+      <column name="type" type="TINYINT" remarks="Event type (0: start, 1: lap, 2: finish)" />
+      <column name="heat_nr" type="INTEGER" remarks="Heat number, initially null." />
+      <column name="bib" type="SMALLINT" remarks="Bib number, initially null." />
+    </createTable>
+  </changeSet>
+
 </databaseChangeLog>
