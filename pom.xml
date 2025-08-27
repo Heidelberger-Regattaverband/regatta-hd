@@ -5,7 +5,7 @@
   <parent>
     <groupId>de.ofterdinger.parents</groupId>
     <artifactId>build</artifactId>
-    <version>0.1.7-SNAPSHOT</version>
+    <version>0.1.7</version>
   </parent>
 
   <groupId>de.regatta-hd</groupId>
@@ -56,16 +56,16 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.6.18.Final</hibernate.version>
+    <hibernate.version>6.6.27.Final</hibernate.version>
 
     <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>12.10.1.jre11</mssql.version>
+    <mssql.version>13.2.0.jre11</mssql.version>
 
     <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.18.0</commons-lang3.version>
 
     <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
-    <junit.version>5.13.3</junit.version>
+    <junit.version>5.13.4</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>4.33.0</liquibase.version>
