@@ -190,15 +190,15 @@
   <changeSet id="15" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="HRV_Timestamps" />
+        <tableExists tableName="HRV_Timestamp" />
       </not>
     </preConditions>
-    <createTable tableName="HRV_Timestamps" remarks="Table for storing timestamps of events, such as start and finish.">
+    <createTable tableName="HRV_Timestamp" remarks="Table for storing timestamps of events, such as start and finish.">
       <column name="timestamp" type="TIMESTAMP" remarks="Timestamp of the event, e.g., start or finish timestamp.">
         <constraints nullable="false" />
       </column>
-      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestamp event.">
-        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestamps_Event" />
+      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestamp.">
+        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestamp_Event" />
       </column>
       <column name="split_nr" type="TINYINT" remarks="Split number (0: start, 64: finish)" />
       <column name="heat_nr" type="INTEGER" remarks="Heat number, initially null." />
