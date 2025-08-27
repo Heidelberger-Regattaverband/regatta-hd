@@ -190,17 +190,17 @@
   <changeSet id="15" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="HRV_Timestrip" />
+        <tableExists tableName="HRV_Timestamps" />
       </not>
     </preConditions>
-    <createTable tableName="HRV_Timestrip" remarks="Table for storing timestrip events, such as start and finish timestamps.">
+    <createTable tableName="HRV_Timestamps" remarks="Table for storing timestamps of events, such as start and finish.">
       <column name="timestamp" type="TIMESTAMP" remarks="Timestamp of the event, e.g., start or finish timestamp.">
         <constraints nullable="false" />
       </column>
-      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestrip event.">
-        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestrip_Event" />
+      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestamp event.">
+        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestamps_Event" />
       </column>
-      <column name="type" type="TINYINT" remarks="Event type (0: start, 1: lap, 2: finish)" />
+      <column name="split_nr" type="TINYINT" remarks="Split number (0: start, 64: finish)" />
       <column name="heat_nr" type="INTEGER" remarks="Heat number, initially null." />
       <column name="bib" type="SMALLINT" remarks="Bib number, initially null." />
     </createTable>
