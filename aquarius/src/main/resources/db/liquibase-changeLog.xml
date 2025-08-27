@@ -1,6 +1,5 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
 
   <changeSet id="1" author="markus@ofterdinger.de">
@@ -21,11 +20,12 @@
   </changeSet>
 
   <changeSet id="2" author="markus@ofterdinger.de" runOnChange="true">
-    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;" relativeToChangelogFile="true"
-      separator="," tableName="HRV_AgeClass" primaryKey="id">
+    <loadUpdateData encoding="UTF-8" file="HRV_AgeClass.csv" quotchar="&quot;" relativeToChangelogFile="true" separator=","
+      tableName="HRV_AgeClass" primaryKey="id">
       <column header="id" name="id" type="NUMERIC" />
       <column header="distance" name="distance" type="NUMERIC" />
-      <column header="comment" type="SKIP" />
+      <column header="comment"
+        type="SKIP" />
     </loadUpdateData>
   </changeSet>
 
@@ -37,8 +37,7 @@
     </preConditions>
     <createTable tableName="HRV_Offer">
       <column name="id" type="INT">
-        <constraints nullable="false" primaryKey="true"
-          primaryKeyName="PK_HRV_Offer" referencedTableName="Offer"
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Offer" referencedTableName="Offer"
           referencedColumnNames="Offer_ID" foreignKeyName="FK_Offer" />
       </column>
       <column name="isSet" type="BOOLEAN">
@@ -55,13 +54,11 @@
     </preConditions>
     <createTable tableName="HRV_Score">
       <column name="club_id" type="INT">
-        <constraints nullable="false" primaryKey="true"
-          primaryKeyName="PK_Score_Club_Event" referencedTableName="Club"
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Club"
           referencedColumnNames="Club_ID" foreignKeyName="FK_Score_Club" />
       </column>
       <column name="event_id" type="INT">
-        <constraints nullable="false" primaryKey="true"
-          primaryKeyName="PK_Score_Club_Event" referencedTableName="Event"
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_Score_Club_Event" referencedTableName="Event"
           referencedColumnNames="Event_ID" foreignKeyName="FK_Score_Event" />
       </column>
       <column name="rank" type="SMALLINT" />
@@ -140,8 +137,7 @@
 
   <changeSet id="10" author="markus@ofterdinger.de">
     <update tableName="Offer">
-      <column name="Offer_HRV_Seeded"
-        valueComputed="(SELECT HRV_Offer.isSet FROM HRV_Offer WHERE Offer_ID = HRV_Offer.id)" />
+      <column name="Offer_HRV_Seeded" valueComputed="(SELECT HRV_Offer.isSet FROM HRV_Offer WHERE Offer_ID = HRV_Offer.id)" />
       <where>Offer_ID = (SELECT HRV_Offer.id FROM HRV_Offer WHERE Offer.Offer_ID = HRV_Offer.id)</where>
     </update>
   </changeSet>
@@ -178,13 +174,34 @@
   </changeSet>
 
   <changeSet id="14" author="markus@ofterdinger.de" runOnChange="true">
-    <loadUpdateData encoding="UTF-8" file="Club.csv" quotchar="&quot;" relativeToChangelogFile="true"
-      separator="," tableName="Club" primaryKey="Club_ExternID" >
+    <loadUpdateData encoding="UTF-8" file="Club.csv" quotchar="&quot;" relativeToChangelogFile="true" separator="," tableName="Club"
+      primaryKey="Club_ExternID">
       <column header="Club_ExternID" name="Club_ExternID" type="NUMERIC" />
-      <column header="Club_HRV_Latitude" name="Club_HRV_Latitude" type="DECIMAL(8,6)" />
+      <column header="Club_HRV_Latitude" name="Club_HRV_Latitude"
+        type="DECIMAL(8,6)" />
       <column header="Club_HRV_Longitude" name="Club_HRV_Longitude" type="DECIMAL(9,6)" />
-      <column header="Club_ShortName" type="skip" />
+      <column
+        header="Club_ShortName" type="skip" />
     </loadUpdateData>
+  </changeSet>
+
+  <changeSet id="15" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="HRV_Timestamp" />
+      </not>
+    </preConditions>
+    <createTable tableName="HRV_Timestamp" remarks="Table for storing timestamps, such as start and finish.">
+      <column name="timestamp" type="TIMESTAMP" remarks="Timestamp of the event, e.g., start or finish timestamp.">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Timestamp" />
+      </column>
+      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestamp.">
+        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestamp_Event" />
+      </column>
+      <column name="split_nr" type="TINYINT" remarks="Split number (0: start, 64: finish)" />
+      <column name="heat_nr" type="SMALLINT" remarks="Heat number, initially null." />
+      <column name="bib" type="SMALLINT" remarks="Bib number, initially null." />
+    </createTable>
   </changeSet>
 
 </databaseChangeLog>
