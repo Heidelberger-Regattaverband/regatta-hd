@@ -50,7 +50,7 @@
     <controlsfx.version>11.2.2</controlsfx.version>
 
     <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.40</lombok.version>
+    <lombok.version>1.18.42</lombok.version>
 
     <!-- https://search.maven.org/artifact/com.google.inject/guice -->
     <guice.version>7.0.0</guice.version>
