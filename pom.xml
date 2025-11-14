@@ -74,7 +74,7 @@
     <poi.version>5.4.1</poi.version>
 
     <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
-    <jSerialComm.version>2.11.2</jSerialComm.version>
+    <jSerialComm.version>2.11.4</jSerialComm.version>
 
     <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
     <jaxb-impl.version>4.0.5</jaxb-impl.version>
