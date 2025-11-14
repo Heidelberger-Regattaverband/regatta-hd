@@ -68,7 +68,7 @@
     <junit.version>6.0.1</junit.version>
 
     <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
-    <liquibase.version>4.33.0</liquibase.version>
+    <liquibase.version>5.0.1</liquibase.version>
 
     <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
     <poi.version>5.4.1</poi.version>
