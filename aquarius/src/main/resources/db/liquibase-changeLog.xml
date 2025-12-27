@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-5.0.xsd">
 
   <changeSet id="1" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
@@ -192,16 +192,30 @@
       </not>
     </preConditions>
     <createTable tableName="HRV_Timestamp" remarks="Table for storing timestamps, such as start and finish.">
-      <column name="timestamp" type="TIMESTAMP" remarks="Timestamp of the event, e.g., start or finish timestamp.">
+      <column name="timestamp" type="TIMESTAMP" remarks="The timestamp of the event.">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_HRV_Timestamp" />
       </column>
-      <column name="event_id" type="INT" remarks="Reference to the event associated with this timestamp.">
+      <column name="eventId" type="INT" remarks="Reference to the event associated with this timestamp.">
         <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Timestamp_Event" />
       </column>
-      <column name="split_nr" type="TINYINT" remarks="Split number (0: start, 64: finish)" />
-      <column name="heat_nr" type="SMALLINT" remarks="Heat number, initially null." />
-      <column name="bib" type="SMALLINT" remarks="Bib number, initially null." />
+      <column name="splitNr" type="TINYINT" remarks="Split number (0: start, 64: finish)." />
+      <column name="heatNr" type="SMALLINT" remarks="Heat number, initially null." />
+      <column name="bib" type="TINYINT" remarks="Bib number, initially null." />
     </createTable>
+  </changeSet>
+
+  <changeSet id="16" author="markus@ofterdinger.de">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="HRV_Message" />
+      </not>
+    </preConditions>
+    <createTable tableName="HRV_Message" remarks="Table for storing messages shown in the Infoportal.">
+      <column name="severity" type="TINYINT" remarks="Severity level of the message." />
+      <column name="text" type="VARCHAR(512)" remarks="The message text to show." />
+      <column name="frequency" type="TINYINT" remarks="Frequency about how often the message should be displayed." />
+    </createTable>
+    <sql dbms="mssql">ALTER TABLE HRV_Message ADD id INT NOT NULL IDENTITY(1, 1) PRIMARY KEY;</sql>
   </changeSet>
 
 </databaseChangeLog>
