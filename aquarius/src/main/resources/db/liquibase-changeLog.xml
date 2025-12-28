@@ -211,9 +211,15 @@
       </not>
     </preConditions>
     <createTable tableName="HRV_Message" remarks="Table for storing messages shown in the Infoportal.">
-      <column name="severity" type="TINYINT" remarks="Severity level of the message." />
-      <column name="text" type="VARCHAR(512)" remarks="The message text to show." />
-      <column name="frequency" type="TINYINT" remarks="Frequency about how often the message should be displayed." />
+      <column name="severity" type="TINYINT" remarks="Severity level of the message.">
+        <constraints nullable="false" />
+      </column>
+      <column name="text" type="CLOB" remarks="The message text to show.">
+        <constraints nullable="false" />
+      </column>
+      <column name="changedAt" type="TIMESTAMP" remarks="Timestamp when the message was last changed.">
+        <constraints nullable="false" />
+      </column>
     </createTable>
     <sql dbms="mssql">ALTER TABLE HRV_Message ADD id INT NOT NULL IDENTITY(1, 1) PRIMARY KEY;</sql>
   </changeSet>
