@@ -211,13 +211,16 @@
       </not>
     </preConditions>
     <createTable tableName="HRV_Message" remarks="Table for storing messages shown in the Infoportal.">
+      <column name="eventId" type="INT" remarks="Reference to the event associated with this message.">
+        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Message_Event" />
+      </column>
       <column name="severity" type="TINYINT" remarks="Severity level of the message.">
         <constraints nullable="false" />
       </column>
       <column name="text" type="CLOB" remarks="The message text to show.">
         <constraints nullable="false" />
       </column>
-      <column name="changedAt" type="TIMESTAMP" remarks="Timestamp when the message was last changed.">
+      <column name="modifiedAt" type="TIMESTAMP" remarks="Timestamp when the message was last modified.">
         <constraints nullable="false" />
       </column>
     </createTable>
