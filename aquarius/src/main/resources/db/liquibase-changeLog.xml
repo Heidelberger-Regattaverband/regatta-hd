@@ -207,24 +207,28 @@
   <changeSet id="16" author="markus@ofterdinger.de">
     <preConditions onFail="MARK_RAN">
       <not>
-        <tableExists tableName="HRV_Message" />
+        <tableExists tableName="HRV_Notification" />
       </not>
     </preConditions>
-    <createTable tableName="HRV_Message" remarks="Table for storing messages shown in the Infoportal.">
-      <column name="eventId" type="INT" remarks="Reference to the event associated with this message.">
-        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID" foreignKeyName="FK_HRV_Message_Event" />
+    <createTable tableName="HRV_Notification" remarks="Table for storing notifications shown in the Infoportal.">
+      <column name="eventId" type="INT" remarks="Reference to the event to which this notification belongs.">
+        <constraints nullable="false" referencedTableName="Event" referencedColumnNames="Event_ID"
+          foreignKeyName="FK_HRV_Notification_Event" />
       </column>
-      <column name="severity" type="TINYINT" remarks="Severity level of the message.">
+      <column name="priority" type="TINYINT" remarks="Severity level of the notification.">
+        <constraints nullable="true" />
+      </column>
+      <column name="title" type="CLOB" remarks="The notification title to show.">
         <constraints nullable="false" />
       </column>
-      <column name="text" type="CLOB" remarks="The message text to show.">
-        <constraints nullable="false" />
+      <column name="text" type="CLOB" remarks="The notification text to show.">
+        <constraints nullable="true" />
       </column>
-      <column name="modifiedAt" type="TIMESTAMP" remarks="Timestamp when the message was last modified.">
-        <constraints nullable="false" />
+      <column name="modifiedAt" type="TIMESTAMP" remarks="Timestamp when the notification was last modified.">
+        <constraints nullable="true" />
       </column>
     </createTable>
-    <sql dbms="mssql">ALTER TABLE HRV_Message ADD id INT NOT NULL IDENTITY(1, 1) PRIMARY KEY;</sql>
+    <sql dbms="mssql">ALTER TABLE HRV_Notification ADD id INT NOT NULL IDENTITY(1, 1) PRIMARY KEY;</sql>
   </changeSet>
 
 </databaseChangeLog>
