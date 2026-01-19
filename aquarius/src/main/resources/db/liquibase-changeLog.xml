@@ -228,7 +228,7 @@
         <constraints nullable="false" />
       </column>
       <column name="modifiedAt" type="TIMESTAMP" remarks="Timestamp when the notification was last modified.">
-        <constraints nullable="false" />
+        <constraints nullable="true" />
       </column>
     </createTable>
     <sql dbms="mssql">ALTER TABLE HRV_Notification ADD id INT NOT NULL IDENTITY(1, 1) PRIMARY KEY;</sql>
