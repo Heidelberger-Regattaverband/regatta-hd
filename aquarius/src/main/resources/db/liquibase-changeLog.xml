@@ -232,19 +232,6 @@
       </column>
     </createTable>
     <sql dbms="mssql">ALTER TABLE HRV_Notification ADD id INT NOT NULL IDENTITY(1, 1) PRIMARY KEY;</sql>
-    <sql dbms="mssql">
-      CREATE TRIGGER trg_HRV_Notification_modifiedAt
-      ON HRV_Notification
-      AFTER INSERT, UPDATE
-      AS
-      BEGIN
-        SET NOCOUNT ON;
-        UPDATE HRV_Notification
-        SET modifiedAt = GETDATE()
-        FROM HRV_Notification n
-        INNER JOIN inserted i ON n.id = i.id;
-      END;
-    </sql>
   </changeSet>
 
 </databaseChangeLog>
