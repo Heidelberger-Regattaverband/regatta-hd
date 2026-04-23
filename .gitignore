@@ -33,4 +33,5 @@ pom.xml.versionsBackup
 dependency-reduced-pom.xml
 
 .DS_Store
+native-image
 .vscode
