@@ -43,40 +43,40 @@
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
 
-    <!-- https://search.maven.org/artifact/org.openjfx/javafx-base -->
+    <!-- https://central.sonatype.com/artifact/org.openjfx/javafx-base -->
     <openjfx.version>23.0.2</openjfx.version>
 
-    <!-- https://search.maven.org/artifact/org.controlsfx/controlsfx -->
+    <!-- https://central.sonatype.com/artifact/org.controlsfx/controlsfx -->
     <controlsfx.version>11.2.3</controlsfx.version>
 
-    <!-- https://search.maven.org/artifact/org.projectlombok/lombok -->
+    <!-- https://central.sonatype.com/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.46</lombok.version>
 
-    <!-- https://search.maven.org/artifact/com.google.inject/guice -->
+    <!-- https://central.sonatype.com/artifact/com.google.inject/guice -->
     <guice.version>7.0.0</guice.version>
 
-    <!-- https://search.maven.org/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.6.49.Final</hibernate.version>
+    <!-- https://central.sonatype.com/artifact/org.hibernate.orm/hibernate-core -->
+    <hibernate.version>6.6.50.Final</hibernate.version>
 
-    <!-- https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+    <!-- https://central.sonatype.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>13.4.0.jre11</mssql.version>
 
-    <!-- https://search.maven.org/artifact/org.apache.commons/commons-lang3 -->
+    <!-- https://central.sonatype.com/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.20.0</commons-lang3.version>
 
-    <!-- https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter-api -->
+    <!-- https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api -->
     <junit.version>6.0.3</junit.version>
 
-    <!-- https://search.maven.org/artifact/org.liquibase/liquibase-core -->
+    <!-- https://central.sonatype.com/artifact/org.liquibase/liquibase-core -->
     <liquibase.version>5.0.2</liquibase.version>
 
-    <!-- https://search.maven.org/artifact/org.apache.poi/poi -->
+    <!-- https://central.sonatype.com/artifact/org.apache.poi/poi -->
     <poi.version>5.5.1</poi.version>
 
-    <!-- https://search.maven.org/artifact/com.fazecast/jSerialComm -->
+    <!-- https://central.sonatype.com/artifact/com.fazecast/jSerialComm -->
     <jSerialComm.version>2.11.4</jSerialComm.version>
 
-    <!-- https://search.maven.org/artifact/com.sun.xml.bind/jaxb-impl -->
+    <!-- https://central.sonatype.com/artifact/com.sun.xml.bind/jaxb-impl -->
     <jaxb-impl.version>4.0.7</jaxb-impl.version>
   </properties>
 
