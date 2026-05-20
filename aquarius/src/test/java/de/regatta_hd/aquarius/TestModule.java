@@ -3,9 +3,9 @@ package de.regatta_hd.aquarius;
 import java.io.IOException;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 
 import de.regatta_hd.commons.core.ConfigService;
-import de.regatta_hd.commons.core.impl.ConfigServiceImpl;
 
 class TestModule extends AbstractModule {
 
@@ -14,7 +14,7 @@ class TestModule extends AbstractModule {
 		bind(ConfigService.class).to(TestConfigService.class);
 
 		try {
-			bind(ConfigServiceImpl.class).toInstance(new ConfigServiceImpl());
+			bind(ConfigService.class).annotatedWith(Names.named("default")).toInstance(ConfigService.createDefault());
 		} catch (IOException e) {
 			addError(e);
 		}
