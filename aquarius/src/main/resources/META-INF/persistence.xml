@@ -4,6 +4,37 @@
   xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
   version="3.2">
   <persistence-unit name="aquarius" transaction-type="RESOURCE_LOCAL">
+    <!--
+      Entity classes are listed explicitly because, with the Java Platform Module System
+      (JPMS), Hibernate's classpath-based entity scanner cannot reliably discover
+      @Entity-annotated classes located inside named modules.
+    -->
+    <class>de.regatta_hd.aquarius.model.AgeClass</class>
+    <class>de.regatta_hd.aquarius.model.Athlet</class>
+    <class>de.regatta_hd.aquarius.model.BoatClass</class>
+    <class>de.regatta_hd.aquarius.model.Club</class>
+    <class>de.regatta_hd.aquarius.model.Crew</class>
+    <class>de.regatta_hd.aquarius.model.Cup</class>
+    <class>de.regatta_hd.aquarius.model.CupPointTable</class>
+    <class>de.regatta_hd.aquarius.model.Heat</class>
+    <class>de.regatta_hd.aquarius.model.HeatReferee</class>
+    <class>de.regatta_hd.aquarius.model.HeatRegistration</class>
+    <class>de.regatta_hd.aquarius.model.Label</class>
+    <class>de.regatta_hd.aquarius.model.LogRecord</class>
+    <class>de.regatta_hd.aquarius.model.MetaData</class>
+    <class>de.regatta_hd.aquarius.model.Nation</class>
+    <class>de.regatta_hd.aquarius.model.ProgressionRule</class>
+    <class>de.regatta_hd.aquarius.model.Race</class>
+    <class>de.regatta_hd.aquarius.model.RaceMode</class>
+    <class>de.regatta_hd.aquarius.model.RaceModeDetail</class>
+    <class>de.regatta_hd.aquarius.model.RaceModeRange</class>
+    <class>de.regatta_hd.aquarius.model.Referee</class>
+    <class>de.regatta_hd.aquarius.model.Regatta</class>
+    <class>de.regatta_hd.aquarius.model.Registration</class>
+    <class>de.regatta_hd.aquarius.model.RegistrationLabel</class>
+    <class>de.regatta_hd.aquarius.model.ReportInfo</class>
+    <class>de.regatta_hd.aquarius.model.Result</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
       <property name="hibernate.show_sql" value="true" />
