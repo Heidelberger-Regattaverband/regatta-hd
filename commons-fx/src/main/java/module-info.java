@@ -8,6 +8,8 @@ module de.regatta_hd.commons.fx {
 	requires transitive javafx.controls;
 	requires transitive javafx.fxml;
 
+	requires com.google.guice;
+
 	requires transitive org.controlsfx.controls;
 
 	requires transitive de.regatta_hd.commons.db;

@@ -5,7 +5,7 @@ module de.regatta_hd.commons.core {
 	requires java.logging;
 
 	// tools modules
-	requires transitive com.google.guice;
+	requires com.google.guice;
 	requires transitive jakarta.inject;
 
 	// exports
