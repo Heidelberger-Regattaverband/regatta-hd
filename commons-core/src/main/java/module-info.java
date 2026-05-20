@@ -11,5 +11,5 @@ module de.regatta_hd.commons.core {
 	// exports
 	exports de.regatta_hd.commons.core;
 	exports de.regatta_hd.commons.core.concurrent;
-	exports de.regatta_hd.commons.core.impl to de.regatta_hd.aquarius, com.google.guice;
+	exports de.regatta_hd.commons.core.impl to com.google.guice;
 }

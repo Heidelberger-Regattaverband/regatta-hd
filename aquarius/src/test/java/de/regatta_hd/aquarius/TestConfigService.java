@@ -5,14 +5,15 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.regatta_hd.commons.core.ConfigService;
-import de.regatta_hd.commons.core.impl.ConfigServiceImpl;
 
 class TestConfigService implements ConfigService {
 
 	@Inject
-	private ConfigServiceImpl cfgService;
+	@Named("default")
+	private ConfigService cfgService;
 
 	@Override
 	public String getProperty(String key) {
