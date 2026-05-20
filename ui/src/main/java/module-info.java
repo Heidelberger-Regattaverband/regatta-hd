@@ -4,6 +4,7 @@ module de.regatta_hd.ui {
 	requires javafx.fxml;
 	requires transitive javafx.graphics;
 
+	requires com.google.guice;
 	requires org.apache.commons.lang3;
 	requires org.apache.poi.poi;
 	requires com.fazecast.jSerialComm;

@@ -5,6 +5,7 @@ module de.regatta_hd.commons.db {
 	requires java.sql;
 
 	// tools modules
+	requires com.google.guice;
 	requires lombok;
 	requires transitive jakarta.persistence;
 
