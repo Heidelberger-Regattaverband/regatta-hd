@@ -70,8 +70,7 @@
           <programs>
             <program>
               <mainClass>${mainClass}</mainClass>
-              <id>app</id>
-              <name>regatta-hd</name>
+              <id>regatta-hd</id>
             </program>
           </programs>
         </configuration>
