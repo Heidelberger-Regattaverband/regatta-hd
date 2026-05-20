@@ -5,11 +5,11 @@ module de.regatta_hd.commons.core {
 	requires java.logging;
 
 	// tools modules
-	requires transitive com.google.guice;
+	requires com.google.guice;
 	requires transitive jakarta.inject;
 
 	// exports
 	exports de.regatta_hd.commons.core;
 	exports de.regatta_hd.commons.core.concurrent;
-	exports de.regatta_hd.commons.core.impl to de.regatta_hd.aquarius, com.google.guice;
+	exports de.regatta_hd.commons.core.impl to com.google.guice;
 }

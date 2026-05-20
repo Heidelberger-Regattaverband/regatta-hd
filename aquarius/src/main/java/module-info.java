@@ -9,6 +9,7 @@ open module de.regatta_hd.aquarius {
 	requires liquibase.core;
 
 	// tools modules
+	requires com.google.guice;
 	requires lombok;
 	requires org.apache.commons.lang3;
 
