@@ -56,7 +56,7 @@
     <guice.version>7.0.0</guice.version>
 
     <!-- https://central.sonatype.com/artifact/org.hibernate.orm/hibernate-core -->
-    <hibernate.version>6.6.52.Final</hibernate.version>
+    <hibernate.version>6.6.53.Final</hibernate.version>
 
     <!-- https://central.sonatype.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <mssql.version>13.4.0.jre11</mssql.version>
