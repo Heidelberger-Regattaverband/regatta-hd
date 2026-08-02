@@ -47,7 +47,7 @@
     <openjfx.version>23.0.2</openjfx.version>
 
     <!-- https://central.sonatype.com/artifact/org.controlsfx/controlsfx -->
-    <controlsfx.version>11.2.3</controlsfx.version>
+    <controlsfx.version>11.2.4</controlsfx.version>
 
     <!-- https://central.sonatype.com/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.46</lombok.version>
