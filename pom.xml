@@ -50,7 +50,7 @@
     <controlsfx.version>11.2.4</controlsfx.version>
 
     <!-- https://central.sonatype.com/artifact/org.projectlombok/lombok -->
-    <lombok.version>1.18.46</lombok.version>
+    <lombok.version>1.18.48</lombok.version>
 
     <!-- https://central.sonatype.com/artifact/com.google.inject/guice -->
     <guice.version>7.0.0</guice.version>
