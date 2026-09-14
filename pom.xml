@@ -59,7 +59,7 @@
     <hibernate.version>6.6.56.Final</hibernate.version>
 
     <!-- https://central.sonatype.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-    <mssql.version>13.4.0.jre11</mssql.version>
+    <mssql.version>13.6.0.jre11</mssql.version>
 
     <!-- https://central.sonatype.com/artifact/org.apache.commons/commons-lang3 -->
     <commons-lang3.version>3.20.0</commons-lang3.version>
