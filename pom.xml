@@ -62,7 +62,7 @@
     <mssql.version>13.6.0.jre11</mssql.version>
 
     <!-- https://central.sonatype.com/artifact/org.apache.commons/commons-lang3 -->
-    <commons-lang3.version>3.20.0</commons-lang3.version>
+    <commons-lang3.version>3.21.0</commons-lang3.version>
 
     <!-- https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api -->
     <junit.version>6.1.3</junit.version>
