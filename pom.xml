@@ -71,7 +71,7 @@
     <liquibase.version>5.0.4</liquibase.version>
 
     <!-- https://central.sonatype.com/artifact/org.apache.poi/poi -->
-    <poi.version>5.5.1</poi.version>
+    <poi.version>6.0.0</poi.version>
 
     <!-- https://central.sonatype.com/artifact/com.fazecast/jSerialComm -->
     <jSerialComm.version>2.11.4</jSerialComm.version>
