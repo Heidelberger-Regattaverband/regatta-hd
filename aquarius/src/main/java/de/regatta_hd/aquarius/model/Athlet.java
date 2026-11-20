@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -50,7 +50,7 @@ public class Athlet {
 
   /** The age group of the athlete. */
   @Column(name = "Athlet_DOB")
-  private Date dob;
+  private LocalDate dob;
 
   @Column(name = "Athlet_ExternID_A")
   private String externalIdA;

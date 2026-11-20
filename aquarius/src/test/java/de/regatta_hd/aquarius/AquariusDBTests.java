@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(BaseDBTest.class)
 class AquariusDBTests extends BaseDBTest {
 
-  private static final int regattaId = 4;
+  private static final int REGATTA_ID = 4;
 
   private static RegattaDAO regattaDAO;
 
@@ -41,8 +41,10 @@ class AquariusDBTests extends BaseDBTest {
         .getExecutor()
         .submit(() -> {
           Regatta regatta =
-              aquariusDb.getEntityManager().getReference(Regatta.class, Integer.valueOf(regattaId));
-          assertEquals(regattaId, regatta.getId());
+              aquariusDb
+                  .getEntityManager()
+                  .getReference(Regatta.class, Integer.valueOf(REGATTA_ID));
+          assertEquals(REGATTA_ID, regatta.getId());
           assertNotNull(regatta);
           regattaDAO.setActiveRegatta(regatta);
         })

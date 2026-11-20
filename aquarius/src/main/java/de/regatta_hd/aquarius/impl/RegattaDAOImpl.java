@@ -375,40 +375,42 @@ public class RegattaDAOImpl extends AbstractDAOImpl implements RegattaDAO {
   private static List<SeedingListEntry> createSetListWithEqualCrews(
       Map<Integer, SeedingListEntry> equalCrews, Race srcRace) {
     List<SeedingListEntry> setList = new ArrayList<>();
-
-    List<List<HeatRegistration>> srcHeatRegsAll = getSrcHeatsByRank(srcRace);
-
-    for (List<HeatRegistration> srcHeatRegs : srcHeatRegsAll) {
+    for (List<HeatRegistration> srcHeatRegs : getSrcHeatsByRank(srcRace)) {
       srcHeatRegs.stream()
-          .sorted((heatReg1, heatReg2) -> {
-            if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
-              return 0;
-            }
-            return heatReg1.getFinalResult().getNetTime().intValue()
-                    > heatReg2.getFinalResult().getNetTime().intValue()
-                ? 1
-                : -1;
-          })
-          .forEach(srcHeatReg -> {
-            SeedingListEntry entry;
-            // ensure the result contains a valid rank, if rank == 0 the boat did not finish
-            if (srcHeatReg.getFinalResult() != null && srcHeatReg.getFinalResult().getRank() > 0) {
-              entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
-              if (entry != null) {
-                entry.setRank(setList.size() + 1);
-                entry.setSrcHeatRegistration(srcHeatReg);
-                setList.add(entry);
-              }
-            } else {
-              entry = equalCrews.get(srcHeatReg.getRegistration().getId());
-              if (entry != null) {
-                entry.setSrcHeatRegistration(srcHeatReg);
-              }
-            }
-          });
+          .sorted(RegattaDAOImpl::compareByNetTime)
+          .forEach(srcHeatReg -> addToSetList(equalCrews, setList, srcHeatReg));
     }
-
     return setList;
+  }
+
+  private static int compareByNetTime(HeatRegistration heatReg1, HeatRegistration heatReg2) {
+    if (heatReg1.getFinalResult() == null || heatReg2.getFinalResult() == null) {
+      return 0;
+    }
+    return heatReg1.getFinalResult().getNetTime().intValue()
+            > heatReg2.getFinalResult().getNetTime().intValue()
+        ? 1
+        : -1;
+  }
+
+  private static void addToSetList(
+      Map<Integer, SeedingListEntry> equalCrews,
+      List<SeedingListEntry> setList,
+      HeatRegistration srcHeatReg) {
+    // ensure the result contains a valid rank, if rank == 0 the boat did not finish
+    if (srcHeatReg.getFinalResult() != null && srcHeatReg.getFinalResult().getRank() > 0) {
+      SeedingListEntry entry = equalCrews.remove(srcHeatReg.getRegistration().getId());
+      if (entry != null) {
+        entry.setRank(setList.size() + 1);
+        entry.setSrcHeatRegistration(srcHeatReg);
+        setList.add(entry);
+      }
+    } else {
+      SeedingListEntry entry = equalCrews.get(srcHeatReg.getRegistration().getId());
+      if (entry != null) {
+        entry.setSrcHeatRegistration(srcHeatReg);
+      }
+    }
   }
 
   private static List<List<HeatRegistration>> getSrcHeatsByRank(Race srcRace) {
