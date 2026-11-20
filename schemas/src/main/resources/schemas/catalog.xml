@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <uri name="http://schemas.rudern.de/service/ausschreibung_2010.xsd"
+    uri="ausschreibung_2010.xsd" />
+  <uri name="http://schemas.rudern.de/service/ergebnisse_2017.xsd"
+    uri="ergebnisse_2017.xsd" />
+  <uri name="http://schemas.rudern.de/service/meldungen/2010/"
+    uri="meldungen_2010.xsd" />
+  <uri name="http://schemas.rudern.de/service/vereinsliste_v2.xsd"
+    uri="vereinsliste_v2.xsd" />
+  <uri name="http://schemas.rudern.de/service/wettkampfrichter_2017.xsd"
+    uri="wettkampfrichter_2017.xsd" />
+</catalog>

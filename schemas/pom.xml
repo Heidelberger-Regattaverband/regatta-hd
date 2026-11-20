@@ -71,6 +71,7 @@
               <sources>
                 <source>${project.basedir}/src/main/resources/schemas/meldungen_2010.xsd</source>
               </sources>
+              <catalog>${project.basedir}/src/main/resources/schemas/catalog.xml</catalog>
               <clearOutputDir>false</clearOutputDir>
             </configuration>
           </execution>
