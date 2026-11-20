@@ -2,12 +2,22 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import de.regatta_hd.aquarius.model.Race;
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.model.Registration;
+import de.regatta_hd.commons.fx.stage.WindowManager;
+import de.regatta_hd.commons.fx.util.FxConstants;
+import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
+import de.regatta_hd.ui.util.GroupModeStringConverter;
+import jakarta.persistence.EntityManager;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,274 +27,274 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-
-import jakarta.persistence.EntityManager;
-
 import org.controlsfx.control.table.TableFilter;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.regatta_hd.aquarius.model.Race;
-import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.aquarius.model.Registration;
-import de.regatta_hd.commons.fx.stage.WindowManager;
-import de.regatta_hd.commons.fx.util.FxConstants;
-import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.UIModule;
-import de.regatta_hd.ui.util.GroupModeStringConverter;
-
 public class RacesController extends AbstractRegattaDAOController {
-	private static final Logger logger = Logger.getLogger(RacesController.class.getName());
+  private static final Logger logger = Logger.getLogger(RacesController.class.getName());
 
-	// toolbar
-	@FXML
-	private Button refreshBtn;
-	@FXML
-	private Button setDistancesBtn;
-	@FXML
-	private Button setMastersAgeClassesBtn;
-	@FXML
-	private Button importAltRegsBtn;
+  // toolbar
+  @FXML private Button refreshBtn;
+  @FXML private Button setDistancesBtn;
+  @FXML private Button setMastersAgeClassesBtn;
+  @FXML private Button importAltRegsBtn;
 
-	// races table
-	@FXML
-	private TableView<Race> racesTbl;
-	@FXML
-	private TableColumn<Race, Integer> idCol;
-	@FXML
-	private TableColumn<Race, Integer> regsExtIdCol;
-	@FXML
-	private TableColumn<Race, String> numberCol;
-	@FXML
-	private TableColumn<Race, Race.GroupMode> groupModeCol;
-	@FXML
-	private TableColumn<Race, Integer> regsIdCol;
+  // races table
+  @FXML private TableView<Race> racesTbl;
+  @FXML private TableColumn<Race, Integer> idCol;
+  @FXML private TableColumn<Race, Integer> regsExtIdCol;
+  @FXML private TableColumn<Race, String> numberCol;
+  @FXML private TableColumn<Race, Race.GroupMode> groupModeCol;
+  @FXML private TableColumn<Race, Integer> regsIdCol;
 
-	// registrations table
-	@FXML
-	private TableView<Registration> regsTbl;
-	@FXML
-	private TableColumn<Registration, Short> regsBibCol;
+  // registrations table
+  @FXML private TableView<Registration> regsTbl;
+  @FXML private TableColumn<Registration, Short> regsBibCol;
 
-	// injections
-	@Inject
-	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
-	private BooleanProperty showIdColumn;
-	@Inject
-	private WindowManager windowManager;
+  // injections
+  @Inject
+  @Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+  private BooleanProperty showIdColumn;
 
-	// fields
-	private final ObservableList<Race> racesList = FXCollections.observableArrayList();
-	private final ObservableList<Registration> regsList = FXCollections.observableArrayList();
+  @Inject private WindowManager windowManager;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+  // fields
+  private final ObservableList<Race> racesList = FXCollections.observableArrayList();
+  private final ObservableList<Registration> regsList = FXCollections.observableArrayList();
 
-		this.idCol.visibleProperty().bind(this.showIdColumn);
-		this.regsIdCol.visibleProperty().bind(this.showIdColumn);
-		this.regsExtIdCol.visibleProperty().bind(this.showIdColumn);
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    super.initialize(location, resources);
 
-		// races table
-		this.racesTbl.setItems(this.racesList);
-		this.racesTbl.getSortOrder().add(this.numberCol);
+    this.idCol.visibleProperty().bind(this.showIdColumn);
+    this.regsIdCol.visibleProperty().bind(this.showIdColumn);
+    this.regsExtIdCol.visibleProperty().bind(this.showIdColumn);
 
-		this.groupModeCol.setCellFactory(TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
-		this.racesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-			if (newSelection != null) {
-				this.regsList.setAll(newSelection.getRegistrations());
-				this.regsTbl.sort();
-			} else {
-				this.regsList.clear();
-			}
-		});
-		this.racesTbl.setRowFactory(row -> new TableRow<>() {
-			@Override
-			public void updateSelected(boolean selected) {
-				super.updateSelected(selected);
-				if (selected && getItem() != null && getItem().isCancelled()) {
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
-				} else {
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
-				}
-			}
+    // races table
+    this.racesTbl.setItems(this.racesList);
+    this.racesTbl.getSortOrder().add(this.numberCol);
 
-			@Override
-			public void updateItem(Race item, boolean empty) {
-				super.updateItem(item, empty);
-				pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
-			}
-		});
+    this.groupModeCol.setCellFactory(
+        TextFieldTableCell.forTableColumn(new GroupModeStringConverter()));
+    this.racesTbl
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener((obs, oldSelection, newSelection) -> {
+          if (newSelection != null) {
+            this.regsList.setAll(newSelection.getRegistrations());
+            this.regsTbl.sort();
+          } else {
+            this.regsList.clear();
+          }
+        });
+    this.racesTbl.setRowFactory(row ->
+        new TableRow<>() {
+          @Override
+          public void updateSelected(boolean selected) {
+            super.updateSelected(selected);
+            if (selected && getItem() != null && getItem().isCancelled()) {
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
+            } else {
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
+            }
+          }
 
-		// registrations table
-		this.regsTbl.setItems(this.regsList);
-		this.regsTbl.getSortOrder().add(this.regsBibCol);
-		this.regsTbl.setRowFactory(row -> new TableRow<>() {
-			@Override
-			public void updateItem(Registration item, boolean empty) {
-				super.updateItem(item, empty);
-				pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
-			}
+          @Override
+          public void updateItem(Race item, boolean empty) {
+            super.updateItem(item, empty);
+            pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
+          }
+        });
 
-			@Override
-			public void updateSelected(boolean selected) {
-				super.updateSelected(selected);
-				if (selected && getItem() != null && getItem().isCancelled()) {
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
-				} else {
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
-				}
-			}
-		});
+    // registrations table
+    this.regsTbl.setItems(this.regsList);
+    this.regsTbl.getSortOrder().add(this.regsBibCol);
+    this.regsTbl.setRowFactory(row ->
+        new TableRow<>() {
+          @Override
+          public void updateItem(Registration item, boolean empty) {
+            super.updateItem(item, empty);
+            pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
+          }
 
-		TableFilter<Race> racesTblFilter = TableFilter.forTableView(this.racesTbl).apply();
-		racesTblFilter.setSearchStrategy((input, target) -> target.contains(input));
+          @Override
+          public void updateSelected(boolean selected) {
+            super.updateSelected(selected);
+            if (selected && getItem() != null && getItem().isCancelled()) {
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
+            } else {
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
+            }
+          }
+        });
 
-		loadRaces(true);
-	}
+    TableFilter<Race> racesTblFilter = TableFilter.forTableView(this.racesTbl).apply();
+    racesTblFilter.setSearchStrategy((input, target) -> target.contains(input));
 
-	@Override
-	protected void onActiveRegattaChanged(Regatta activeRegatta) {
-		if (activeRegatta != null) {
-			loadRaces(true);
-		} else {
-			this.racesList.clear();
-			disableButtons(true);
-		}
-	}
+    loadRaces(true);
+  }
 
-	@Override
-	protected String getTitle(Regatta activeRegatta) {
-		return nonNull(activeRegatta) ? getText("PrimaryView.racesMitm.text") + " - " + activeRegatta.getTitle()
-				: getText("PrimaryView.racesMitm.text");
-	}
+  @Override
+  protected void onActiveRegattaChanged(Regatta activeRegatta) {
+    if (activeRegatta != null) {
+      loadRaces(true);
+    } else {
+      this.racesList.clear();
+      disableButtons(true);
+    }
+  }
 
-	@FXML
-	void handleImportAltRegsBtnOnAction() {
-		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
-		this.windowManager.newStage(getClass().getResource("AlternativeRegistrations.fxml"), getText("altRegs.title"),
-				super.bundle, getWindow(), styleLocation);
-	}
+  @Override
+  protected String getTitle(Regatta activeRegatta) {
+    return nonNull(activeRegatta)
+        ? getText("PrimaryView.racesMitm.text") + " - " + activeRegatta.getTitle()
+        : getText("PrimaryView.racesMitm.text");
+  }
 
-	@FXML
-	void handleRefreshOnAction() {
-		loadRaces(true);
-	}
+  @FXML
+  void handleImportAltRegsBtnOnAction() {
+    String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
+    this.windowManager.newStage(
+        getClass().getResource("AlternativeRegistrations.fxml"),
+        getText("altRegs.title"),
+        super.bundle,
+        getWindow(),
+        styleLocation);
+  }
 
-	@FXML
-	void handleSetDistancesOnAction() {
-		disableButtons(true);
+  @FXML
+  void handleRefreshOnAction() {
+    loadRaces(true);
+  }
 
-		super.dbTaskRunner.runInTransaction(monitor -> this.regattaDAO.setDistances(), dbResult -> {
-			try {
-				List<Race> races = dbResult.getResult();
-				if (races.isEmpty()) {
-					FxUtils.showInfoDialog(getWindow(), "Keine Rennen geändert.");
-				} else {
-					loadRaces(true);
-					FxUtils.showInfoDialog(getWindow(),
-							"%d Rennen geändert.".formatted(Integer.valueOf(races.size())));
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
-			}
-		});
-	}
+  @FXML
+  void handleSetDistancesOnAction() {
+    disableButtons(true);
 
-	@FXML
-	void handleSetMastersAgeClassesOnAction() {
-		disableButtons(true);
+    super.dbTaskRunner.runInTransaction(
+        monitor -> this.regattaDAO.setDistances(),
+        dbResult -> {
+          try {
+            List<Race> races = dbResult.getResult();
+            if (races.isEmpty()) {
+              FxUtils.showInfoDialog(getWindow(), "Keine Rennen geändert.");
+            } else {
+              loadRaces(true);
+              FxUtils.showInfoDialog(
+                  getWindow(), "%d Rennen geändert.".formatted(Integer.valueOf(races.size())));
+            }
+          } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            FxUtils.showErrorMessage(getWindow(), e);
+          } finally {
+            disableButtons(false);
+          }
+        });
+  }
 
-		super.dbTaskRunner.runInTransaction(monitor -> this.regattaDAO.enableMastersAgeClasses(), dbResult -> {
-			try {
-				List<Race> races = dbResult.getResult();
-				if (races.isEmpty()) {
-					FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
-				} else {
-					loadRaces(true);
-					FxUtils.showInfoDialog(getWindow(),
-							"%d Masters Rennen geändert.".formatted(Integer.valueOf(races.size())));
-				}
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
-			}
-		});
-	}
+  @FXML
+  void handleSetMastersAgeClassesOnAction() {
+    disableButtons(true);
 
-	@FXML
-	void handleDeleteRegistrationOnAction() {
-		Registration selectedRegistration = this.regsTbl.getSelectionModel().getSelectedItem();
-		if (selectedRegistration != null
-				&& FxUtils.showConfirmDialog(getWindow(), getText("races.confirmDeleteRegistration.title"),
-						getText("races.confirmDeleteRegistration.question"))) {
+    super.dbTaskRunner.runInTransaction(
+        monitor -> this.regattaDAO.enableMastersAgeClasses(),
+        dbResult -> {
+          try {
+            List<Race> races = dbResult.getResult();
+            if (races.isEmpty()) {
+              FxUtils.showInfoDialog(getWindow(), "Keine Masters Rennen geändert.");
+            } else {
+              loadRaces(true);
+              FxUtils.showInfoDialog(
+                  getWindow(),
+                  "%d Masters Rennen geändert.".formatted(Integer.valueOf(races.size())));
+            }
+          } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            FxUtils.showErrorMessage(getWindow(), e);
+          } finally {
+            disableButtons(false);
+          }
+        });
+  }
 
-			disableButtons(true);
+  @FXML
+  void handleDeleteRegistrationOnAction() {
+    Registration selectedRegistration = this.regsTbl.getSelectionModel().getSelectedItem();
+    if (selectedRegistration != null
+        && FxUtils.showConfirmDialog(
+            getWindow(),
+            getText("races.confirmDeleteRegistration.title"),
+            getText("races.confirmDeleteRegistration.question"))) {
 
-			super.dbTaskRunner.runInTransaction(progMon -> {
-				EntityManager em = super.db.getEntityManager();
-				selectedRegistration.getLabels().forEach(regLabel -> {
-					em.remove(regLabel);
-					// don't delete label if it's used at several registrations
-					if (regLabel.getLabel().getRegistrationLabels().size() == 1) {
-						em.remove(regLabel.getLabel());
-					}
-				});
-				em.remove(selectedRegistration);
-				return selectedRegistration;
-			}, dbResult -> {
-				try {
-					Registration deletedReg = dbResult.getResult();
-					this.racesTbl.getSelectionModel().getSelectedItem().getRegistrations().remove(deletedReg);
-					this.regsList.remove(deletedReg);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			});
-		}
-	}
+      disableButtons(true);
 
-	private void loadRaces(boolean refresh) {
-		disableButtons(true);
-		Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
+      super.dbTaskRunner.runInTransaction(
+          progMon -> {
+            EntityManager em = super.db.getEntityManager();
+            selectedRegistration
+                .getLabels()
+                .forEach(regLabel -> {
+                  em.remove(regLabel);
+                  // don't delete label if it's used at several registrations
+                  if (regLabel.getLabel().getRegistrationLabels().size() == 1) {
+                    em.remove(regLabel.getLabel());
+                  }
+                });
+            em.remove(selectedRegistration);
+            return selectedRegistration;
+          },
+          dbResult -> {
+            try {
+              Registration deletedReg = dbResult.getResult();
+              this.racesTbl
+                  .getSelectionModel()
+                  .getSelectedItem()
+                  .getRegistrations()
+                  .remove(deletedReg);
+              this.regsList.remove(deletedReg);
+            } catch (Exception e) {
+              logger.log(Level.SEVERE, e.getMessage(), e);
+              FxUtils.showErrorMessage(getWindow(), e);
+            } finally {
+              disableButtons(false);
+            }
+          });
+    }
+  }
 
-		super.dbTaskRunner.run(monitor -> {
-			if (refresh) {
-				this.db.getEntityManager().clear();
-			}
-			return this.regattaDAO.getRaces(Race.GRAPH_CLUBS);
-		}, dbResult -> {
-			try {
-				this.racesList.setAll(dbResult.getResult());
-				this.racesTbl.getSelectionModel().select(selectedItem);
-				this.racesTbl.sort();
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
-			}
-		});
-	}
+  private void loadRaces(boolean refresh) {
+    disableButtons(true);
+    Race selectedItem = this.racesTbl.getSelectionModel().getSelectedItem();
 
-	private void disableButtons(boolean disabled) {
-		this.refreshBtn.setDisable(disabled);
-		this.setDistancesBtn.setDisable(disabled);
-		this.setMastersAgeClassesBtn.setDisable(disabled);
-		this.importAltRegsBtn.setDisable(disabled);
-		this.racesTbl.setDisable(disabled);
-		this.regsTbl.setDisable(disabled);
-	}
+    super.dbTaskRunner.run(
+        monitor -> {
+          if (refresh) {
+            this.db.getEntityManager().clear();
+          }
+          return this.regattaDAO.getRaces(Race.GRAPH_CLUBS);
+        },
+        dbResult -> {
+          try {
+            this.racesList.setAll(dbResult.getResult());
+            this.racesTbl.getSelectionModel().select(selectedItem);
+            this.racesTbl.sort();
+          } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            FxUtils.showErrorMessage(getWindow(), e);
+          } finally {
+            disableButtons(false);
+          }
+        });
+  }
 
+  private void disableButtons(boolean disabled) {
+    this.refreshBtn.setDisable(disabled);
+    this.setDistancesBtn.setDisable(disabled);
+    this.setMastersAgeClassesBtn.setDisable(disabled);
+    this.importAltRegsBtn.setDisable(disabled);
+    this.racesTbl.setDisable(disabled);
+    this.regsTbl.setDisable(disabled);
+  }
 }

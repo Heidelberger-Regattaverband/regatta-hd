@@ -7,13 +7,13 @@ import javafx.stage.Window;
 
 public class AboutDialog extends Dialog<Void> {
 
-	public AboutDialog(Window owner, String title, String headerText, String text) {
-		initModality(Modality.WINDOW_MODAL);
-		initOwner(owner);
-		setTitle(title);
-		setHeaderText(headerText);
-		setContentText(text);
+  public AboutDialog(Window owner, String title, String headerText, String text) {
+    initModality(Modality.WINDOW_MODAL);
+    initOwner(owner);
+    setTitle(title);
+    setHeaderText(headerText);
+    setContentText(text);
 
-		getDialogPane().getButtonTypes().addAll(ButtonType.OK);
-	}
+    getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+  }
 }

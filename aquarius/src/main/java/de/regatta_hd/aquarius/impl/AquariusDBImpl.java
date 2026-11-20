@@ -1,111 +1,111 @@
 package de.regatta_hd.aquarius.impl;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+import de.regatta_hd.aquarius.model.MetaData;
+import de.regatta_hd.commons.core.ListenerManager;
+import de.regatta_hd.commons.db.AbstractDBConnection;
+import de.regatta_hd.commons.db.DBConfig;
+import jakarta.persistence.PersistenceException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jakarta.persistence.PersistenceException;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.hibernate.Session;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-
-import de.regatta_hd.aquarius.model.MetaData;
-import de.regatta_hd.commons.core.ListenerManager;
-import de.regatta_hd.commons.db.AbstractDBConnection;
-import de.regatta_hd.commons.db.DBConfig;
-
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.Session;
 
 @Singleton
 public class AquariusDBImpl extends AbstractDBConnection {
 
-	private static final Logger logger = Logger.getLogger(AquariusDBImpl.class.getName());
+  private static final Logger logger = Logger.getLogger(AquariusDBImpl.class.getName());
 
-	private String version;
+  private String version;
 
-	@Inject
-	public AquariusDBImpl(ListenerManager listenerManager) {
-		super("aquarius", listenerManager);
-	}
+  @Inject
+  public AquariusDBImpl(ListenerManager listenerManager) {
+    super("aquarius", listenerManager);
+  }
 
-	@SuppressWarnings({ "resource" })
-	@Override
-	public void updateSchema() {
-		ensureOpen();
+  @SuppressWarnings({"resource"})
+  @Override
+  public void updateSchema() {
+    ensureOpen();
 
-		Session session = getEntityManager().unwrap(Session.class);
-		session.doWork(connection -> {
-			try {
-				Database database = DatabaseFactory.getInstance()
-						.findCorrectDatabaseImplementation(new JdbcConnection(connection));
-				database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
-				database.setDatabaseChangeLogTableName("HRV_ChangeLog");
+    Session session = getEntityManager().unwrap(Session.class);
+    session.doWork(connection -> {
+      try {
+        Database database =
+            DatabaseFactory.getInstance()
+                .findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        database.setDatabaseChangeLogLockTableName("HRV_ChangeLogLock");
+        database.setDatabaseChangeLogTableName("HRV_ChangeLog");
 
-				Liquibase liquibase = new Liquibase("/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(),
-						database);
-				liquibase.update();
-			} catch (LiquibaseException e) { // NOSONAR
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				close();
-				throw new SQLException(e);
-			}
-		});
-	}
+        Liquibase liquibase =
+            new Liquibase(
+                "/db/liquibase-changeLog.xml", new ClassLoaderResourceAccessor(), database);
+        liquibase.update();
+      } catch (LiquibaseException e) { // NOSONAR
+        logger.log(Level.SEVERE, e.getMessage(), e);
+        close();
+        throw new SQLException(e);
+      }
+    });
+  }
 
-	public String getVersion() {
-		return this.version;
-	}
+  public String getVersion() {
+    return this.version;
+  }
 
-	@Override
-	protected Map<String, String> getProperties(DBConfig dbConfig) {
-		Map<String, String> properties = new HashMap<>();
+  @Override
+  protected Map<String, String> getProperties(DBConfig dbConfig) {
+    Map<String, String> properties = new HashMap<>();
 
-		String url = String.format("jdbc:sqlserver://%s;databaseName=%s;encrypt=%s", dbConfig.getHost(),
-				dbConfig.getName(), Boolean.toString(dbConfig.isEncrypt()));
+    String url =
+        String.format(
+            "jdbc:sqlserver://%s;databaseName=%s;encrypt=%s",
+            dbConfig.getHost(), dbConfig.getName(), Boolean.toString(dbConfig.isEncrypt()));
 
-		if (dbConfig.isEncrypt()) {
-			url += ";sslProtocol=TLSv1.2";
+    if (dbConfig.isEncrypt()) {
+      url += ";sslProtocol=TLSv1.2";
 
-			if (dbConfig.isTrustServerCertificate()) {
-				url += ";trustServerCertificate=true";
-			}
-		}
-		logger.log(Level.INFO, "JDBC URL: {0}", url);
-		properties.put("javax.persistence.jdbc.url", url);
-		properties.put("javax.persistence.jdbc.user", dbConfig.getUser());
-		properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
-		return properties;
-	}
+      if (dbConfig.isTrustServerCertificate()) {
+        url += ";trustServerCertificate=true";
+      }
+    }
+    logger.log(Level.INFO, "JDBC URL: {0}", url);
+    properties.put("javax.persistence.jdbc.url", url);
+    properties.put("javax.persistence.jdbc.user", dbConfig.getUser());
+    properties.put("javax.persistence.jdbc.password", dbConfig.getPassword());
+    return properties;
+  }
 
-	@Override
-	protected void openImpl() {
-		this.version = readVersion();
-	}
+  @Override
+  protected void openImpl() {
+    this.version = readVersion();
+  }
 
-	@Override
-	protected void convertException(PersistenceException ex) throws SQLException {
-		Throwable rootCause = ExceptionUtils.getRootCause(ex);
-		if (rootCause instanceof SQLServerException sqlEx) {
-			throw sqlEx;
-		}
-		throw ex;
-	}
+  @Override
+  protected void convertException(PersistenceException ex) throws SQLException {
+    Throwable rootCause = ExceptionUtils.getRootCause(ex);
+    if (rootCause instanceof SQLServerException sqlEx) {
+      throw sqlEx;
+    }
+    throw ex;
+  }
 
-	private String readVersion() {
-		MetaData metaData = this.getEntityManager()
-				.createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class).getSingleResult();
-		return metaData.getValue();
-	}
-
+  private String readVersion() {
+    MetaData metaData =
+        this.getEntityManager()
+            .createQuery("SELECT m FROM MetaData m WHERE m.key = 'PatchLevel'", MetaData.class)
+            .getSingleResult();
+    return metaData.getValue();
+  }
 }

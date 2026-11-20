@@ -1,15 +1,16 @@
 module de.regatta_hd.commons.core {
 
-	// Java modules
-	requires java.desktop;
-	requires java.logging;
+  // Java modules
+  requires java.desktop;
+  requires java.logging;
 
-	// tools modules
-	requires com.google.guice;
-	requires transitive jakarta.inject;
+  // tools modules
+  requires com.google.guice;
+  requires transitive jakarta.inject;
 
-	// exports
-	exports de.regatta_hd.commons.core;
-	exports de.regatta_hd.commons.core.concurrent;
-	exports de.regatta_hd.commons.core.impl to com.google.guice;
+  // exports
+  exports de.regatta_hd.commons.core;
+  exports de.regatta_hd.commons.core.concurrent;
+  exports de.regatta_hd.commons.core.impl to
+      com.google.guice;
 }

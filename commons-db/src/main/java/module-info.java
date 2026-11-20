@@ -1,16 +1,15 @@
 module de.regatta_hd.commons.db {
+  requires transitive de.regatta_hd.commons.core;
+  requires java.sql;
 
-	requires transitive de.regatta_hd.commons.core;
+  // tools modules
+  requires com.google.guice;
+  requires lombok;
+  requires transitive jakarta.persistence;
 
-	requires java.sql;
+  // exports
+  exports de.regatta_hd.commons.db;
 
-	// tools modules
-	requires com.google.guice;
-	requires lombok;
-	requires transitive jakarta.persistence;
-
-	// exports
-	exports de.regatta_hd.commons.db;
-
-	opens de.regatta_hd.commons.db.impl to com.google.guice;
+  opens de.regatta_hd.commons.db.impl to
+      com.google.guice;
 }
