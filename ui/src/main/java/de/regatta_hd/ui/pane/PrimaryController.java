@@ -2,6 +2,18 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import de.regatta_hd.aquarius.MasterDataDAO;
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.commons.db.DBConfig;
+import de.regatta_hd.commons.db.DBConfigStore;
+import de.regatta_hd.commons.db.DBConnection;
+import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.dialog.AboutDialog;
+import de.regatta_hd.commons.fx.dialog.DBConnectionDialog;
+import de.regatta_hd.commons.fx.stage.WindowManager;
+import de.regatta_hd.commons.fx.util.FxUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -11,7 +23,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,273 +34,264 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.regatta_hd.aquarius.MasterDataDAO;
-import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.commons.db.DBConfig;
-import de.regatta_hd.commons.db.DBConfigStore;
-import de.regatta_hd.commons.db.DBConnection;
-import de.regatta_hd.commons.fx.db.DBTask;
-import de.regatta_hd.commons.fx.dialog.AboutDialog;
-import de.regatta_hd.commons.fx.dialog.DBConnectionDialog;
-import de.regatta_hd.commons.fx.stage.WindowManager;
-import de.regatta_hd.commons.fx.util.FxUtils;
-
 public class PrimaryController extends AbstractRegattaDAOController {
-	private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
+  private static final Logger logger = Logger.getLogger(PrimaryController.class.getName());
 
-	// injections
-	@Inject
-	private WindowManager windowManager;
-	@Inject
-	private DBConfigStore dbCfgStore;
-	@Inject
-	@Named("version")
-	private String version;
-	@Inject
-	private MasterDataDAO masterData;
+  // injections
+  @Inject private WindowManager windowManager;
+  @Inject private DBConfigStore dbCfgStore;
 
-	// menu and menu items
-	@FXML
-	private MenuBar mainMbar;
-	@FXML
-	private MenuItem dbConnectMitm;
-	@FXML
-	private MenuItem dbDisconnectMitm;
-	@FXML
-	private MenuItem eventsMitm;
-	@FXML
-	private MenuItem refereesMitm;
-	@FXML
-	private MenuItem racesMitm;
-	@FXML
-	private MenuItem setRaceMitm;
-	@FXML
-	private MenuItem errorLogMitm;
-	@FXML
-	private MenuItem heatsMitm;
-	@FXML
-	private ComboBox<Regatta> activeRegattaCBox;
-	@FXML
-	private Label dbNameLbl;
+  @Inject
+  @Named("version")
+  private String version;
 
-	// fields
-	private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
+  @Inject private MasterDataDAO masterData;
 
-	private Stage openStage(String resource, String title) {
-		String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
-		return this.windowManager.newStage(getClass().getResource(resource), title, super.bundle, styleLocation);
-	}
+  // menu and menu items
+  @FXML private MenuBar mainMbar;
+  @FXML private MenuItem dbConnectMitm;
+  @FXML private MenuItem dbDisconnectMitm;
+  @FXML private MenuItem eventsMitm;
+  @FXML private MenuItem refereesMitm;
+  @FXML private MenuItem racesMitm;
+  @FXML private MenuItem setRaceMitm;
+  @FXML private MenuItem errorLogMitm;
+  @FXML private MenuItem heatsMitm;
+  @FXML private ComboBox<Regatta> activeRegattaCBox;
+  @FXML private Label dbNameLbl;
 
-	private final DBConnection.StateChangedEventListener dbStateChangedEventListener = event -> {
-		if (event.getDBConnection().isOpen()) {
-			this.activeRegattaCBox.setDisable(true);
+  // fields
+  private ObservableList<Regatta> regattasList = FXCollections.observableArrayList();
 
-			super.dbTaskRunner.run(progress -> {
-				List<Regatta> regattas = super.regattaDAO.getRegattas();
-				Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
-				return new Pair<>(regattas, activeRegatta);
-			}, dbResult -> {
-				this.dbNameLbl.setText(event.getDBConnection().getName());
+  private Stage openStage(String resource, String title) {
+    String styleLocation = this.getClass().getResource("/style.css").toExternalForm();
+    return this.windowManager.newStage(
+        getClass().getResource(resource), title, super.bundle, styleLocation);
+  }
 
-				try {
-					this.regattasList.setAll(dbResult.getResult().getKey());
-					this.activeRegattaCBox.getSelectionModel().select(dbResult.getResult().getValue());
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					this.activeRegattaCBox.setDisable(false);
-				}
-			});
-		} else {
-			this.regattasList.clear();
-			this.dbNameLbl.setText("");
-		}
-	};
+  private final DBConnection.StateChangedEventListener dbStateChangedEventListener =
+      event -> {
+        if (event.getDBConnection().isOpen()) {
+          this.activeRegattaCBox.setDisable(true);
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+          super.dbTaskRunner.run(
+              progress -> {
+                List<Regatta> regattas = super.regattaDAO.getRegattas();
+                Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+                return new Pair<>(regattas, activeRegatta);
+              },
+              dbResult -> {
+                this.dbNameLbl.setText(event.getDBConnection().getName());
 
-		updateControls(false);
+                try {
+                  this.regattasList.setAll(dbResult.getResult().getKey());
+                  this.activeRegattaCBox
+                      .getSelectionModel()
+                      .select(dbResult.getResult().getValue());
+                } catch (Exception e) {
+                  logger.log(Level.SEVERE, e.getMessage(), e);
+                  FxUtils.showErrorMessage(getWindow(), e);
+                } finally {
+                  this.activeRegattaCBox.setDisable(false);
+                }
+              });
+        } else {
+          this.regattasList.clear();
+          this.dbNameLbl.setText("");
+        }
+      };
 
-		this.activeRegattaCBox.setItems(this.regattasList);
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    super.initialize(location, resources);
 
-		this.listenerManager.addListener(DBConnection.StateChangedEventListener.class,
-				this.dbStateChangedEventListener);
+    updateControls(false);
 
-		Platform.runLater(this::handleConnectOnAction);
-	}
+    this.activeRegattaCBox.setItems(this.regattasList);
 
-	@Override
-	protected void onActiveRegattaChanged(Regatta activeRegatta) {
-		// nothing to do
-	}
+    this.listenerManager.addListener(
+        DBConnection.StateChangedEventListener.class, this.dbStateChangedEventListener);
 
-	@Override
-	public void shutdown() {
-		super.listenerManager.removeListener(DBConnection.StateChangedEventListener.class,
-				this.dbStateChangedEventListener);
+    Platform.runLater(this::handleConnectOnAction);
+  }
 
-		super.shutdown();
-	}
+  @Override
+  protected void onActiveRegattaChanged(Regatta activeRegatta) {
+    // nothing to do
+  }
 
-	@Override
-	protected String getTitle(Regatta activeRegatta) {
-		return nonNull(activeRegatta) ? getText("MainWindow.title") + " - " + activeRegatta.getTitle()
-				: getText("MainWindow.title");
-	}
+  @Override
+  public void shutdown() {
+    super.listenerManager.removeListener(
+        DBConnection.StateChangedEventListener.class, this.dbStateChangedEventListener);
 
-	// fxml event handlers
+    super.shutdown();
+  }
 
-	@FXML
-	void handleConnectOnAction() {
-		if (!super.db.isOpen()) {
-			try {
-				DBConnectionDialog dialog = new DBConnectionDialog(getWindow(), this.dbCfgStore.getLastSuccessful());
-				Optional<DBConfig> connectionData = dialog.showAndWait();
-				if (connectionData.isPresent()) {
-					openDbConnection(connectionData.get());
-				}
-			} catch (IOException e) {
-				logger.log(Level.WARNING, e.getMessage(), e);
-			}
-		}
-	}
+  @Override
+  protected String getTitle(Regatta activeRegatta) {
+    return nonNull(activeRegatta)
+        ? getText("MainWindow.title") + " - " + activeRegatta.getTitle()
+        : getText("MainWindow.title");
+  }
 
-	@FXML
-	void handleDatabaseDisconnect() {
-		super.db.close();
-		final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
-		stage.setTitle(getText("MainWindow.title"));
-		updateControls(false);
-	}
+  // fxml event handlers
 
-	@FXML
-	void handleSetRaceOnAction() {
-		openStage("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"));
-	}
+  @FXML
+  void handleConnectOnAction() {
+    if (!super.db.isOpen()) {
+      try {
+        DBConnectionDialog dialog =
+            new DBConnectionDialog(getWindow(), this.dbCfgStore.getLastSuccessful());
+        Optional<DBConfig> connectionData = dialog.showAndWait();
+        if (connectionData.isPresent()) {
+          openDbConnection(connectionData.get());
+        }
+      } catch (IOException e) {
+        logger.log(Level.WARNING, e.getMessage(), e);
+      }
+    }
+  }
 
-	@FXML
-	void handleEvents() {
-		openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
-	}
+  @FXML
+  void handleDatabaseDisconnect() {
+    super.db.close();
+    final Stage stage = (Stage) this.mainMbar.getScene().getWindow();
+    stage.setTitle(getText("MainWindow.title"));
+    updateControls(false);
+  }
 
-	@FXML
-	void handleRefereesOnAction() {
-		openStage("RefereesView.fxml", getText("common.referees"));
-	}
+  @FXML
+  void handleSetRaceOnAction() {
+    openStage("SetRaceView.fxml", getText("PrimaryView.setRaceMitm.text"));
+  }
 
-	@FXML
-	void handleConfigOnAction() {
-		openStage("ConfigView.fxml", getText("common.config"));
-	}
+  @FXML
+  void handleEvents() {
+    openStage("RegattasView.fxml", getText("PrimaryView.regattasMitm.text"));
+  }
 
-	@FXML
-	void handleRacesOnAction() {
-		openStage("RacesView.fxml", getText("PrimaryView.racesMitm.text"));
-	}
+  @FXML
+  void handleRefereesOnAction() {
+    openStage("RefereesView.fxml", getText("common.referees"));
+  }
 
-	@FXML
-	void handleLogRecordsOnAction() {
-		openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
-	}
+  @FXML
+  void handleConfigOnAction() {
+    openStage("ConfigView.fxml", getText("common.config"));
+  }
 
-	@FXML
-	void handleHeatsOnAction() {
-		openStage("HeatsView.fxml", getText("heats.title"));
-	}
+  @FXML
+  void handleRacesOnAction() {
+    openStage("RacesView.fxml", getText("PrimaryView.racesMitm.text"));
+  }
 
-	@FXML
-	void handleAboutOnAction() {
-		String aquariusVersion = this.masterData.getAquariusVersion();
-		if (aquariusVersion == null) {
-			aquariusVersion = getText("about.unknown");
-		}
-		AboutDialog aboutDlg = new AboutDialog(getWindow(), this.bundle.getString("about.title"),
-				this.bundle.getString("about.header"),
-				MessageFormat.format(this.bundle.getString("about.text"), this.version, aquariusVersion));
-		aboutDlg.showAndWait();
-	}
+  @FXML
+  void handleLogRecordsOnAction() {
+    openStage("ErrorLogView.fxml", getText("PrimaryView.errorLogMitm.text"));
+  }
 
-	@FXML
-	void handleActiveRegattaOnAction() {
-		Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
-		if (regatta != null) {
-			super.regattaDAO.setActiveRegatta(regatta);
-		}
-	}
+  @FXML
+  void handleHeatsOnAction() {
+    openStage("HeatsView.fxml", getText("heats.title"));
+  }
 
-	@FXML
-	void handleExit() {
-		Platform.exit();
-	}
+  @FXML
+  void handleAboutOnAction() {
+    String aquariusVersion = this.masterData.getAquariusVersion();
+    if (aquariusVersion == null) {
+      aquariusVersion = getText("about.unknown");
+    }
+    AboutDialog aboutDlg =
+        new AboutDialog(
+            getWindow(),
+            this.bundle.getString("about.title"),
+            this.bundle.getString("about.header"),
+            MessageFormat.format(
+                this.bundle.getString("about.text"), this.version, aquariusVersion));
+    aboutDlg.showAndWait();
+  }
 
-	// private
+  @FXML
+  void handleActiveRegattaOnAction() {
+    Regatta regatta = this.activeRegattaCBox.getSelectionModel().getSelectedItem();
+    if (regatta != null) {
+      super.regattaDAO.setActiveRegatta(regatta);
+    }
+  }
 
-	private void openDbConnection(DBConfig connectionData) {
-		DBTask<Pair<DBConfig, Regatta>> dbTask = super.dbTaskRunner.createTask(progress -> {
-			final int MAX = 3;
-			updateControls(true);
+  @FXML
+  void handleExit() {
+    Platform.exit();
+  }
 
-			progress.update(1, MAX, getText("login.openingDb"));
-			super.db.open(connectionData);
+  // private
 
-			if (connectionData.isUpdateSchema()) {
-				progress.update(2, MAX, getText("login.updatingDb"));
-				super.db.updateSchema();
-			}
+  private void openDbConnection(DBConfig connectionData) {
+    DBTask<Pair<DBConfig, Regatta>> dbTask =
+        super.dbTaskRunner.createTask(
+            progress -> {
+              final int MAX = 3;
+              updateControls(true);
 
-			progress.update(3, MAX, getText("login.settingActiveRegatta"));
-			Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
+              progress.update(1, MAX, getText("login.openingDb"));
+              super.db.open(connectionData);
 
-			return new Pair<>(connectionData, activeRegatta);
-		}, dbResult -> {
-			try {
-				Pair<DBConfig, Regatta> pair = dbResult.getResult();
-				this.dbCfgStore.setLastSuccessful(pair.getKey());
-			} catch (CancellationException e) {
-				logger.log(Level.FINEST, e.getMessage(), e);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				updateControls(false);
-			}
-		}, false);
+              if (connectionData.isUpdateSchema()) {
+                progress.update(2, MAX, getText("login.updatingDb"));
+                super.db.updateSchema();
+              }
 
-		runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), false);
-	}
+              progress.update(3, MAX, getText("login.settingActiveRegatta"));
+              Regatta activeRegatta = super.regattaDAO.getActiveRegatta();
 
-	private void updateControls(boolean isConnecting) {
-		boolean isOpen = super.db.isOpen();
+              return new Pair<>(connectionData, activeRegatta);
+            },
+            dbResult -> {
+              try {
+                Pair<DBConfig, Regatta> pair = dbResult.getResult();
+                this.dbCfgStore.setLastSuccessful(pair.getKey());
+              } catch (CancellationException e) {
+                logger.log(Level.FINEST, e.getMessage(), e);
+              } catch (Exception e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+                FxUtils.showErrorMessage(getWindow(), e);
+              } finally {
+                updateControls(false);
+              }
+            },
+            false);
 
-		if (isOpen) {
-			super.dbTaskRunner.run(em -> super.regattaDAO.getActiveRegatta(), dbResult -> {
-				try {
-					boolean hasActiveRegatta = dbResult.getResult() != null;
+    runTaskWithProgressDialog(dbTask, getText("DatabaseConnectionDialog.title"), false);
+  }
 
-					this.racesMitm.setDisable(!hasActiveRegatta);
-					this.setRaceMitm.setDisable(!hasActiveRegatta);
-					this.heatsMitm.setDisable(!hasActiveRegatta);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			});
-		} else {
-			this.racesMitm.setDisable(!isOpen);
-			this.setRaceMitm.setDisable(!isOpen);
-			this.heatsMitm.setDisable(!isOpen);
-		}
+  private void updateControls(boolean isConnecting) {
+    boolean isOpen = super.db.isOpen();
 
-		this.dbConnectMitm.setDisable(isOpen || isConnecting);
-		this.dbDisconnectMitm.setDisable(!isOpen);
-		this.eventsMitm.setDisable(!isOpen);
-		this.refereesMitm.setDisable(!isOpen);
-		this.errorLogMitm.setDisable(!isOpen);
-	}
+    if (isOpen) {
+      super.dbTaskRunner.run(
+          em -> super.regattaDAO.getActiveRegatta(),
+          dbResult -> {
+            try {
+              boolean hasActiveRegatta = dbResult.getResult() != null;
 
+              this.racesMitm.setDisable(!hasActiveRegatta);
+              this.setRaceMitm.setDisable(!hasActiveRegatta);
+              this.heatsMitm.setDisable(!hasActiveRegatta);
+            } catch (Exception e) {
+              logger.log(Level.SEVERE, e.getMessage(), e);
+            }
+          });
+    } else {
+      this.racesMitm.setDisable(!isOpen);
+      this.setRaceMitm.setDisable(!isOpen);
+      this.heatsMitm.setDisable(!isOpen);
+    }
+
+    this.dbConnectMitm.setDisable(isOpen || isConnecting);
+    this.dbDisconnectMitm.setDisable(!isOpen);
+    this.eventsMitm.setDisable(!isOpen);
+    this.refereesMitm.setDisable(!isOpen);
+    this.errorLogMitm.setDisable(!isOpen);
+  }
 }

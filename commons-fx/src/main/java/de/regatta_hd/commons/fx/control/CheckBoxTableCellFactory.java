@@ -12,24 +12,23 @@ import javafx.util.Callback;
  */
 public class CheckBoxTableCellFactory {
 
-	private CheckBoxTableCellFactory() {
-		// avoid instances
-	}
+  private CheckBoxTableCellFactory() {
+    // avoid instances
+  }
 
-	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> readonly() {
-		return column -> {
-			CheckBoxTableCell<S, T> checkBoxTableCell = new CheckBoxTableCell<>();
-			checkBoxTableCell.setEditable(false);
-			return checkBoxTableCell;
-		};
-	}
+  public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> readonly() {
+    return column -> {
+      CheckBoxTableCell<S, T> checkBoxTableCell = new CheckBoxTableCell<>();
+      checkBoxTableCell.setEditable(false);
+      return checkBoxTableCell;
+    };
+  }
 
-	public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> editable() {
-		return column -> {
-			CheckBoxTableCell<S, T> checkBoxTableCell = new CheckBoxTableCell<>();
-			checkBoxTableCell.setEditable(true);
-			return checkBoxTableCell;
-		};
-	}
-
+  public static <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> editable() {
+    return column -> {
+      CheckBoxTableCell<S, T> checkBoxTableCell = new CheckBoxTableCell<>();
+      checkBoxTableCell.setEditable(true);
+      return checkBoxTableCell;
+    };
+  }
 }

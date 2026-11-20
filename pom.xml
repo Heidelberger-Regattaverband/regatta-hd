@@ -78,6 +78,11 @@
 
     <!-- https://central.sonatype.com/artifact/com.sun.xml.bind/jaxb-impl -->
     <jaxb-impl.version>4.0.7</jaxb-impl.version>
+
+    <!-- https://central.sonatype.com/artifact/com.diffplug.spotless/spotless-maven-plugin -->
+    <spotless.version>2.44.5</spotless.version>
+    <!-- https://central.sonatype.com/artifact/com.google.googlejavaformat/google-java-format -->
+    <google-java-format.version>2.0.0</google-java-format.version>
   </properties>
 
   <modules>
@@ -366,6 +371,27 @@
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <version>${google-java-format.version}</version>
+              <style>GOOGLE</style>
+            </googleJavaFormat>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

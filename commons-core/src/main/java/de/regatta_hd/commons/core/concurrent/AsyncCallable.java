@@ -8,6 +8,5 @@ package de.regatta_hd.commons.core.concurrent;
 @FunctionalInterface
 public interface AsyncCallable<R> {
 
-	R call(ProgressMonitor monitor) throws Exception; // NOSONAR
-
+  R call(ProgressMonitor monitor) throws Exception; // NOSONAR
 }

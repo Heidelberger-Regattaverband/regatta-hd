@@ -2,6 +2,22 @@ package de.regatta_hd.ui.pane;
 
 import static java.util.Objects.nonNull;
 
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import de.regatta_hd.aquarius.model.Heat;
+import de.regatta_hd.aquarius.model.HeatRegistration;
+import de.regatta_hd.aquarius.model.Regatta;
+import de.regatta_hd.aquarius.util.ModelUtils;
+import de.regatta_hd.commons.fx.db.DBTask;
+import de.regatta_hd.commons.fx.util.FxConstants;
+import de.regatta_hd.commons.fx.util.FxUtils;
+import de.regatta_hd.ui.UIModule;
+import de.regatta_hd.ui.util.SerialPortUtils;
+import de.regatta_hd.ui.util.TrafficLightsStartList;
+import de.regatta_hd.ui.util.WorkbookUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +29,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -27,374 +42,384 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
-
 import org.apache.poi.ss.usermodel.Workbook;
 import org.controlsfx.control.table.TableFilter;
 
-import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
-import com.fazecast.jSerialComm.SerialPortEvent;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.regatta_hd.aquarius.model.Heat;
-import de.regatta_hd.aquarius.model.HeatRegistration;
-import de.regatta_hd.aquarius.model.Regatta;
-import de.regatta_hd.aquarius.util.ModelUtils;
-import de.regatta_hd.commons.fx.db.DBTask;
-import de.regatta_hd.commons.fx.util.FxConstants;
-import de.regatta_hd.commons.fx.util.FxUtils;
-import de.regatta_hd.ui.UIModule;
-import de.regatta_hd.ui.util.SerialPortUtils;
-import de.regatta_hd.ui.util.TrafficLightsStartList;
-import de.regatta_hd.ui.util.WorkbookUtils;
-
 public class HeatsController extends AbstractRegattaDAOController {
-	private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
+  private static final Logger logger = Logger.getLogger(HeatsController.class.getName());
 
-	// main toolbar
-	@FXML
-	private Button refreshBtn;
-	@FXML
-	private Button exportCsvBtn;
-	@FXML
-	private Button exportXslBtn;
-	@FXML
-	private ToggleButton startSignalTbtn;
+  // main toolbar
+  @FXML private Button refreshBtn;
+  @FXML private Button exportCsvBtn;
+  @FXML private Button exportXslBtn;
+  @FXML private ToggleButton startSignalTbtn;
 
-	// heats table
-	@FXML
-	private TableView<Heat> heatsTbl;
-	@FXML
-	private TableColumn<Heat, Instant> timeCol;
-	@FXML
-	private TableColumn<Heat, Integer> heatsIdCol;
-	@FXML
-	private Menu stateMenu;
+  // heats table
+  @FXML private TableView<Heat> heatsTbl;
+  @FXML private TableColumn<Heat, Instant> timeCol;
+  @FXML private TableColumn<Heat, Integer> heatsIdCol;
+  @FXML private Menu stateMenu;
 
-	// division table
-	@FXML
-	private TableView<HeatRegistration> divisionTbl;
-	@FXML
-	private TableColumn<HeatRegistration, Integer> divisionIdCol;
-	@FXML
-	private TableColumn<HeatRegistration, Short> divisionLaneCol;
-	@FXML
-	private Menu swapMenu;
+  // division table
+  @FXML private TableView<HeatRegistration> divisionTbl;
+  @FXML private TableColumn<HeatRegistration, Integer> divisionIdCol;
+  @FXML private TableColumn<HeatRegistration, Short> divisionLaneCol;
+  @FXML private Menu swapMenu;
 
-	// injections
-	@Inject
-	private TrafficLightsStartList startList;
-	@Inject
-	@Named(UIModule.CONFIG_SHOW_ID_COLUMN)
-	private BooleanProperty showIdColumn;
-	@Inject
-	@Named(UIModule.CONFIG_SERIAL_PORT_START_SIGNAL)
-	private StringProperty serialPortStartSignal;
+  // injections
+  @Inject private TrafficLightsStartList startList;
 
-	// private fields
-	private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
-	private final ObservableList<HeatRegistration> divisionList = FXCollections.observableArrayList();
-	private Optional<SerialPort> serialPortOpt;
+  @Inject
+  @Named(UIModule.CONFIG_SHOW_ID_COLUMN)
+  private BooleanProperty showIdColumn;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+  @Inject
+  @Named(UIModule.CONFIG_SERIAL_PORT_START_SIGNAL)
+  private StringProperty serialPortStartSignal;
 
-		this.heatsIdCol.visibleProperty().bind(this.showIdColumn);
-		this.divisionIdCol.visibleProperty().bind(this.showIdColumn);
+  // private fields
+  private final ObservableList<Heat> heatsList = FXCollections.observableArrayList();
+  private final ObservableList<HeatRegistration> divisionList = FXCollections.observableArrayList();
+  private Optional<SerialPort> serialPortOpt;
 
-		this.heatsTbl.setItems(this.heatsList);
-		this.heatsTbl.getSortOrder().add(this.timeCol);
-		this.heatsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-			if (newSelection != null) {
-				this.divisionList.setAll(newSelection.getEntries());
-				this.divisionTbl.sort();
-			} else {
-				this.divisionList.clear();
-			}
-		});
-		this.heatsTbl.setRowFactory(row -> new TableRow<>() {
-			@Override
-			public void updateItem(Heat item, boolean empty) {
-				super.updateItem(item, empty);
-				pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
-			}
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    super.initialize(location, resources);
 
-			@Override
-			public void updateSelected(boolean selected) {
-				super.updateSelected(selected);
-				if (selected && getItem().isCancelled()) {
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
-				} else {
-					pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
-				}
-			}
-		});
+    this.heatsIdCol.visibleProperty().bind(this.showIdColumn);
+    this.divisionIdCol.visibleProperty().bind(this.showIdColumn);
 
-		this.divisionTbl.setItems(this.divisionList);
-		this.divisionTbl.getSortOrder().add(this.divisionLaneCol);
+    this.heatsTbl.setItems(this.heatsList);
+    this.heatsTbl.getSortOrder().add(this.timeCol);
+    this.heatsTbl
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener((obs, oldSelection, newSelection) -> {
+          if (newSelection != null) {
+            this.divisionList.setAll(newSelection.getEntries());
+            this.divisionTbl.sort();
+          } else {
+            this.divisionList.clear();
+          }
+        });
+    this.heatsTbl.setRowFactory(row ->
+        new TableRow<>() {
+          @Override
+          public void updateItem(Heat item, boolean empty) {
+            super.updateItem(item, empty);
+            pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, item != null && item.isCancelled());
+          }
 
-		this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
-		this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
+          @Override
+          public void updateSelected(boolean selected) {
+            super.updateSelected(selected);
+            if (selected && getItem().isCancelled()) {
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, true);
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED, false);
+            } else {
+              pseudoClassStateChanged(FxConstants.PC_HIGHLIGHTED_SELECTED, false);
+            }
+          }
+        });
 
-		TableFilter<Heat> heatsTblFilter = TableFilter.forTableView(this.heatsTbl).apply();
-		heatsTblFilter.setSearchStrategy((input, target) -> target.contains(input));
+    this.divisionTbl.setItems(this.divisionList);
+    this.divisionTbl.getSortOrder().add(this.divisionLaneCol);
 
-		loadHeats(false);
-	}
+    this.serialPortOpt = SerialPortUtils.getSerialPortByPath(this.serialPortStartSignal.get());
+    this.startSignalTbtn.setDisable(this.serialPortOpt.isEmpty());
 
-	@Override
-	public void shutdown() {
-		closePort();
-		// don't forget to shutdown parent class
-		super.shutdown();
-	}
+    TableFilter<Heat> heatsTblFilter = TableFilter.forTableView(this.heatsTbl).apply();
+    heatsTblFilter.setSearchStrategy((input, target) -> target.contains(input));
 
-	private void openPort() {
-		if (this.serialPortOpt.isPresent()) {
-			SerialPort serialPort = this.serialPortOpt.get();
-			boolean openPort = serialPort.isOpen() || serialPort.openPort();
+    loadHeats(false);
+  }
 
-			if (openPort) {
-				SerialPortDataListener serialPortListener = new SerialPortDataListener() {
+  @Override
+  public void shutdown() {
+    closePort();
+    // don't forget to shutdown parent class
+    super.shutdown();
+  }
 
-					@Override
-					public void serialEvent(SerialPortEvent event) {
-						event.getEventType();
-						System.out.println(Arrays.toString(event.getReceivedData()));
-					}
+  private void openPort() {
+    if (this.serialPortOpt.isPresent()) {
+      SerialPort serialPort = this.serialPortOpt.get();
+      boolean openPort = serialPort.isOpen() || serialPort.openPort();
 
-					@Override
-					public int getListeningEvents() {
-						return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
-					}
-				};
-				serialPort.addDataListener(serialPortListener);
+      if (openPort) {
+        SerialPortDataListener serialPortListener =
+            new SerialPortDataListener() {
 
-//			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
-//				byte[] buffer = new byte[1024];
-//				int read = portIn.read(buffer);
-//				while (read >= 0) {
-//					System.out.println("Read " + read + ": "+ Arrays.toString(buffer));
-//					read = portIn.read(buffer);
-//				}
-//			} catch (IOException e) {
-//				logger.log(Level.SEVERE, e.getMessage(), e);
-//				FxUtils.showErrorMessage(getWindow(), e);
-//			} finally {
-//				port.closePort();
-//			}
-			} else {
-				FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
-			}
-		}
-	}
+              @Override
+              public void serialEvent(SerialPortEvent event) {
+                event.getEventType();
+                System.out.println(Arrays.toString(event.getReceivedData()));
+              }
 
-	private void closePort() {
-		if (this.serialPortOpt.isPresent()) {
-			SerialPort serialPort = this.serialPortOpt.get();
-			serialPort.removeDataListener();
-			serialPort.closePort();
-		}
-	}
+              @Override
+              public int getListeningEvents() {
+                return SerialPort.LISTENING_EVENT_DATA_RECEIVED
+                    | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+              }
+            };
+        serialPort.addDataListener(serialPortListener);
 
-	@Override
-	protected void onActiveRegattaChanged(Regatta activeRegatta) {
-		if (activeRegatta != null) {
-			loadHeats(true);
-		} else {
-			this.heatsList.clear();
-			disableButtons(true);
-		}
-	}
+        //			try (InputStream portIn = port.getInputStreamWithSuppressedTimeoutExceptions()) {
+        //				byte[] buffer = new byte[1024];
+        //				int read = portIn.read(buffer);
+        //				while (read >= 0) {
+        //					System.out.println("Read " + read + ": "+ Arrays.toString(buffer));
+        //					read = portIn.read(buffer);
+        //				}
+        //			} catch (IOException e) {
+        //				logger.log(Level.SEVERE, e.getMessage(), e);
+        //				FxUtils.showErrorMessage(getWindow(), e);
+        //			} finally {
+        //				port.closePort();
+        //			}
+      } else {
+        FxUtils.showErrorMessage(getWindow(), "Serial Port", "Not open.");
+      }
+    }
+  }
 
-	@FXML
-	void handleRefreshOnAction() {
-		loadHeats(true);
-	}
+  private void closePort() {
+    if (this.serialPortOpt.isPresent()) {
+      SerialPort serialPort = this.serialPortOpt.get();
+      serialPort.removeDataListener();
+      serialPort.closePort();
+    }
+  }
 
-	@FXML
-	void handleExportCsvOnAction() {
-		disableButtons(true);
+  @Override
+  protected void onActiveRegattaChanged(Regatta activeRegatta) {
+    if (activeRegatta != null) {
+      loadHeats(true);
+    } else {
+      this.heatsList.clear();
+      disableButtons(true);
+    }
+  }
 
-		File file = FxUtils.showSaveDialog(getWindow(), "startliste.csv", getText("heats.csv.description"), "*.csv");
-		if (file != null) {
-			DBTask<String> dbTask = super.dbTaskRunner.createTask(progress -> {
-				return this.startList.createCsv(this.heatsList, progress);
-			}, dbResult -> {
-				try {
-					saveCsvFile(dbResult.getResult(), file);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			}, false);
+  @FXML
+  void handleRefreshOnAction() {
+    loadHeats(true);
+  }
 
-			runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
-		} else {
-			disableButtons(false);
-		}
-	}
+  @FXML
+  void handleExportCsvOnAction() {
+    disableButtons(true);
 
-	@FXML
-	void handleExportXslOnAction() {
-		disableButtons(true);
+    File file =
+        FxUtils.showSaveDialog(
+            getWindow(), "startliste.csv", getText("heats.csv.description"), "*.csv");
+    if (file != null) {
+      DBTask<String> dbTask =
+          super.dbTaskRunner.createTask(
+              progress -> {
+                return this.startList.createCsv(this.heatsList, progress);
+              },
+              dbResult -> {
+                try {
+                  saveCsvFile(dbResult.getResult(), file);
+                } catch (Exception e) {
+                  logger.log(Level.SEVERE, e.getMessage(), e);
+                  FxUtils.showErrorMessage(getWindow(), e);
+                } finally {
+                  disableButtons(false);
+                }
+              },
+              false);
 
-		File file = FxUtils.showSaveDialog(getWindow(), "startliste.xls", getText("heats.xsl.description"), "*.xls");
-		if (file != null) {
-			DBTask<Workbook> dbTask = super.dbTaskRunner.createTask(progress -> {
-				return this.startList.createWorkbook(this.heatsList, progress);
-			}, dbResult -> {
-				try (Workbook workbook = dbResult.getResult()) {
-					WorkbookUtils.saveWorkbook(workbook, file);
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					FxUtils.showErrorMessage(getWindow(), e);
-				} finally {
-					disableButtons(false);
-				}
-			}, false);
+      runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+    } else {
+      disableButtons(false);
+    }
+  }
 
-			runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
-		} else {
-			disableButtons(false);
-		}
-	}
+  @FXML
+  void handleExportXslOnAction() {
+    disableButtons(true);
 
-	@FXML
-	void handleStartSignalOnAction() {
-		if (this.startSignalTbtn.isSelected()) {
-			openPort();
-		} else {
-			closePort();
-		}
-	}
+    File file =
+        FxUtils.showSaveDialog(
+            getWindow(), "startliste.xls", getText("heats.xsl.description"), "*.xls");
+    if (file != null) {
+      DBTask<Workbook> dbTask =
+          super.dbTaskRunner.createTask(
+              progress -> {
+                return this.startList.createWorkbook(this.heatsList, progress);
+              },
+              dbResult -> {
+                try (Workbook workbook = dbResult.getResult()) {
+                  WorkbookUtils.saveWorkbook(workbook, file);
+                } catch (Exception e) {
+                  logger.log(Level.SEVERE, e.getMessage(), e);
+                  FxUtils.showErrorMessage(getWindow(), e);
+                } finally {
+                  disableButtons(false);
+                }
+              },
+              false);
 
-	@FXML
-	void handleHeatsContextMenuOnShowing() {
-		this.stateMenu.getItems().clear();
+      runTaskWithProgressDialog(dbTask, getText("heats.csv.export"), false);
+    } else {
+      disableButtons(false);
+    }
+  }
 
-		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
-		if (selectedHeat != null) {
-			int currentState = selectedHeat.getState();
-			byte[] allowedStates = Heat.getAllowedStates();
-			for (final byte newState : allowedStates) {
-				if (currentState != newState) {
-					String newStateLabel = Heat.getStateLabel(newState);
-					MenuItem menuItem = new MenuItem(newStateLabel);
-					menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-						// confirm changing the state
-						if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmChangeState.title"), getText(
-								"heats.confirmChangeState.question", selectedHeat.getStateLabel(), newStateLabel))) {
-							// changing state requires a transaction
-							this.dbTaskRunner.runInTransaction(progress -> {
-								selectedHeat.setState(newState);
-								return this.db.getEntityManager().merge(selectedHeat);
-							}, dbResult -> {
-								try {
-									int indexOf = this.heatsList.indexOf(selectedHeat);
-									this.heatsList.set(indexOf, dbResult.getResult());
-								} catch (Exception ex) {
-									logger.log(Level.SEVERE, ex.getMessage(), ex);
-									FxUtils.showErrorMessage(getWindow(), ex);
-								}
-							});
-						}
-					});
-					this.stateMenu.getItems().add(menuItem);
-				}
-			}
-		}
+  @FXML
+  void handleStartSignalOnAction() {
+    if (this.startSignalTbtn.isSelected()) {
+      openPort();
+    } else {
+      closePort();
+    }
+  }
 
-		// disable context menu if it's empty
-		this.stateMenu.setVisible(!this.stateMenu.getItems().isEmpty());
-	}
+  @FXML
+  void handleHeatsContextMenuOnShowing() {
+    this.stateMenu.getItems().clear();
 
-	@FXML
-	void handleDivisionContextMenuOnShowing() {
-		this.swapMenu.getItems().clear();
+    Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
+    if (selectedHeat != null) {
+      int currentState = selectedHeat.getState();
+      byte[] allowedStates = Heat.getAllowedStates();
+      for (final byte newState : allowedStates) {
+        if (currentState != newState) {
+          String newStateLabel = Heat.getStateLabel(newState);
+          MenuItem menuItem = new MenuItem(newStateLabel);
+          menuItem.addEventHandler(
+              ActionEvent.ACTION,
+              event -> {
+                // confirm changing the state
+                if (FxUtils.showConfirmDialog(
+                    getWindow(),
+                    getText("heats.confirmChangeState.title"),
+                    getText(
+                        "heats.confirmChangeState.question",
+                        selectedHeat.getStateLabel(),
+                        newStateLabel))) {
+                  // changing state requires a transaction
+                  this.dbTaskRunner.runInTransaction(
+                      progress -> {
+                        selectedHeat.setState(newState);
+                        return this.db.getEntityManager().merge(selectedHeat);
+                      },
+                      dbResult -> {
+                        try {
+                          int indexOf = this.heatsList.indexOf(selectedHeat);
+                          this.heatsList.set(indexOf, dbResult.getResult());
+                        } catch (Exception ex) {
+                          logger.log(Level.SEVERE, ex.getMessage(), ex);
+                          FxUtils.showErrorMessage(getWindow(), ex);
+                        }
+                      });
+                }
+              });
+          this.stateMenu.getItems().add(menuItem);
+        }
+      }
+    }
 
-		Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
-		if (selectedHeat != null && selectedHeat.isStateFinished()) {
-			HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
+    // disable context menu if it's empty
+    this.stateMenu.setVisible(!this.stateMenu.getItems().isEmpty());
+  }
 
-			this.divisionList.stream().filter(heatReg -> heatReg.getId() != selectedItem.getId()).forEach(heatReg -> {
-				MenuItem menuItem = new MenuItem(heatReg.getBib() + " - " + ModelUtils.getBoatLabel(heatReg));
-				menuItem.addEventHandler(ActionEvent.ACTION, event -> {
-					// confirm swapping the results
-					if (FxUtils.showConfirmDialog(getWindow(), getText("heats.confirmSwapRsult.title"),
-							getText("heats.confirmSwapRsult.question", ModelUtils.getBoatLabel(selectedItem),
-									ModelUtils.getBoatLabel(heatReg)))) {
-						// swapping results requires a transaction
-						this.dbTaskRunner.runInTransaction(progress -> {
-							return this.regattaDAO.swapResults(heatReg, selectedItem);
-						}, dbResult -> {
-							try {
-								this.divisionList.setAll(dbResult.getResult().getEntries());
-								this.divisionTbl.sort();
-							} catch (Exception ex) {
-								logger.log(Level.SEVERE, ex.getMessage(), ex);
-								FxUtils.showErrorMessage(getWindow(), ex);
-							}
-						});
-					}
-				});
-				this.swapMenu.getItems().add(menuItem);
-			});
-		}
+  @FXML
+  void handleDivisionContextMenuOnShowing() {
+    this.swapMenu.getItems().clear();
 
-		// disable context menu if it's empty
-		this.swapMenu.setVisible(!this.swapMenu.getItems().isEmpty());
-	}
+    Heat selectedHeat = this.heatsTbl.getSelectionModel().getSelectedItem();
+    if (selectedHeat != null && selectedHeat.isStateFinished()) {
+      HeatRegistration selectedItem = this.divisionTbl.getSelectionModel().getSelectedItem();
 
-	@Override
-	protected String getTitle(Regatta activeRegatta) {
-		return nonNull(activeRegatta) ? getText("heats.title") + " - " + activeRegatta.getTitle()
-				: getText("heats.title");
-	}
+      this.divisionList.stream()
+          .filter(heatReg -> heatReg.getId() != selectedItem.getId())
+          .forEach(heatReg -> {
+            MenuItem menuItem =
+                new MenuItem(heatReg.getBib() + " - " + ModelUtils.getBoatLabel(heatReg));
+            menuItem.addEventHandler(
+                ActionEvent.ACTION,
+                event -> {
+                  // confirm swapping the results
+                  if (FxUtils.showConfirmDialog(
+                      getWindow(),
+                      getText("heats.confirmSwapRsult.title"),
+                      getText(
+                          "heats.confirmSwapRsult.question",
+                          ModelUtils.getBoatLabel(selectedItem),
+                          ModelUtils.getBoatLabel(heatReg)))) {
+                    // swapping results requires a transaction
+                    this.dbTaskRunner.runInTransaction(
+                        progress -> {
+                          return this.regattaDAO.swapResults(heatReg, selectedItem);
+                        },
+                        dbResult -> {
+                          try {
+                            this.divisionList.setAll(dbResult.getResult().getEntries());
+                            this.divisionTbl.sort();
+                          } catch (Exception ex) {
+                            logger.log(Level.SEVERE, ex.getMessage(), ex);
+                            FxUtils.showErrorMessage(getWindow(), ex);
+                          }
+                        });
+                  }
+                });
+            this.swapMenu.getItems().add(menuItem);
+          });
+    }
 
-	private void loadHeats(boolean refresh) {
-		disableButtons(true);
-		Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
+    // disable context menu if it's empty
+    this.swapMenu.setVisible(!this.swapMenu.getItems().isEmpty());
+  }
 
-		super.dbTaskRunner.run(progress -> {
-			if (refresh) {
-				super.db.getEntityManager().clear();
-			}
-			return this.regattaDAO.getHeats(Heat.GRAPH_ENTRIES);
-		}, dbResult -> {
-			try {
-				this.heatsList.setAll(dbResult.getResult());
-				this.heatsTbl.sort();
-				this.heatsTbl.getSelectionModel().select(selectedItem);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-				FxUtils.showErrorMessage(getWindow(), e);
-			} finally {
-				disableButtons(false);
-			}
-		});
-	}
+  @Override
+  protected String getTitle(Regatta activeRegatta) {
+    return nonNull(activeRegatta)
+        ? getText("heats.title") + " - " + activeRegatta.getTitle()
+        : getText("heats.title");
+  }
 
-	private void saveCsvFile(String csvContent, File file) {
-		try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
-			writer.println(csvContent);
-		} catch (IOException ex) {
-			logger.log(Level.SEVERE, ex.getMessage(), ex);
-			FxUtils.showErrorMessage(getWindow(), ex);
-		}
-	}
+  private void loadHeats(boolean refresh) {
+    disableButtons(true);
+    Heat selectedItem = this.heatsTbl.getSelectionModel().getSelectedItem();
 
-	private void disableButtons(boolean disabled) {
-		this.refreshBtn.setDisable(disabled);
-		this.exportCsvBtn.setDisable(disabled);
-		this.exportXslBtn.setDisable(disabled);
-		this.heatsTbl.setDisable(disabled);
-		this.divisionTbl.setDisable(disabled);
-	}
+    super.dbTaskRunner.run(
+        progress -> {
+          if (refresh) {
+            super.db.getEntityManager().clear();
+          }
+          return this.regattaDAO.getHeats(Heat.GRAPH_ENTRIES);
+        },
+        dbResult -> {
+          try {
+            this.heatsList.setAll(dbResult.getResult());
+            this.heatsTbl.sort();
+            this.heatsTbl.getSelectionModel().select(selectedItem);
+          } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            FxUtils.showErrorMessage(getWindow(), e);
+          } finally {
+            disableButtons(false);
+          }
+        });
+  }
 
+  private void saveCsvFile(String csvContent, File file) {
+    try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
+      writer.println(csvContent);
+    } catch (IOException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+      FxUtils.showErrorMessage(getWindow(), ex);
+    }
+  }
+
+  private void disableButtons(boolean disabled) {
+    this.refreshBtn.setDisable(disabled);
+    this.exportCsvBtn.setDisable(disabled);
+    this.exportXslBtn.setDisable(disabled);
+    this.heatsTbl.setDisable(disabled);
+    this.divisionTbl.setDisable(disabled);
+  }
 }
