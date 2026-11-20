@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -67,10 +68,10 @@
         <executions>
           <execution>
             <id>build-jnlp</id>
-            <phase>package</phase>
             <goals>
               <goal>jnlp</goal>
             </goals>
+            <phase>package</phase>
             <configuration>
               <attachArchive>false</attachArchive>
               <filenameMapping>full</filenameMapping>
@@ -93,13 +94,13 @@
       <!-- additional deploy steps -->
       <!-- ======================= -->
       <plugin>
-      <!-- keytool -genkey -keyalg RSA -keysize 2048 -alias selfsigned -validity 9999 -dname "CN=Markus Ofterdinger, OU=EDV-Team, O=Heidelberger Regatta-Verband, L=Heidelberg, ST=Baden-Württemberg, C=DE" -keystore keystore.jks -storepass password -keypass password -->
+        <!-- keytool -genkey -keyalg RSA -keysize 2048 -alias selfsigned -validity 9999 -dname "CN=Markus Ofterdinger, OU=EDV-Team, O=Heidelberger Regatta-Verband, L=Heidelberg, ST=Baden-Württemberg, C=DE" -keystore keystore.jks -storepass password -keypass password -->
         <artifactId>maven-jarsigner-plugin</artifactId>
         <configuration>
           <archiveDirectory>${archives.directory}</archiveDirectory>
-<!--          <excludes>-->
-<!--            <exclude>com.microsoft.sqlserver-mssql-jdbc*.jar</exclude>-->
-<!--          </excludes>-->
+          <!--          <excludes>-->
+          <!--            <exclude>com.microsoft.sqlserver-mssql-jdbc*.jar</exclude>-->
+          <!--          </excludes>-->
           <keystore>keystore.jks</keystore>
           <alias>selfsigned</alias>
           <storepass>password</storepass>
