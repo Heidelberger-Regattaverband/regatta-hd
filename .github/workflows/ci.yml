@@ -44,7 +44,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Check formatting
-        run: mvn spotless:check -B --ntp
+        run: mvn spotless:check -B --ntp -V
 
       - name: Build with Maven
         env:
@@ -52,4 +52,4 @@ jobs:
           dbName: ${{ secrets.DB_NAME }}
           username: ${{ secrets.DB_USER }}
           password: ${{ secrets.DB_PASSWORD }}
-        run: mvn clean verify -B --ntp
+        run: mvn clean verify -B --ntp -V
