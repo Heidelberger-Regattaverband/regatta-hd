@@ -46,7 +46,7 @@
     <openjfx.version>23.0.2</openjfx.version>
 
     <!-- https://central.sonatype.com/artifact/org.controlsfx/controlsfx -->
-    <controlsfx.version>11.2.6</controlsfx.version>
+    <controlsfx.version>11.2.7</controlsfx.version>
 
     <!-- https://central.sonatype.com/artifact/org.projectlombok/lombok -->
     <lombok.version>1.18.48</lombok.version>
@@ -76,7 +76,7 @@
     <jSerialComm.version>2.11.4</jSerialComm.version>
 
     <!-- https://central.sonatype.com/artifact/com.sun.xml.bind/jaxb-impl -->
-    <jaxb-impl.version>4.0.7</jaxb-impl.version>
+    <jaxb-impl.version>4.0.9</jaxb-impl.version>
 
     <!-- https://central.sonatype.com/artifact/com.diffplug.spotless/spotless-maven-plugin -->
     <spotless.version>3.11.0</spotless.version>
