@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <uri name="http://schemas.rudern.de/service/ausschreibung_2010.xsd"
+       uri="ausschreibung_2010.xsd"/>
+</catalog>
