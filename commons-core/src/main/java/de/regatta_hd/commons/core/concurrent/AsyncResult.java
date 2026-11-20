@@ -8,12 +8,11 @@ package de.regatta_hd.commons.core.concurrent;
 @FunctionalInterface
 public interface AsyncResult<R> {
 
-	/**
-	 * Returns the result of the asynchronously executed task.
-	 *
-	 * @return the result of the asynchronously executed task
-	 * @throws Exception if an error occurred during the execution of the asynchronously executed task
-	 */
-	R getResult() throws Exception; // NOSONAR
-
+  /**
+   * Returns the result of the asynchronously executed task.
+   *
+   * @return the result of the asynchronously executed task
+   * @throws Exception if an error occurred during the execution of the asynchronously executed task
+   */
+  R getResult() throws Exception; // NOSONAR
 }

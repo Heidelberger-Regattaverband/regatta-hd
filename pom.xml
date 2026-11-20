@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -20,25 +20,24 @@
     <url>https://www.regatta-hd.de/</url>
   </organization>
 
+  <modules>
+    <module>commons-core</module>
+    <module>commons-db</module>
+    <module>commons-fx</module>
+    <module>aquarius</module>
+    <module>ui</module>
+    <module>schemas</module>
+    <module>releng/appassembler</module>
+    <module>releng/nativeapp</module>
+    <module>releng/webstart</module>
+  </modules>
+
   <scm>
     <connection>scm:git:git@github.com:Heidelberger-Regattaverband/regatta-hd.git</connection>
     <developerConnection>scm:git:git@github.com:Heidelberger-Regattaverband/regatta-hd.git</developerConnection>
     <tag>HEAD</tag>
     <url>https://github.com/Heidelberger-Regattaverband/regatta-hd</url>
   </scm>
-
-  <repositories>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
@@ -78,19 +77,13 @@
 
     <!-- https://central.sonatype.com/artifact/com.sun.xml.bind/jaxb-impl -->
     <jaxb-impl.version>4.0.7</jaxb-impl.version>
-  </properties>
 
-  <modules>
-    <module>commons-core</module>
-    <module>commons-db</module>
-    <module>commons-fx</module>
-    <module>aquarius</module>
-    <module>ui</module>
-    <module>schemas</module>
-    <module>releng/appassembler</module>
-    <module>releng/nativeapp</module>
-    <module>releng/webstart</module>
-  </modules>
+    <!-- https://central.sonatype.com/artifact/com.diffplug.spotless/spotless-maven-plugin -->
+    <spotless.version>2.44.5</spotless.version>
+
+    <!-- https://central.sonatype.com/artifact/com.google.googlejavaformat/google-java-format -->
+    <google-java-format.version>2.0.0</google-java-format.version>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -296,6 +289,19 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
       <plugin>
@@ -366,6 +372,33 @@
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <version>${google-java-format.version}</version>
+              <style>GOOGLE</style>
+            </googleJavaFormat>
+          </java>
+          <pom>
+            <includes>
+              <include>pom.xml</include>
+            </includes>
+            <sortPom></sortPom>
+          </pom>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

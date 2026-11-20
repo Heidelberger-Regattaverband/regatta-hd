@@ -9,38 +9,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Assigns a {@link Referee referee} to a {@link Heat heat}.
- */
+/** Assigns a {@link Referee referee} to a {@link Heat heat}. */
 @Entity
 @Table(schema = "dbo", name = "CompReferee")
-//lombok
+// lombok
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HeatReferee {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CompReferee_ID")
-	@EqualsAndHashCode.Include
-	private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "CompReferee_ID")
+  @EqualsAndHashCode.Include
+  private int id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CompReferee_Comp_ID_FK", nullable = false)
-	private Heat heat;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "CompReferee_Comp_ID_FK", nullable = false)
+  private Heat heat;
 
-	@Column(name = "CompReferee_Role", length = 1)
-	private String role;
+  @Column(name = "CompReferee_Role", length = 1)
+  private String role;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CompReferee_Referee_ID_FK", nullable = false)
-	private Referee referee;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "CompReferee_Referee_ID_FK", nullable = false)
+  private Referee referee;
 }
