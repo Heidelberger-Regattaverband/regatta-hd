@@ -80,6 +80,7 @@
 
     <!-- https://central.sonatype.com/artifact/com.diffplug.spotless/spotless-maven-plugin -->
     <spotless.version>2.44.5</spotless.version>
+
     <!-- https://central.sonatype.com/artifact/com.google.googlejavaformat/google-java-format -->
     <google-java-format.version>2.0.0</google-java-format.version>
   </properties>
