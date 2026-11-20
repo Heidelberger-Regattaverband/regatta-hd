@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,11 +44,11 @@ public class ReportInfo {
   private String code;
 
   @Column(name = "Report_Date")
-  private Date date;
+  private LocalDateTime date;
 
   @Column(name = "Report_Generated")
   @ToString.Include(rank = 10)
-  private Date generated;
+  private LocalDateTime generated;
 
   @Column(name = "Report_Round")
   private Byte round;

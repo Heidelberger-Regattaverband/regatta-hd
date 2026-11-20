@@ -67,18 +67,11 @@ public class DateTableCell<B> extends TableCell<B, Instant> { // NOSONAR
       logger.log(Level.FINE, "Committed: {0}", this.datePicker.getValue());
       commitEdit(this.datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
     });
-    //        datePicker.focusedProperty().addListener((ObservableValue<? extends Boolean>
-    // observable, Boolean oldValue, Boolean newValue) -> {
-    //            if (!newValue) {
-    //
-    // commitEdit(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-    //            }
-    //        });
   }
 
   private LocalDate getDate() {
     return getItem() == null
-        ? LocalDate.now()
+        ? LocalDate.now(ZoneId.systemDefault())
         : getItem().atZone(ZoneId.systemDefault()).toLocalDate();
   }
 }
