@@ -79,7 +79,7 @@
     <jaxb-impl.version>4.0.9</jaxb-impl.version>
 
     <!-- https://central.sonatype.com/artifact/com.diffplug.spotless/spotless-maven-plugin -->
-    <spotless.version>3.11.0</spotless.version>
+    <spotless.version>3.12.0</spotless.version>
 
     <!-- https://central.sonatype.com/artifact/com.google.googlejavaformat/google-java-format -->
     <google-java-format.version>2.0.0</google-java-format.version>
